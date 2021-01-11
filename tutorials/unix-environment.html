@@ -1,0 +1,1156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-09-03 Thu 11:09 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Accessing Unix/Linux Programming Environments</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2020-09-03 Thu 11:09</i>
+</div>
+<div id="content">
+<h1 class="title">Accessing Unix/Linux Programming Environments</h1>
+
+
+<div id="outline-container-org1f2bddc" class="outline-4">
+<h4 id="org1f2bddc">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org1f2bddc">
+<dl class="org-dl">
+<dt>Thu Sep  3 11:05:11 AM CDT 2020</dt><dd>Updates to the Virtual Machine
+section to apprise Mac OSX users to a common security setting that
+must be changed to make Virtualbox work.</dd>
+<dt>Fri 28 Aug 2020 11:52:13 AM CDT</dt><dd>Updated instructions on
+<a href="#org039df56">VS Code to remotely edit CSE lab machines code</a> to include
+official staff-produced guide.</dd>
+<dt>Mon 24 Aug 2020 09:30:15 AM CDT</dt><dd>Added <a href="#orgdc657d4">graphical access to CSE Lab
+machines</a> through the web via vole-like technology.</dd>
+<dt>Mon 03 Aug 2020 02:52:31 PM CDT</dt><dd>Added overview of using <a href="#org039df56">VS Code
+to remotely edit CSE lab machines code.</a></dd>
+<dt>Tue 07 Jul 2020 11:12:03 PM CDT</dt><dd>Added some information on
+transferring files via <code>scp</code> and <code>sshfs</code> along with some
+additional notes on the CSE Labs Vole system.</dd>
+</dl>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgb52fc1a">1. Rationale</a></li>
+<li><a href="#orgc8c1d2d">2. UMN/CSE Unix Computing Resources</a>
+<ul>
+<li><a href="#org222c731">2.1. Vole for Graphical Login: http://vole.cse.umn.edu</a></li>
+<li><a href="#orgf19e8e2">2.2. Graphical Login to Specific Lab Machines</a></li>
+<li><a href="#org94cfe50">2.3. SSH to CSE Lab Machines</a></li>
+<li><a href="#org3f1ebab">2.4. Transferring Files To/From Lab Machines</a></li>
+<li><a href="#orgd6ef292">2.5. Visual Studio Code and Remote Access</a></li>
+<li><a href="#org8adeedd">2.6. Physical Access to CSE Labs Machines</a></li>
+</ul>
+</li>
+<li><a href="#org7e91420">3. Linux Environments on Your own machine</a>
+<ul>
+<li><a href="#orge8f6912">3.1. Virtual Machines on Mac or Windows</a></li>
+<li><a href="#org0319049">3.2. Windows Specific Options</a></li>
+<li><a href="#orgab64733">3.3. Mac OSX</a></li>
+<li><a href="#orgaf4a454">3.4. Native Linux</a></li>
+</ul>
+</li>
+<li><a href="#org3652e2d">4. Basic Navigation in a Unix Terminal</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb52fc1a" class="outline-2">
+<h2 id="orgb52fc1a"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+This guide is meant to inform UMN students on options they have to
+access a Unix/Linux environment for course work in computer
+science. This applies to courses that use the C programming language
+like CSCI 2021 and CSCI 4061 and may be useful for other courses as
+well.
+</p>
+
+<p>
+The first section provides information on UMN Unix computing resources
+and some links to tutorials on how to install Unix one personal
+computers. In the latter case, the focus is on the use of Virtual
+Machines so that a Linux environment can coexist with an existing
+Windows or Mac OSX installation rather than overwriting these more
+familiar environments.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc8c1d2d" class="outline-2">
+<h2 id="orgc8c1d2d"><span class="section-number-2">2</span> UMN/CSE Unix Computing Resources</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The UMN College of Science and Engineering (CSE) provides a wealth of
+computing resources including several ways to easily access UNIX
+environments. 
+</p>
+</div>
+
+<div id="outline-container-org222c731" class="outline-3">
+<h3 id="org222c731"><span class="section-number-3">2.1</span> <a id="orgf6967eb"></a> Vole for Graphical Login: <a href="http://vole.cse.umn.edu">http://vole.cse.umn.edu</a></h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+CSE Labs provides a slick graphical login to Linux machines through a
+web browser via its VOLE system. Navigate to <a href="http://vole.cse.umn.edu">http://vole.cse.umn.edu</a>,
+enter your login credentials, and initial a graphical login.  
+</p>
+
+<p>
+A couple observations on Vole
+</p>
+<ul class="org-ul">
+<li>It is full-ish graphical environment with a 0-cost setup</li>
+<li>Being graphical environment, it can be "laggy" if your network
+connection isn't fast. Many students notice see this when the system
+fails to respond for a short time or single press of the "x" key
+results in "xxxxxxxxxxxxxxxxxxxxxx" showing up on their screen</li>
+</ul>
+<p>
+For these reasons, it is also good to familiar with alternatives to
+Vole described later.
+</p>
+
+<blockquote>
+<p>
+Note: unless you are doing dedicated graphics programming, <b>don't use
+the Vole 3D nodes</b>. Use normal Vole. I have received reports that the
+memory checking program Valgrind can report spurious errors on Vole3D
+and should therefore be avoided.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-orgf19e8e2" class="outline-3">
+<h3 id="orgf19e8e2"><span class="section-number-3">2.2</span> <a id="orgdc657d4"></a> Graphical Login to Specific Lab Machines</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+CSE Labs has implemented the same technology used in VOLE to allow
+graphical logins to physical lab machines. This can be done by
+visiting a web site with the machine name it the title. For example,
+to get a graphical login to the machines, visit the corresponding
+URLs:
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Machine</th>
+<th scope="col" class="org-left">URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>csel-kh4250-01</code></td>
+<td class="org-left"><a href="https://csel-kh4250-01.cselabs.umn.edu">https://csel-kh4250-01.cselabs.umn.edu</a></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>csel-kh4250-20</code></td>
+<td class="org-left"><a href="https://csel-kh4250-20.cselabs.umn.edu">https://csel-kh4250-20.cselabs.umn.edu</a></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>csel-kh1250-05</code></td>
+<td class="org-left"><a href="https://csel-kh1250-05.cselabs.umn.edu">https://csel-kh1250-05.cselabs.umn.edu</a></td>
+</tr>
+
+<tr>
+<td class="org-left">&#x2026;</td>
+<td class="org-left">&#x2026;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+All machines that can be accessed are in the <a href="https://cseit.umn.edu/computer-classrooms/cse-labs-unix-machine-listings">big list of machines</a> on
+the CSE Labs help site.
+</p>
+
+<p>
+<b>This method provides only minor advantages over using VOLE</b>.  The
+trade-offs are roughly
+</p>
+<ul class="org-ul">
+<li>You have to remember the individual machine names rather than just
+<code>vole.cselabs.umn.edu</code></li>
+<li>It is still a graphical environment so you're likely to experience
+lag if your network connection is slow</li>
+<li>It is NOT virtualized like VOLE so you get access to the physical
+machine resources but must share them with whoever else is logged
+into the machine</li>
+<li>VOLE automatically assigns you to nodes that have fewer users to get
+you somewhat better performance but it is a virtualized environment
+so may not be appropriate for all situations</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org94cfe50" class="outline-3">
+<h3 id="org94cfe50"><span class="section-number-3">2.3</span> <a id="orgf4db5aa"></a> SSH to CSE Lab Machines</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+<i>There is a full video course on <a href="https://www.linkedin.com/learning-login/share?forceAccount=false&amp;redirect=https%253A%252F%252Fwww.linkedin.com%252Flearning%252Flearning-ssh">Learning SSH</a> on LinkedIn Learning,
+available free through the UMN Library.</i>
+</p>
+
+<p>
+CSE Labs allows you to remotely log into a variety of machines using
+the <b>secure shell</b> or SSH for short.  For this you will need an SSH
+tool
+</p>
+<ul class="org-ul">
+<li>Mac / Linux: Open a terminal and use the <code>ssh</code> command</li>
+<li>Windows: examine <a href="https://cseit.umn.edu/knowledge-help/choose-ssh-tool">these choices</a> of which <a href="https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html">PuTTY</a> is a classic favorite.
+<ul class="org-ul">
+<li>Alternatively Windows users can install a <a href="#org64512ad">Unix Environment</a> which
+will come with SSH. See the section on this below.</li>
+</ul></li>
+</ul>
+
+<p>
+SSH connections are non-graphical and therefore are much more robust
+against slow network connections compared to tools like <a href="#orgf6967eb">Vole</a>.
+</p>
+
+<p>
+To use SSH, you must first know the network address of a machine to
+log into.  Select a machine name from the <a href="https://cseit.umn.edu/computer-classrooms/cse-labs-unix-machine-listings">big list of machines</a> in CSE
+Labs and log in. My go-to is often
+</p>
+<pre class="example">
+apollo.cselabs.umn.edu
+</pre>
+
+
+<p>
+To access <code>apollo</code> or other machines via SSH on a Unix terminal, 
+type the command below
+</p>
+<div class="org-src-container">
+<pre class="src src-text">&gt; ssh kauf0095@apollo.cselabs.umn.edu
+      |^^^^^^  |^^^^^^^^^^^^^^^^^^^^^
+      |        +-&gt; network address of remote machine
+      +-&gt;username on machine, UMN X.500 unsername
+</pre>
+</div>
+
+<p>
+A login would look something like this:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">&gt; ssh kauf0095@apollo.cselabs.umn.edu
+kauf0095@apollo.cselabs.umn.edu's password:  # PASSWORD TYPED Characters don't display
+----------------------------------------------------------------------
+       COLLEGE OF SCIENCE AND ENGINEERING WORKSTATION
+If you are not authorized to access this system, disconnect now.
+
+       YOU SHOULD HAVE NO EXPECTATION OF PRIVACY
+
+By continuing, you agree to the terms outlined in the Acceptable Use
+Policy (AUP) governing use of this workstation.  The AUP may be found
+online at
+
+       https://cseit.umn.edu/knowledge-help/acceptable-use-policy
+
+As a user of this system, it is YOUR responsibility to be familiar
+with the information contained in the AUP.
+
+Users requiring assistance should talk to the operator on duty:
+They can be reached by any of the following means:
+       email: csehelp@umn.edu 
+       or call 612-625-0876  The phones in the labs directly call operator.
+       You may also visit them in Keller Hall 1-201
+
+----------------------------------------------------------------------
+
+Last login: Sat Nov  2 17:20:27 2019 from 24.118.102.107
+
+csel-apollo [~]% ls                # SUCCESS: list files on apollo home
+2021                 Music         results.json tree
+4061                 data          lila         mypubs    
+bin                  defgnome      mail         packgaes  
+blather              Desktop       Mail         pdbs      
+burial-minimization  Documents     mailboxlist  Pictures  
+cklayout             Downloads     matlab       proteins  
+
+csel-apollo [~]% exit              # DONE: exit shell to close connection
+logout
+Connection to apollo.cselabs.umn.edu closed.
+
+&gt;                                  # shell is now for home computer
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3f1ebab" class="outline-3">
+<h3 id="org3f1ebab"><span class="section-number-3">2.4</span> Transferring Files To/From Lab Machines</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+When working on remote machines, it is often necessary to transfer
+files between a local (home) computer and the remote (lab) machines.
+There are a number of graphical tools to do this on all platforms:
+just use search terms like
+</p>
+<ul class="org-ul">
+<li>"secure file transfer on windows"</li>
+<li>"secure file transfer on mac osx"</li>
+</ul>
+<p>
+and you are likely to find free versions.
+</p>
+
+<p>
+Non-graphical tools for file transfer are usually very fast, robust,
+and easy to use once your learn their quirks.
+</p>
+</div>
+
+<div id="outline-container-org11700da" class="outline-4">
+<h4 id="org11700da">scp: remote copying</h4>
+<div class="outline-text-4" id="text-org11700da">
+<p>
+If you have access to <code>ssh</code> in a terminal on your home computer, you
+very likely have access to <code>scp</code> which uses the same secure connection
+protocol but to transfer files rather than set up an interactive
+shell. It has a syntax that combines <code>ssh</code> and the Unix <code>cp</code> (copy)
+program. A few examples show common use cases
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"># FROM HOME TO LABS
+# copy file.txt from home computer to apollo, place file in my home directory on apollo
+&gt; scp file.txt kauff0095@atlas.cselabs.umn.edu:
+
+# same as above but place file.txt in ~/code/docs on apollo
+&gt; scp file.txt kauff0095@atlas.cselabs.umn.edu:code/docs/
+
+# copy the entire directory p1-code/ to apollo, put it in ~/csci2021 on apollo
+&gt; scp -r p1-code/ kauff0095@atlas.cselabs.umn.edu:csci2021/
+
+# FROM LABS TO HOME
+# copy file.txt in home directory on apollo to the current directory
+&gt; scp kauff0095@atlas.cselabs.umn.edu:file.txt .
+
+# same as above but file.txt is in ~/code/docs on apollo and place it in directory code/ 
+&gt; scp kauff0095@atlas.cselabs.umn.edu:code/docs/file.txt code/
+
+# copy the entire directory ~/csci2021/p1-code/ from apollo to current directory
+&gt; scp -r kauff0095@atlas.cselabs.umn.edu:csci2021/p1-code .
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org86a0d60" class="outline-4">
+<h4 id="org86a0d60">sshfs and FUSE</h4>
+<div class="outline-text-4" id="text-org86a0d60">
+<p>
+Some systems support a way to "mount" a remote machine filesystem
+through an SSH connection. The net effect of this is that copying
+files into what looks like a local folder actually transfers them to
+a remote machine and copying them from that folder transfers from that
+machine.  This behavior is often not present by default but is
+<b>incredibly useful</b> and has saved me countless hours of toil. You can
+investigate these for your system of choice
+</p>
+<ul class="org-ul">
+<li>Mac OSX FUSE / sshfs: <a href="https://osxfuse.github.io/">https://osxfuse.github.io/</a></li>
+<li>SSHFS on Linux: Most Distributions have a package for SSHFS
+<ul class="org-ul">
+<li>Ubuntu: <a href="https://help.ubuntu.com/community/SSHFS">https://help.ubuntu.com/community/SSHFS</a></li>
+<li>Mint: <a href="https://community.linuxmint.com/software/view/sshfs">https://community.linuxmint.com/software/view/sshfs</a></li>
+<li>Arch Linux: <a href="https://wiki.archlinux.org/index.php/SSHFS">https://wiki.archlinux.org/index.php/SSHFS</a></li>
+<li>etc.</li>
+</ul></li>
+<li>Windows: best achieved through the <a href="#org64512ad">Windows Subsystem for Linux</a></li>
+</ul>
+
+<p>
+Once set up, an <code>sshfs</code> command can be issued to mount a remote folder
+on an empty local folder. I often use the following command to mount
+my home directory on remote machine <code>apollo.cselabs.umn.edu</code> on a
+local directory called <code>apollo</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"># use sshfs to mount remote directory as local directory
+&gt; sshfs kauffman@apollo.cselabs.umn.edu: ./apollo
+
+# transfers remote file to home computer
+&gt; cp ./apollo/file.txt .
+
+# transfers local directory to remote computer
+&gt; cp -r p1-code/ ./apollo
+
+# unmounts remote directory
+&gt; fusermount -q -u -z ./apollo
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd6ef292" class="outline-3">
+<h3 id="orgd6ef292"><span class="section-number-3">2.5</span> <a id="org039df56"></a> Visual Studio Code and Remote Access</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+<a href="https://code.visualstudio.com/">Visual Studio Code (VS Code)</a> has become a popular code editor /
+Integrated Development Environment (IDE) that many students and staff
+use.  While our course has no "official" code editing environment,
+many staff members are knowledgeable about VS Code and have pointed to
+its <b>remote code editing</b> features/plugins as particularly useful for
+courses like ours.  The capability allows you to edit code on other
+computers as if it were on your local machine. While this capability
+is not unique to VS Code (and is in fact based on SSH), VS Code
+provides a easy and useful means of accessing this ability.  Below are
+several sets of instructions on how to do this. 
+</p>
+
+<p>
+<b>Many students have found this method of accessing school Unix/Linux
+environments to meet their needs very well.</b>
+</p>
+</div>
+
+<div id="outline-container-org13d930e" class="outline-4">
+<h4 id="org13d930e">Official Tutorial from Course Staff: <a href="https://tienpdinh.com/posts/remote-vscode">https://tienpdinh.com/posts/remote-vscode</a></h4>
+<div class="outline-text-4" id="text-org13d930e">
+<p>
+TA Tien Dinh constructed the <a href="https://tienpdinh.com/posts/remote-vscode">linked guide</a> to setting up remote editing
+in VS Code which is comprehensive and has been vetted by the teaching
+staff.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org970ba18" class="outline-4">
+<h4 id="org970ba18">Local Guide by a Student</h4>
+<div class="outline-text-4" id="text-org970ba18">
+<i>
+<p>
+The following information was shared by student Dan Runningen was
+reported as very useful by several other students. It hasn't been
+vetted by the staff but looks legit and useful.
+</p>
+</i>
+
+<p>
+As long as you have access to your labs account, your credentials
+should work via SSH. Instructions on how to set-up SSH for VSCode can
+be found <a href="https://code.visualstudio.com/docs/remote/ssh">here</a>, however my set-up was a little different.
+</p>
+
+<ol class="org-ol">
+<li>You do need to ensure you have an <a href="https://code.visualstudio.com/docs/remote/troubleshooting#_installing-a-supported-ssh-client">ssh client</a> installed.</li>
+<li><p>
+You will need the plug-ins below. I believe the first three may be
+already installed for you, but "Remote Development" is the
+important one.
+</p>
+
+<div class="figure">
+<p><img src="plugin.png" alt="plugin.png" style="max-width:100%;" />
+</p>
+</div></li>
+<li>After installing the plug-ins, you will need to reload the editor.</li>
+<li><p>
+Open up the "Remote Explorer" panel.
+</p>
+
+<div class="figure">
+<p><img src="remote-explorer.png" alt="remote-explorer.png" style="max-width:100%;" />
+</p>
+</div></li>
+<li>Change the drop-down to "SSH Targets"</li>
+<li>Click the "+" directly underneath to add a new connection.</li>
+<li><p>
+The window will ask you for your ssh command. You need the full
+command and be sure to include the <code>-A</code> option otherwise the
+connection won't complete. Example:
+</p>
+<pre class="example">
+ssh -A stude028@atlas.cselabs.umn.edu
+</pre>
+
+<p>
+This will connect to machine <code>atlas</code>. <a href="https://cseit.umn.edu/computer-classrooms/cse-labs-unix-machine-listings">Other possible lab
+computers are here.</a>
+</p></li>
+</ol>
+<ol class="org-ol">
+<li>Click on the option to save the command in your personal files,
+not your program files.</li>
+<li>Click the connection and enter your password in the new window.</li>
+<li>This will allow you you work in an interactive IDE through the
+school's environment. The connection is faster since all the
+rendering is done client-side and not being transmitted through a
+web browser. You also have access to the terminal directly through
+the "Terminal" menu.</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-org8adeedd" class="outline-3">
+<h3 id="org8adeedd"><span class="section-number-3">2.6</span> Physical Access to CSE Labs Machines</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+You can sit down at a variety of machines managed by CSE Labs which
+are listed here: <a href="https://cseit.umn.edu/computer-classrooms">https://cseit.umn.edu/computer-classrooms</a>
+</p>
+
+<p>
+Be mindful of the times these labs are open and which labs have Unix
+machines listed as Ubuntu 16.04. Keller 4-250 is likely the most
+popular. 
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7e91420" class="outline-2">
+<h2 id="org7e91420"><span class="section-number-2">3</span> Linux Environments on Your own machine</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+It is fun and profitable to set up your own machine to compile code
+for the class. While not strictly required, most students find it more
+convenient to compile and run code on their own computer rather than
+relying on remote access to other machines. The following sections
+outline some options on how to set up a local Unix environment.
+</p>
+</div>
+
+<div id="outline-container-orge8f6912" class="outline-3">
+<h3 id="orge8f6912"><span class="section-number-3">3.1</span> <a id="org174aeeb"></a> Virtual Machines on Mac or Windows</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Running <i>Virtual Machine</i> software allows you to have a "guest"
+operating system, likely free Linux, which has separate software from
+the "host" OS.  A great option for this is running <a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a> on your
+Host OS (Windows or Mac) with a Linux distribution as the "Guest" OS.
+</p>
+
+<p>
+In almost all cases, compiling and running code on a Linux VM (virtual
+machine) will behave identically to a "native" Linux.
+</p>
+
+<p>
+Some good beginner tutorials on installing VirtualBox and a Linux VM is
+the following:
+</p>
+
+<ul class="org-ul">
+<li><a href="https://www.youtube.com/watch?v=JzSOIW2-6BE">How to Install Linux on Windows or Mac with VirtualBox - Beginner
+Video by IT Career Questions (YouTube)</a>
+<ul class="org-ul">
+<li>~15min video</li>
+<li>Install Ubuntu Linux for easiest experience, NOT Kali Linux</li>
+<li>No need to make any monetary contributions when downloading anything</li>
+<li>Mac OSX users will need to adjsut their security settings to allow
+VirtualBox to work, see the guide <a href="https://www.howtogeek.com/658047/how-to-fix-virtualboxs-%e2%80%9ckernel-driver-not-installed-rc-1908-error/">How to Fix VirtualBox’s “Kernel
+Driver Not Installed (rc=-1908)” Error on a Mac</a>.</li>
+<li>Windows users are NOT recommended to use Virtualbox, use the
+<a href="#org64512ad">Windows Subsystem for Linux</a> instead</li>
+</ul></li>
+<li><a href="https://www.youtube.com/watch?v=AFvQCzee3pE">How to set up VirtualBox and Install Ubuntu OS (Mac) by ISOM Suffolk
+(YouTube)</a>
+<ul class="org-ul">
+<li>~22min video</li>
+<li>Mac OSX install of Ubuntu Linux Guest</li>
+<li>Mac OSX users will need to adjsut their security settings to allow
+VirtualBox to work, see the guide <a href="https://www.howtogeek.com/658047/how-to-fix-virtualboxs-%e2%80%9ckernel-driver-not-installed-rc-1908-error/">How to Fix VirtualBox’s “Kernel
+Driver Not Installed (rc=-1908)” Error on a Mac</a>.</li>
+</ul></li>
+<li><a href="https://www.youtube.com/watch?v=ohHDt6rAbag">Create Shared Folder Between Mac OS X and Ubuntu Linux via
+VirtualBox by Abanoub Hanna (YouTube)</a>
+<ul class="org-ul">
+<li>~4min video</li>
+<li>Allows files to be accessed both between both Host (Mac) and Guest
+(Linux)</li>
+<li>Setup is very short and easy</li>
+</ul></li>
+</ul>
+
+<p>
+After installing Linux, you are likely to need some tools. The names
+for these vary but on Ubuntu they are usually as follows
+</p>
+<ul class="org-ul">
+<li><code>build-essential</code>: compiler toolchain based on <code>gcc</code></li>
+<li><code>valgrind</code>: memory checker</li>
+<li><code>gdb</code>: debugger</li>
+</ul>
+<p>
+Usually performing the following command <b>in an Ubuntu Linux terminal</b>
+will install all of these:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; sudo apt install build-essential valgrind gdb
+</pre>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-org0319049" class="outline-3">
+<h3 id="org0319049"><span class="section-number-3">3.2</span> <a id="org64512ad"></a> Windows Specific Options</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+While Windows does not have Unix tools by default, Windows 10 supports
+the very nice  <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">Windows Subsystem for Linux on Windows 10</a>. This allows
+a Linux system to be installed with very little effort complete with
+compiler and debugging tools.
+</p>
+<ul class="org-ul">
+<li><b>Install a flavor of Linux such as Ubuntu (<a href="https://www.youtube.com/watch?v=Cvrqmq9A3tA">Video Tutorial</a>, highly recommended)</b></li>
+<li>Start a linux command line via the <code>bash</code> program</li>
+<li>Follow the Linux installation instructions appropriate to the distro
+(see Linux/Unix instructions)</li>
+<li><p>
+After installing Linux, you are likely to need some tools. The names
+for these vary but on Ubuntu they are usually as follows
+</p>
+<ul class="org-ul">
+<li><code>build-essential</code>: compiler toolchain based on <code>gcc</code></li>
+<li><code>valgrind</code>: memory checker</li>
+<li><code>gdb</code>: debugger</li>
+</ul>
+<p>
+Usually performing the following command will install all of these:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">  &gt; sudo apt install build-essential valgrind gdb
+</pre>
+</div></li>
+</ul>
+
+
+<p>
+NOTE: Assembly produced by <code>gcc</code> will target the Windows architecture
+and is not likely to work on lab Linux machines where we will
+grade. Make sure to verify your code works in those environments as
+well.
+</p>
+
+<p>
+NOTE: Older options for getting a Unix environment include Cygwin and
+MinGW but these are <b>discouraged</b> as they will not be fully compatible
+with the tools used in the course.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgab64733" class="outline-3">
+<h3 id="orgab64733"><span class="section-number-3">3.3</span> Mac OSX</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+Unfortunately, <b>Mac OSX no longer has good support for the tools used
+in this course.</b> 
+</p>
+
+<p>
+To get a local working environment, Mac OSX users are encouraged to
+<b>install a virtual machine software like Virtual Box and Ubuntu
+Linux.</b> The earlier <a href="#org174aeeb">section on Virtual Machines</a> gives some tutorials
+on how to perform the install.
+</p>
+
+<p>
+Historically Mac OSX had better support for native Unix development
+but changes over the last few years to the default configuration of
+OSX has made it unlikely to be able to work use tools that are central
+the course. These are as follows.
+</p>
+<ul class="org-ul">
+<li><code>gcc</code>: Most OSX installations come with a command called <code>gcc</code> BUT
+<b>it is not actually the GNU Compiler Collection</b>. It is usually the
+CLANG compiler.  This is not compatible with our tools and it is not
+straightforward to get a <i>real</i> GCC installed.</li>
+<li><code>gdb</code>: A learning goal for this course is to understand the basic
+utility of debuggers. We will focus on <code>gdb</code>. Unfortunately OSX does
+not come with this tool by default and installing it is a HUGE
+headache.</li>
+<li><code>valgrind</code>: Testing C programs is not easy and the Valgrind memory
+checker makes it a lot easier. However, the most recent versions of
+OSX are not compatible with this tool.  This is regrettable and
+there is no known solution at this time.</li>
+<li>Assembly produced by any compiler on Macs will target the OSX
+architecture and is not likely to work on lab Linux machines where
+we will grade. This can lead to loss of credit.</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-orgaf4a454" class="outline-3">
+<h3 id="orgaf4a454"><span class="section-number-3">3.4</span> Native Linux</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+Linux is a Unix-like OS. Installing Linux naively on your own computer
+is NOT required but can be quite useful. For those new to Linux, good
+beginner distributions (flavors) of Linux include.
+</p>
+<ul class="org-ul">
+<li><a href="https://ubuntu.com/">Ubuntu</a></li>
+<li><a href="https://linuxmint.com/">Linux Mint</a></li>
+<li><a href="https://www.debian.org/">Debian</a></li>
+</ul>
+<p>
+The site <a href="https://distrowatch.com/">DistroWatch</a> maintains an up-to-date list of popular Linux
+distributions and various properties of them.
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org3652e2d" class="outline-2">
+<h2 id="org3652e2d"><span class="section-number-2">4</span> Basic Navigation in a Unix Terminal</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+On logging into the machine you will work on, you will need to make
+sure that you get the codepack linked at the top associated with the
+lab and unzip it which will create a directory called <code>lab01-code</code>
+with C files for you to analyze. To compile and run these, open a
+<b>terminal</b> and navigate to the directory <code>lab01-code</code>. This is usually
+done by issuing a series of "change directory" or <code>cd</code> commands as in
+the following brief demo.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">kauffman [~]$ cd csci2021
+
+kauffman [~/csci2021]$ ls
+lecture-stuff/ hw01-code.zip hw01-code/
+
+kauffman [~/csci2021]$ cd hw01-code/
+
+kauffman [~/csci2021/hw01-code]$ ls
+age.c  collatz_funcs.c	collatz.h  collatz_main.c  QUESTIONS.txt
+</pre>
+</div>
+
+<p>
+If you are inexperienced working with a terminal (also called command
+line or <i>shell</i>), then the following tutorial should give you the basics
+to get through most of the course.
+</p>
+
+<p>
+<a href="http://www.ee.surrey.ac.uk/Teaching/Unix/">http://www.ee.surrey.ac.uk/Teaching/Unix/</a>
+</p>
+
+<p>
+You might also examine some videos on <a href="https://www.linkedin.com/learning-login/share?forceAccount=false&amp;redirect=https://www.linkedin.com/learning/learning-linux-command-line-2">Learning the Linux Command Line</a>
+and <a href="https://www.linkedin.com/learning-login/share?forceAccount=false&amp;redirect=https%253A%252F%252Fwww.linkedin.com%252Flearning%252Flearning-ssh">Learning SSH</a> as this is helpful for this and LOTS of other
+courses. These videos are available through LinkedIn Learning which is
+free for UMN students to access through the University Library
+system. 
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2020-09-03 Thu 11:09 <br/> </i>
+</div>
+</body>
+</html>
