@@ -1,0 +1,1412 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-01-11 Mon 14:00 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 2021 Quick Guide to gdb: The GNU Debugger</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2021-01-11 Mon 14:00</i>
+</div>
+<div id="content">
+<h1 class="title">CSCI 2021 Quick Guide to gdb: The GNU Debugger</h1>
+
+<div id="outline-container-org798fd09" class="outline-2">
+<h2 id="org798fd09"><span class="section-number-2">1</span> Starting the Debugger</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+In a terminal, run <code>gdb</code> with a "text user interface"
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; make puzzlebox
+gcc -Wall -g -c puzzlebox.c
+gcc -Wall -g -o puzzlebox puzzlebox.o
+
+# Note the -g option while compiling which adds debugging symbols for
+# the debugger: very useful
+
+# Start gdb with the text user interface on program puzzlebox
+&gt; gdb -tui ./puzzlebox
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org1ef9c30" class="outline-3">
+<h3 id="org1ef9c30"><span class="section-number-3">1.1</span> TUI Mode (recommended)</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+The <i>Text User Interface</i> (TUI) is enabled by running <code>gdb</code> with the <code>-tui</code> option. It shows
+</p>
+<ul class="org-ul">
+<li>Commands and history towards the bottom</li>
+<li>Source code position towards the top</li>
+</ul>
+<p>
+The screen will occasionally get "messed up" which can be corrected by
+pressing <code>Control-L</code> which will force a redraw of the terminal screen.
+</p>
+
+<div class="org-center">
+
+<div class="figure">
+<p><img src="gdb-tui.png" alt="gdb-tui.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 1: </span><code>gdb -tui ./puzzlebox</code>, the text user interface mode</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgff44c89" class="outline-3">
+<h3 id="orgff44c89"><span class="section-number-3">1.2</span> Normal Mode</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+This is in contrast to the normal mode of <code>gdb</code> which does not show
+any source code unless the <code>list</code> command is issued. Most folks find
+this harder to work with unless they are running it as a sub-process
+of another editor such as <code>emacs</code>.
+</p>
+
+<div class="org-center">
+
+<div class="figure">
+<p><img src="gdb-normal.png" alt="gdb-normal.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 2: </span><code>gdb ./puzzlebox</code>, the normal "quiet" mode. Source code is only shown after <code>list</code> commands.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org366a2dd" class="outline-3">
+<h3 id="org366a2dd"><span class="section-number-3">1.3</span> Switching Modes</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+If in normal mode, one can enter TUI mode with the command
+</p>
+<pre class="example">
+tui enable
+</pre>
+
+<p>
+Switching to normal mode is done via
+</p>
+<pre class="example">
+tui disable
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb7e662c" class="outline-2">
+<h2 id="orgb7e662c"><span class="section-number-2">2</span> A Typical Start to <code>puzzlebox</code></h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The below sample run in <code>gdb</code> illustrates the basics of running
+<code>puzzlebox</code> in the debugger. See the next section for some details on
+commands like <code>next / run / break</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt; gdb -tui ./puzzlebox                                # Start gdb with text user interface on the puzzlebox
+GNU gdb (GDB) 8.1
+...
+Reading symbols from ./puzzlebox...done.
+(gdb) set args input.txt                              # set command line arguments to the input.txt
+(gdb) run                                             # run the program
+Starting program: puzzlebox input.txt
+UserID 'kauf0095' accepted: hash value = 1397510491   # program output
+PHASE 1: A puzzle you say? Challenge accepted!
+
+Ah ah ah, you didnt say the magic word...
+Failure: Double debugger burger, order up!
+
+  * Score: 0 / 50 pts *
+[Inferior 1 (process 27727) exited normally]          # gdb indicates program ended
+
+(gdb) break phase01                                   # set a breakpoint to stop at function phase01()
+Breakpoint 1 at 0x55555555551a: file puzzlebox.c, line 220.
+(gdb) run
+Starting program: puzzlebox input.txt
+UserID 'kauf0095' accepted: hash value = 1397510491
+PHASE 1: A puzzle you say? Challenge accepted!
+
+Breakpoint 1, phase01 () at puzzlebox.c:220           # hit a breakpoint
+220	  int a = atoi(next_input());                 # stopped at this line of code
+(gdb) step                                            # step forward one line of code
+next_input () at puzzlebox.c:197                      # stepped into function next_input()
+197	  input_idx++;
+(gdb) step                                            # step again
+198	  int ret = fscanf(input_fh, "%s", inputs[input_idx]);
+(gdb) finish                                          # boring: finish this function
+Run till exit from #0  next_input () at puzzlebox.c:198
+0x0000555555555524 in phase01 () at puzzlebox.c:220
+220	  int a = atoi(next_input());                 # back in phase01()
+Value returned is $1 = 0x555555758380 &lt;inputs+128&gt; "1"
+(gdb) step                                            # forward
+221	  int b = atoi(next_input());
+(gdb) next                                            # move past the call to next_input()
+222	  int c = atoi(next_input());
+(gdb) next                                            # past again: 3 inputs required for this phase
+224	  a += hash % 40;                             # doing something to a based on random hash...
+(gdb) print a                                         # show what happened to it
+$2 = 12                                               # now has value 12
+(gdb) n                                               # abbreviation for 'next'
+225	  if (a&lt;b &amp;&amp; b&gt;c &amp;&amp; a&lt;c) {                    # some checks for a, b, c which are inputs
+(gdb) next
+228	  failure("Double debugger burger, order up!"); # about to fail, must need different inputs
+(gdb) kill                                              # kill the program
+Kill the program being debugged? (y or n) y
+
+                                                      # Edit intput.txt to have different values now
+
+
+(gdb) run                                             # re-run the program
+Starting program: puzzlebox input.txt
+UserID 'kauf0095' accepted: hash value = 1397510491
+PHASE 1: A puzzle you say? Challenge accepted!
+
+Breakpoint 1, phase01 () at puzzlebox.c:220           # hit breakpoint again
+220	  int a = atoi(next_input());
+
+(gdb) info break                                      # show info about which breakpoints are active
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x000055555555551a in phase01 at puzzlebox.c:220
+	breakpoint already hit 1 time
+
+(gdb) break puzzlebox.c:225                           # don't feel like stepping: set a breakpoint some lines ahead
+Breakpoint 2 at 0x555555555583: file puzzlebox.c, line 225.
+
+(gdb) info break                                      # show info on active brekpoints
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x000055555555551a in phase01 at puzzlebox.c:220
+	breakpoint already hit 1 time
+2       breakpoint     keep y   0x0000555555555583 in phase01 at puzzlebox.c:225
+
+(gdb) continue                                        # continue executing until next breakpoint
+Continuing.
+
+Breakpoint 2, phase01 () at puzzlebox.c:225           # hit second breakpoint
+225	  if (a&lt;b &amp;&amp; b&gt;c &amp;&amp; a&lt;c) {
+(gdb) print a                                         # a value
+$3 = 21
+(gdb) next                                            # see if this works
+228	  failure("Double debugger burger, order up!"); # nope
+(gdb) print b                                          # see b
+$4 = 2                                                 # probably need to make it bigger to satisfy a&lt;b
+
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orge6705cc" class="outline-2">
+<h2 id="orge6705cc"><span class="section-number-2">3</span> Standard <code>gdb</code> Commands</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Like most debuggers, <code>gdb</code> gives a variety of ways to control program
+execution and inspect values. Below is a summary but the extensive
+<code>help</code> within <code>gdb</code> itself gives many more details.
+</p>
+</div>
+
+<div id="outline-container-org4e0f691" class="outline-3">
+<h3 id="org4e0f691"><span class="section-number-3">3.1</span> Setting breakpoints in <code>gdb</code></h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+A <i>breakpoint</i> indicates a place that execution will be stopped in a
+program by the debugger. They can be created in a variety of ways and
+removed when no longer needed.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Command</th>
+<th scope="col" class="org-left">Effect</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>break main</code></td>
+<td class="org-left">Stop running at the beginning of <code>main()</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>break phase01</code></td>
+<td class="org-left">Stop running at the beginning of</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>break puzzlebox.c:100</code></td>
+<td class="org-left">Stop running at line 100 of <code>puzzlebox.c</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>break</code></td>
+<td class="org-left">Stop running at the current line</td>
+<td class="org-left">Useful for stopping on a re-run</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>info breakpoint</code></td>
+<td class="org-left">Show all breakpoints with locations</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>disable 2</code></td>
+<td class="org-left">Don't stop at breakpoint #2 but keep it there</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>enable 2</code></td>
+<td class="org-left">Stop at breakpoint #2 again</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>clear phase01</code></td>
+<td class="org-left">Remove breakpoint for <code>phase01()</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>clear puzzlebox.c:100</code></td>
+<td class="org-left">Remove breakpoint at line 100 of <code>puzzlebox.c</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>delete 2</code></td>
+<td class="org-left">Remove breakpoint #2</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgf19b86c" class="outline-3">
+<h3 id="orgf19b86c"><span class="section-number-3">3.2</span> Arguments and Running</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+After loading a program and setting a breakpoint or two, typically one
+runs it. Command line arguments are also often necessary.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Command</th>
+<th scope="col" class="org-left">Effect</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>set args hi bye 2</code></td>
+<td class="org-left">Set command line arguments to <code>hi bye 2</code></td>
+<td class="org-left">Want command line to be <code>input.txt</code> for <code>puzzlebox</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>show args</code></td>
+<td class="org-left">Show the current command line arguments</td>
+<td class="org-left">Changes to args require a <code>kill/run</code> to take effect</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>run</code></td>
+<td class="org-left">Start running the program from the beginning</td>
+<td class="org-left">Will run to complete unless a breakpoint is set</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>kill</code></td>
+<td class="org-left">Kill the running program</td>
+<td class="org-left">Usually done to re- <code>run</code> the program before hitting a failure</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>file program</code></td>
+<td class="org-left">Load <code>program</code> and start debugging</td>
+<td class="org-left">Reloads after a recompile, not necessary for <code>puzzlebox</code> but useful for proper debugging</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>quit</code></td>
+<td class="org-left">Exit the debugger</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org4a93440" class="outline-3">
+<h3 id="org4a93440"><span class="section-number-3">3.3</span> Stepping</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+When a breakpoint is hit, single steps forward are possible in the
+debugger to trace which path of execution is taken. Use <code>step</code> to move
+into functions line by line and <code>next</code> to stay in the current function
+stepping over function calls.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Command</th>
+<th scope="col" class="org-left">Effect</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>step</code></td>
+<td class="org-left">Step forward one line of code</td>
+<td class="org-left">Must be running; usually do this after hitting a breakpoint</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>step 4</code></td>
+<td class="org-left">Step forward 4 lines of code</td>
+<td class="org-left"><code>step</code> goes into functions</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>next</code> / <code>next 4</code></td>
+<td class="org-left">Step forward but over function calls</td>
+<td class="org-left"><code>next</code> does not go into functions</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>stepi</code></td>
+<td class="org-left">Step a single assembly instruction forward</td>
+<td class="org-left"><code>stepi</code> goes into functions</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>nexti</code></td>
+<td class="org-left">Step an assembly instruction forward over functions</td>
+<td class="org-left"><code>nexti</code> does not go into functions</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>finish</code></td>
+<td class="org-left">Finish executing the current function</td>
+<td class="org-left">Shows return value of function on finishing it</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>continue</code> / <code>cont</code></td>
+<td class="org-left">Continue running until the next breakpoint</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org6a56017" class="outline-3">
+<h3 id="org6a56017"><span class="section-number-3">3.4</span> Printing Values</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+Inspecting values is often necessary to see what is going on in a
+program. The debugger can display data in a variety of formats
+including formats that defy the C type of the variable given.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Command</th>
+<th scope="col" class="org-left">Effect</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>print a</code></td>
+<td class="org-left">Print value of variable <code>a</code> which must be in the current function</td>
+<td class="org-left">Formats <code>a</code> according to its C type</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>print/x a</code></td>
+<td class="org-left">Print value of <code>a</code> as a hexadecimal number</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>print/o a</code></td>
+<td class="org-left">Print value of <code>a</code> as a octal number</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>print/s a</code></td>
+<td class="org-left">Print value of <code>a</code> as a string even if it is not one</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>print arr[2]</code></td>
+<td class="org-left">Print value of <code>arr[2]</code> according to its C type</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>print 0x4A25</code></td>
+<td class="org-left">Print decimal value of hex constant <code>0x4A25</code> which is 18981</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>x a</code></td>
+<td class="org-left">Examines memory pointed to by <code>a</code></td>
+<td class="org-left">Assumes <code>a</code> is a pointer</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>x/d a</code></td>
+<td class="org-left">Print memory pointed to by <code>a</code> as a decimal integer</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>x/s a</code></td>
+<td class="org-left">Print memory pointed to by <code>a</code> as a string</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>x/s (a+4)</code></td>
+<td class="org-left">Print memory pointed to by <code>a+4</code> as a string</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>x $rax</code></td>
+<td class="org-left">Print memory pointed to by register <code>rax</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgd7efc45" class="outline-3">
+<h3 id="orgd7efc45"><span class="section-number-3">3.5</span> Command History and Screen Management in TUI Mode</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+A bit of basic editing discipline is useful in gdb. The Text User
+Interface <code>-tui</code> mode alter keys so that arrows don't work
+normally. However, TUI mode shows the source code position in the
+upper area of the terminal which most folks find to be helpful.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Command/Keystroke</th>
+<th scope="col" class="org-left">TUI <code>-tui</code> mode</th>
+<th scope="col" class="org-left">Normal Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>Ctrl-l</code> (control L)</td>
+<td class="org-left">Re-draw the screen to remove cruft (do this a LOT)</td>
+<td class="org-left">Clear the screen</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Ctrl-p</code> (control P)</td>
+<td class="org-left">Previous command, repeat for history</td>
+<td class="org-left">Same</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Ctrl-n</code> (control N)</td>
+<td class="org-left">Next command if at a previous</td>
+<td class="org-left">Same</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Ctrl-r</code> (control R)</td>
+<td class="org-left">Interactive search backwards</td>
+<td class="org-left">Same</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Ctrl-b</code> (control B)</td>
+<td class="org-left">Move the cursor back (left) a char</td>
+<td class="org-left">Same</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Ctrl-f</code> (control F)</td>
+<td class="org-left">Move the cursor forward (right) a char</td>
+<td class="org-left">Same</td>
+</tr>
+
+<tr>
+<td class="org-left">Up / Down arrows</td>
+<td class="org-left">Move the source code window up/down</td>
+<td class="org-left">Previous/Next Commands</td>
+</tr>
+
+<tr>
+<td class="org-left">Left / Right arrows</td>
+<td class="org-left">Move the source code window left/right</td>
+<td class="org-left">Move cursor left/right</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>list</code></td>
+<td class="org-left">No effect, source code is always shown up top</td>
+<td class="org-left">Show 10 lines of source code around current execution point</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org6d116d9" class="outline-3">
+<h3 id="org6d116d9"><span class="section-number-3">3.6</span> Other Resources</h3>
+<div class="outline-text-3" id="text-3-6">
+<ul class="org-ul">
+<li>A long listing of <code>gdb</code> commands: <a href="https://ccrma.stanford.edu/~jos/stkintro/Useful_commands_gdb.html">https://ccrma.stanford.edu/~jos/stkintro/Useful_commands_gdb.html</a></li>
+<li>Some preface material on commands: <a href="https://www.cs.rochester.edu/~nelson/courses/csc_173/review/gdb.html">https://www.cs.rochester.edu/~nelson/courses/csc_173/review/gdb.html</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc1d3063" class="outline-2">
+<h2 id="orgc1d3063"><span class="section-number-2">4</span> <a id="org8b207b1"></a> Debugging Assembly in GDB</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org47d96e0" class="outline-3">
+<h3 id="org47d96e0"><span class="section-number-3">4.1</span> Overview</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+GDB has no trouble handling assembly code when it is included or when
+only a binary executable is available.  The following commands are
+useful for this.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Command/Keystroke</th>
+<th scope="col" class="org-left">TUI <code>-tui</code> mode</th>
+<th scope="col" class="org-left">Normal Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>Ctrl-l</code> (control L)</td>
+<td class="org-left">Re-draw the screen to remove cruft (do this a LOT)</td>
+<td class="org-left">Clear the screen</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>layout asm</code></td>
+<td class="org-left">Show assembly code window if not currently shown</td>
+<td class="org-left">No effect</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>layout reg</code></td>
+<td class="org-left">Show a window holding register contents</td>
+<td class="org-left">No effect</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>winheight regs +2</code></td>
+<td class="org-left">Make the registers window 2 lines bigger</td>
+<td class="org-left">No effect</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>winheight regs -1</code></td>
+<td class="org-left">Make the registers window 1 line smaller</td>
+<td class="org-left">No effect</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>info reg</code></td>
+<td class="org-left">Show the contents of registers in the command window</td>
+<td class="org-left">Same</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>list</code></td>
+<td class="org-left">No effect</td>
+<td class="org-left">Show some lines of assembly code</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>disassemble</code> OR <code>disas</code></td>
+<td class="org-left">No effect</td>
+<td class="org-left">Show lines of assembly in binary, includes instruction addresses</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+In TUI mode with the commands <code>layout asm</code> and <code>layout reg</code>, one can
+get a somewhat ergonomic layout for debugging assembly which looks
+like this.
+</p>
+
+<div class="org-center">
+
+<div class="figure">
+<p><img src="gdb-assembly.png" alt="gdb-assembly.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 3: </span><code>gdb</code> running on some assembly code. Register contents are displayed in the top frame, assembly in the middle, and commands on the bottom.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0598da6" class="outline-3">
+<h3 id="org0598da6"><span class="section-number-3">4.2</span> Compile and Run Assembly Files (source available)</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Compiling an assembly file with debug flags on will cause gdb to show
+that assembly code by default in the TUI source window and cause the
+<code>step</code> command to move one instruction at a time.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt; gcc -g collatz.s              # compile assembly code with debug symbols
+&gt; gdb ./a.out                   # run gdb on executable
+gdb&gt; tui enable                 # enable text user interface mode
+gdb&gt; break main                 # set a break point at main
+gdb&gt; run                        # run to the break point
+gdb&gt; step                       # step a couple times to see position in assembly
+gdb&gt; s                          # shorthand for step
+gdb&gt; layout regs                # start displaying registers 
+gdb&gt; step                       # step to see changes in registers
+gdb&gt; break collatz.s:15         # break at another source line
+gdb&gt; continue                   # run to the source line
+gdb&gt; step                       # step
+gdb&gt; winheight regs +2          # show more of the register window for eflags
+gdb&gt; quit                       # exit the debugger
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6399c6a" class="outline-3">
+<h3 id="org6399c6a"><span class="section-number-3">4.3</span> <a id="org639d580"></a> Debug Binaries (no source available)</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Without debug symbols, <code>gdb</code> does not know what source to
+display. Since binary files correspond to assembly, one can <b>always</b>
+get the debugger to show assembly code in TUI with <code>layout asm</code>.
+Also, the <code>stepi</code> command should be used to execute single assembly
+instructions at a time as <code>step</code> may try to figure out C-level
+operation to execute which may be several assembly instructions.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt; gcc collatz.s                 # compile assembly code without debug symbols
+&gt; gdb ./a.out                   # run gdb on executable
+gdb&gt; tui enable                 # enable text user interface mode
+
+gdb&gt; layout asm                 # SHOW ASSEMBLY CODE IN SOURCE WINDOW
+
+gdb&gt; break main                 # set a break point at main
+gdb&gt; run                        # run to the break point
+
+gdb&gt; stepi                      # STEP A SINGLE ASSMEBLY INSTRUCTION
+gdb&gt; si                         # shorthand for stepi
+
+gdb&gt; layout regs                # start displaying registers 
+gdb&gt; stepi                      # step to see changes in registers
+gdb&gt; break collatz.s:15         # break at another source line
+gdb&gt; continue                   # run to the source line
+gdb&gt; stepi                      # step
+gdb&gt; winheight regs +2          # show more of the register window for eflags
+gdb&gt; quit                       # exit the debugger
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8bd3583" class="outline-3">
+<h3 id="org8bd3583"><span class="section-number-3">4.4</span> Additional TUI Commands</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+The official list of <code>gdb</code> TUI commands and configuration is here:
+<a href="https://sourceware.org/gdb/current/onlinedocs/gdb/TUI.html">https://sourceware.org/gdb/current/onlinedocs/gdb/TUI.html</a>
+</p>
+
+<p>
+Included in the documentation are
+</p>
+<ul class="org-ul">
+<li>Adjusting window heights</li>
+<li>Displaying additional windows</li>
+<li>Cycling through windows for scrolling with up/down arrows</li>
+<li>Single-key mode so that pressing <code>i</code> or <code>s</code> steps one instruction
+forward which makes one feel <b>very</b> cool</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org0da7d31" class="outline-2">
+<h2 id="org0da7d31"><span class="section-number-2">5</span> <a id="orge4ef038"></a> Breakpoints in Binary Files</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Setting breakpoints with C and Assembly source files is easily done by
+file/line number. However, if no source is available, it becomes a bit
+trickier as one must set breakpoints base on other criteria. Here are
+some tricks.
+</p>
+</div>
+
+<div id="outline-container-org322ecea" class="outline-3">
+<h3 id="org322ecea"><span class="section-number-3">5.1</span> Break at Function Symbols/Labels</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+At the assembly level, function names at higher language levels are
+still present as "symbols".  These can be viewed using binary tools
+like <code>objdump -t a.out</code> or <code>nm a.out</code>. Anything marked with the <code>T</code>
+symbol are "program text". Setting break points at these is common.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt; nm bomb                            # show symbols in binary bomb
+...                                  # functions marked with "T"
+0000000000400df6 T main              # there is a main function
+...
+0000000000400f2d T phase_1           # there are phase functions
+0000000000400f49 T phase_2
+...
+&gt; gdb ./bomb                         # run binary in debugger
+...
+Reading symbols from bomb...done.
+(gdb) break main                     # set a breakpoint on reaching symbol "main"
+Breakpoint 1 at 0x400df6: file bomb.c, line 37.
+(gdb) break phase_1                  # set a breakpoint on reaching symbol "phase_1"
+Breakpoint 2 at 0x400f2d             # shows memory address of instruction starting phase_1
+(gdb) run                            # run
+Starting program: bomb
+Breakpoint 1, main (argc=1, argv=0x7fffffffe6a8) at bomb.c:37    # first breakpoint in main
+37      {
+(gdb) cont                           # continue
+Continuing.
+...
+Breakpoint 2, 0x0000000000400f2d in phase_1 () # second breakpoint in phase_1, note memory address
+(gdb)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf6130a9" class="outline-3">
+<h3 id="orgf6130a9"><span class="section-number-3">5.2</span> <a id="org794ac4d"></a> Break at Specific Instruction Addresses</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+As binaries don't have line numbers, one cannot set a breakpoint at a
+specific line number. However, all instructions in a binary file do
+have an <b>instruction address</b>. One can set a breakpoints at specific
+instruction addresses so that when the instruction pointer register
+(<code>rip</code>) reaches these, the debugger will stop execution. The syntax
+for this is a little funny:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"># note the use of the * in each case
+
+(gdb) break *0x1248f2    # break at instruction at address 0x1248f2
+
+(gdb) break *func+24     # break at label func + 24 bytes
+
+(gdb) break *func+0x18   # break at label func + 24 bytes (0x18 == 24)
+</pre>
+</div>
+
+<p>
+Below is an example showing typical uses of setting breakpoints at
+instruction addresses. Note that the <code>disas</code> command is used in <code>gdb</code>
+to show disassembled code in the current function which conveniently
+provides some offsets for upcoming instruction addresses from the
+closest label.  This information may already be present in TUI mode
+without need to use <code>disas</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">Breakpoint 2, 0x0000000000400f2d in phase_1 ()
+
+(gdb) disas                     # SHOW assembly code and current position
+Dump of assembler code for function phase_1:
+=&gt; 0x0000000000400f2d &lt;+0&gt;:     sub    $0x8,%rsp
+   0x0000000000400f31 &lt;+4&gt;:     mov    $0x402710,%esi
+   0x0000000000400f36 &lt;+9&gt;:     callq  0x401439 &lt;strings_not_equal&gt;
+   0x0000000000400f3b &lt;+14&gt;:    test   %eax,%eax
+   0x0000000000400f3d &lt;+16&gt;:    je     0x400f44 &lt;phase_1+23&gt;
+   0x0000000000400f3f &lt;+18&gt;:    callq  0x401762 &lt;explode_bomb&gt;
+   0x0000000000400f44 &lt;+23&gt;:    add    $0x8,%rsp
+   0x0000000000400f48 &lt;+27&gt;:    retq
+End of assembler dump.
+
+(gdb) break *0x400f36           # SET a breakpoint at specific instruction address
+Breakpoint 3 at 0x400f36
+(gdb) cont                      # CONTINUE execution
+Continuing.
+
+Breakpoint 3, 0x0000000000400f36 in phase_1 ()  # note stopping address matches breakpoint
+(gdb) disas                     # SHOW assembly code and current position
+Dump of assembler code for function phase_1:
+   0x0000000000400f2d &lt;+0&gt;:     sub    $0x8,%rsp
+   0x0000000000400f31 &lt;+4&gt;:     mov    $0x402710,%esi
+=&gt; 0x0000000000400f36 &lt;+9&gt;:     callq  0x401439 &lt;strings_not_equal&gt;
+   0x0000000000400f3b &lt;+14&gt;:    test   %eax,%eax
+   0x0000000000400f3d &lt;+16&gt;:    je     0x400f44 &lt;phase_1+23&gt;
+   0x0000000000400f3f &lt;+18&gt;:    callq  0x401762 &lt;explode_bomb&gt;
+   0x0000000000400f44 &lt;+23&gt;:    add    $0x8,%rsp
+   0x0000000000400f48 &lt;+27&gt;:    retq
+End of assembler dump.
+
+(gdb) break *phase_1+18         # SET a breakpoint at byte offset from label
+Breakpoint 4 at 0x400f3f        # Note address 
+
+(gdb) cont                      # CONTINUE execution
+Continuing.
+
+Breakpoint 4, 0x0000000000400f3f in phase_1 () # note address
+
+(gdb) disas                     # SHOW assembly code and current position
+Dump of assembler code for function phase_1:
+   0x0000000000400f2d &lt;+0&gt;:     sub    $0x8,%rsp
+   0x0000000000400f31 &lt;+4&gt;:     mov    $0x402710,%esi
+   0x0000000000400f36 &lt;+9&gt;:     callq  0x401439 &lt;strings_not_equal&gt;
+   0x0000000000400f3b &lt;+14&gt;:    test   %eax,%eax
+   0x0000000000400f3d &lt;+16&gt;:    je     0x400f44 &lt;phase_1+23&gt;
+=&gt; 0x0000000000400f3f &lt;+18&gt;:    callq  0x401762 &lt;explode_bomb&gt;
+   0x0000000000400f44 &lt;+23&gt;:    add    $0x8,%rsp
+   0x0000000000400f48 &lt;+27&gt;:    retq
+End of assembler dump.
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org0b933e9" class="outline-2">
+<h2 id="org0b933e9"><span class="section-number-2">6</span> Other GDB Guides</h2>
+<div class="outline-text-2" id="text-6">
+<ul class="org-ul">
+<li><a href="http://beej.us/guide/bggdb/">Beej's Quick Guide to GDB</a>: Beej's guides are accurate, short, and
+usually funny</li>
+<li><a href="https://sourceware.org/gdb/current/onlinedocs/gdb/">Official GDB Manual</a>: Long and thorough, go here if you need more
+information</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org6d15ca0" class="outline-2">
+<h2 id="org6d15ca0"><span class="section-number-2">7</span> <a id="org873a4dd"></a> Other Useful Tools for working with Binary Files</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+The following programs are available on most Unix systems and can
+prove useful when dealing with binary files. In addition to GDB, they
+can provide some information on what to look for.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Command</th>
+<th scope="col" class="org-left">Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>objdump -d file.o</code></td>
+<td class="org-left">Show decompiled assembly from compiled file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>objdump -t file.o</code></td>
+<td class="org-left">Show the symbols (functions/global vars) defined in the file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>nm file.o</code></td>
+<td class="org-left">Short for "names", Similar to <code>objdump -t</code> but omits some details of symbols</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>strings file.o</code></td>
+<td class="org-left">Find and show ASCII strings that are present in the file</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-01-11 Mon 14:00 <br/> </i>
+</div>
+</body>
+</html>
