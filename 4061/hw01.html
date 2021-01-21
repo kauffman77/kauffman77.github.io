@@ -1,0 +1,1070 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-01-21 Thu 09:27 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 4061: HW01 Compiling C Programs, Makefiles</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2021-01-21 Thu 09:27</i>
+</div>
+<div id="content">
+<h1 class="title">CSCI 4061: HW01 Compiling C Programs, Makefiles</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Wed 6/17/2020</b></li>
+<li><i>Approximately 0.83% of total grade</i></li>
+<li>Homework and Quizzes are open resource/open collaboration. You must
+submit your own work but you may freely discuss HW topics with other
+members of the class.</li>
+</ul>
+
+<div id="outline-container-org0221f32" class="outline-4">
+<h4 id="org0221f32">CODE DISTRIBUTION: <a href="hw01-code.zip">hw01-code.zip</a></h4>
+<div class="outline-text-4" id="text-org0221f32">
+<ul class="org-ul">
+<li>Download the code distribution every HW</li>
+<li>See further setup instructions below</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org955763e" class="outline-4">
+<h4 id="org955763e">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org955763e">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgb79b1b9">1. Rationale</a>
+<ul>
+<li><a href="#org0f023e9">1.1. Associated Reading</a></li>
+<li><a href="#org8dbc7af">1.2. Grading Policy</a></li>
+</ul>
+</li>
+<li><a href="#orgd277bc5">2. Download Code and Setup</a></li>
+<li><a href="#org791b1f1">3. What to Understand</a></li>
+<li><a href="#org282feea">4. Questions</a></li>
+<li><a href="#org3bb5561">5. Again, What to Understand</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb79b1b9" class="outline-2">
+<h2 id="orgb79b1b9"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Accessing a computer's capabilities via the command line is an
+essential tool in a computer scientist's toolkit.  When logging into a
+remote system, non-graphical tools are the faster and often only
+option to interact.  These exercises will gain you basic familiarity
+with editing short shell scripts on a Unix system to automate 
+basic tasks.  It will also review how to edit basic C programs,
+compile them, and run them.
+</p>
+
+<p>
+Completing this HW will familiarize students with the following.
+</p>
+<ul class="org-ul">
+<li>cd, ls, rm</li>
+<li>gcc to compile C programs</li>
+<li>make and Makefiles</li>
+</ul>
+</div>
+
+<div id="outline-container-org0f023e9" class="outline-3">
+<h3 id="org0f023e9"><span class="section-number-3">1.1</span> Associated Reading</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Basic knowledge of C programming and the Unix command line is assumed
+already. If this is your first time working with such things, follow
+the instructions closely and ask a LOT of questions. This HW is meant
+to be self-describing so it is likely you won't need too much extra
+reading but use your best judgment.
+</p>
+</div>
+
+<div id="outline-container-org1aaec23" class="outline-4">
+<h4 id="org1aaec23">Unix Environment</h4>
+<div class="outline-text-4" id="text-org1aaec23">
+<p>
+Most coursework will be done in a Unix environment. It's a good idea
+to find an efficient way to access such environments to support your
+workflow.  The following tutorial offers some options such as remote
+access and local installations to suite several situations.
+</p>
+
+<p>
+<a href="https://www-users.cs.umn.edu/~kauffman/tutorials/unix-environment">Tutorial: Accessing a Unix Environment</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbe7ff5b" class="outline-4">
+<h4 id="orgbe7ff5b">Command Line Work</h4>
+<div class="outline-text-4" id="text-orgbe7ff5b">
+<p>
+Our textbooks deal with shell commands only tangentially so are not a
+great source for this set of exercises.  Information on shell
+programming is distributed throughout the texts associated with
+various topics so they are not good for a beginning text
+</p>
+
+<p>
+Instead, try <a href="https://ryanstutorials.net/linuxtutorial/">Ryan's Tutorials: Linux Tutorial</a> for a reasonably
+concentrated introduction of command line tricks and shell
+programming.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4902096" class="outline-4">
+<h4 id="org4902096">C Programming</h4>
+<div class="outline-text-4" id="text-org4902096">
+<p>
+If this is your first time working with C, find a tutorial online to
+work through.  If you are coming form another programming language,
+you may want to search for a tailored tutorial such as
+</p>
+<pre class="example">
+c programming for java programmers
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgec3552e" class="outline-4">
+<h4 id="orgec3552e">Makefiles</h4>
+<div class="outline-text-4" id="text-orgec3552e">
+<p>
+This HW will teach you the basics of make and Makefiles on its own
+but it is a deep and powerful to solve a certain class of
+problems. The <a href="https://www.gnu.org/software/make/manual/html_node/index.html">manual for GNU make</a> is an extensive source of
+information on it. You may wish to peruse it for additional details.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8dbc7af" class="outline-3">
+<h3 id="org8dbc7af"><span class="section-number-3">1.2</span> Grading Policy</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Credit for this HW is earned by taking the associate Quiz which is
+linked under <code>Gradescope</code>.  The quiz will ask similar questions as
+those that are present in the <code>QUESTIONS.txt</code> file and those that
+complete all answers in <code>QUESTIONS.txt</code> should have no trouble with
+the quiz.
+</p>
+
+<p>
+See the <a href="../syllabus.html">full policy in the syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd277bc5" class="outline-2">
+<h2 id="orgd277bc5"><span class="section-number-2">2</span> Download Code and Setup</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Most HWs come with some code that you need to use, which is linked at
+the top of the HW specification in a ZIP file (compressed
+archive). After downloading the HW code, unzip it and get to
+work. The files in this HW's zip are
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">hw01-code
+|-- collatz                              Directory with code for Problem 1
+|   |-- collatz_funcs.c
+|   |-- collatz.h
+|   |-- collatz_main.c
+|   |-- test_collatz.c
+|   |-- test_collatz.org
+|   |-- testy
+|   |-- Makefile
+|   `-- Makefile-commented
+|-- mat-product                          Directory with code for Problem 2
+|   |-- free_matrix.c       
+|   |-- mat.h               
+|   |-- op_main.c           
+|   |-- outer_product.c     
+|   |-- test_outer_product.org
+|   |-- testy
+|   `-- Makefile                         CREATE this file
+`-- QUESTIONS.txt                        Fill with answers, paste into Gradescope
+</pre>
+</div>
+
+<p>
+Here is an example terminal session illustrating the use of the
+<code>unzip</code> utility to unpack the provided zip.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"># Print the working directory
+&gt;&gt; pwd
+/home/kauffman
+# Most terminals/shells start in your home directory
+
+# I downloaded hw01-code.zip to the Downloads folder so I'll change
+# there. You may need to change to a different directory
+&gt;&gt; cd Downloads
+
+# There is the zip along with a few other things
+&gt;&gt; ls
+entr-3.8.tar.gz  eradman-entr-592856d50559  hw01-code.zip
+
+# The unzip command will upack the contents of hw01-code.zip into a
+# usable folder
+&gt;&gt; unzip hw01-code.zip 
+
+Archive:  hw01-code.zip
+   creating: hw01-code/
+   creating: hw01-code/collatz/
+  inflating: hw01-code/collatz/Makefile  
+  inflating: hw01-code/collatz/Makefile-commented  
+  inflating: hw01-code/collatz/collatz_main.c  
+  inflating: hw01-code/collatz/collatz_test.c  
+  inflating: hw01-code/collatz/coll  
+  inflating: hw01-code/collatz/collatz.h  
+  inflating: hw01-code/collatz/collatz.c  
+  inflating: hw01-code/QUESTIONS.txt  
+   creating: hw01-code/mat-product/
+  inflating: hw01-code/mat-product/op_main.c  
+  inflating: hw01-code/mat-product/test_outer_product.c  
+  inflating: hw01-code/mat-product/mat.h  
+  inflating: hw01-code/mat-product/free_matrix.c  
+  inflating: hw01-code/mat-product/outer_product.c  
+
+# The folder hw01-code was created, change there
+&gt;&gt; ls
+entr-3.8.tar.gz  eradman-entr-592856d50559  hw01-code	hw01-code.zip
+&gt;&gt; cd hw01-code
+&gt;&gt; pwd
+/home/kauffman/Downloads/hw01-code
+
+# These are files and directories relevant to hw01
+&gt;&gt; ls
+collatz  mat-product  QUESTIONS.txt
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org791b1f1" class="outline-2">
+<h2 id="org791b1f1"><span class="section-number-2">3</span> What to Understand</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Ensure that you understand
+</p>
+<ul class="org-ul">
+<li>The basic structure of a <code>Makefile</code>, the notion of target,
+dependency, and commands.</li>
+<li>The idea that a <code>Makefile</code> can detect changes and only rebuild
+targets that depend on changed files.</li>
+<li>Common conventions such as <code>make clean</code> and <code>make test</code></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org282feea" class="outline-2">
+<h2 id="org282feea"><span class="section-number-2">4</span> Questions</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+The file <code>QUESTIONS.txt</code> contains a series of questions about basic
+Unix shell navigation and C compilation.  You should open
+<code>QUESTIONS.txt</code> in your favorite text editor and fill in answers to
+each Problem and part. Specific instructions for each problem are in
+subsequent sections.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                            ________________
+
+                             HW01 QUESTIONS
+                            ________________
+
+
+- Name: (FILL THIS in)
+- NetID: (THE kauf0095 IN kauf0095@umn.edu)
+
+Write your answers to the questions below directly in this text file.
+HW quiz questions will be related to the questions in this file.
+
+
+PROBLEM 1: Compile and Run via make
+===================================
+
+  Unzip the provided zip file and change into the `hw01-code/collatz'
+  directory.
+
+
+(A) Compiling and Running a C Program
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  The directory `collatz' contains a small C program that computes
+  sequences of numbers according to the following convention:
+  ,----
+  | For an input number N
+  | - If N is even, set N to N / 2
+  | - If N is odd,  set N to 3*N + 1
+  `----
+  A variety of folks have conjectured that this sequence always reaches
+  1 (see &lt;https://en.wikipedia.org/wiki/Collatz_conjecture&gt;) but and the
+  code provide in the `collatz' directory terminates when this happens.
+
+  We will simply be using the code here to refresh on compiling and
+  running code.
+
+  Issue the following compilation command to compile the program then
+  run it starting the sequence at 17. Show your results.
+
+  ,----
+  | &gt; gcc -o coll collatz_funcs.c collatz_main.c 
+  `----
+
+
+(B) Use of Makefiles
+~~~~~~~~~~~~~~~~~~~~
+
+  Compiling more than a few C files together is tedious if one must do
+  so with individual `gcc' invocations. Instead, compiling and linking
+  the files in a larger project is the purvey of a build system.
+
+  On Unix, `make' is the classic tool used to automate the build
+  process.  Instructions on what needs compiling and how to do so are
+  written into a file, traditionally called a `Makefile'. `make' itself
+  is a program which will read through the `Makefile' and execute the
+  commands contained within. Several features are present in `make':
+  - Users specify what needs to be done but `make' will figure out the
+    order to do them in to avoid redundancy.
+  - `make' will only recompiled programs if the source code has
+    changed. If no changes have been made, it may report `Nothing to do'
+    or `So-and-so is already up to date'.
+  - `make' has many shortcuts built into it for common C compilation
+    tasks so that files can be short. However, it can be used to
+    automate many other types of task such as posting HTML pages
+    associated with HWs.
+
+  Below is a sample `Makefile' that is present in the `collatz'
+  directory. It can be used to build the collatz program and has
+  extensive comments to explain some of what is happening in the
+  file. Study this carefully and ask questions of the lab staff if
+  needed.
+
+  ,----
+  | # Makefile to create the collatz programs. To use, type
+  | #   &gt; make
+  | # Which will create the collatz_main program. Alternatively
+  | #   &gt; make collatz_main
+  | # will also create the collatz_main program.
+  | #
+  | # To create and run the test program use
+  | #   &gt; make test
+  | #
+  | # Makefiles are divided into "rules" comprised of target,
+  | # dependencies, and commands to execute to finish the target.
+  | # 
+  | # target : dependency1 dependency2
+  | #       command1
+  | #       command2
+  | #       @command3 which is not printed
+  | #       command4
+  | #
+  | # Some targets are files to create like the "collatz_main" program or
+  | # "collatz_main.o" file. Other targets are "virtual" which specify
+  | # commands to run such as 'clean'. Some targets like 'test' are a
+  | # combination of creating files and running commands: 'make test' will
+  | # ensure several programs are created before running the automated
+  | # tests.
+  | 
+  | CFLAGS = -Wall -g					       # variable holding options to the c compiler
+  | CC     = gcc $(CFLAGS)					       # variable holding the compilation command
+  | 
+  | collatz_main : collatz_funcs.o collatz_main.o collatz.h	       # collatz_main is a program, depends on two files, is default target
+  | 	$(CC) -o collatz_main collatz_funcs.o collatz_main.o   # when the other files are ready, compile collatz_main
+  | 	@echo collatz_main is ready			       # issue a report that the program is ready
+  | 
+  | collatz_main.o : collatz_main.c collatz.h		       # collatz_main.o depends on two source files
+  | 	$(CC) -c collatz_main.c				       # compile only, don't link yet
+  | 
+  | collatz_funcs.o : collatz_funcs.c collatz.h		       # collatz.o depends on collatz.c and collatz.h
+  | 	$(CC) -c $&lt;					       # compile, use shortcut $&lt; which becomes "collatz.c"
+  | 
+  | test_collatz : test_collatz.c collatz_funcs.o collatz.h	       # builds a test program for collatz functions
+  | 	$(CC) -o $@ $^
+  | 
+  | test : test_collatz collatz_main			       # runs automated tests, builds required programs first
+  | 	@chmod u+x testy				       # ensures that the 'testy' script is executable
+  | 	./testy test_collatz.org $(testnum)		       # runs automated tests
+  | 
+  | clean:							       # No dependencies: clean is the de facto cleanup target
+  | 	@echo Cleaning up object files			       # Report what's happening
+  | 	rm -f *.o collatz_main				       # Remove all the .o files and programs
+  | 
+  | clean-tests:						       # target to remove temporary files associated with testing
+  | 	@echo Removing temporary test files
+  | 	rm -f *.o test_collatz test-results
+  `----
+
+  Type the command `make' and paste the results of this command below.
+  Run the program that results from this compilation and show it below.
+
+
+(C) Makefile Targets
+~~~~~~~~~~~~~~~~~~~~
+
+  The default target in a Makefile is the first one to appear but other
+  targets can also be reference explicitly.  Two common targets we will
+  make use of are
+  - `make clean' : remove all compiled files (and programs)
+  - `make test' : run some automated tests associated with the project
+
+  Run these two commands and explain how they relate to the commands
+  that appear in the `Makefile'. Note that many assignments in this
+  class will feature some sort of testing target which will run
+  automated tests of the correctness of a program.
+
+
+(D) Testing Code
+~~~~~~~~~~~~~~~~
+
+  Throughout the course we will utilize a small testing framework called
+  'testy' which is provided with the HW code. This script is what
+  actually runs tests and reports results when one types `make test' as
+  evidenced by the output of make:
+  ,----
+  | &gt; make test                     # build and run tests
+  | gcc -Wall -g -c collatz_funcs.c # compiling code
+  | ...
+  | ./testy test_collatz.org        # run the 'testy' script on the tests in 'test_collatz.org'
+  | ============================================================
+  | == testy test_collatz.org : collatz_func.c and collatz_main.c tests 
+  | ...
+  `----
+
+  By default results, testy reports testing failures and puts verbose
+  output in files that are noted while it runs. for example Test 1 fails
+  and the results for the failure are showing the file indicated:
+  ,----
+  | &gt; make test
+  | ...
+  | 1)  collatz_next(1)              : FAIL -&gt; results in file 'test-results/collatz-01-result.tmp'
+  |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  `----
+
+  These results can be examined in any text editor. One quick way to
+  examine them in a terminal is with the `less' text viewer.  Try typing
+  ,----
+  | &gt; less test-results/collatz-01-result.tmp
+  `----
+  Useful keybindings in `less' are
+
+  ------------------------------------------------
+   Key       Effect in less                       
+  ------------------------------------------------
+   q         quit less and return to the terminal 
+   spacebar  scroll down a page                   
+   u         scroll up a page                     
+   j         scroll down one line                 
+   k         scroll up one line                   
+  ------------------------------------------------
+
+  There are a few tricks associated with 'testy' that are worth
+  knowing. To run individual tests for debugging purposes one can set
+  the `testnum' environment variable.
+  ,----
+  | &gt; make test testnum=5
+  | ...
+  | &gt; make test testnum=12
+  | ...
+  `----
+
+  If several tests are to be run, quote the test numbers as in the
+  following. By default, only summary output is shown on the screen.  If
+  the `SHOW' environment variable is set, then any failures are printed
+  immediately.
+  ,----
+  | &gt; make test testnum='3 5 12'
+  | ...
+  | &gt; make test testnum='3 5 12' SHOW=1
+  | ...
+  `----
+
+  In space below, paste the results of running the above `make' commands
+  in a terminal.
+
+
+(E) Compile based on Changes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Build systems are useful because they usually detect changes to files
+  in a project and then recompile only those files that are dependent on
+  the changes. This saves time on large projects with many files as not
+  everything needs to be recompiled.  One can simulate a editing a file
+  with the `touch' command which changes the 'timestamp' a file to look
+  like it has been modified recently though its contents will not
+  actually change.
+
+  Issue the following sequence of commands and explain why each `make'
+  compiles a different set of files.
+
+  ,----
+  | &gt; make clean
+  | 
+  | &gt; make
+  | 
+  | &gt; make                          # intentional repeat
+  | 
+  | &gt; touch collatz_funcs.c         # simulate edit of collatz_funcs.c
+  | 
+  | &gt; make
+  | 
+  | &gt; rm collatz_main
+  | 
+  | &gt; make
+  | 
+  | &gt; touch collatz_main.c          # simulate edit of collatz_main.c
+  | 
+  | &gt; make                          
+  | 
+  | &gt; make                          # intentional repeat
+  `----
+
+
+PROBLEM 2: Create a `Makefile'
+==============================
+
+  Change into the `mat-product' directory. This directory contains
+  several C files.
+  ----------------------------------------------------------------------------------
+   File                    Notes                                                    
+  ----------------------------------------------------------------------------------
+   mat.h                   header file listing project functions                    
+   outer_product.c         function that creates an outer product matrix            
+   free_matrix.c           function that frees memory associated with a heap matric 
+   op_main.c               main function which uses two C files above               
+   testy                   test running script                                      
+   test_outer_product.org  automated tests for outer_product.c                      
+  ----------------------------------------------------------------------------------
+
+  For this problem, create a `Makefile' that will build the project
+  executables and run tests. The following make targets should be
+  available.
+  - `make': build the `op_main' executable which is dependent on
+    functions in `op_main.c, outer_product.c, free_matrix.c'
+  - `make test': builds the `op_main' program AND runs the automated
+    tests.
+  - `make clean': removes all `.o' files and all programs associated
+    with the project.
+  Ensure that Object files are built from each C file to enable
+  efficient separate compilation and linking as is the case in the
+  `collatz/Makefile'.
+
+  A demonstration of the Makefile behavior is below.
+
+  ,----
+  | &gt; make
+  | gcc -Wall -g -c op_main.c
+  | gcc -Wall -g -c outer_product.c
+  | gcc -Wall -g -c free_matrix.c
+  | gcc -Wall -g -o op_main op_main.o outer_product.o free_matrix.o
+  | 
+  | &gt; ./op_main 3 1.1 2.2 3.3  2 1.1 2.2
+  |     1.21     2.42 
+  |     2.42     4.84 
+  |     3.63     7.26 
+  | 
+  | &gt; make clean
+  | rm -f *.o op_main
+  | 
+  | &gt; ./op_main 3 1.1 2.2 3.3  2 1.1 2.2
+  | bash: ./op_main: No such file or directory
+  | 
+  | &gt; make test
+  | gcc -Wall -g -c op_main.c
+  | gcc -Wall -g -c outer_product.c
+  | gcc -Wall -g -c free_matrix.c
+  | gcc -Wall -g -o op_main op_main.o outer_product.o free_matrix.o
+  | ./testy test_outer_product.org
+  | ============================================================
+  | == testy test_outer_product.org : Tests for outer_product.c and op_main.c
+  | == Running 5 / 5 tests
+  | 1)  Singleton vectors    : ok
+  | 2)  Small vectors 1      : ok
+  | 3)  Small vectors 2      : ok
+  | 4)  Size 1 for x, for y  : ok
+  | 5)  Medium vectors       : ok
+  | ============================================================
+  | RESULTS: 5 / 5 tests passed
+  | 
+  | &gt; make test
+  | ./testy test_outer_product.org
+  | ============================================================
+  | == testy test_outer_product.org : Tests for outer_product.c and op_main.c
+  | == Running 5 / 5 tests
+  | 1)  Singleton vectors    : ok
+  | 2)  Small vectors 1      : ok
+  | 3)  Small vectors 2      : ok
+  | 4)  Size 1 for x, for y  : ok
+  | 5)  Medium vectors       : ok
+  | ============================================================
+  | RESULTS: 5 / 5 tests passed
+  | 
+  | &gt; touch free_matrix.c
+  | &gt; make
+  | gcc -g -c free_matrix.c
+  | gcc -g -o op_main op_main.o outer_product.o free_matrix.o
+  | 
+  | &gt; ./op_main 3 1.1 2.2 3.3  2 1.1 2.2
+  |     1.21     2.42 
+  |     2.42     4.84 
+  |     3.63     7.26 
+  | 
+  | &gt; rm op_main
+  | 
+  | &gt; make test
+  | gcc -Wall -g -o op_main op_main.o outer_product.o free_matrix.o
+  | ./testy test_outer_product.org
+  | ============================================================
+  | == testy test_outer_product.org : Tests for outer_product.c and op_main.c
+  | == Running 5 / 5 tests
+  | 1)  Singleton vectors    : ok
+  | 2)  Small vectors 1      : ok
+  | 3)  Small vectors 2      : ok
+  | 4)  Size 1 for x, for y  : ok
+  | 5)  Medium vectors       : ok
+  | ============================================================
+  | RESULTS: 5 / 5 tests passed
+  `----
+
+
+  Use the `Makefile' provided in the `collatz' directory as a model and
+  paste your resulting `Makefile' below. (Note: there is no C testing
+  file for this project but the tests depend on the `op_main' program as
+  shown in the last few demo lines).
+
+
+Understanding the Code
+======================
+
+  The focus of this HW is to acquaint you with the utility of Makefiles
+  in efficiently compiling projects, rebuilding based on source changes,
+  and running provided tests. You should gather some of common
+  conventions associated with it such as `make clean'.
+
+  While it is not essential that you spend significant time
+  understanding all the code in `collatz' and `mat-product', it is
+  fairly elementary C and students wishing to refresh their knowledge of
+  the language and techniques may want to spend some time examining how
+  this code works. Labs may review some of the code in these projects.
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3bb5561" class="outline-2">
+<h2 id="org3bb5561"><span class="section-number-2">5</span> Again, What to Understand</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Ensure that you understand
+</p>
+<ul class="org-ul">
+<li>The basic structure of a <code>Makefile</code>, the notion of target,
+dependency, and commands.</li>
+<li>The idea that a <code>Makefile</code> can detect changes and only rebuild
+targets that depend on changed files.</li>
+<li>Common conventions such as <code>make clean</code> and <code>make test</code></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@cs.gmu.edu">kauffman@cs.gmu.edu</a>) <br/> Date: 2021-01-21 Thu 09:27 <br/> </i>
+</div>
+</body>
+</html>
