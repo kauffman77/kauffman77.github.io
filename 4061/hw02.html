@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-01-28 Thu 12:16 -->
+<!-- 2021-01-28 Thu 12:04 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CSCI 4061 Lab02: Fork and Wait</title>
+<title>CSCI 4061 HW02: Fork, Spoon, and Wait</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
 <style type="text/css">
@@ -387,87 +387,98 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-01-28 Thu 12:16</i>
+<i>Last Updated: 2021-01-28 Thu 12:04</i>
 </div>
 <div id="content">
-<h1 class="title">CSCI 4061 Lab02: Fork and Wait</h1>
+<h1 class="title">CSCI 4061 HW02: Fork, Spoon, and Wait</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Mon 2/08/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
-<li><i>Approximately 1.00% of total grade</i></li>
+<li><b>Due: 11:59pm Mon 2/8/2021</b></li>
+<li><i>Approximately 0.83% of total grade</i></li>
 </ul>
 
-<div id="outline-container-orgb7f7064" class="outline-4">
-<h4 id="orgb7f7064">CODE DISTRIBUTION: <a href="lab02-code.zip">lab02-code.zip</a></h4>
-<div class="outline-text-4" id="text-orgb7f7064">
+<div id="outline-container-org323d726" class="outline-4">
+<h4 id="org323d726">CODE DISTRIBUTION: <a href="hw02-code.zip">hw02-code.zip</a></h4>
+<div class="outline-text-4" id="text-org323d726">
 <ul class="org-ul">
-<li>Download the code distribution</li>
+<li>Download the code distribution every HW</li>
 <li>See further setup instructions below</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org9d755fb" class="outline-4">
-<h4 id="org9d755fb">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-org9d755fb">
+<div id="outline-container-orgd02f628" class="outline-4">
+<h4 id="orgd02f628">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orgd02f628">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org9a73cd7">1. Rationale</a></li>
-<li><a href="#orgd2f884a">2. Codepack</a></li>
-<li><a href="#org2cbd7d1">3. Overview of Lab Work</a></li>
-<li><a href="#org125f8a5">4. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org99ec0e5">5. Submission</a></li>
+<li><a href="#org55d342e">1. Rationale</a>
+<ul>
+<li><a href="#org90e8478">1.1. Associated Reading</a></li>
+<li><a href="#org6b30ff7">1.2. Grading Policy</a></li>
+</ul>
+</li>
+<li><a href="#org0bb0f95">2. Codepack</a></li>
+<li><a href="#orgccfbe5b">3. What to Understand</a></li>
+<li><a href="#org955dc68">4. Questions about fork(), wait(), and exec()</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org9a73cd7" class="outline-2">
-<h2 id="org9a73cd7"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org55d342e" class="outline-2">
+<h2 id="org55d342e"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-The <code>fork()</code> and <code>wait()</code> system calls are among the most basic
-facilities to create and coordinate processes in Unix systems. While
-their semantics can seem simple at first, use of <code>fork()</code> in
-particular can be a bit deceptive.  This lab illustrates as much with
-a simple looking program with somewhat unexpected behavior.
+Processes are created in Unix by <code>fork()</code>'ing an existing process so
+mastery of these system calls is essential to bringing new running
+programs into the system. Processes created in this way are the
+children of the creating parent process which can detect changes in
+their state using the <code>wait()</code> family of calls. Many programming
+paradigms rely on the parent tracking its children necessitating an
+understanding of the <code>wait()</code> family. Children execute the same code
+code as parents unless a call to a member of the <code>exec()</code> family is
+made which replaces a running child's instructions with a different
+program.
 </p>
 </div>
 
-<div id="outline-container-org88d3029" class="outline-4">
-<h4 id="org88d3029">Grading Policy</h4>
-<div class="outline-text-4" id="text-org88d3029">
+<div id="outline-container-org90e8478" class="outline-3">
+<h3 id="org90e8478"><span class="section-number-3">1.1</span> Associated Reading</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li>Ch 8 of Stevens and Rago introduces and shows many examples of
+<code>fork(), wait(), exec()</code></li>
+<li>Ch 3 of Robbins &amp; Robbins also discusses these system calls</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org6b30ff7" class="outline-3">
+<h3 id="org6b30ff7"><span class="section-number-3">1.2</span> Grading Policy</h3>
+<div class="outline-text-3" id="text-1-2">
 <p>
-Credit for this Lab is earned by completing the exercises here and
-submitting a Zip of the work to Gradescope. Students are responsible
-to check that the results produced locally via <code>make test</code> are
-reflected on Gradescope after submitting their completed
-Zip. Successful completion earns 1 Engagement Point.
+Credit for this HW is earned by taking the associate Quiz which is
+linked under <code>Gradescope</code>.  The quiz will ask similar questions as
+those that are present in the <code>QUESTIONS.txt</code> file and those that
+complete all answers in <code>QUESTIONS.txt</code> should have no trouble with
+the quiz.
 </p>
 
 <p>
-Lab Exercises are open resource/open collaboration and <b>students are
-encouraged to coopearte on labs.</b> Students may submit work as groups
-of up to 5 to Gradescope: one person submits then adds the names of
-their group members to the submission.
-</p>
-
-<p>
-See the <a href="../syllabus.html">full policies in the course syllabus</a>.
+See the <a href="../syllabus.html">full policy in the syllabus</a>.
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgd2f884a" class="outline-2">
-<h2 id="orgd2f884a"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org0bb0f95" class="outline-2">
+<h2 id="org0bb0f95"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-The codepack for this lab is linked at the top of this
-document. Always download it and unzip/unpack it.  It should contain
-the following files which are briefly described.
+The codepack for the HW contains the following files:
 </p>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -477,240 +488,161 @@ the following files which are briefly described.
 <col  class="org-left" />
 
 <col  class="org-left" />
-
-<col  class="org-left" />
 </colgroup>
 <thead>
 <tr>
 <th scope="col" class="org-left">File</th>
-<th scope="col" class="org-left">Use</th>
 <th scope="col" class="org-left">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="org-left"><code>QUESTIONS.txt</code></td>
-<td class="org-left">EDIT</td>
-<td class="org-left">Questions to answer: fill in the multiple choice selections in this file.</td>
+<td class="org-left">Questions to answer</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>fork_me_main.c</code></td>
-<td class="org-left">EDIT</td>
-<td class="org-left">C file to; edit it to complete for testing</td>
-</tr>
-</tbody>
-<tbody>
-<tr>
-<td class="org-left"><code>QUESTIONS.txt.bk</code></td>
-<td class="org-left">Backup</td>
-<td class="org-left">Backup copy of the original file to help revert if needed</td>
+<td class="org-left"><code>fork_report.c</code></td>
+<td class="org-left">C file for Problem 1</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>Makefile</code></td>
-<td class="org-left">Build</td>
-<td class="org-left">Enables <code>make test</code> and <code>make zip</code></td>
+<td class="org-left"><code>run_child.c</code></td>
+<td class="org-left">C file for Problem 2</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>testy</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">Test running scripts</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>test_lab02.org</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">Tests for this lab</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>test_order_pids</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">Filter to normalize the PIDs in <code>fork_me</code></td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">NOTE: No <code>Makefile</code> is provided; use <code>gcc file.c</code> for these simple programs</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 
-<div id="outline-container-org2cbd7d1" class="outline-2">
-<h2 id="org2cbd7d1"><span class="section-number-2">3</span> Overview of Lab Work</h2>
+<div id="outline-container-orgccfbe5b" class="outline-2">
+<h2 id="orgccfbe5b"><span class="section-number-2">3</span> What to Understand</h2>
 <div class="outline-text-2" id="text-3">
 <p>
-Lab leaders will give a short overview examining the <code>fork_me.c</code> code
-that is central to this lab.  Leaders will demonstrate a run of this
-program to show how its output might be unexpected for those new to
-the use of the <code>fork()</code> system call.
-</p>
-
-<p>
-Leaders may also give a quick overview of the <code>wait()</code> and <code>waitpid()</code>
-system calls as they are used to give more predictable output in the
-program.
-</p>
-
-<p>
-Student should work in groups to complete the QUIZ and CODE exercises
-described in the <code>QUESTIONS.txt</code> file.  The same conventions for
-answering multiple choice questions and testing the QUIZ/CODE answers
-are used here as were used in the previous lab.
+Make sure you get a good understanding of 
 </p>
 <ul class="org-ul">
-<li><code>make test-quiz</code> to check QUIZ answers</li>
-<li><code>make test-code</code> to run automated code tests</li>
-<li><code>make test</code> to run all tests</li>
-<li><code>make zip</code> to produce a zip file for submission</li>
+<li>How <code>fork</code> is used to clone a running process to create a child</li>
+<li>How each process has a unique <code>pid</code>, process ID, available via
+library calls</li>
+<li>How <code>wait()</code> and <code>waitpid()</code> can be used to ensure order in
+execution by causing a parent to wait for a child to finish</li>
+<li>How <code>execvp()</code> is used to replace a running program with a different
+program</li>
 </ul>
-</div>
-</div>
-
-<div id="outline-container-org125f8a5" class="outline-2">
-<h2 id="org125f8a5"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
-<div class="outline-text-2" id="text-4">
 <p>
-Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
-Follow the instructions in it to complete the QUIZ and CODE questions
-for the lab.
+All of these things will show up in projects.
 </p>
+</div>
+</div>
 
+
+<div id="outline-container-org955dc68" class="outline-2">
+<h2 id="org955dc68"><span class="section-number-2">4</span> Questions about fork(), wait(), and exec()</h2>
+<div class="outline-text-2" id="text-4">
 <div class="org-src-container">
-<pre class="src src-text">                           __________________
+<pre class="src src-text">                           _________________
 
-                            LAB 02 QUESTIONS
-                           __________________
-
-
+                            HW 02 QUESTIONS
+                           _________________
 
 
+- Name: (FILL THIS in)
+- NetID: (THE kauf0095 IN kauf0095@umn.edu)
 
-Lab Instructions
-================
-
-  Follow the instructions below to experiment with topics related to
-  this lab.
-  - For sections marked QUIZ, fill in an (X) for the appropriate
-    response in this file. Use the command `make test-quiz' to see if
-    all of your answers are correct.
-  - For sections marked CODE, complete the code indicated. Use the
-    command `make test-code' to check if your code is complete.
-  - DO NOT CHANGE any parts of this file except the QUIZ sections as it
-    may interfere with the tests otherwise.
-  - If your `QUESTIONS.txt' file seems corrupted, restore it by copying
-    over the `QUESTIONS.txt.bk' backup file.
-  - When you complete the exercises, check your answers with `make test'
-    and if all is well, create a zip file with `make zip' and upload it
-    to Gradescope. Ensure that the Autograder there reflects your local
-    results.
-  - IF YOU WORK IN A GROUP only one member needs to submit and then add
-    the names of their group.
+Write your answers to the questions below directly in this text file.
+HW quiz questions will be related to the questions in this file.
 
 
-QUIZ Questions on fork_me.c
-===========================
+PROBLEM 1 `fork_report.c'
+=========================
 
-  Analyze and run the `fork_me.c' application and compile and run it
-  (compiling can be done via a `make'). Then answer the questions below.
+A
+~
 
-  How many total processes are created by running this program including
-  the initial process?
-  - ( ) 3
-  - ( ) 4
-  - ( ) 5
-  - ( ) 16
-
-  Which of the following best describes the relationship between the
-  processes created by running this program?
-  - ( ) There is a "chain" of processes with single parent, single
-    child, single grand child, etc.
-  - ( ) There is a "fan" of processes with a single parent and multiple
-    children
-  - ( ) There is a lobsided "tree" of processes with a single parent,
-    several children, some of which have grand children, some of which
-    have great grand children, etc.
-  - ( ) There are several individual parents each of which has a single
-    child.
-
-  Concerning when the processes complete and produce their FINISH
-  output...
-  - ( ) The order that the processes complete is always the same.
-  - ( ) The order that processes complete is unpredictable.
+  Compile and run the program in `fork_report.c'. Run the program
+  several times. Show the output of a typical run below.
 
 
-CODE Create order for fork_me.c
-===============================
+B
+~
 
-  Modify the `fork_me.c' program to make sure that the processes
-  complete in the same order each run. The easiest way to do this is to
-  have parent processes use the `wait()' or `waitpid()' system call
-  after creating child which will "block" the parent until the child
-  completes.  This should give a consistent ordering of the output and
-  prevent any orphan processes.
+  Is the output ordered or disordered with respect to the "I am
+  number..." statements? Why?
 
-  You can test your results with `make test-quiz'.
 
-  NOTE that since the PIDs from run to run are unpredictable, the `make
-  test-quiz' command uses the `test_order_pids' to create consistent
-  PIDs for testing purposes.
+C
+~
 
-  EXAMPLE:
+  Add calls to the wait() or waitpid() function to ensure that the
+  output is ordered. Compile and rerun the code to ensure that your code
+  will enforce ordered output. Paste your completed code below.
+
+
+D
+~
+
+  How many parents and children are there in this program? What is their
+  arrangement? How are the parent process(es) numbered?
+
+
+PROBLEM 2 `run_child.c'
+=======================
+
+A
+~
+
+  Compile and run the program in `run_child.c'. Show it's output below.
+
+
+B
+~
+
+  Adjust the contents of the `child_argv[]' array. Try removing the "-l"
+  element, try adding on ".." prior to the final NULL, or make other
+  modifications INCLUDING for the 0th "ls" string.  Recompile and
+  describe whether the output has changed.
+
+
+C
+~
+
+  Change the child_cmd string from "ls" to be something else like "gcc"
+  or "cat". A good combination is "gcc" with the "--version" as the only
+  option in the child_argv array. Recompile and explain what happens
+  now.
+
+
+D
+~
+
+  Currently `run_child.c' does not reach the bottom statements.
   ,----
-  | &gt; ./fork_me
-  | |START| pid: 953670 parent_pid: 929189
-  | FINISH| pid: 953674 parent_pid: 953670
-  | FINISH| pid: 953672 parent_pid: 953670
-  | FINISH| pid: 953675 parent_pid: 953672
-  | FINISH| pid: 953673 parent_pid: 953671
-  | FINISH| pid: 953671 parent_pid: 953670
-  | FINISH| pid: 953676 parent_pid: 953671
-  | FINISH| pid: 953670 parent_pid: 929189
-  | FINISH| pid: 953679 parent_pid: 953674
-  | FINISH| pid: 953680 parent_pid: 953672
-  | FINISH| pid: 953681 parent_pid: 953675
-  | FINISH| pid: 953682 parent_pid: 953671
-  | FINISH| pid: 953684 parent_pid: 953676
-  | FINISH| pid: 953677 parent_pid: 953670
-  | FINISH| pid: 953678 parent_pid: 953673
-  | FINISH| pid: 953683 parent_pid: 953673
-  | FINISH| pid: 953685 parent_pid: 953678
-  | 
-  | &gt; ./fork_me | test_order_pids
-  | |START| pid: 101 parent_pid: 100
-  | FINISH| pid: 101 parent_pid: 100
-  | FINISH| pid: 102 parent_pid: 101
-  | FINISH| pid: 103 parent_pid: 101
-  | FINISH| pid: 104 parent_pid: 102
-  | FINISH| pid: 105 parent_pid: 103
-  | FINISH| pid: 106 parent_pid: 101
-  | FINISH| pid: 107 parent_pid: 101
-  | FINISH| pid: 108 parent_pid: 102
-  | FINISH| pid: 109 parent_pid: 103
-  | FINISH| pid: 110 parent_pid: 104
-  | FINISH| pid: 111 parent_pid: 105
-  | FINISH| pid: 112 parent_pid: 111
-  | FINISH| pid: 113 parent_pid: INIT
-  | FINISH| pid: 114 parent_pid: 113
-  | FINISH| pid: 115 parent_pid: 106
-  | FINISH| pid: 116 parent_pid: INIT
+  |   printf("------------------\n");
+  |   printf("Child Finished\n");
   `----
+  Correct this by doing the following:
+  - Fork a child process
+  - Have ONLY the child process call execvp()
+  - Have the parent process wait() for the child
+  Paste your completed code below.
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org99ec0e5" class="outline-2">
-<h2 id="org99ec0e5"><span class="section-number-2">5</span> Submission</h2>
-<div class="outline-text-2" id="text-5">
-<p>
-Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
-how to upload your completed lab zip to Gradescope.
-</p>
-</div>
-</div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-01-28 Thu 12:16 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-01-28 Thu 12:04 <br/> </i>
 </div>
 </body>
 </html>
