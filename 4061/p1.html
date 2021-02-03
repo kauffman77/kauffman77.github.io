@@ -1,0 +1,2864 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-02-03 Wed 11:54 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 4061 Project 1: Going Commando</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2021-02-03 Wed 11:54</i>
+</div>
+<div id="content">
+<h1 class="title">CSCI 4061 Project 1: Going Commando</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Sat 2/22/2021</b></li>
+<li><i>Approximately 10.0% of total grade</i></li>
+<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a> (<i>Submission will open soon</i>)</li>
+<li>Projects may be done in groups of 1 or 2. Indicate groups in the
+<code>GROUP-MEMBERS.txt</code> file <b>and on Gradescope when submitting</b></li>
+<li>No additional collaboration with other students is allowed. Seek
+help from course staff if you get stuck for too long.</li>
+</ul>
+
+<div id="outline-container-org9f63e38" class="outline-4">
+<h4 id="org9f63e38">CODE DISTRIBUTION: <a href="p1-code.zip">p1-code.zip</a></h4>
+</div>
+
+<div id="outline-container-orgc008aa9" class="outline-4">
+<h4 id="orgc008aa9">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orgc008aa9">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org426ef5c">1. Introduction: A Simple Shell</a></li>
+<li><a href="#org86f73df">2. Download Code and Setup</a></li>
+<li><a href="#org5c8f99e">3. Opening Demo</a></li>
+<li><a href="#org1c3383a">4. Overall Architecture</a>
+<ul>
+<li><a href="#org973ec29">4.1. What Needs to be Implemented</a></li>
+<li><a href="#orgfe30a67">4.2. What's Already Done</a></li>
+<li><a href="#org9510646">4.3. Create a Makefile</a></li>
+</ul>
+</li>
+<li><a href="#orgf5114c7">5. <code>cmd_t</code> Data Type</a>
+<ul>
+<li><a href="#org7807ac7">5.1. Required Functions</a></li>
+<li><a href="#org23ff97a">5.2. Allocation and Freeing</a></li>
+<li><a href="#orge131793">5.3. Starting a <code>cmd_t</code></a></li>
+<li><a href="#orgd1d6717">5.4. Checking for Updated State</a></li>
+<li><a href="#org8520d36">5.5. Retrieving and Printing Output</a></li>
+</ul>
+</li>
+<li><a href="#org8037c11">6. <code>cmdcol_t</code> Data Type</a>
+<ul>
+<li><a href="#org57d00a3">6.1. Required Functions</a></li>
+<li><a href="#org0c65602">6.2. Basic functionality</a></li>
+</ul>
+</li>
+<li><a href="#org53fee97">7. Commando Top Level Functionalities</a>
+<ul>
+<li><a href="#org2517337">7.1. Important Note on Buffered Output</a></li>
+<li><a href="#org18b4198">7.2. Main Loop</a></li>
+<li><a href="#orgc2deb81">7.3. Basic Help and Exiting</a></li>
+<li><a href="#orgf1c1ea7">7.4. Command Echoing</a></li>
+<li><a href="#org28cf8fd">7.5. Running and Listing Jobs</a></li>
+<li><a href="#org1ffce2c">7.6. Output of Jobs</a></li>
+<li><a href="#orga659994">7.7. End of Loop Alerts</a></li>
+<li><a href="#org93e2021">7.8. Waiting and Alerts</a></li>
+<li><a href="#org9b1eb6b">7.9. Pausing</a></li>
+<li><a href="#orge65ae7b">7.10. Cleaning up at Close</a></li>
+</ul>
+</li>
+<li><a href="#orgdbc76d5">8. Manual Inspection Criteria (60%)</a></li>
+<li><a href="#org718b14e">9. Automatic Testing (40%)</a>
+<ul>
+<li><a href="#org3792f9f">9.1. Credit For Tests</a></li>
+<li><a href="#org514395b">9.2. <code>test_Makefile</code> to include in <code>Makefile</code></a></li>
+<li><a href="#org885d2c6">9.3. Running Tests</a></li>
+<li><a href="#org81d583b">9.4. Tips for Running Tests</a></li>
+</ul>
+</li>
+<li><a href="#org53728d5">10. Assignment Submission</a>
+<ul>
+<li><a href="#orgee9817e">10.1. Zip Target in <code>test_Makefile</code></a></li>
+<li><a href="#orge000190">10.2. Submit to Gradescope</a></li>
+<li><a href="#org80fc8da">10.3. Late Policies</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org426ef5c" class="outline-2">
+<h2 id="org426ef5c"><span class="section-number-2">1</span> Introduction: A Simple Shell</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Command line shells allow one to access the capabilities of a computer
+using simple, interactive means.  Type the name of a program and the
+shell will bring it into being, run it, and show output. Familiarizing
+yourself with the basics of shell job management will make work on
+terminal-only machines much more palatable.
+</p>
+
+<p>
+The goal of this project is to write a simple, quasi-command line
+shell called <code>commando</code>.  The shell will be less functional in many
+ways from standard shells like <code>bash</code> (default on most Linux
+machines), but will have some properties that distinguish it such as
+the ability to recall output for any child process.  Like most
+interesting projects, <code>commando</code> uses a variety of system calls
+together to accomplish its overall purpose.  Most of these will be
+individually discussed in lecture but the interactions between them is
+what inspires real danger and romance.
+</p>
+
+<p>
+Completing <code>commando</code> will educate an implementer on the following
+systems programming topics.
+</p>
+<ul class="org-ul">
+<li><b>Basic C Memory Discipline</b>: A variety of strings and structs are
+allocated and de-allocated during execution which will require
+attention to detail and judicious use of memory tools like Valgrind.</li>
+<li><b>fork() and exec()</b>: Text entered that is not recognized as a
+built-in is treated as an command (external program) to be
+executed. This spawns a child process which executes the new
+program.</li>
+<li><b>Pipes, dup2(), read():</b> Rather than immediately print child output
+to the screen, child output is redirected into pipes and then
+retrieved on request by commando.</li>
+<li><b>wait() and waitpid(), blocking and nonblocking:</b> Child processes
+usually take a while to finish so the shell will check on their
+status every so often</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org86f73df" class="outline-2">
+<h2 id="org86f73df"><span class="section-number-2">2</span> Download Code and Setup</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+As in labs, download the code pack linked at the top of the
+page. Unzip this which will create a folder and create your files in
+that folder.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">State</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>GROUP_MEMBERS.txt</code></td>
+<td class="org-left">Edit</td>
+<td class="org-left">Fill in names of group members to indicate partnerships</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Build project, run tests</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>commando.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">main() function for commando interactive shell</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>cmd.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Functions to deal with the cmd<sub>t</sub> struct</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>cmdcol.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Functions to deal with the cmdcol<sub>t</sub> struct</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>commando.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Header file which contains required structs, defines, and prototypes</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>util.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Utility methods for creating argv[] arrays and pausing execution</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>test_Makefile</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Testing make targets, place <code>include test_Makefile</code> at the END of your <code>Makefile</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_cmd.c</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests specific C function calls for <code>cmd.c / cmdcol.c</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_cmd.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test definitions for function tests</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_commando.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test definitions for commando main tests</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running script</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_standardize_pids</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Filter to standardize PID printing during testing</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test-results/</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Directory containing temporary files for testing, removed via make <code>clean-tests</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>00_ID.txt</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Assignment/course name used for testing</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>test_data/</code></td>
+<td class="org-left">Test Data</td>
+<td class="org-left">Directory containing below files used in testing</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>3K.txt</code></td>
+<td class="org-left">Test Data</td>
+<td class="org-left">Large-ish file with numbers</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>gettysburg.txt</code></td>
+<td class="org-left">Test Data</td>
+<td class="org-left">Gettysburg address</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>print_args.c</code></td>
+<td class="org-left">Test Data</td>
+<td class="org-left">Program that prints command line arguments</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>quote.txt</code></td>
+<td class="org-left">Test Data</td>
+<td class="org-left">Quote from Edsger Dijkstra</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>README</code></td>
+<td class="org-left">Test Data</td>
+<td class="org-left">Description of directory</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>sleep_print.c</code></td>
+<td class="org-left">Test Data</td>
+<td class="org-left">Program which sleeps then prints</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>stuff/</code></td>
+<td class="org-left">Test Data</td>
+<td class="org-left">Subdirectory with oddities for doing listings</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>table.sh</code></td>
+<td class="org-left">Test Data</td>
+<td class="org-left">Shell scrip which prints table of squares/cubes</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org5c8f99e" class="outline-2">
+<h2 id="org5c8f99e"><span class="section-number-2">3</span> Opening Demo</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+The best way to get a sense of any program is to see how it
+behaves. In the below demonstration, <code>commando</code> is first built then
+started. Input is entered in <code>commando</code> after its prompt on lines that
+look like
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">@&gt; commands here
+</pre>
+</div>
+<p>
+Other lines contain output from the program. To the right of the demo
+after the <code>#</code> symbol are comments on what is happening.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">lila  [a1-code]% make                                        # Build commando
+gcc -Wall -g -c commando.c
+gcc -Wall -g -c cmd.c
+gcc -Wall -g -c cmdcol.c
+gcc -Wall -g -c util.c
+gcc -Wall -g -o commando commando.o cmd.o cmdcol.o util.o
+
+lila  [a1-code]% commando                                    # Start commando, prompt is @&gt;
+
+@&gt; help                                                      # Show available built-ins
+COMMANDO COMMANDS
+help               : show this message
+exit               : exit the program
+list               : list all jobs that have been started giving information on each
+pause nanos secs   : pause for the given number of nanseconds and seconds
+output-for int     : print the output for given job number
+output-all         : print output for all jobs
+wait-for int       : wait until the given job number finishes
+wait-all           : wait for all jobs to finish
+command arg1 ...   : non-built-in is run as a job            # Runs a command as a child process
+@&gt; list
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+@&gt; ls test-data/                                             # Run ls on test-data/ directory
+@&gt; list                                                      # ls now present as a running job
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #26532      -1        RUN   -1 ls test-data/ 
+@!!! ls[#26532]: EXIT(0)                                     # @!!! is an alert: job finished
+@&gt; list                                                      # list again: see exit and output size
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #26532       0    EXIT(0)  145 ls test-data/ 
+@&gt; output-for 0                                              # show output for job 0 (ls)
+@&lt;&lt;&lt; Output for ls[#26532] (145 bytes):
+----------------------------------------
+3K.txt                                                       # actual output of ls
+actual.tmp
+diff.tmp
+expect.tmp
+gettysburg.txt
+print_args
+print_args.c
+quote.txt
+README
+sleep_print.c
+stuff
+table.sh
+temp.tmp
+valgrind.tmp
+----------------------------------------
+@&gt; ls -l test-data/                                          # run another child job
+@&gt; list                                                      # now have two jobs       
+JOB  #PID      STAT   STR_STAT OUTB COMMAND                  # one finished one running
+0    #26532       0    EXIT(0)  145 ls test-data/ 
+1    #26908      -1        RUN   -1 ls -l test-data/ 
+@!!! ls[#26908]: EXIT(0)                                     # alert: job finished         
+@&gt; list                                                      # listing shows completed jobs
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #26532       0    EXIT(0)  145 ls test-data/ 
+1    #26908       0    EXIT(0)  855 ls -l test-data/         # output should be larger due to -l option
+@&gt; output-for 1                                              # show output for job 1
+@&lt;&lt;&lt; Output for ls[#26908] (855 bytes):
+----------------------------------------
+total 204
+-rw-r----- 1 kauffman kauffman 13893 Sep 27  2017 3K.txt
+-rw-rw---- 1 kauffman kauffman 14834 Feb  5 12:13 actual.tmp
+-rw-rw---- 1 kauffman kauffman 30921 Feb  5 12:13 diff.tmp
+-rw-rw---- 1 kauffman kauffman 14834 Feb  5 12:13 expect.tmp
+-rw-rw---- 1 kauffman kauffman  1511 Sep 18  2017 gettysburg.txt
+-rwxrwx--- 1 kauffman kauffman 16576 Feb  5 12:14 print_args
+-rw-rw---- 1 kauffman kauffman   218 Sep 11  2017 print_args.c
+-rw-rw---- 1 kauffman kauffman   125 Sep 18  2017 quote.txt
+-rw-rw---- 1 kauffman kauffman   298 Feb  1 11:13 README
+-rw-rw---- 1 kauffman kauffman   346 Sep 26  2017 sleep_print.c
+drwxrwx--- 2 kauffman kauffman  4096 Feb  4 21:17 stuff
+-rwxrwx--- 1 kauffman kauffman   427 Sep 26  2017 table.sh
+-rw-rw---- 1 kauffman kauffman 14926 Feb  5 12:13 temp.tmp
+-rw-rw---- 1 kauffman kauffman  1656 Feb  5 12:14 valgrind.tmp
+----------------------------------------
+@&gt; output-for 0                                              # output for job 0, permanently available
+@&lt;&lt;&lt; Output for ls[#26532] (145 bytes):                      # despite having run othe jobs
+----------------------------------------
+3K.txt
+actual.tmp
+diff.tmp
+expect.tmp
+gettysburg.txt
+print_args
+print_args.c
+quote.txt
+README
+sleep_print.c
+stuff
+table.sh
+temp.tmp
+valgrind.tmp
+----------------------------------------
+@&gt; grep Lincoln test-data/gettysburg.txt                     # start another job with grep
+@&gt;                                                           # press enter again, no input at prompt
+@!!! grep[#27113]: EXIT(0)                                   # alert: job finished
+@&gt; list                                                      # listing shows all three jobs
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #26532       0    EXIT(0)  145 ls test-data/ 
+1    #26908       0    EXIT(0)  855 ls -l test-data/ 
+2    #27113       0    EXIT(0)   16 grep Lincoln test-data/gettysburg.txt 
+@&gt; output-all                                                # output all jobs in the listing
+@&lt;&lt;&lt; Output for ls[#26532] (145 bytes):
+----------------------------------------
+3K.txt                                                       # output for job 1
+actual.tmp
+diff.tmp
+expect.tmp
+gettysburg.txt
+print_args
+print_args.c
+quote.txt
+README
+sleep_print.c
+stuff
+table.sh
+temp.tmp
+valgrind.tmp
+----------------------------------------
+@&lt;&lt;&lt; Output for ls[#26908] (855 bytes):
+----------------------------------------
+total 204                                                    # output for job 2
+-rw-r----- 1 kauffman kauffman 13893 Sep 27  2017 3K.txt
+-rw-rw---- 1 kauffman kauffman 14834 Feb  5 12:13 actual.tmp
+-rw-rw---- 1 kauffman kauffman 30921 Feb  5 12:13 diff.tmp
+-rw-rw---- 1 kauffman kauffman 14834 Feb  5 12:13 expect.tmp
+-rw-rw---- 1 kauffman kauffman  1511 Sep 18  2017 gettysburg.txt
+-rwxrwx--- 1 kauffman kauffman 16576 Feb  5 12:14 print_args
+-rw-rw---- 1 kauffman kauffman   218 Sep 11  2017 print_args.c
+-rw-rw---- 1 kauffman kauffman   125 Sep 18  2017 quote.txt
+-rw-rw---- 1 kauffman kauffman   298 Feb  1 11:13 README
+-rw-rw---- 1 kauffman kauffman   346 Sep 26  2017 sleep_print.c
+drwxrwx--- 2 kauffman kauffman  4096 Feb  4 21:17 stuff
+-rwxrwx--- 1 kauffman kauffman   427 Sep 26  2017 table.sh
+-rw-rw---- 1 kauffman kauffman 14926 Feb  5 12:13 temp.tmp
+-rw-rw---- 1 kauffman kauffman  1656 Feb  5 12:14 valgrind.tmp
+----------------------------------------
+@&lt;&lt;&lt; Output for grep[#27113] (16 bytes):
+----------------------------------------
+Abraham Lincoln                                              # output for job 3
+----------------------------------------
+@&gt; grep Abradolf test-data/gettysburg.txt                    # run one more command
+@&gt; 
+@!!! grep[#27514]: EXIT(1)                                   # grep exit code 1 when string not found
+@&gt; list
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #26532       0    EXIT(0)  145 ls test-data/ 
+1    #26908       0    EXIT(0)  855 ls -l test-data/ 
+2    #27113       0    EXIT(0)   16 grep Lincoln test-data/gettysburg.txt 
+3    #27514       1    EXIT(1)    0 grep Abradolf test-data/gettysburg.txt 
+@&gt; output-for 3                                              # show output
+@&lt;&lt;&lt; Output for grep[#27514] (0 bytes):                      # not much to see
+----------------------------------------
+----------------------------------------
+@&gt; exit                                                      # exit commando
+lila [a1-code]%                                              # returns to normal shell prompt
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orga4b8438" class="outline-4">
+<h4 id="orga4b8438">Things to Note</h4>
+<div class="outline-text-4" id="text-orga4b8438">
+<ul class="org-ul">
+<li>The child processes (jobs) that <code>commando</code> starts do not show any
+output by default and run concurrently with the main process which
+gives back the <code>@&gt;</code> prompt immediately.  This is different from a
+normal shell such as <code>bash</code> which starts jobs in the foreground,
+shows their output immediately, and will wait until a job finishes
+before showing the command prompt for additional input.</li>
+<li>The output for all jobs is saved by <code>commando</code> and can be recalled
+at any time using the <code>output-for int</code> built-in command.</li>
+<li>Not all of the built-in commands are shown in the demo but each will
+be discussed in later sections.</li>
+<li>It should be clear that <code>commando</code> is not a full shell (no signals,
+built-in scripting, or pipes), but it is a mid-sized project which
+will take some organization. Luckily, this document prescribes a
+simple architecture to make the coding manageable.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1c3383a" class="outline-2">
+<h2 id="org1c3383a"><span class="section-number-2">4</span> Overall Architecture</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org973ec29" class="outline-3">
+<h3 id="org973ec29"><span class="section-number-3">4.1</span> What Needs to be Implemented</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+<code>commando</code> is divided into the following parts which must be
+implemented to complete the project. Each part corresponds to a single
+C file.
+</p>
+<dl class="org-dl">
+<dt><code>cmd_t</code> command data structure</dt><dd><p>
+The <code>cmd_t</code> type is defined in the <code>commando</code> header file. It is
+intended to encapsulate the state of a running or completed child
+process.  Fields within it describe aspects such as the name of
+the command being run, arguments to it, its exit status, a pipe
+for communication with <code>commando</code> process, and an output buffer.
+</p>
+
+<p>
+The functions in <code>cmd.c</code> manipulate the data structure. Basic
+functions for allocating and de-allocating it are present as well
+as functions to start a process running with the program and
+arguments contained with a <code>cmd_t</code> and update the data structure
+based on the state of the job.
+</p>
+
+<p>
+Within <code>commando</code>, instances of <code>cmd_t</code> will be created each time
+a job is run and commands such as <code>output-for</code> and <code>wait-for</code>
+will need to access and alter the fields of <code>cmd_t</code> instances.
+</p></dd>
+<dt><code>cmdcol_t</code> collection of <code>cmd_t</code></dt><dd><p>
+It should be clear from the demos that <code>commando</code> tracks multiple
+child processes / jobs.  This multiplicity is simplified somewhat
+with a data structure to add and iterate through all child
+jobs. This is the role of <code>cmdcol_t</code>: it's primary fields are an
+array of <code>cmd_t</code> instances and a size indicating how many are
+present. The array is fixed size so there is a maximum number of
+child processes which can be handled defined in the <code>commando.h</code>
+header with <code>MAX_CMDS</code>.
+</p>
+
+<p>
+The functions in <code>cmdcol.c</code> do basic manipulation such as adding,
+producing output for all commands and updating the state of all
+commands.  There are no required allocation or de-allocation
+routines but they may be added if they seem useful.
+</p></dd>
+<dt><code>commando main()</code> function</dt><dd><p>
+The file <code>commando.c</code> will contain a <code>main()</code> function which
+loops over input provided by the user either interactively or via
+standard input as is done in the automated tests.  After setup,
+the program executes an infinite loop until no more input is
+available.
+</p>
+<ul class="org-ul">
+<li>Print the <code>@&gt;</code> prompt and parse input</li>
+<li>Determine what action to take: built-in or start a job</li>
+<li>Check for updates to the state of jobs and print alerts for changes</li>
+</ul>
+<p>
+Some input may cause new <code>cmd_t</code> instances to be allocated for
+child processes. These are added into a <code>cmdcol_t</code> instance for
+tracking.  
+</p></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orgfe30a67" class="outline-3">
+<h3 id="orgfe30a67"><span class="section-number-3">4.2</span> What's Already Done</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Examine the provided files closely as they give some insight into what
+work is already done.
+</p>
+<ul class="org-ul">
+<li><code>commando.h</code> can be included in most files to make programs aware of
+the data structures and required functions. It contains
+documentation of the central data structures.</li>
+<li><code>util.c</code> contains a few functions that are tricky but not central to
+our study of systems programming. To save time, these are provided.
+<ul class="org-ul">
+<li><code>parse_into_tokens()</code> is useful create <code>argv[]</code> arrays in <code>cmd_t</code>
+structures. It is similar to functions in some textbooks and makes
+use of the ever-dangerous <code>strtok()</code> function.</li>
+<li><code>pause_for()</code> causes a program to <i>sleep</i> for a period of
+time. This allows <code>commando</code> to suspend execution for a while so
+that child processes can finish.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org9510646" class="outline-3">
+<h3 id="org9510646"><span class="section-number-3">4.3</span> Create a Makefile</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Create a <code>Makefile</code> which has at least the following targets.
+</p>
+<ul class="org-ul">
+<li><code>make</code> and <code>make commando</code> : builds the <code>commando</code> application, this
+should be the default target or be included with the default target.</li>
+<li><code>make clean</code> will remove all compiled <code>.o</code> files and programs
+including <code>commando</code></li>
+<li><p>
+Test Targets: <b>at the END of your Makefile</b> add the directive
+</p>
+<pre class="example">
+include test_Makefile
+</pre>
+
+<p>
+which will enable testing targets described in the <a href="#org12e0657">Automatic Testing
+Section</a>.
+</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf5114c7" class="outline-2">
+<h2 id="orgf5114c7"><span class="section-number-2">5</span> <code>cmd_t</code> Data Type</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Information about a child process / job / command in <code>commando</code> is
+stored in the <code>cmd_t</code> struct which has the following form from
+<code>commando.h</code>. 
+</p>
+
+<pre class="example">
+// cmd_t: struct to represent a running command/child process.
+typedef struct {
+  char   name[NAME_MAX+1];         // name of command like "ls" or "gcc"
+  char  *argv[ARG_MAX+1];          // argv for running child, NULL terminated
+  pid_t  pid;                      // PID of child
+  int    out_pipe[2];              // pipe for child output
+  int    finished;                 // 1 if child process finished, 0 otherwise
+  int    status;                   // return value of child, -1 if not finished
+  char   str_status[STATUS_LEN+1]; // describes child status such as RUN or EXIT(..)
+  void  *output;                   // saved output from child, NULL initially
+  int    output_size;              // number of bytes in output
+} cmd_t;
+</pre>
+
+<p>
+This section lists the functions that are required to be implemented
+for to manipulate <code>cmd_t</code>'s and how they should behave. Additional
+functions and fields may be added if implements see good cause for
+it but the reference implementation includes only those listed.
+</p>
+</div>
+
+<div id="outline-container-org7807ac7" class="outline-3">
+<h3 id="org7807ac7"><span class="section-number-3">5.1</span> Required Functions</h3>
+<div class="outline-text-3" id="text-5-1">
+<pre class="example">
+// cmd.c: functions related the cmd_t struct abstracting a
+// command. Most functions maninpulate cmd_t structs.
+
+cmd_t *cmd_new(char *argv[]);
+// Allocates a new cmd_t with the given argv[] array. Makes string
+// copies of each of the strings contained within argv[] using
+// strdup() as they likely come from a source that will be
+// altered. Ensures that cmd-&gt;argv[] is ended with NULL. Sets the name
+// field to be the argv[0]. Sets finished to 0 (not finished yet). Set
+// str_status to be "INIT" using snprintf(). Initializes the remaining
+// fields to obvious default values such as -1s, and NULLs.
+
+void cmd_free(cmd_t *cmd);
+// Deallocates a cmd structure. Deallocates the strings in the argv[]
+// array. Also deallocats the output buffer if it is not
+// NULL. Finally, deallocates cmd itself.
+
+void cmd_start(cmd_t *cmd);
+// Forks a process and executes command in cmd in the process.
+// Changes the str_status field to "RUN" using snprintf().  Creates a
+// pipe for out_pipe to capture standard output.  In the parent
+// process, ensures that the pid field is set to the child PID. In the
+// child process, directs standard output to the pipe using the dup2()
+// command. For both parent and child, ensures that unused file
+// descriptors for the pipe are closed (write in the parent, read in
+// the child).
+
+void cmd_update_state(cmd_t *cmd, int block);
+// If the finished flag is 1, does nothing. Otherwise, updates the
+// state of cmd.  Uses waitpid() and the pid field of command to wait
+// selectively for the given process. Passes block (one of DOBLOCK or
+// NOBLOCK) to waitpid() to cause either non-blocking or blocking
+// waits.  Uses the macro WIFEXITED to check the returned status for
+// whether the command has exited. If so, sets the finished field to 1
+// and sets the cmd-&gt;status field to the exit status of the cmd using
+// the WEXITSTATUS macro. Calls cmd_fetch_output() to fill up the
+// output buffer for later printing.
+//
+// When a command finishes (the first time), prints a status update
+// message of the form
+//
+// @!!! ls[#17331]: EXIT(0)
+//
+// which includes the command name, PID, and exit status.
+
+char *read_all(int fd, int *nread);
+// Reads all input from the open file descriptor fd. Assumes
+// character/text output and null-terminates the character output with
+// a '\0' character allowing for printf() to print it later. Stores
+// the results in a dynamically allocated buffer which may need to
+// grow as more data is read.  Uses an efficient growth scheme such as
+// doubling the size of the buffer when additional space is
+// needed. Uses realloc() for resizing.  When no data is left in fd,
+// sets the integer pointed to by nread to the number of bytes read
+// and return a pointer to the allocated buffer. Ensures the return
+// string is null-terminated. Does not call close() on the fd as this
+// is done elsewhere.
+
+void cmd_fetch_output(cmd_t *cmd);
+// If cmd-&gt;finished is zero, prints an error message with the format
+// 
+// ls[#12341] not finished yet
+// 
+// Otherwise retrieves output from the cmd-&gt;out_pipe and fills
+// cmd-&gt;output setting cmd-&gt;output_size to number of bytes in
+// output. Makes use of read_all() to efficiently capture
+// output. Closes the pipe associated with the command after reading
+// all input.
+
+void cmd_print_output(cmd_t *cmd);
+// Prints the output of the cmd contained in the output field if it is
+// non-null. Prints the error message
+// 
+// ls[#17251] : output not ready
+//
+// if output is NULL. The message includes the command name and PID.
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org23ff97a" class="outline-3">
+<h3 id="org23ff97a"><span class="section-number-3">5.2</span> Allocation and Freeing</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+Basic allocation of a <code>cmd_t</code> is done with <code>cmd_new()</code> which takes an
+array of string arguments. Below are some implementation notes on this
+process. 
+</p>
+
+<ol class="org-ol">
+<li>The first and most obvious step is to use <code>malloc()</code> to allocate a
+hunk of memory that is <code>sizeof(cmd_t)</code>.</li>
+
+<li>Make sure to copy the strings in the argument array as these are
+likely to be overwritten. The most common place where this will
+happen is in the <code>main()</code> loop of <code>commando</code>. In that setting, a
+fixed character buffer is used to read a line of text and
+<code>parse_into_tokens()</code> from <code>util.c</code> is used to produce the <code>argv[]</code>
+array. The function find pointers within the buffer for each
+element of <code>argv[]</code>. The next input a user enters will overwrite
+the text clobbering the strings unless <code>cmd_new()</code> makes copies for
+the <code>cmd_t</code>. The <code>strdup()</code> function makes copying strings
+relatively easy.</li>
+
+<li>Ensure that the <code>cmd-&gt;argv[]</code> array is <code>NULL</code> terminated this array
+will likely be passed to an <code>exec()</code> family function which requires
+null termination.</li>
+
+<li>While it is possible that some programs can be run with an <code>argv[0]</code>
+that is not equal to the program name, this is not allowed in
+<code>commando</code> so the <code>cmd-&gt;name</code> field is always identical to
+<code>cmd-&gt;argv[0]</code>.</li>
+
+<li>To get a string into character arrays like <code>cmd-&gt;str_status</code>, the
+<code>snprintf()</code> method is useful: it "prints" like <code>printf()</code> but into
+a character array rather than onto the screen.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orge131793" class="outline-3">
+<h3 id="orge131793"><span class="section-number-3">5.3</span> Starting a <code>cmd_t</code></h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+The real action associated with <code>cmd_t</code> is "starting" them which will
+cause a child process to be forked. Several things need careful
+attention during this process.
+</p>
+
+<ol class="org-ol">
+<li>Child commands should NOT print their output to the screen. This
+means they need someplace to put their output which an be retrieved
+by the parent. A <b>pipe</b> is an excellent choice here: output is
+written there by the child and read from the pipe later by the
+parent when it is needed.</li>
+<li>Before doing anything else, <code>cmd_start()</code> should create a pipe
+associated with the <code>cmd-&gt;out_pipe</code> field. This way both parent and
+child processes will have access to work with the pipe.</li>
+<li>Ensure that <code>cmd-&gt;str_status</code> changes to <code>RUN</code>.</li>
+<li>Fork a new process and capture its pid in the <code>cmd-&gt;pid</code>
+field. Use the different return values of <code>fork()</code> to distinguish
+parent from child process.</li>
+<li>The child process will need to use <code>dup2()</code> to alter its standard
+output to write instead to the write to <code>cmd-&gt;out_pipe[PWRITE]</code>.
+This will prevent output for the child process from going to the
+screen.</li>
+<li>Ensure that the parent closes the write end of the pipe and child
+closes the read end of the pipe as they only use one end apiece.</li>
+<li>The child should call <code>execvp()</code> with the name of the command and
+<code>argv[]</code> array stored in the passed <code>cmd</code>.  This should launch a
+new program with output that is directed into the pipe set up
+above.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgd1d6717" class="outline-3">
+<h3 id="orgd1d6717"><span class="section-number-3">5.4</span> <a id="orgef50559"></a> Checking for Updated State</h3>
+<div class="outline-text-3" id="text-5-4">
+<p>
+After a <code>cmd_t</code> has <code>cmd_start()</code> called on it, there should be a
+child process executing the associated command; this child process
+should have its PID stored in the <code>cmd_t</code>.  Eventually the child
+will terminate. Whenever <code>cmd_update_state(cmd,block)</code> is
+called by the <code>commando</code> process, the child process associated with it
+is checked for termination. The primary means to do this is with the
+<code>waitpid()</code> system call.  Below are notes on how to go about this
+function.
+</p>
+
+<ol class="org-ol">
+<li>Each <code>cmd_t</code> has a <code>finished</code> field and when 1, the command has
+already finished so no further state changes can occur.</li>
+<li>Make use of <code>waitpid()</code> to check a child. This function needs a PID
+which can be gotten from a <code>cmd_t</code>, a status integer and options
+instructing it on whether to block or not.</li>
+<li>Blocking means that the calling process, likely <code>commando</code> will
+pause execution until the child is done. The constant <code>DOBLOCK</code> is
+defined in <code>commando.h</code> and can be used to trigger this if passed
+as the 3rd arg to <code>waitpid()</code>.</li>
+<li>Non-blocking waits mean the caller gets control back immediately
+regardless of whether a child process is finished or not. This is
+more of a "check on the child" call than a proper wait.  This
+behavior can be triggered by passing <code>NOBLOCK</code> as the 3rd argument
+to <code>waitpid()</code>.</li>
+<li>Don't make use of <code>DOBLOCK</code> and <code>NOBLOCK</code> within
+<code>cmd_update_state()</code>. Instead, know that the argument <code>block</code> will
+be one of these.</li>
+<li>Regardless of whether blocking or non-blocking waits are done, the
+return value of <code>waitpid()</code> is either
+<ul class="org-ul">
+<li>-1 on an error in which case commando should exit with non-zero
+status (not tested)</li>
+<li>0 if the requested child has no status change. This means there
+is nothing left to do in <code>cmd_update_state()</code></li>
+<li>The pid of the child indicating that there is a state change</li>
+</ul></li>
+<li>If a state change has occurred, it can be dissected using a series
+of macros in the manual entry for <code>wait()</code> and <code>waitpid()</code>.  The
+most important of these is the <code>WIFEXITED(status)</code> macro which is
+called on the status integer passed to <code>waitpid()</code>.</li>
+<li>If the <code>WIFEXITED(status)</code> evaluate to nonzero, the child process
+has exited. Several actions need to take place at this point.
+<ul class="org-ul">
+<li>Retrieve its return code via a call to <code>WEXITSTATUS(status)</code>
+which should be assigned to the <code>cmd-&gt;status</code> field.</li>
+<li>Change <code>cmd-&gt;str_status</code> to <code>EXIT(num)</code> when the
+process finishes.</li>
+<li>Set its <code>finish</code> field to 1 which will cause later status updates
+to ignore the completed command.</li>
+<li>Call <code>cmd_fetch_output()</code> to read the contents of the pipe into
+the command's output buffer.</li>
+<li><p>
+Print a message like
+</p>
+<pre class="example">
+@!!! ls[#17331]: EXIT(0)
+</pre>
+
+<p>
+<i>Note: Previously there was mention of a DOALERTS option which is
+not required.</i>
+</p></li>
+</ul></li>
+<li>There are a series of other macros which can be used to detect
+other process status changes such as signaling, stopped, and so
+forth but this is not required for <code>commando</code>.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org8520d36" class="outline-3">
+<h3 id="org8520d36"><span class="section-number-3">5.5</span> Retrieving and Printing Output</h3>
+<div class="outline-text-3" id="text-5-5">
+<p>
+When a child process completes, it will exit. If all has gone
+according to spec, the output for the process will be left in a pipe
+that is referred to in a <code>cmd-&gt;out_pipe</code> which is tracked by
+<code>commando</code>.  The function <code>cmd_fetch_output()</code> is meant to retrieve
+this output for later use. The output contents will be stored in
+<code>cmd-&gt;output</code> which should have at least <code>cmd-&gt;output_size</code> bytes in
+it.
+</p>
+
+<p>
+Due to the trickiness of this problem, the helper function 
+</p>
+<pre class="example">
+char *read_all(int fd, int *nread)
+</pre>
+
+<p>
+is used. This function reads all data from the given file descriptor
+and returns a buffer with the contents and sets the integer <code>nread</code> to
+the number of bytes in the buffer. This allows independent testing of
+this portion of code to isolate errors.  The general process for
+<code>read_all()</code> is as follows.
+</p>
+
+<ol class="org-ol">
+<li>Allocate some initial memory in a buffer to <code>read()</code> into from the
+file descriptor. For each <code>read()</code> call, limit the number of bytes
+read so that this buffer is not overflowed.</li>
+<li>If the buffer runs out of space, call <code>realloc()</code> to get more
+space. This call will increase the buffer size and automatically
+copy data already in the buffer to a new location if required
+making it more handy than <code>malloc()</code> in this situation.</li>
+<li>A common strategy to make buffer allocation efficient is the
+following. <code>malloc()</code> an initial buffer size such as 1024
+bytes. When this fills up, use <code>realloc()</code> to double the current
+size of the buffer. Doing this in a read/resize loop will lead to
+sizes like 1024, 2048, 4096, etc. This balances the number of
+allocations versus reads done and has good amortized performance.</li>
+<li>It does not matter if the buffer is not sized exacoly to the size
+of the output. Particularly be careful when trying to <code>realloc()</code>
+to a smaller size as this may fail returning a <code>NULL</code>.</li>
+<li>When <code>read()</code> calls no longer give more bytes (return value of 0 or
+less), reading is finished.  Set the integer <code>nread</code> to be the
+total bytes read then return the allocated buffer of data.</li>
+<li><p>
+<a id="org61e5e5d"></a> Ensure that the returned string is
+null-terminated. This may mean adjusting the buffer sizes in
+allocation a little (add 1) and then setting the character beyond
+the last read to be the null character as in:
+</p>
+<pre class="example">
+buf[last_position] = '\0';
+</pre></li>
+</ol>
+
+<p>
+With <code>read_all()</code> in hand, the job of <code>cmd_fetch_output()</code> is
+relatively straight-forward.
+</p>
+
+<ol class="org-ol">
+<li>A pipe is not permanent storage: unlike a file which may be read
+multiple times, once data is read from the pipe, it is gone. This
+necessitates reading the data into a memory area if the data is to
+be used again as is the intention here.</li>
+<li><p>
+Before doing anything, check if the <code>cmd_t</code> is finished and if not,
+print a message of the form
+</p>
+<pre class="example">
+ls[#12783] not finished yet
+</pre>
+
+<p>
+and take no further action.
+</p></li>
+<li>If the <code>cmd_t</code> is finished, use <code>read_all()</code> with <code>output_pipe</code>
+to extract bytes from the pipe. Make sure to read from the <code>PREAD</code>
+side of the pipe.</li>
+<li>Associate the <code>cmd-&gt;output</code> field with the buffer returned by
+<code>read_all()</code> and set the <code>cmd-&gt;output_size</code> to the number of bytes
+read.</li>
+<li>Make sure to close the pipe that was read from.</li>
+</ol>
+
+<p>
+After fetching output for the command, its output can always be
+recalled as it is saved in the <code>cmd-&gt;output</code> field. The
+<code>cmd_print_output()</code> should print it on to the standard output. 
+</p>
+<ol class="org-ol">
+<li><p>
+<a id="orgf88f769"></a> Check that <code>cmd-&gt;output</code> is non-null; if it
+is <code>NULL</code>, print a message like
+</p>
+<pre class="example">
+gcc[#76324] :  output not ready
+</pre></li>
+<li>Otherwise use a call to <code>write()</code> to put data on the screen. As
+<code>write()</code> uses file descriptors, make sure to pass <code>STDOUT_FILENO</code>
+along with the buffer to write and the number of bytes to write.</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org8037c11" class="outline-2">
+<h2 id="org8037c11"><span class="section-number-2">6</span> <code>cmdcol_t</code> Data Type</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+The intent of <code>cmdcol_t</code> is to track a collection of <code>cmd_t</code> instances
+and provide a few basic convenience functions for the collection. The
+struct definition from <code>commando.h</code> is as follows.
+</p>
+
+<pre class="example">
+// cmdcol_t: struct for tracking multiple commands
+typedef struct {                
+  cmd_t *cmd[MAX_CMDS];         // array of pointers to cmd_t
+  int size;                     // number of cmds in the array
+} cmdcol_t;
+</pre>
+
+
+<p>
+There is a fixed maximum on the number of children possible for the
+<code>cmdcol_t</code> simplifies its implementation but limits its dynamic
+capabilities.
+</p>
+
+<p>
+This section describes the basic functionality of <code>cmdcol_t</code>.
+</p>
+</div>
+
+<div id="outline-container-org57d00a3" class="outline-3">
+<h3 id="org57d00a3"><span class="section-number-3">6.1</span> Required Functions</h3>
+<div class="outline-text-3" id="text-6-1">
+<pre class="example">
+// cmdcol.c: functions related to cmdcol_t collections of commands.
+
+void cmdcol_add(cmdcol_t *col, cmd_t *cmd);
+// Add the given cmd to the col structure. Update the cmd[] array and
+// size field. Report an error if adding would cause size to exceed
+// MAX_CMDS, the maximum number commands supported.
+
+void cmdcol_print(cmdcol_t *col);
+// Print all cmd elements in the given col structure.  The format of
+// the table is
+//
+// JOB  #PID      STAT   STR_STAT OUTB COMMAND
+// 0    #17434       0    EXIT(0) 2239 ls -l -a -F 
+// 1    #17435       0    EXIT(0) 3936 gcc --help 
+// 2    #17436      -1        RUN   -1 sleep 2 
+// 3    #17437       0    EXIT(0)  921 cat Makefile 
+// 
+// Columns correspond to fields in the following way:
+// JOB:      index in the cmdcol_t struct
+// PID:      pid from the cmd_t struct
+// STAT:     status from the cmd_t struct
+// STR_STAT: str_status field from cmd_t
+// OUTB:     output_size from the cmd_t struct
+// COMMAND:  The contents of cmd-&gt;argv[] with a space
+//           between each element of the array.
+// 
+// Widths of the fields and justification are as follows
+// 
+// JOB  #PID      STAT   STR_STAT OUTB COMMAND
+// 1234 #12345678 1234 1234567890 1234 Remaining
+// left  left    right      right rigt left
+// int   int       int     string  int string
+
+void cmdcol_update_state(cmdcol_t *col, int block);
+// Update each cmd in col by calling cmd_update_state() which is also
+// passed the block argument (either NOBLOCK or DOBLOCK) 
+
+void cmdcol_freeall(cmdcol_t *col);
+// Call cmd_free() on all of the constituent cmd_t's.
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org0c65602" class="outline-3">
+<h3 id="org0c65602"><span class="section-number-3">6.2</span> Basic functionality</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+Adding a new <code>cmd_t</code> instance should be done by checking whether
+<code>size</code> is within the <code>MAX_CHILD</code> limit, then updating the <code>col-&gt;cmd</code>
+array and <code>col-&gt;size</code> fields. If not, print an error message.
+</p>
+
+<p>
+The <code>cmdcol_print()</code> function should print a table of information on
+the <code>cmd_t</code> instances within it. Pay careful attention to the comments
+on formatting the table which give column widths, justification, and
+where to place spaces.
+</p>
+
+<p>
+The <code>cmdcol_update_state()</code> and <code>cmdcol_freeall()</code> functions are just
+conveniences to apply the appropriate <code>cmd_t</code> functions to all
+constituents of the <code>cmdcol_t</code>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org53fee97" class="outline-2">
+<h2 id="org53fee97"><span class="section-number-2">7</span> Commando Top Level Functionalities</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+The <code>commando.c</code> file should tie the basic low-level pieces from
+<code>cmd.c</code> and <code>cmdcol.c</code> into a usable application. The only required
+function in <code>commando.c</code> is a <code>main()</code> which allows it to compile to
+an executable. Aside from that, additional helper functions in
+<code>commando.c</code> will likely make life easier (the did in the reference
+implementation).
+</p>
+</div>
+
+<div id="outline-container-org2517337" class="outline-3">
+<h3 id="org2517337"><span class="section-number-3">7.1</span> Important Note on Buffered Output</h3>
+<div class="outline-text-3" id="text-7-1">
+<p>
+During testing, it is desirable to get output onto the screen as soon
+as possible to match the output expected by the tests.  This is easily
+done by inserting the following near the top of <code>main()</code>.
+</p>
+<pre class="example">
+setvbuf(stdout, NULL, _IONBF, 0); // Turn off output buffering
+</pre>
+
+<p>
+This call disables "buffering" of standard output so that <code>printf()</code>
+and its ilk immediately put output onto the screen.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org18b4198" class="outline-3">
+<h3 id="org18b4198"><span class="section-number-3">7.2</span> Main Loop</h3>
+<div class="outline-text-3" id="text-7-2">
+<p>
+After setup, the main input loop will likely have the following basic
+structure.
+</p>
+<ol class="org-ol">
+<li>Print the prompt <code>@&gt;</code></li>
+<li>Use a call to <code>fgets()</code> to read a whole line of text from the
+user. The #define <code>MAX_LINE</code> limits the length of what will be
+read. If no input is remains, print <code>End of input</code> and break out
+of the loop.</li>
+<li>Echo (print) given input if echoing is enabled.</li>
+<li>Use a call to <code>parse_into_tokens()</code> from <code>util.c</code> to break the line
+up by spaces. If there are no tokens, jump to the end of the loop
+(the use just hit enter).</li>
+<li>Examine the 0th token for built-ins like <code>help</code>, <code>list</code>, and so
+forth.  Use <code>strncmp()</code> to determine if any match and make
+appropriate calls. This will be a long if/else chain of statements.</li>
+<li>If no built-ins match, create a new <code>cmd_t</code> instance where the
+tokens are the <code>argv[]</code> for it and start it running.</li>
+<li>At the end of each loop, update the state of all child processes
+via a call to <code>cmdcol_update_state()</code>.</li>
+</ol>
+</div>
+</div>
+
+
+<div id="outline-container-orgc2deb81" class="outline-3">
+<h3 id="orgc2deb81"><span class="section-number-3">7.3</span> Basic Help and Exiting</h3>
+<div class="outline-text-3" id="text-7-3">
+<p>
+The <code>help</code> command should show  the built-in commands required to be supported
+and brief descriptions of them. Here is the help message which may be
+copied and used in implementations.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">@&gt; help
+COMMANDO COMMANDS
+help               : show this message
+exit               : exit the program
+list               : list all jobs that have been started giving information on each
+pause nanos secs   : pause for the given number of nanseconds and seconds
+output-for int     : print the output for given job number
+output-all         : print output for all jobs
+wait-for int       : wait until the given job number finishes
+wait-all           : wait for all jobs to finish
+command arg1 ...   : non-built-in is run as a job
+</pre>
+</div>
+
+<p>
+The <code>exit</code> command should immediately break out of the input
+loop. This also happens if there is no input remaining. After leaving
+the input loop and before finishing, <code>commando</code> should free all
+dynamically allocated memory. Most of this should be associated with a
+<code>cmdcol_t</code> making a call to <code>cmdcol_freeall()</code> the easiest way to get
+away clean.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf1c1ea7" class="outline-3">
+<h3 id="orgf1c1ea7"><span class="section-number-3">7.4</span> Command Echoing</h3>
+<div class="outline-text-3" id="text-7-4">
+<p>
+To make testing easier to understand, <code>commando</code> should support
+<i>command echoing</i> which means to print back to the screen what a user
+has typed in.  If the input source is coming from somewhere else as is
+the case in testing, this allows the entered commands to be seen in
+output.
+</p>
+
+<p>
+On startup, <code>commando</code> should check two places for echoing options:
+</p>
+<ul class="org-ul">
+<li>The 1th argument of <code>argv[]</code> is the string <code>--echo</code></li>
+<li>The environment variable <code>COMMANDO_ECHO</code> is set to anything</li>
+</ul>
+<p>
+If either of these are the case, echoing should be turned
+on. Immediately after getting input, it should be re-printed to the
+screen.  Here are some examples.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">lila [commando]% ./commando                         # Normal start
+@&gt; list                                             # no echoing of commands
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+@&gt; ls -a test_data/
+@&gt; list
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #32758      -1        RUN   -1 ls -a test_data/
+@!!! ls[#32758]: EXIT(0)
+@&gt; exit
+
+lila [commando]% ./commando --echo                  # echoing enabled
+@&gt; list                                             # typed command is 
+list                                                # immediately printed back
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+@&gt; ls -a test_data/                                 # typed command is
+ls -a test_data/                                    # echoed
+@&gt; list
+list
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #32760      -1        RUN   -1 ls -a test_data/ 
+@!!! ls[#32760]: EXIT(0)
+@&gt; exit
+exit
+
+lila [commando]% export COMMANDO_ECHO=1             # enable echoing via env var
+lila [commando]% ./commando
+@&gt; list                                             # type command is
+list                                                # immediately echoed
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+@&gt; exit
+exit
+
+# Input can come from other places aside from typing for which echoing
+# makes the output more readily understandable
+
+lila [commando]% printf 'list \nls test_data \nlist \nexit \n' | commando --echo
+@&gt; list 
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+@&gt; ls test_data/ 
+@&gt; list 
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #385        -1        RUN   -1 ls test_data/ 
+
+# Without echoing, the output is nye unreadable
+
+lila [commando]% printf 'list \nls test_data/ \nlist \nexit \n' | commando
+@&gt; JOB  #PID      STAT   STR_STAT OUTB COMMAND
+@&gt; @&gt; JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #396        -1        RUN   -1 ls test_data/ 
+@&gt; lila [commando]% 
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org28cf8fd" class="outline-3">
+<h3 id="org28cf8fd"><span class="section-number-3">7.5</span> Running and Listing Jobs</h3>
+<div class="outline-text-3" id="text-7-5">
+<p>
+The main purpose of <code>commando</code> is to run jobs / child processes. If
+the 0th token does not match any built-in commands, it should be
+interpreted as a program name to be run with the remaining tokens
+as arguments to the program.  Allocate a new <code>cmd_t</code>, add it to a
+<code>cmdcol_t</code>, and start it running.
+</p>
+
+<p>
+Once jobs are being run, they should show up in a <code>list</code>
+command. <code>list</code> is simply a call to <code>cmdcol_print()</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">lila [commando]% commando
+@&gt; list                                                         # initial listing is empty
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+@&gt; gcc test_data/print_args.c                                   # starting jobs
+@&gt; list                                                         # should cause them to show in the listing
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #441        -1        RUN   -1 gcc test_data/print_args.c 
+@!!! gcc[#441]: EXIT(0)
+@&gt; ./a.out hello goodbye                                        # start another job
+@&gt; list                                                         # listing should show updated state
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #441         0    EXIT(0)    0 gcc test_data/print_args.c 
+1    #453        -1        RUN   -1 ./a.out hello goodbye
+@!!! ./a.out[#453]: EXIT(0)
+@&gt; list
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #441         0    EXIT(0)    0 gcc test_data/print_args.c 
+1    #453         0    EXIT(0)   51 ./a.out hello goodbye 
+@&gt; ls -F test_data
+@&gt; list
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #441         0    EXIT(0)    0 gcc test_data/print_args.c 
+1    #453         0    EXIT(0)   51 ./a.out hello goodbye 
+2    #454        -1        RUN   -1 ls -F test_data
+@!!! ls[#454]: EXIT(0)
+@&gt; list
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #441         0    EXIT(0)    0 gcc test_data/print_args.c 
+1    #453         0    EXIT(0)   51 ./a.out hello goodbye 
+2    #454         0    EXIT(0)   29 ls -F test_data
+@&gt; exit
+lila [commando]% 
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1ffce2c" class="outline-3">
+<h3 id="org1ffce2c"><span class="section-number-3">7.6</span> Output of Jobs</h3>
+<div class="outline-text-3" id="text-7-6">
+<p>
+The output for a job is not printed to <code>commando</code> screen by
+default. Instead, it is stored internally as described elsewhere. To
+see the output of any previous command, use the <code>output-for int</code>
+command. This command takes job number. An easy way to convert the
+string token to an integer is with the <code>atoi()</code> C function. If all
+output for all jobs is desired, the <code>output-all command</code> can be used.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">@&gt; ls -l test_data/
+@&gt; 
+@!!! ls[#27791]: EXIT(0)
+@&gt; output-for 0
+@&lt;&lt;&lt; Output for ls[#27791] (855 bytes):
+----------------------------------------
+total 204
+-rw-r----- 1 kauffman kauffman 13893 Sep 27  2017 3K.txt
+-rw-rw---- 1 kauffman kauffman 14834 Feb  5 12:13 actual.tmp
+-rw-rw---- 1 kauffman kauffman 30921 Feb  5 12:13 diff.tmp
+-rw-rw---- 1 kauffman kauffman 14834 Feb  5 12:13 expect.tmp
+-rw-rw---- 1 kauffman kauffman  1511 Sep 18  2017 gettysburg.txt
+-rwxrwx--- 1 kauffman kauffman 16576 Feb  5 13:00 print_args
+-rw-rw---- 1 kauffman kauffman   218 Sep 11  2017 print_args.c
+-rw-rw---- 1 kauffman kauffman   125 Sep 18  2017 quote.txt
+-rw-rw---- 1 kauffman kauffman   298 Feb  1 11:13 README
+-rw-rw---- 1 kauffman kauffman   346 Sep 26  2017 sleep_print.c
+drwxrwx--- 2 kauffman kauffman  4096 Feb  4 21:17 stuff
+-rwxrwx--- 1 kauffman kauffman   427 Sep 26  2017 table.sh
+-rw-rw---- 1 kauffman kauffman 14926 Feb  5 12:13 temp.tmp
+-rw-rw---- 1 kauffman kauffman  1656 Feb  5 12:14 valgrind.tmp
+----------------------------------------
+@&gt; gcc test_data/print_args.c
+@&gt; 
+@!!! gcc[#27864]: EXIT(0)
+@&gt; ./a.out hi bye
+@&gt; 
+@!!! ./a.out[#27924]: EXIT(0)
+@&gt; list
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #27791       0    EXIT(0)  855 ls -l test_data/ 
+1    #27864       0    EXIT(0)    0 gcc test_data/print_args.c 
+2    #27924       0    EXIT(0)   40 ./a.out hi bye 
+@&gt; output-for 1
+@&lt;&lt;&lt; Output for gcc[#27864] (0 bytes):
+----------------------------------------
+----------------------------------------
+@&gt; output-for 2
+@&lt;&lt;&lt; Output for ./a.out[#27924] (40 bytes):
+----------------------------------------
+3 args received
+0: ./a.out
+1: hi
+2: bye
+----------------------------------------
+@&gt; output-all
+@&lt;&lt;&lt; Output for ls[#27791] (855 bytes):
+----------------------------------------
+total 204
+-rw-r----- 1 kauffman kauffman 13893 Sep 27  2017 3K.txt
+-rw-rw---- 1 kauffman kauffman 14834 Feb  5 12:13 actual.tmp
+-rw-rw---- 1 kauffman kauffman 30921 Feb  5 12:13 diff.tmp
+-rw-rw---- 1 kauffman kauffman 14834 Feb  5 12:13 expect.tmp
+-rw-rw---- 1 kauffman kauffman  1511 Sep 18  2017 gettysburg.txt
+-rwxrwx--- 1 kauffman kauffman 16576 Feb  5 13:00 print_args
+-rw-rw---- 1 kauffman kauffman   218 Sep 11  2017 print_args.c
+-rw-rw---- 1 kauffman kauffman   125 Sep 18  2017 quote.txt
+-rw-rw---- 1 kauffman kauffman   298 Feb  1 11:13 README
+-rw-rw---- 1 kauffman kauffman   346 Sep 26  2017 sleep_print.c
+drwxrwx--- 2 kauffman kauffman  4096 Feb  4 21:17 stuff
+-rwxrwx--- 1 kauffman kauffman   427 Sep 26  2017 table.sh
+-rw-rw---- 1 kauffman kauffman 14926 Feb  5 12:13 temp.tmp
+-rw-rw---- 1 kauffman kauffman  1656 Feb  5 12:14 valgrind.tmp
+----------------------------------------
+@&lt;&lt;&lt; Output for gcc[#27864] (0 bytes):
+----------------------------------------
+----------------------------------------
+@&lt;&lt;&lt; Output for ./a.out[#27924] (40 bytes):
+----------------------------------------
+3 args received
+0: ./a.out
+1: hi
+2: bye
+----------------------------------------
+@&gt; 
+</pre>
+</div>
+
+<p>
+Jobs need to complete before their output is available.  The
+prescribed order of events in the <code>commando</code> main loop dictate that
+even if a child process finishes, <code>commando</code> may not immediately know
+about it: child processes are only checked after receiving some input
+from the user. This means that one may have to hit RETURN to get the
+calls to <code>cmd_update_state()</code> to register the change in
+state. Examples, some of which use the <code>sleep_print.c</code> program which
+causes a controllable delay before finishes.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">@&gt; ls test_data                                     # run an ls                              
+@&gt; output-for 0                                     # output hasn't been collected yet       
+@&lt;&lt;&lt; Output for ls[#29348] (-1 bytes):                                                       
+----------------------------------------                                                     
+ls[#29348] : output not ready                                                                
+----------------------------------------                                                     
+@!!! ls[#29348]: EXIT(0)                            # now output is availble                 
+@&gt; output-for 0                                     # show output for 0                      
+@&lt;&lt;&lt; Output for ls[#29348] (145 bytes):
+----------------------------------------
+3K.txt
+actual.tmp
+diff.tmp
+expect.tmp
+gettysburg.txt
+print_args
+print_args.c
+quote.txt
+README
+sleep_print.c
+stuff
+table.sh
+temp.tmp
+valgrind.tmp
+----------------------------------------
+@&gt; gcc -o sleep_print test_data/sleep_print.c       # compile a program               
+@&gt; output-for 1                                     # output hasn't been collected yet
+@&lt;&lt;&lt; Output for gcc[#29555] (-1 bytes):
+----------------------------------------
+gcc[#29555] : output not ready
+----------------------------------------
+@!!! gcc[#29555]: EXIT(0)                           # now output should be available
+@&gt; output-for 1                                     # show it                       
+@&lt;&lt;&lt; Output for gcc[#29555] (0 bytes):
+----------------------------------------
+----------------------------------------
+@&gt; ./sleep_print 2 waking up now                    # run a program that has a delay
+@&gt; output-for 2                                     # not there yet                 
+@&lt;&lt;&lt; Output for ./sleep_print[#29861] (-1 bytes):
+----------------------------------------
+./sleep_print[#29861] : output not ready
+----------------------------------------
+@&gt; output-for 2                                     # still not there yet
+@&lt;&lt;&lt; Output for ./sleep_print[#29861] (-1 bytes):
+----------------------------------------
+./sleep_print[#29861] : output not ready
+----------------------------------------
+@!!! ./sleep_print[#29861]: EXIT(2)                 # alert: output is not available
+@&gt; output-for 2                                     # show it                       
+@&lt;&lt;&lt; Output for ./sleep_print[#29861] (15 bytes):
+----------------------------------------
+waking up now 
+----------------------------------------
+@&gt; 
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga659994" class="outline-3">
+<h3 id="orga659994"><span class="section-number-3">7.7</span> End of Loop Alerts</h3>
+<div class="outline-text-3" id="text-7-7">
+<p>
+At the end of each iteration of the main loop of <code>commando</code>, each job
+should be checked for updates to its status.  This is done via a calls
+to <code>cmd_update_state()</code> but since it is called on every child, a
+<code>cmdcol_update_state()</code> is probably a good idea to update everything.
+</p>
+
+<p>
+This call <b>should not block</b>: if processes have not finished,
+<code>commando</code> should not wait for them. That means the underlying calls
+to <code>waitpid()</code> should use the <code>NOBLOCK</code> option provided in
+<code>commando.h</code>. This includes <code>WNOHANG</code>, an option which causes
+<code>waitpid()</code> to return immediately if nothing has happened with the
+process. 
+</p>
+
+<p>
+If the call to <code>cmd_update_state()</code> detects a change it should print
+an alert <code>@!!!</code> message indicating the change, usually program
+exits. These alerts should appear only once, when a child process
+exits and the state is updated in <code>cmd_update_state()</code>. If
+<code>cmd-&gt;finished</code> is set, there can be no additional state changes so no
+alerts should be generated.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">@&gt; ls test_data/                                              # start a listing
+@&gt;                                                            # press enter to update state
+@!!! ls[#31702]: EXIT(0)                                      # got an alert
+@&gt; ./sleep_print 2 awake now                                  # longer running program
+@&gt;                                                            # enter to update state
+@&gt; list                                                       # not done yet, list
+JOB  #PID      STAT   STR_STAT OUTB COMMAND                   
+0    #31702       0    EXIT(0)  145 ls test_data/             
+1    #31799      -1        RUN   -1 ./sleep_print 2 awake now 
+@&gt; list                                                       # not done yet, list again
+JOB  #PID      STAT   STR_STAT OUTB COMMAND                   
+0    #31702       0    EXIT(0)  145 ls test_data/             
+1    #31799      -1        RUN   -1 ./sleep_print 2 awake now 
+@&gt;                                                            # still not done, press enter  
+@!!! ./sleep_print[#31799]: EXIT(2)                           # finally done                  
+@&gt; list                                                       # shows both processes complete 
+JOB  #PID      STAT   STR_STAT OUTB COMMAND                    
+0    #31702       0    EXIT(0)  145 ls test_data/             
+1    #31799       2    EXIT(2)   11 ./sleep_print 2 awake now 
+1    #2395        2    EXIT(2)   11 sleep_print 2 awake now
+@&gt; 
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org93e2021" class="outline-3">
+<h3 id="org93e2021"><span class="section-number-3">7.8</span> Waiting and Alerts</h3>
+<div class="outline-text-3" id="text-7-8">
+<p>
+In comparison to standard shells, <code>commando</code> starts child processes
+roughly "in the background" giving control immediately back to
+<code>commando</code> to do further work. The <code>wait-for int</code> built-in command causes
+execution of <code>commando</code> to stop until the specified job number
+actually finishes. This is useful if one wants the output for the job.
+</p>
+
+<p>
+The following demonstration uses the provided <code>sleep_print</code> program
+which sleeps for a while, 10 seconds in this case, then prints
+output. The <code>wait-for 0</code> command causes execution of <code>commando</code> to
+pause until it is finished.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">@&gt; list
+JOB  #PID      STAT   STR_STAT OUTB COMMAND       
+@&gt; sleep_print 10 now awake                       # start job that takes a while to finish
+@&gt; output-for 0                                   # no output yet
+@&lt;&lt;&lt; Output for sleep_print[#2276] (-1 bytes):
+----------------------------------------
+sleep_print[#2276] has no output yet
+----------------------------------------
+@&gt; output-for 0                                   # no output yet
+@&lt;&lt;&lt; Output for sleep_print[#2276] (-1 bytes):
+----------------------------------------
+sleep_print[#2276] has no output yet
+----------------------------------------
+@&gt; wait-for 0                                     # wait until it finishes, may take a while
+@!!! sleep_print[#2276]: EXIT(10)
+@&gt; output-for 0
+@&lt;&lt;&lt; Output for sleep_print[#2276] (11 bytes):
+----------------------------------------
+now awake 
+----------------------------------------
+@&gt;
+</pre>
+</div>
+
+<p>
+The <code>wait-for int</code> command translates to a call to
+<code>cmd_update_state()</code> with the <code>DO_BLOCK</code> option.  <code>DOBLOCK</code> contains
+options to the underlying <code>waitpid()</code> call which will cause it to
+pause <code>commando</code> until the child process finishes. 
+</p>
+
+<p>
+It is the call to <code>cmd_update_state()</code> which issues the <code>@!!!</code> alert
+messages to be printed. Note that this function should also make a
+call to <code>cmd_fetch_output()</code> to make output available for printing.
+</p>
+
+<p>
+Similarly, if several commands are taking a while, a call to
+<code>wait-all</code> will pause <code>commando</code> until all child processes are
+finished.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">@&gt; list
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #2276       10   EXIT(10)   11 sleep_print 10 now awake 
+@&gt; sleep_print 4 now awake                     # Start several processes
+@&gt; sleep_print 5 now awake
+@&gt; sleep_print 2 now awake
+@&gt; wait-all                                    # wait for all to finish, may take a tick
+@!!! sleep_print[#2335]: EXIT(4)
+@!!! sleep_print[#2336]: EXIT(5)
+@!!! sleep_print[#2337]: EXIT(2)
+@&gt; list                                        # show all of jobs finished
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #2276       10   EXIT(10)   11 sleep_print 10 now awake 
+1    #2335        4    EXIT(4)   11 sleep_print 4 now awake 
+2    #2336        5    EXIT(5)   11 sleep_print 5 now awake 
+3    #2337        2    EXIT(2)   11 sleep_print 2 now awake
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9b1eb6b" class="outline-3">
+<h3 id="org9b1eb6b"><span class="section-number-3">7.9</span> Pausing</h3>
+<div class="outline-text-3" id="text-7-9">
+<p>
+It is useful in testing to be able to have <code>commando</code> simply do
+nothing for a short time, accomplished with the <code>pause nanos secs</code>
+built-in. This should parse two tokens, the number of nanoseconds and
+number seconds to sleep.  The provided function <code>pause_for()</code> in
+<code>util.c</code> should be called for to get the main program to stop
+temporarily.
+</p>
+
+<p>
+After the pause, the standard check of all child processes for state
+changes should occur which can cause some processes to print that they
+are done as shown in the following example.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">lila [commando]% ./commando
+@&gt; sleep_print 2 awake now              # launch job that takes 2 seconds
+@&gt; pause 0 3                            # pause for 0 nanos + 3 seconds
+@!!! sleep_print[#2421]: EXIT(2)        # when control returns, state change in child is detected
+@&gt; list
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #2421        2    EXIT(2)   11 sleep_print 2 awake now 
+@&gt; 
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orge65ae7b" class="outline-3">
+<h3 id="orge65ae7b"><span class="section-number-3">7.10</span> Cleaning up at Close</h3>
+<div class="outline-text-3" id="text-7-10">
+<p>
+When the <code>exit</code> command is issued or the end of the input is found,
+<code>commando</code> should free any memory it has allocated during execution.
+Most/all of such memory is likely associated with a <code>cmdcol_t</code> so a
+call to <code>cmdcol_freeall()</code> should take care of this. Tests will use
+Valgrind to check for memory that remains in use so you may want to
+run this yourself to check. Example:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">phaedrus [commando]% valgrind ./commando                       # Start running commando with valgrind checking
+==6452== Memcheck, a memory error detector                     # messages from valgrind
+==6452== Copyright (C) 2002-2017, and GNU GPLd, by Julian Seward et al.
+==6452== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==6452== Command: ./commando
+==6452== 
+@&gt; ls stuff                                                    # prompt for commando
+@&gt; sleep_print 1 hello goodbye
+@!!! ls[#6453]: EXIT(0)
+@&gt; gcc --help
+@!!! sleep_print[#6454]: EXIT(1)
+@&gt; ls
+@!!! gcc[#6455]: EXIT(0)
+@&gt; 
+@!!! ls[#6457]: EXIT(0)
+@&gt; list
+JOB  #PID      STAT   STR_STAT OUTB COMMAND
+0    #6453        0    EXIT(0)   28 ls stuff 
+1    #6454        1    EXIT(1)   15 sleep_print 1 hello goodbye 
+2    #6455        0    EXIT(0) 3936 gcc --help 
+3    #6457        0    EXIT(0)  619 ls 
+@&gt; exit                                                        # finishing commando
+==6452== 
+==6452== HEAP SUMMARY:                                         # exit summary from valgrind
+==6452==     in use at exit: 0 bytes in 0 blocks               # looks good
+==6452==   total heap usage: 20 allocs, 20 frees, 20,723 bytes allocated
+==6452== 
+==6452== All heap blocks were freed -- no leaks are possible   # damn straight
+==6452== 
+==6452== For counts of detected and suppressed errors, rerun with: -v
+==6452== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+phaedrus [commando]% valgrind ./commando
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgdbc76d5" class="outline-2 grading">
+<h2 id="orgdbc76d5"><span class="section-number-2">8</span> Manual Inspection Criteria (60%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span></span></h2>
+<div class="outline-text-2" id="text-8">
+<p>
+The following criteria will be examined during manual inspection of
+code by graders. Use this as a guide to avoid omitting important steps
+or committing bad style fouls.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Location</th>
+<th scope="col" class="org-right">Wgt</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><b>Makefile</b> and</td>
+<td class="org-right">5</td>
+<td class="org-left">A Makefile is provided which compiles commando via <code>make</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Compilation</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">The Makefile has a <code>make clean</code> target to remove programs and <code>.o</code> files</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">5</td>
+<td class="org-left">The required test targets are present: test-functions, test-commando</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">5</td>
+<td class="org-left">The code builds and tests run  with no warnings from the compiler</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><b>cmd.c</b></td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>cmd_new()</code></td>
+<td class="org-right">5</td>
+<td class="org-left">initializes all the fields to obvious default values</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>cmd_free()</code></td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">clearly freeing all memory associated with the <code>cmd_t</code> (argv, output)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>cmd_start()</code></td>
+<td class="org-right">5</td>
+<td class="org-left">creates a pipe correcoly prior to forking</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">forks a child process and behaves differently for parent/child</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">parent and child close the half of the pipe they won't use</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">child redirects standard output to the pipe using dup2()</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">child correctly exec()'s the indicated program</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">basic error checking is done for system calls to detect failures</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">tidy code and descriptive comments used to explain code flow</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>cmd_update_state()</code></td>
+<td class="org-right">5</td>
+<td class="org-left">commands that are already finished are not checked again</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">waitpid() is used to check a child, the block parameter is honored</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">the return value for waitpid() is checked to see if status has changed</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">on a child finishing, macros are used to check for exit status</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">@!!! alerts are printed on status changes but only once per change/exit</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">tidy code and descriptive comments used to explain code flow</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>read_all()</code></td>
+<td class="org-right">5</td>
+<td class="org-left">calls to the read() function are used to get data</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">as more space is needed, realloc() is used to resize the buffer</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">an efficient growth scheme such as doubling the buffer size is used</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>cmd_fetch_output()</code></td>
+<td class="org-right">5</td>
+<td class="org-left">make use of read<sub>all</sub>() to retrieve output from the pipe</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">closes() the pipe after reading all output</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>cmd_print_output()</code></td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">uses the write() system call to put command output on standard output</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><b>cmdcol.c</b></td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>cmdcol_add()</code></td>
+<td class="org-right">5</td>
+<td class="org-left">basic bounds checking on size to ensure the buffer does not overflow</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>cmdcol_print()</code></td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">makes use of printf() format specifiers to get printing aligned</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><b>commando.c</b></td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">input loop</td>
+<td class="org-right">10</td>
+<td class="org-left">clear use of if/else-if conditional structure to check for built-ins</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">use of strncmp() to compare strings checking for built-ins</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">use fgets() to retrieve input lines, ensure the buffer doesn't overflow</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">check return value of fgets() for end of input and break from loop</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">use provided parse<sub>into</sub><sub>tokens</sub>() function to split input lines</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">tidy code and descriptive comments used to explain code flow</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">outside input loop</td>
+<td class="org-right">5</td>
+<td class="org-left">clear attempt made to honor the <code>--echo</code> command line option</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">clear attempt made to honor the <code>COMMANDO_ECHO</code> environment variable</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">clear attempt to free memory prior to exiting</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">60</td>
+<td class="org-left">Total</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org718b14e" class="outline-2 grading">
+<h2 id="org718b14e"><span class="section-number-2">9</span> <a id="org12e0657"></a> Automatic Testing (40%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span></span></h2>
+<div class="outline-text-2" id="text-9">
+<p>
+Automated tests will be provided sometime after the initial release of
+the project. This section will explain requirements for how they will
+function. 
+</p>
+</div>
+
+<div id="outline-container-org3792f9f" class="outline-3">
+<h3 id="org3792f9f"><span class="section-number-3">9.1</span> Credit For Tests</h3>
+<div class="outline-text-3" id="text-9-1">
+<p>
+There are tests for some of the C functions specified in the project
+and tests of the executable <code>commando</code> called shell tests. The
+weighting of credit is as follows.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Wgt</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">20</td>
+<td class="org-left">Number of passed tests from <code>make test-cmd</code> (20 total, 1 pt per test)</td>
+</tr>
+
+<tr>
+<td class="org-right">20</td>
+<td class="org-left">Number of passed tests from <code>make test-commando</code> (20 total, 1 pt per test)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org514395b" class="outline-3">
+<h3 id="org514395b"><span class="section-number-3">9.2</span> <code>test_Makefile</code> to include in <code>Makefile</code></h3>
+<div class="outline-text-3" id="text-9-2">
+<p>
+Add the following line to your <code>Makefile</code>
+</p>
+<pre class="example">
+include test_Makefile
+</pre>
+
+<p>
+This will include the provided testing <code>test_Makefile</code>.  
+</p>
+
+<p>
+<b>NOTE</b>: The <code>test_Makefile</code> file has a <code>make zip</code> target in it.
+Remove this from your <code>Makefile</code> if it is present otherwise you will
+get errors about a duplicate target.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org885d2c6" class="outline-3">
+<h3 id="org885d2c6"><span class="section-number-3">9.3</span> Running Tests</h3>
+<div class="outline-text-3" id="text-9-3">
+<p>
+Including the above <code>test_Makefile</code> includes several testing targets
+including
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; make test                 # run all tests, both of the above
+&gt; make test-cmd             # test functions in the cmd.c and cmdcol.c files
+&gt; make test-cmd testnum=9   # test functions, only run test 9
+&gt; make test-commando        # test the commando application
+&gt; make clean-tests          # remove temporary files generated during testing
+&gt; make zip                  # create a zip of the project for submission
+</pre>
+</div>
+
+<p>
+A completely correct run of the tests would build and run as follows.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">## Remove any temporary files used for testing
+&gt; make clean-tests
+rm -rf test_cmd test-results/
+
+## Test functions
+&gt; make test-cmd
+gcc -Wall -Werror -g -o test_cmd test_cmd.c cmd.c cmdcol.c commando.h
+./testy test_cmd.org 
+============================================================
+== test_cmd.org : Tests of cmd.c and cmdcol.c via test_cmd.c
+== Running 20 / 20 tests
+1)  cmd_new_1             : ok
+2)  cmd_new_2             : ok
+3)  cmd_new_3             : ok
+4)  cmd_start_1           : ok
+5)  cmd_start_2           : ok
+6)  cmd_start_3           : ok
+7)  read_all_1            : ok
+8)  read_all_2            : ok
+9)  read_all_3            : ok
+10) cmd_update_1          : ok
+11) cmd_update_2          : ok
+12) cmd_update_3          : ok
+13) cmd_print_output_1    : ok
+14) cmd_print_output_2    : ok
+15) cmdcol_add_1          : ok
+16) cmdcol_add_2          : ok
+17) cmdcol_update_state_1 : ok
+18) cmdcol_update_state_2 : ok
+19) cmdcol_print_1        : ok
+20) cmdcol_print_2        : ok
+============================================================
+RESULTS: 20 / 20 tests passed
+
+## Test Commando
+&gt; make test-commando
+gcc -Wall -g -c commando.c
+gcc -Wall -g -c cmd.c
+gcc -Wall -g -c cmdcol.c
+gcc -Wall -g -c util.c
+gcc -Wall -g -o commando commando.o cmd.o cmdcol.o util.o
+./testy test_commando.org 
+============================================================
+== test_commando.org : Commando Application Tests
+== Running 20 / 20 tests
+1)  Startup, Help, Exit, and List Built-in : ok
+2)  Echoing via --echo and COMMANDO_ECHO   : ok
+3)  End of Input                           : ok
+4)  Blank Line Handling                    : ok
+5)  ls on the test_data/stuff directory    : ok
+6)  cat on test_data/quote.txt file        : ok
+7)  sleep for 1s                           : ok
+8)  ls multiple times                      : ok
+9)  ls and table.sh                        : ok
+10) rm, compile, run print_args            : ok
+11) output-all builtin                     : ok
+12) wait-all                               : ok
+13) Output Changes                         : ok
+14) pause builtin                          : ok
+15) pause finishes single job              : ok
+16) pause finishes multiple jobs           : ok
+17) pause not done                         : ok
+18) wait-for individual jobs               : ok
+19) Stress 1                               : ok
+20) Stress 2                               : ok
+============================================================
+RESULTS: 20 / 20 tests passed
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org81d583b" class="outline-3">
+<h3 id="org81d583b"><span class="section-number-3">9.4</span> Tips for Running Tests</h3>
+<div class="outline-text-3" id="text-9-4">
+<ul class="org-ul">
+<li><p>
+Individual tests can be run by setting  <code>testnum=N</code> during a make
+invocation. Two examples are below
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">## Run only test 15 from the test-cmd set of tests
+&gt; make test-cmd testnum=15
+./testy test_cmd.org 15
+============================================================
+== test_cmd.org : Tests of cmd.c and cmdcol.c via test_cmd.c
+== Running 1 / 20 tests
+15) cmdcol_add_1          : ok
+============================================================
+RESULTS: 1 / 1 tests passed
+
+
+## Run only test 3 for commando
+&gt; make test-commando testnum=3
+./testy test_commando.org 3
+============================================================
+== test_commando.org : Commando Application Tests
+== Running 1 / 20 tests
+3)  End of Input                        : ok
+============================================================
+RESULTS: 1 / 1 tests passed
+</pre>
+</div></li>
+<li><p>
+If test failures occur, a Results file will be listed giving
+detailed information about why the test failed. This file has the
+<code>.tmp</code> extension but is just a text file and should be examined in a
+text editor or in the terminal. For example
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; make test-commando 
+./testy test_commando.org 
+============================================================
+== test_commando.org : Commando Application Tests
+== Running 20 / 20 tests
+1)  Startup, Help, and Exit             : ok
+2)  List Built-in                       : ok
+3)  End of Input                        : ok
+4)  Blank Line Handling                 : ok
+5)  ls on the test_data/stuff directory : ok
+6)  cat on test_data/quote.txt file     : ok
+7)  sleep for 1s                        : ok
+8)  ls multiple times                   : ok
+9)  ls and table.sh                     : ok
+10) rm, compile, run print_args         : ok
+11) output-all builtin                  : ok
+12) wait-all                            : ok
+13) Output Changes                      : FAIL -&gt; results in file 'test-results/commando-13-result.tmp'
+14) pause builtin                       : ok
+15) pause finishes single job           : ok
+16) pause finishes multiple jobs        : ok
+17) pause not done                      : FAIL -&gt; results in file 'test-results/commando-17-result.tmp'
+18) wait-for individual jobs            : FAIL -&gt; results in file 'test-results/commando-18-result.tmp'
+19) Stress 1                            : FAIL -&gt; results in file 'test-results/commando-19-result.tmp'
+20) Stress 2                            : FAIL -&gt; results in file 'test-results/commando-20-result.tmp'
+============================================================
+RESULTS: 15 / 20 tests passed
+</pre>
+</div>
+<p>
+It would be a good idea to examine the first test failure Results
+file called <code>test-results/commando-13-result.tmp</code>. A quick way to do
+this would be via <code>less</code> as in
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; less test-results/commando-13-result.tmp
+</pre>
+</div>
+<p>
+with 'Space' scrolling down, 'u' scrolling up, and 'q' quitting.
+</p></li>
+<li><p>
+When running a single test, failure Results are saved to a file
+AND automatically shown to the screen
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; make test-commando testnum=13
+./testy test_commando.org 13
+============================================================
+== test_commando.org : Commando Application Tests
+== Running 1 / 20 tests
+13) Output Changes                      : FAIL -&gt; results in file 'test-results/commando-13-result.tmp'
+============================================================
+RESULTS: 0 / 1 tests passed
+
+
+FAILURE RESULTS
+----------------------------------------
+(TEST 13) Output Changes
+COMMENTS:
+Starts a program and shows it in a listing before it is complete.
+Requests output before it is complete which should be handled
+gracefully showing an 'output not ready' message.
+
+
+program: ./commando --echo
+Failure messages:
+- FAILURE: Output Mismatch at lines marked
+
+--- Side by Side Differences ---
+...
+</pre>
+</div></li>
+<li>The test files themselves have the extension <code>.org</code> but are just
+text files and can be examined in any text editor. They are run via
+the <code>testy</code> script which is an executable shell script.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org53728d5" class="outline-2">
+<h2 id="org53728d5"><span class="section-number-2">10</span> Assignment Submission</h2>
+<div class="outline-text-2" id="text-10">
+</div>
+<div id="outline-container-orgee9817e" class="outline-3">
+<h3 id="orgee9817e"><span class="section-number-3">10.1</span> Zip Target in <code>test_Makefile</code></h3>
+<div class="outline-text-3" id="text-10-1">
+<p>
+The <code>make zip</code> target is included in the provide <code>test_Makefile</code>. This
+will enable one to type <code>make zip</code> to create a <code>p1-code.zip</code> file
+which contains the entire project. Submit this Zip when you complete
+the project.
+</p>
+
+<p>
+Note that in some cases, <code>make zip</code> may produce warnings for instance
+if the size of the zip file is very large or contains more files than
+is healthy. Heed these warnings as they will ensure your submission
+goes through.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge000190" class="outline-3">
+<h3 id="orge000190"><span class="section-number-3">10.2</span> <a id="org32654cf"></a> Submit to Gradescope</h3>
+<div class="outline-text-3" id="text-10-2">
+<p>
+The below guide is for a different class and project but the basic
+steps are the same as for the present case except where noted.
+</p>
+
+<ol class="org-ol">
+<li><p>
+In a terminal, change to your project code directory and type <b>make
+zip</b> which will create a zip file of your code. A session should
+look like this:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">   &gt; cd Desktop/2021/p1-code      # location of assignment code
+
+   &gt; ls 
+   Makefile    commando.c  test_commando.org  cmd.c test_Makefile
+   ...
+
+   &gt; make zip                     # create a zip file using Makefile target
+   rm -f p1-code.zip
+   cd .. &amp;&amp; zip "p1-code/p1-code.zip" -r "p1-code"
+     adding: p1-code/ (stored 0%)
+     adding: p1-code/Makefile (deflated 68%)
+     adding: p1-code/commando.c (deflated 69%)
+     adding: p1-code/cmd.c (deflated 71%)
+     ...
+   Zip created in p1-code.zip
+
+   &gt; ls p1-code.zip
+   p1-code.zip
+</pre>
+</div></li>
+
+<li><p>
+Log into <a href="https://www.gradescope.com/">Gradescope</a> and locate and click 'Project 1' which will
+open up submission
+</p>
+<div class="org-center">
+
+<div class="figure">
+<p><img src="gradescope01.png" alt="gradescope01.png" style="max-width:100%;" />
+</p>
+</div>
+</div></li>
+<li><p>
+Click on the 'Drag and Drop' text which will open a file selection
+dialog; locate and choose your <code>p1-code.zip</code> file
+</p>
+<div class="org-center">
+
+<div class="figure">
+<p><img src="gradescope02.png" alt="gradescope02.png" style="max-width:100%;" />
+</p>
+</div>
+</div></li>
+<li><p>
+This will show the contents of the Zip file and should include your
+C source files along with testing files and directories. 
+</p>
+<div class="org-center">
+
+<div class="figure">
+<p><img src="gradescope03.png" alt="gradescope03.png" style="max-width:100%;" />
+</p>
+</div>
+</div></li>
+<li><p>
+Click 'Upload' which will show progress uploading files.  It may
+take a few seconds before this dialog closes to indicate that the
+upload is successful. Note: there is a limit of 256 files per
+upload; normal submissions are not likely to have problems with
+this but you may want to make sure that nothing has gone wrong such
+as infinite loops creating many files or incredibly large files. 
+</p>
+
+<p>
+<b>WARNING</b>: There is a limit of 256 files per zip. Doing <code>make zip</code>
+will warn if this limit is exceeded but uploading to Gradescope
+will fail without any helpful messages if you upload more the 256
+files in a zip. 
+</p>
+
+<div class="org-center">
+
+<div class="figure">
+<p><img src="gradescope04.png" alt="gradescope04.png" style="max-width:100%;" />
+</p>
+</div>
+</div></li>
+
+<li><p>
+Once files have successfully uploaded, the Autograder will begin
+running the command line tests and recording results.  These are
+the same tests that are run via <code>make test</code>.   
+</p>
+<div class="org-center">
+
+<div class="figure">
+<p><img src="gradescope05.png" alt="gradescope05.png" style="max-width:100%;" />
+</p>
+</div>
+</div></li>
+<li><p>
+When the tests have completed, results will be displayed
+summarizing scores along with output for each batch of tests.
+</p>
+<div class="org-center">
+
+<div class="figure">
+<p><img src="gradescope06.png" alt="gradescope06.png" style="max-width:100%;" />
+</p>
+</div>
+</div></li>
+<li><p>
+<b>For those working in groups, only 1 member should upload a ZIP.</b>
+After uploading, there will be a Menu option in the upper right to
+<b>Add Group Member</b>.  Click this and add your group members.
+Gradescope also provides a <a href="https://www.youtube.com/watch?v=rue7p_kATLA">video on how to Add Group Members to a
+submission</a>.
+</p>
+
+<div class="org-center">
+
+<div class="figure">
+<p><img src="gradescope07.png" alt="gradescope07.png" style="max-width:100%;" />
+</p>
+</div>
+</div></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org80fc8da" class="outline-3">
+<h3 id="org80fc8da"><span class="section-number-3">10.3</span> Late Policies</h3>
+<div class="outline-text-3" id="text-10-3">
+<p>
+You may wish to review the policy on late project submission which
+will cost 1 Engagement Point per day late. <b>No projects will be
+accepted more than 48 hours after the deadline.</b>
+</p>
+
+<p>
+<a href="https://www-users.cs.umn.edu/~kauffman/4061/syllabus.html">https://www-users.cs.umn.edu/~kauffman/4061/syllabus.html</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-02-03 Wed 11:54 <br/> </i>
+</div>
+</body>
+</html>
