@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-02-03 Wed 12:09 -->
+<!-- 2021-02-04 Thu 10:45 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 4061 Project 1: Going Commando</title>
@@ -387,7 +387,7 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-02-03 Wed 12:09</i>
+<i>Last Updated: 2021-02-04 Thu 10:45</i>
 </div>
 <div id="content">
 <h1 class="title">CSCI 4061 Project 1: Going Commando</h1>
@@ -401,70 +401,87 @@ for the JavaScript code in this tag.
 help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-org11cd89c" class="outline-4">
-<h4 id="org11cd89c">CODE DISTRIBUTION: <a href="p1-code.zip">p1-code.zip</a></h4>
+<div id="outline-container-org6b0b185" class="outline-4">
+<h4 id="org6b0b185">CODE DISTRIBUTION: <a href="p1-code.zip">p1-code.zip</a></h4>
 </div>
 
-<div id="outline-container-orgd4b4dcb" class="outline-4">
-<h4 id="orgd4b4dcb">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-orgd4b4dcb">
+<div id="outline-container-org8d471a5" class="outline-4">
+<h4 id="org8d471a5">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org8d471a5">
+<dl class="org-dl">
+<dt>Thu Feb  4 10:41:02 AM CST 2021</dt><dd><p>
+The missing <code>GROUP_MEMBERS.txt</code> has been added to <code>p1-code.zip</code>.  
+</p>
+
+<p>
+<a href="https://piazza.com/class/kjx61xyeuoxb8?cid=27">Post 27</a> reported some errors associated with test output which
+relies on permissions of files in the <code>test_data/</code> directory.  This
+can happen when <code>unzip</code>'ing files where some files are marked as
+executable so <code>ls -F</code> lists them as <code>gettysburg.txt*</code> (with the <code>*</code>
+symbol affixed).  The provided <code>test_Makefile</code> has been updated to
+correct for this by changing these permissions and the tests should
+now run normally. <a href="test_Makefile">Download a fresh copy of <code>test_Makefile</code></a> and
+replace the old one if needed.
+</p></dd>
+</dl>
+
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgd5b0920">1. Introduction: A Simple Shell</a></li>
-<li><a href="#orga8480b1">2. Download Code and Setup</a></li>
-<li><a href="#orga196fbf">3. Opening Demo</a></li>
-<li><a href="#org6c9a036">4. Overall Architecture</a>
+<li><a href="#orgaf14b16">1. Introduction: A Simple Shell</a></li>
+<li><a href="#org34b36f5">2. Download Code and Setup</a></li>
+<li><a href="#org6c71d62">3. Opening Demo</a></li>
+<li><a href="#org9dba9a9">4. Overall Architecture</a>
 <ul>
-<li><a href="#org2672381">4.1. What Needs to be Implemented</a></li>
-<li><a href="#org70a7581">4.2. What's Already Done</a></li>
-<li><a href="#orge294718">4.3. Create a Makefile</a></li>
+<li><a href="#org068b347">4.1. What Needs to be Implemented</a></li>
+<li><a href="#org1c9e06a">4.2. What's Already Done</a></li>
+<li><a href="#org71e10af">4.3. Create a Makefile</a></li>
 </ul>
 </li>
-<li><a href="#orgad0a9a6">5. <code>cmd_t</code> Data Type</a>
+<li><a href="#org538a1a5">5. <code>cmd_t</code> Data Type</a>
 <ul>
-<li><a href="#orgd1c0146">5.1. Required Functions</a></li>
-<li><a href="#org8935249">5.2. Allocation and Freeing</a></li>
-<li><a href="#org685f884">5.3. Starting a <code>cmd_t</code></a></li>
-<li><a href="#orga412c21">5.4. Checking for Updated State</a></li>
-<li><a href="#org5b29902">5.5. Retrieving and Printing Output</a></li>
+<li><a href="#orgca1534b">5.1. Required Functions</a></li>
+<li><a href="#orged1661e">5.2. Allocation and Freeing</a></li>
+<li><a href="#org88981f9">5.3. Starting a <code>cmd_t</code></a></li>
+<li><a href="#orgc1ef6ab">5.4. Checking for Updated State</a></li>
+<li><a href="#orge882f3d">5.5. Retrieving and Printing Output</a></li>
 </ul>
 </li>
-<li><a href="#org8934e18">6. <code>cmdcol_t</code> Data Type</a>
+<li><a href="#org6f83e62">6. <code>cmdcol_t</code> Data Type</a>
 <ul>
-<li><a href="#org799079c">6.1. Required Functions</a></li>
-<li><a href="#orgd136ca7">6.2. Basic functionality</a></li>
+<li><a href="#org68aa17d">6.1. Required Functions</a></li>
+<li><a href="#org81e1dfc">6.2. Basic functionality</a></li>
 </ul>
 </li>
-<li><a href="#org48831ab">7. Commando Top Level Functionalities</a>
+<li><a href="#org5709de1">7. Commando Top Level Functionalities</a>
 <ul>
-<li><a href="#orgf0c83ca">7.1. Important Note on Buffered Output</a></li>
-<li><a href="#orgf39de64">7.2. Main Loop</a></li>
-<li><a href="#orgffd8670">7.3. Basic Help and Exiting</a></li>
-<li><a href="#org1dd4c7e">7.4. Command Echoing</a></li>
-<li><a href="#org5761bc5">7.5. Running and Listing Jobs</a></li>
-<li><a href="#orgb9ee0c6">7.6. Output of Jobs</a></li>
-<li><a href="#org62aa442">7.7. End of Loop Alerts</a></li>
-<li><a href="#org4cbe5e4">7.8. Waiting and Alerts</a></li>
-<li><a href="#orgdff3904">7.9. Pausing</a></li>
-<li><a href="#orgd51601e">7.10. Cleaning up at Close</a></li>
+<li><a href="#orge4fdc7c">7.1. Important Note on Buffered Output</a></li>
+<li><a href="#orgd127040">7.2. Main Loop</a></li>
+<li><a href="#org4d14454">7.3. Basic Help and Exiting</a></li>
+<li><a href="#orge75ef4b">7.4. Command Echoing</a></li>
+<li><a href="#org70fdb2a">7.5. Running and Listing Jobs</a></li>
+<li><a href="#org4ff28b3">7.6. Output of Jobs</a></li>
+<li><a href="#org3e819e5">7.7. End of Loop Alerts</a></li>
+<li><a href="#orgd1bc9d5">7.8. Waiting and Alerts</a></li>
+<li><a href="#orgd5d1a37">7.9. Pausing</a></li>
+<li><a href="#org29d09c5">7.10. Cleaning up at Close</a></li>
 </ul>
 </li>
-<li><a href="#org8c540be">8. Manual Inspection Criteria (60%)</a></li>
-<li><a href="#org9552704">9. Automatic Testing (40%)</a>
+<li><a href="#orgf0c1b45">8. Manual Inspection Criteria (60%)</a></li>
+<li><a href="#orgccda44b">9. Automatic Testing (40%)</a>
 <ul>
-<li><a href="#org3efab2b">9.1. Credit For Tests</a></li>
-<li><a href="#orgb2d0daf">9.2. <code>test_Makefile</code> to include in <code>Makefile</code></a></li>
-<li><a href="#orgb362f5f">9.3. Running Tests</a></li>
-<li><a href="#org3bd460e">9.4. Tips for Running Tests</a></li>
+<li><a href="#org130c04f">9.1. Credit For Tests</a></li>
+<li><a href="#org7949985">9.2. <code>test_Makefile</code> to include in <code>Makefile</code></a></li>
+<li><a href="#org038234d">9.3. Running Tests</a></li>
+<li><a href="#orge1bc81a">9.4. Tips for Running Tests</a></li>
 </ul>
 </li>
-<li><a href="#org6148cb7">10. Assignment Submission</a>
+<li><a href="#org3dde323">10. Assignment Submission</a>
 <ul>
-<li><a href="#org619872d">10.1. Zip Target in <code>test_Makefile</code></a></li>
-<li><a href="#org2214754">10.2. Submit to Gradescope</a></li>
-<li><a href="#org8e245bb">10.3. Late Policies</a></li>
+<li><a href="#org30432bd">10.1. Zip Target in <code>test_Makefile</code></a></li>
+<li><a href="#orgca6067c">10.2. Submit to Gradescope</a></li>
+<li><a href="#orgfb68af0">10.3. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -473,8 +490,8 @@ help from course staff if you get stuck for too long.</li>
 </div>
 </div>
 
-<div id="outline-container-orgd5b0920" class="outline-2">
-<h2 id="orgd5b0920"><span class="section-number-2">1</span> Introduction: A Simple Shell</h2>
+<div id="outline-container-orgaf14b16" class="outline-2">
+<h2 id="orgaf14b16"><span class="section-number-2">1</span> Introduction: A Simple Shell</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Command line shells allow one to access the capabilities of a computer
@@ -518,8 +535,8 @@ status every so often</li>
 </div>
 </div>
 
-<div id="outline-container-orga8480b1" class="outline-2">
-<h2 id="orga8480b1"><span class="section-number-2">2</span> Download Code and Setup</h2>
+<div id="outline-container-org34b36f5" class="outline-2">
+<h2 id="org34b36f5"><span class="section-number-2">2</span> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 As in labs, download the code pack linked at the top of the
@@ -696,8 +713,8 @@ that folder.
 </div>
 </div>
 
-<div id="outline-container-orga196fbf" class="outline-2">
-<h2 id="orga196fbf"><span class="section-number-2">3</span> Opening Demo</h2>
+<div id="outline-container-org6c71d62" class="outline-2">
+<h2 id="org6c71d62"><span class="section-number-2">3</span> Opening Demo</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 The best way to get a sense of any program is to see how it
@@ -877,9 +894,9 @@ lila [a1-code]%                                              # returns to normal
 </div>
 </div>
 
-<div id="outline-container-org6fdbf49" class="outline-4">
-<h4 id="org6fdbf49">Things to Note</h4>
-<div class="outline-text-4" id="text-org6fdbf49">
+<div id="outline-container-org1364b2e" class="outline-4">
+<h4 id="org1364b2e">Things to Note</h4>
+<div class="outline-text-4" id="text-org1364b2e">
 <ul class="org-ul">
 <li>The child processes (jobs) that <code>commando</code> starts do not show any
 output by default and run concurrently with the main process which
@@ -900,12 +917,12 @@ simple architecture to make the coding manageable.</li>
 </div>
 </div>
 
-<div id="outline-container-org6c9a036" class="outline-2">
-<h2 id="org6c9a036"><span class="section-number-2">4</span> Overall Architecture</h2>
+<div id="outline-container-org9dba9a9" class="outline-2">
+<h2 id="org9dba9a9"><span class="section-number-2">4</span> Overall Architecture</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org2672381" class="outline-3">
-<h3 id="org2672381"><span class="section-number-3">4.1</span> What Needs to be Implemented</h3>
+<div id="outline-container-org068b347" class="outline-3">
+<h3 id="org068b347"><span class="section-number-3">4.1</span> What Needs to be Implemented</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 <code>commando</code> is divided into the following parts which must be
@@ -972,8 +989,8 @@ tracking.
 </div>
 </div>
 
-<div id="outline-container-org70a7581" class="outline-3">
-<h3 id="org70a7581"><span class="section-number-3">4.2</span> What's Already Done</h3>
+<div id="outline-container-org1c9e06a" class="outline-3">
+<h3 id="org1c9e06a"><span class="section-number-3">4.2</span> What's Already Done</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 Examine the provided files closely as they give some insight into what
@@ -997,8 +1014,8 @@ that child processes can finish.</li>
 </div>
 </div>
 
-<div id="outline-container-orge294718" class="outline-3">
-<h3 id="orge294718"><span class="section-number-3">4.3</span> Create a Makefile</h3>
+<div id="outline-container-org71e10af" class="outline-3">
+<h3 id="org71e10af"><span class="section-number-3">4.3</span> Create a Makefile</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 Create a <code>Makefile</code> which has at least the following targets.
@@ -1016,7 +1033,7 @@ include test_Makefile
 </pre>
 
 <p>
-which will enable testing targets described in the <a href="#org4091cc1">Automatic Testing
+which will enable testing targets described in the <a href="#org4fd89fa">Automatic Testing
 Section</a>.
 </p></li>
 </ul>
@@ -1024,8 +1041,8 @@ Section</a>.
 </div>
 </div>
 
-<div id="outline-container-orgad0a9a6" class="outline-2">
-<h2 id="orgad0a9a6"><span class="section-number-2">5</span> <code>cmd_t</code> Data Type</h2>
+<div id="outline-container-org538a1a5" class="outline-2">
+<h2 id="org538a1a5"><span class="section-number-2">5</span> <code>cmd_t</code> Data Type</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Information about a child process / job / command in <code>commando</code> is
@@ -1056,8 +1073,8 @@ it but the reference implementation includes only those listed.
 </p>
 </div>
 
-<div id="outline-container-orgd1c0146" class="outline-3">
-<h3 id="orgd1c0146"><span class="section-number-3">5.1</span> Required Functions</h3>
+<div id="outline-container-orgca1534b" class="outline-3">
+<h3 id="orgca1534b"><span class="section-number-3">5.1</span> Required Functions</h3>
 <div class="outline-text-3" id="text-5-1">
 <pre class="example">
 // cmd.c: functions related the cmd_t struct abstracting a
@@ -1141,8 +1158,8 @@ void cmd_print_output(cmd_t *cmd);
 </div>
 </div>
 
-<div id="outline-container-org8935249" class="outline-3">
-<h3 id="org8935249"><span class="section-number-3">5.2</span> Allocation and Freeing</h3>
+<div id="outline-container-orged1661e" class="outline-3">
+<h3 id="orged1661e"><span class="section-number-3">5.2</span> Allocation and Freeing</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 Basic allocation of a <code>cmd_t</code> is done with <code>cmd_new()</code> which takes an
@@ -1181,8 +1198,8 @@ a character array rather than onto the screen.</li>
 </div>
 </div>
 
-<div id="outline-container-org685f884" class="outline-3">
-<h3 id="org685f884"><span class="section-number-3">5.3</span> Starting a <code>cmd_t</code></h3>
+<div id="outline-container-org88981f9" class="outline-3">
+<h3 id="org88981f9"><span class="section-number-3">5.3</span> Starting a <code>cmd_t</code></h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 The real action associated with <code>cmd_t</code> is "starting" them which will
@@ -1217,8 +1234,8 @@ above.</li>
 </div>
 </div>
 
-<div id="outline-container-orga412c21" class="outline-3">
-<h3 id="orga412c21"><span class="section-number-3">5.4</span> <a id="orgb3ab73a"></a> Checking for Updated State</h3>
+<div id="outline-container-orgc1ef6ab" class="outline-3">
+<h3 id="orgc1ef6ab"><span class="section-number-3">5.4</span> <a id="org9d50d26"></a> Checking for Updated State</h3>
 <div class="outline-text-3" id="text-5-4">
 <p>
 After a <code>cmd_t</code> has <code>cmd_start()</code> called on it, there should be a
@@ -1292,8 +1309,8 @@ forth but this is not required for <code>commando</code>.</li>
 </div>
 </div>
 
-<div id="outline-container-org5b29902" class="outline-3">
-<h3 id="org5b29902"><span class="section-number-3">5.5</span> Retrieving and Printing Output</h3>
+<div id="outline-container-orge882f3d" class="outline-3">
+<h3 id="orge882f3d"><span class="section-number-3">5.5</span> Retrieving and Printing Output</h3>
 <div class="outline-text-3" id="text-5-5">
 <p>
 When a child process completes, it will exit. If all has gone
@@ -1341,7 +1358,7 @@ to a smaller size as this may fail returning a <code>NULL</code>.</li>
 less), reading is finished.  Set the integer <code>nread</code> to be the
 total bytes read then return the allocated buffer of data.</li>
 <li><p>
-<a id="org9ef2881"></a> Ensure that the returned string is
+<a id="org6ff4d77"></a> Ensure that the returned string is
 null-terminated. This may mean adjusting the buffer sizes in
 allocation a little (add 1) and then setting the character beyond
 the last read to be the null character as in:
@@ -1388,7 +1405,7 @@ recalled as it is saved in the <code>cmd-&gt;output</code> field. The
 </p>
 <ol class="org-ol">
 <li><p>
-<a id="org0e6092a"></a> Check that <code>cmd-&gt;output</code> is non-null; if it
+<a id="org1174fd2"></a> Check that <code>cmd-&gt;output</code> is non-null; if it
 is <code>NULL</code>, print a message like
 </p>
 <pre class="example">
@@ -1403,8 +1420,8 @@ along with the buffer to write and the number of bytes to write.</li>
 </div>
 
 
-<div id="outline-container-org8934e18" class="outline-2">
-<h2 id="org8934e18"><span class="section-number-2">6</span> <code>cmdcol_t</code> Data Type</h2>
+<div id="outline-container-org6f83e62" class="outline-2">
+<h2 id="org6f83e62"><span class="section-number-2">6</span> <code>cmdcol_t</code> Data Type</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 The intent of <code>cmdcol_t</code> is to track a collection of <code>cmd_t</code> instances
@@ -1432,8 +1449,8 @@ This section describes the basic functionality of <code>cmdcol_t</code>.
 </p>
 </div>
 
-<div id="outline-container-org799079c" class="outline-3">
-<h3 id="org799079c"><span class="section-number-3">6.1</span> Required Functions</h3>
+<div id="outline-container-org68aa17d" class="outline-3">
+<h3 id="org68aa17d"><span class="section-number-3">6.1</span> Required Functions</h3>
 <div class="outline-text-3" id="text-6-1">
 <pre class="example">
 // cmdcol.c: functions related to cmdcol_t collections of commands.
@@ -1480,8 +1497,8 @@ void cmdcol_freeall(cmdcol_t *col);
 </div>
 </div>
 
-<div id="outline-container-orgd136ca7" class="outline-3">
-<h3 id="orgd136ca7"><span class="section-number-3">6.2</span> Basic functionality</h3>
+<div id="outline-container-org81e1dfc" class="outline-3">
+<h3 id="org81e1dfc"><span class="section-number-3">6.2</span> Basic functionality</h3>
 <div class="outline-text-3" id="text-6-2">
 <p>
 Adding a new <code>cmd_t</code> instance should be done by checking whether
@@ -1505,8 +1522,8 @@ constituents of the <code>cmdcol_t</code>.
 </div>
 </div>
 
-<div id="outline-container-org48831ab" class="outline-2">
-<h2 id="org48831ab"><span class="section-number-2">7</span> Commando Top Level Functionalities</h2>
+<div id="outline-container-org5709de1" class="outline-2">
+<h2 id="org5709de1"><span class="section-number-2">7</span> Commando Top Level Functionalities</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 The <code>commando.c</code> file should tie the basic low-level pieces from
@@ -1518,8 +1535,8 @@ implementation).
 </p>
 </div>
 
-<div id="outline-container-orgf0c83ca" class="outline-3">
-<h3 id="orgf0c83ca"><span class="section-number-3">7.1</span> Important Note on Buffered Output</h3>
+<div id="outline-container-orge4fdc7c" class="outline-3">
+<h3 id="orge4fdc7c"><span class="section-number-3">7.1</span> Important Note on Buffered Output</h3>
 <div class="outline-text-3" id="text-7-1">
 <p>
 During testing, it is desirable to get output onto the screen as soon
@@ -1537,8 +1554,8 @@ and its ilk immediately put output onto the screen.
 </div>
 </div>
 
-<div id="outline-container-orgf39de64" class="outline-3">
-<h3 id="orgf39de64"><span class="section-number-3">7.2</span> Main Loop</h3>
+<div id="outline-container-orgd127040" class="outline-3">
+<h3 id="orgd127040"><span class="section-number-3">7.2</span> Main Loop</h3>
 <div class="outline-text-3" id="text-7-2">
 <p>
 After setup, the main input loop will likely have the following basic
@@ -1566,8 +1583,8 @@ via a call to <code>cmdcol_update_state()</code>.</li>
 </div>
 
 
-<div id="outline-container-orgffd8670" class="outline-3">
-<h3 id="orgffd8670"><span class="section-number-3">7.3</span> Basic Help and Exiting</h3>
+<div id="outline-container-org4d14454" class="outline-3">
+<h3 id="org4d14454"><span class="section-number-3">7.3</span> Basic Help and Exiting</h3>
 <div class="outline-text-3" id="text-7-3">
 <p>
 The <code>help</code> command should show  the built-in commands required to be supported
@@ -1601,8 +1618,8 @@ away clean.
 </div>
 </div>
 
-<div id="outline-container-org1dd4c7e" class="outline-3">
-<h3 id="org1dd4c7e"><span class="section-number-3">7.4</span> Command Echoing</h3>
+<div id="outline-container-orge75ef4b" class="outline-3">
+<h3 id="orge75ef4b"><span class="section-number-3">7.4</span> Command Echoing</h3>
 <div class="outline-text-3" id="text-7-4">
 <p>
 To make testing easier to understand, <code>commando</code> should support
@@ -1681,8 +1698,8 @@ lila [commando]% printf 'list \nls test_data/ \nlist \nexit \n' | commando
 </div>
 </div>
 
-<div id="outline-container-org5761bc5" class="outline-3">
-<h3 id="org5761bc5"><span class="section-number-3">7.5</span> Running and Listing Jobs</h3>
+<div id="outline-container-org70fdb2a" class="outline-3">
+<h3 id="org70fdb2a"><span class="section-number-3">7.5</span> Running and Listing Jobs</h3>
 <div class="outline-text-3" id="text-7-5">
 <p>
 The main purpose of <code>commando</code> is to run jobs / child processes. If
@@ -1735,8 +1752,8 @@ lila [commando]%
 </div>
 </div>
 
-<div id="outline-container-orgb9ee0c6" class="outline-3">
-<h3 id="orgb9ee0c6"><span class="section-number-3">7.6</span> Output of Jobs</h3>
+<div id="outline-container-org4ff28b3" class="outline-3">
+<h3 id="org4ff28b3"><span class="section-number-3">7.6</span> Output of Jobs</h3>
 <div class="outline-text-3" id="text-7-6">
 <p>
 The output for a job is not printed to <code>commando</code> screen by
@@ -1897,8 +1914,8 @@ waking up now
 </div>
 </div>
 
-<div id="outline-container-org62aa442" class="outline-3">
-<h3 id="org62aa442"><span class="section-number-3">7.7</span> End of Loop Alerts</h3>
+<div id="outline-container-org3e819e5" class="outline-3">
+<h3 id="org3e819e5"><span class="section-number-3">7.7</span> End of Loop Alerts</h3>
 <div class="outline-text-3" id="text-7-7">
 <p>
 At the end of each iteration of the main loop of <code>commando</code>, each job
@@ -1952,8 +1969,8 @@ JOB  #PID      STAT   STR_STAT OUTB COMMAND
 </div>
 </div>
 
-<div id="outline-container-org4cbe5e4" class="outline-3">
-<h3 id="org4cbe5e4"><span class="section-number-3">7.8</span> Waiting and Alerts</h3>
+<div id="outline-container-orgd1bc9d5" class="outline-3">
+<h3 id="orgd1bc9d5"><span class="section-number-3">7.8</span> Waiting and Alerts</h3>
 <div class="outline-text-3" id="text-7-8">
 <p>
 In comparison to standard shells, <code>commando</code> starts child processes
@@ -2034,8 +2051,8 @@ JOB  #PID      STAT   STR_STAT OUTB COMMAND
 </div>
 </div>
 
-<div id="outline-container-orgdff3904" class="outline-3">
-<h3 id="orgdff3904"><span class="section-number-3">7.9</span> Pausing</h3>
+<div id="outline-container-orgd5d1a37" class="outline-3">
+<h3 id="orgd5d1a37"><span class="section-number-3">7.9</span> Pausing</h3>
 <div class="outline-text-3" id="text-7-9">
 <p>
 It is useful in testing to be able to have <code>commando</code> simply do
@@ -2066,8 +2083,8 @@ JOB  #PID      STAT   STR_STAT OUTB COMMAND
 </div>
 
 
-<div id="outline-container-orgd51601e" class="outline-3">
-<h3 id="orgd51601e"><span class="section-number-3">7.10</span> Cleaning up at Close</h3>
+<div id="outline-container-org29d09c5" class="outline-3">
+<h3 id="org29d09c5"><span class="section-number-3">7.10</span> Cleaning up at Close</h3>
 <div class="outline-text-3" id="text-7-10">
 <p>
 When the <code>exit</code> command is issued or the end of the input is found,
@@ -2118,8 +2135,8 @@ phaedrus [commando]% valgrind ./commando
 </div>
 
 
-<div id="outline-container-org8c540be" class="outline-2 grading">
-<h2 id="org8c540be"><span class="section-number-2">8</span> Manual Inspection Criteria (60%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span></span></h2>
+<div id="outline-container-orgf0c1b45" class="outline-2 grading">
+<h2 id="orgf0c1b45"><span class="section-number-2">8</span> Manual Inspection Criteria (60%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span></span></h2>
 <div class="outline-text-2" id="text-8">
 <p>
 The following criteria will be examined during manual inspection of
@@ -2401,8 +2418,8 @@ or committing bad style fouls.
 </div>
 </div>
 
-<div id="outline-container-org9552704" class="outline-2 grading">
-<h2 id="org9552704"><span class="section-number-2">9</span> <a id="org4091cc1"></a> Automatic Testing (40%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span></span></h2>
+<div id="outline-container-orgccda44b" class="outline-2 grading">
+<h2 id="orgccda44b"><span class="section-number-2">9</span> <a id="org4fd89fa"></a> Automatic Testing (40%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span></span></h2>
 <div class="outline-text-2" id="text-9">
 <p>
 Automated tests are provided via the <code>test_*</code> files which are part of
@@ -2411,8 +2428,8 @@ they function.
 </p>
 </div>
 
-<div id="outline-container-org3efab2b" class="outline-3">
-<h3 id="org3efab2b"><span class="section-number-3">9.1</span> Credit For Tests</h3>
+<div id="outline-container-org130c04f" class="outline-3">
+<h3 id="org130c04f"><span class="section-number-3">9.1</span> Credit For Tests</h3>
 <div class="outline-text-3" id="text-9-1">
 <p>
 There are tests for some of the C functions specified in the project
@@ -2449,8 +2466,8 @@ weighting of credit is as follows.
 </div>
 </div>
 
-<div id="outline-container-orgb2d0daf" class="outline-3">
-<h3 id="orgb2d0daf"><span class="section-number-3">9.2</span> <code>test_Makefile</code> to include in <code>Makefile</code></h3>
+<div id="outline-container-org7949985" class="outline-3">
+<h3 id="org7949985"><span class="section-number-3">9.2</span> <code>test_Makefile</code> to include in <code>Makefile</code></h3>
 <div class="outline-text-3" id="text-9-2">
 <p>
 Add the following line to <b>the END of</b>  your <code>Makefile</code>
@@ -2471,8 +2488,8 @@ get errors about a duplicate target.
 </div>
 </div>
 
-<div id="outline-container-orgb362f5f" class="outline-3">
-<h3 id="orgb362f5f"><span class="section-number-3">9.3</span> Running Tests</h3>
+<div id="outline-container-org038234d" class="outline-3">
+<h3 id="org038234d"><span class="section-number-3">9.3</span> Running Tests</h3>
 <div class="outline-text-3" id="text-9-3">
 <p>
 Including the above <code>test_Makefile</code> includes several testing targets
@@ -2564,8 +2581,8 @@ RESULTS: 20 / 20 tests passed
 </div>
 </div>
 
-<div id="outline-container-org3bd460e" class="outline-3">
-<h3 id="org3bd460e"><span class="section-number-3">9.4</span> Tips for Running Tests</h3>
+<div id="outline-container-orge1bc81a" class="outline-3">
+<h3 id="orge1bc81a"><span class="section-number-3">9.4</span> Tips for Running Tests</h3>
 <div class="outline-text-3" id="text-9-4">
 <ul class="org-ul">
 <li><p>
@@ -2683,12 +2700,12 @@ the <code>testy</code> script which is an executable shell script.</li>
 </div>
 </div>
 
-<div id="outline-container-org6148cb7" class="outline-2">
-<h2 id="org6148cb7"><span class="section-number-2">10</span> Assignment Submission</h2>
+<div id="outline-container-org3dde323" class="outline-2">
+<h2 id="org3dde323"><span class="section-number-2">10</span> Assignment Submission</h2>
 <div class="outline-text-2" id="text-10">
 </div>
-<div id="outline-container-org619872d" class="outline-3">
-<h3 id="org619872d"><span class="section-number-3">10.1</span> Zip Target in <code>test_Makefile</code></h3>
+<div id="outline-container-org30432bd" class="outline-3">
+<h3 id="org30432bd"><span class="section-number-3">10.1</span> Zip Target in <code>test_Makefile</code></h3>
 <div class="outline-text-3" id="text-10-1">
 <p>
 The <code>make zip</code> target is included in the provide <code>test_Makefile</code>. This
@@ -2706,8 +2723,8 @@ goes through.
 </div>
 </div>
 
-<div id="outline-container-org2214754" class="outline-3">
-<h3 id="org2214754"><span class="section-number-3">10.2</span> <a id="org60a820d"></a> Submit to Gradescope</h3>
+<div id="outline-container-orgca6067c" class="outline-3">
+<h3 id="orgca6067c"><span class="section-number-3">10.2</span> <a id="orgb0358e5"></a> Submit to Gradescope</h3>
 <div class="outline-text-3" id="text-10-2">
 <p>
 The below guide is for a different class and project but the basic
@@ -2841,8 +2858,8 @@ submission</a>.
 </div>
 </div>
 
-<div id="outline-container-org8e245bb" class="outline-3">
-<h3 id="org8e245bb"><span class="section-number-3">10.3</span> Late Policies</h3>
+<div id="outline-container-orgfb68af0" class="outline-3">
+<h3 id="orgfb68af0"><span class="section-number-3">10.3</span> Late Policies</h3>
 <div class="outline-text-3" id="text-10-3">
 <p>
 You may wish to review the policy on late project submission which
@@ -2858,7 +2875,7 @@ accepted more than 48 hours after the deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-02-03 Wed 12:09 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-02-04 Thu 10:45 <br/> </i>
 </div>
 </body>
 </html>
