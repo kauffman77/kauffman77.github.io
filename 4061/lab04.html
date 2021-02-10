@@ -1,0 +1,786 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-02-07 Sun 19:47 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 4061 Lab03: Input and Expanding Buffers</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2021-02-07 Sun 19:47</i>
+</div>
+<div id="content">
+<h1 class="title">CSCI 4061 Lab03: Input and Expanding Buffers</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Mon 2/15/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><i>Approximately 1.00% of total grade</i></li>
+</ul>
+
+<div id="outline-container-org04b7e54" class="outline-4">
+<h4 id="org04b7e54">CODE DISTRIBUTION: <a href="lab03-code.zip">lab03-code.zip</a></h4>
+<div class="outline-text-4" id="text-org04b7e54">
+<ul class="org-ul">
+<li>Download the code distribution</li>
+<li>See further setup instructions below</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org72f79e0" class="outline-4">
+<h4 id="org72f79e0">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org72f79e0">
+<dl class="org-dl">
+<dt>Sun Feb  7 07:46:35 PM CST 2021</dt><dd>The files <code>alphabet.txt</code> and <code>nums.txt</code> were initially missing from
+<code>lab03-code.zip</code> but have now been added to it.</dd>
+</dl>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgc2f97eb">1. Rationale</a></li>
+<li><a href="#org9b0e317">2. Codepack</a></li>
+<li><a href="#orge5684dd">3. QUESTIONS.txt File Contents</a></li>
+<li><a href="#orgfa72216">4. Submission</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc2f97eb" class="outline-2">
+<h2 id="orgc2f97eb"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+At times programs must deal with an input situation wherein an unknown
+amount of input must be accepted and stored in a single input
+pass. This problem is reflected in the following program specification:
+</p>
+<blockquote>
+<p>
+Read an arbitrary length string from the user and print its characters
+back in reverse order.
+</p>
+</blockquote>
+<p>
+In such a case, two common constraints are at play:
+</p>
+<ol class="org-ol">
+<li>The program cannot pre-allocate sufficient space as it may run out
+for long inputs.</li>
+<li>The input is presented only once so it cannot be counted then read
+again.</li>
+</ol>
+<p>
+Dynamic data structures like Linked Lists can solve such problems by
+allocating nodes on demand. However, many problems such as printing in
+reverse are handled more succinctly with arrays. With arrays, one
+typically allocates some space initially and reads the input into
+it. If one runs out of space, allocate a larger space, copy data over
+to the larger space, and continue reading. 
+</p>
+
+<p>
+This lab demonstrates a standard technique to do this in which an
+input array (buffer) is repeatedly expanded to make space for
+input. This technique will be useful for an upcoming project.
+</p>
+</div>
+
+
+<div id="outline-container-org09a49f0" class="outline-4">
+<h4 id="org09a49f0">Grading Policy</h4>
+<div class="outline-text-4" id="text-org09a49f0">
+<p>
+Credit for this Lab is earned by completing the exercises here and
+submitting a Zip of the work to Gradescope. Students are responsible
+to check that the results produced locally via <code>make test</code> are
+reflected on Gradescope after submitting their completed
+Zip. Successful completion earns 1 Engagement Point.
+</p>
+
+<p>
+Lab Exercises are open resource/open collaboration and <b>students are
+encouraged to coopearte on labs.</b> Students may submit work as groups
+of up to 5 to Gradescope: one person submits then adds the names of
+their group members to the submission.
+</p>
+
+<p>
+See the <a href="../syllabus.html">full policies in the course syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9b0e317" class="outline-2">
+<h2 id="org9b0e317"><span class="section-number-2">2</span> Codepack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The codepack for this lab is linked at the top of this
+document. Always download it and unzip/unpack it.  It should contain
+the following files which are briefly described.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">Use</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Questions to answer: fill in the multiple choice selections in this file.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>print_reverse.c</code></td>
+<td class="org-left">Study</td>
+<td class="org-left">C file to study to answer QUIZ questions</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>file_reverse.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Create and complete the program for the CODE portion of the lab</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt.bk</code></td>
+<td class="org-left">Backup</td>
+<td class="org-left">Backup copy of the original file to help revert if needed</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Build</td>
+<td class="org-left">Enables <code>make test</code> and <code>make zip</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running scripts</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_lab03.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for this lab</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orge5684dd" class="outline-2">
+<h2 id="orge5684dd"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
+Follow the instructions in it to complete the QUIZ and CODE questions
+for the lab.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                           __________________
+
+                            LAB 03 QUESTIONS
+                           __________________
+
+
+
+
+
+Lab Instructions
+================
+
+  Follow the instructions below to experiment with topics related to
+  this lab.
+  - For sections marked QUIZ, fill in an (X) for the appropriate
+    response in this file. Use the command `make test-quiz' to see if
+    all of your answers are correct.
+  - For sections marked CODE, complete the code indicated. Use the
+    command `make test-code' to check if your code is complete.
+  - DO NOT CHANGE any parts of this file except the QUIZ sections as it
+    may interfere with the tests otherwise.
+  - If your `QUESTIONS.txt' file seems corrupted, restore it by copying
+    over the `QUESTIONS.txt.bk' backup file.
+  - When you complete the exercises, check your answers with `make test'
+    and if all is well, create a zip file with `make zip' and upload it
+    to Gradescope. Ensure that the Autograder there reflects your local
+    results.
+  - IF YOU WORK IN A GROUP only one member needs to submit and then add
+    the names of their group.
+
+
+QUIZ Questions on print_reverse.c
+=================================
+
+  Analyze the `print_reverse.c' application. Compile and run it as shown
+  below
+  ,----
+  | // DEMO:
+  | &gt; make print_reverse
+  | gcc -Wall -Werror -g  -o print_reverse print_reverse.c
+  | 
+  | &gt; ./print_reverse               # interactive run
+  | hello world                     # typed input
+  |                                 # press Ctrl-d to end input
+  | dlrow olleh                     # output from program
+  | 
+  | # non-interactive runs via pipes
+  | &gt; printf "0123456789" | ./print_reverse
+  | ...
+  | 
+  | &gt; printf "here is everything I have" | ./print_reverse
+  | ...
+  `----
+
+  Answer the following Questions about the techniques used in this
+  program. You may need to consult the Manual Page / Documentation on
+  some functions to answer confidently.
+
+
+Location of buf
+~~~~~~~~~~~~~~~
+
+  The variable `buf' is used to store character data that is read from
+  standard input in `print_reverse'.  Which part of memory are these
+  characters stored?
+
+  - ( ) The Stack: `buf' is declared as a local array near the top of
+    `main()' so exists in `main()''s stack frame.
+  - ( ) The Heap: `buf' points to an array that is `malloc()''d on the
+    heap near the start of main.
+  - ( ) Globals: `buf' is declared outside of any function and is
+    therefore in the Globa/Static/Data portion of program memory.
+  - ( ) Based on the way that `buf' is declared, it is impossible to say
+    where in memory it exists.
+
+
+Expansion of buf
+~~~~~~~~~~~~~~~~
+
+  The `realloc()' function is used to change the size of the memory area
+  associated with `buf'.  According to your read of the code and the
+  manual page for this function, which of the following is returned by
+  `realloc()'?
+
+  - ( ) It will return `NULL' if it is not possible to find a larger
+    space for `buf'
+  - ( ) It will return the same pointer `buf' if that space can be
+    expanded in place.
+  - ( ) It will return a pointer to a new memory of the requested size
+    where the contents of `buf' have already been copied with the old
+    pointer being automatically `free()''d.
+  - ( ) `realloc()' could return any of these.
+
+
+Resizing Rate
+~~~~~~~~~~~~~
+
+  Which of the following is used as the "rate" of expansion for the
+  buffer?
+  - ( ) If there is insufficient space in `buf', it is resized to be 1
+    character larger than its previous size.
+  - ( ) If there is insufficient space in `buf', it is resized to be 10
+    characters larger than its previous size.
+  - ( ) If there is insufficient space in `buf', it is resized to be
+    150% of its previous size.
+  - ( ) If there is insufficient space in `buf', it is resized to be
+    200% of its previous size.
+
+  Note that expanding by 150% or 200% each iteration leads to an "append
+  item" operation that has an Amortized computation complexity O(1).
+  This approach is often used in data structures such as Python Lists,
+  Java's ArrayList / StringBuffer, or other "dynamic array" data
+  structures. &lt;https://en.wikipedia.org/wiki/Dynamic_array&gt;
+
+
+CODE Adapt to file_reverse.c
+============================
+
+  Create a new file called `file_reverse.c' and adapt the approach taken
+  in `print_reverse.c' to print the contents of a file in reverse order,
+  character by character.
+
+  1. The provided `Makefile' will compile `file_reverse.c' to the
+     program `file_reverse'
+  2. `file_reverse' should take a command line argument which is the
+     name of a file to print in reverse order.
+  3. If no command line argument is given, print a usage message and
+     exit with code 1 as demonstrated below.
+  4. Open the file provided on the command line using the C standard
+     library. Scan data into a character array and expand the array as
+     needed using the techniques demoed in print_reverse.
+  5. When the entire file has been read in, print the contents in
+     reverse order.
+  6. Make sure to clean up any memory used through heap allocation or
+     opening files.
+
+  NOTE: If you are not familiar with how to use `argc / argv' to deal
+  with command line arguments, get help from a colleague or staff member
+  to review this technique.
+
+  The tests provided via `make test-code' use the files `alphabet.txt'
+  and `nums.txt'. A correctly written program will behave as
+  demonstrated below.
+
+  ,----
+  | &gt;&gt; ./file_reverse               # run with no args
+  | usage: file_reverse &lt;file&gt;      # print usage message
+  | 
+  | &gt;&gt; echo $?                      # show return code
+  | 1                               # 1 - error while running program
+  | 
+  | &gt;&gt; ./file_reverse alphabet.txt  # print alphabet.txt in reverse
+  | 
+  | z y x w v u t s r q p o n m l k j i h g f e d c b a
+  | Z Y X W V U T S R Q P O N M L K J I H G F E D C B A
+  | 
+  | &gt;&gt; echo $?                      # check return code
+  | 0                               # 0 for no problems
+  | 
+  | &gt;&gt; ./file_reverse nums.txt      # print nums.txt in reverse
+  | 
+  | 52
+  | 42
+  | 32
+  | 22
+  | 12
+  | 02
+  | 91
+  | 81
+  | 71
+  | 61
+  | 51
+  | 41
+  | 31
+  | 21
+  | 11
+  | 01
+  | 9
+  | 8
+  | 7
+  | 6
+  | 5
+  | 4
+  | 3
+  | 2
+  | 1
+  `----
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfa72216" class="outline-2">
+<h2 id="orgfa72216"><span class="section-number-2">4</span> Submission</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
+how to upload your completed lab zip to Gradescope.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-02-07 Sun 19:47 <br/> </i>
+</div>
+</body>
+</html>
