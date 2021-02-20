@@ -1,0 +1,2396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-02-19 Fri 17:18 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 2021 Project 2: Bit Ops and Debugging</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2021-02-19 Fri 17:18</i>
+</div>
+<div id="content">
+<h1 class="title">CSCI 2021 Project 2: Bit Ops and Debugging</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Tue 3/02/2021</b></li>
+<li><i>Approximately 3.0-4.0% of total grade</i></li>
+<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a> (<i>submission will open soon</i>)</li>
+<li>Projects are <b>individual work</b>: no collaboration with other students
+is allowed. Seek help from course staff if you get stuck for too long.</li>
+</ul>
+
+<div id="outline-container-org91ac27c" class="outline-4">
+<h4 id="org91ac27c">CODE/TEST DISTRIBUTION: <a href="p2-code.zip">p2-code.zip</a></h4>
+</div>
+
+<div id="outline-container-org8fc1f6e" class="outline-4">
+<h4 id="org8fc1f6e">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org8fc1f6e">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orga562251">1. Introduction</a></li>
+<li><a href="#org57fcf9f">2. Download Code and Setup</a></li>
+<li><a href="#orgcbb750d">3. <b>Problem 1</b>: Battery Meter Simulation</a>
+<ul>
+<li><a href="#org5b37b1e">3.1. Overview</a></li>
+<li><a href="#orgaf094b4">3.2. <code>batt_update.c</code>: Updating the Display with User Code</a></li>
+<li><a href="#org6b211f7">3.3. Battery Meter Simulator</a></li>
+<li><a href="#org31c9182">3.4. Sample Runs of <code>batt_main</code></a></li>
+<li><a href="#org76d2d23">3.5. Problem 1 Grading Criteria</a></li>
+</ul>
+</li>
+<li><a href="#org7d6d0e9">4. <b>Problem 2</b>: Debugging the Puzzlebox</a>
+<ul>
+<li><a href="#org70d9e35">4.1. Overview</a></li>
+<li><a href="#org6e963d4">4.2. <code>input.txt</code> Input File</a></li>
+<li><a href="#orgb579d08">4.3. <code>gdb</code> The GNU Debugger</a></li>
+<li><a href="#org3257c11">4.4. Typical Cycle</a></li>
+<li><a href="#orgce2b3e4">4.5. Kinds of Puzzles</a></li>
+<li><a href="#orge611ca3">4.6. Tests for <code>puzzlebox.c</code></a></li>
+</ul>
+</li>
+<li><a href="#orgfd366d0">5. Assignment Submission</a>
+<ul>
+<li><a href="#orgd778843">5.1. Submit to Gradescope</a></li>
+<li><a href="#org5a4a0f1">5.2. Late Policies</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga562251" class="outline-2">
+<h2 id="orga562251"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<b>Bit-level operations</b> are common in C and systems programming.  This
+assignment features a problem in which shifting and bitwise AND/OR-ing
+are required to complete the requirements.
+</p>
+
+<p>
+Debugging is also a critical skill enabled by the <b>debugger</b>. The
+second problem in the assignment makes use of the GNU Debugger, <code>gdb</code>,
+to work through a puzzle program requiring specific inputs to pass its
+"phases".
+</p>
+</div>
+
+<div id="outline-container-org85eb297" class="outline-4">
+<h4 id="org85eb297">Makefile</h4>
+<div class="outline-text-4" id="text-org85eb297">
+<p>
+As in the first assignment, a <code>Makefile</code> is provided as part of this
+project. The essential targets pertinent to each problem are described
+in those sections. The <code>Makefile</code> is equipped with a brief help
+listing:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; make help
+Typical usage is:
+  &gt; make                          # build all programs
+  &gt; make clean                    # remove all compiled items
+  &gt; make zip                      # create a zip file for submission
+  &gt; make prob1                    # built targets associated with problem 1
+  &gt; make prob1 testnum=5          # run problem 1 test #5 only
+  &gt; make test-prob2               # run test for problem 2
+  &gt; make test                     # run all tests
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgd712b52" class="outline-4">
+<h4 id="orgd712b52">Automated Tests</h4>
+<div class="outline-text-4" id="text-orgd712b52">
+<p>
+As in previous assignments, automated tests are provided and
+associated with problems. Each problem describes how to run tests
+associated with it. Generally this is done as before:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; make test-prob1
+gcc -Wall -Wno-comment -Werror -g  -c batt_main.c
+gcc -Wall -Wno-comment -Werror -g  -c batt_update.c
+...
+./testy test_prob1.org 
+============================================================
+== test_prob1.org : Problem 1 test_batt_update and batt_main tests
+== Running 35 / 35 tests
+1)  set_batt_from_ports() 0 V                 : ok
+2)  set_batt_from_ports() 0 P                 : ok
+3)  set_batt_from_ports() 7400 V              : ok
+4)  set_batt_from_ports() 7400 P              : ok
+5)  set_batt_from_ports() STATUS=0b10011001 V : ok
+...
+
+&gt; make test-prob2         # run "tests" associated with problem 2
+... 
+&gt; ./puzzlebox input.txt   # same as above: run puzzlebox to test answers
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org57fcf9f" class="outline-2">
+<h2 id="org57fcf9f"><span class="section-number-2">2</span> <a id="orgfd22415"></a> Download Code and Setup</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Download the code pack linked at the top of the page. Unzip this which
+will create a project folder. Create new files in this
+folder. Ultimately you will re-zip this folder to submit it.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">State</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Build file to compile all programs</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>batt.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 header file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batt_main.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 main() function for battmeter simulation</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batt_update.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Create this file and write required function in it to complete Problem 1</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batt_examples.sh</code></td>
+<td class="org-left">Sample</td>
+<td class="org-left">Prints a variety of sample runs of <code>batt_main</code></td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_batt_update.c</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 functions tests for <code>batt_upate.c</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_prob1.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 testing data file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 test running script</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>puzzlebox.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2 Debugging problem</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>input.txt</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 2 Input for <code>puzzlebox</code>, fill this in</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<div id="outline-container-orgcbb750d" class="outline-2">
+<h2 id="orgcbb750d"><span class="section-number-2">3</span> <b>Problem 1</b>: Battery Meter Simulation</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org5b37b1e" class="outline-3">
+<h3 id="org5b37b1e"><span class="section-number-3">3.1</span> Overview</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+You are tasked with writing code which will be run by a
+microcontroller in a digital battery meter.  The hardware has the
+following relevant features.
+</p>
+<ul class="org-ul">
+<li>A voltage sensor whose value can be accessed via a memory mapped
+port. In C this is presented as a global variable. Another port
+indicates whether the voltage should be displayed in Volts or
+Percentage of total battery capacity.</li>
+<li>A digital display with a port control port; setting certain global
+variable will change the display to show information to a user of
+the battery meter.</li>
+<li>User code that you will need to write to update the display based on
+the sensor value.</li>
+<li>A simulator program with <code>Makefile</code> to test your code</li>
+</ul>
+<p>
+Each feature is discussed in subsequent sections.
+</p>
+</div>
+
+<div id="outline-container-org86ffa67" class="outline-4">
+<h4 id="org86ffa67">Voltage Sensor</h4>
+<div class="outline-text-4" id="text-org86ffa67">
+<p>
+A voltage sensor is attached to the battery meter and can be
+accessed via a C global variable. This is declared in the <code>batt.h</code>
+header file as follows.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">extern short BATT_VOLTAGE_PORT;
+// Sensor tied to the battery, provides a measure of voltage in units
+// of 0.0005 volts (half milli volts). The sensor can sense a wide
+// range of voltages including negatives but the batteries being
+// measured are Full when 3.8V (7600 sensor value) or above is read
+// and Empty when 3.0V (6000 sensor value) or lower is read.
+</pre>
+</div>
+<p>
+You do not need to define this variable as it is already there. You do
+NOT need to set this variable as it is automatically changed by the
+hardware.  Instead, you will need to access its value to determine
+various the voltage level of the attached battery.
+</p>
+
+<p>
+As indicated in the variable documentation, a common (though mildly
+unreliable) means of detecting how much charge is left in a battery is
+to read the voltage on the battery. The type of battery being measured
+in this case has a higher voltage when fully charged and its lower voltage
+continuously lowers as it discharges. Past certain low voltage, the
+battery is unsafe to discharge and other hardware will disable the
+meter.  The figure below shows the voltage range and corresponding
+Capacity Percentage for the battery.
+</p>
+
+<div class="org-center">
+
+<div id="orged9ccb6" class="figure">
+<p><img src="battery-voltage-v-percent2.png" alt="battery-voltage-v-percent2.png" style="max-width:80%;" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Relationship between Voltage and Percent full for batteries being measured by the meter.</p>
+</div>
+</div>
+
+<p>
+Notice the relationship between the Voltage which can be read directly
+and the Percent full which needs to be calculated from the voltage
+using the given formula:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">BattV = BattVoltPort / 2
+Batt% = (BattV - 3000) / 8
+</pre>
+</div>
+<p>
+Note the conversion is done in millivolts (0.001 volts) and the the
+voltage sensor is in units of half millivolts (0.0005 volts).
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb274e08" class="outline-4">
+<h4 id="orgb274e08">Voltage Display Mode</h4>
+<div class="outline-text-4" id="text-orgb274e08">
+<p>
+Another global variable exposes whether the user has pressed a button
+which toggles between displaying Volts or Percent full in the battery.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">extern unsigned char BATT_STATUS_PORT;
+// The bit at index 2 indicates whether display should be in Volts (0)
+// or Percent (1). C code should only read this port. Tied to a user
+// button which will toggle the bit. Other bits in this char may be
+// set to indicate the status of other parts of the meter and should
+// be ignored: ONLY BIT 2 BIT MATTERS.
+</pre>
+</div>
+<p>
+As per the documentation, only the 2th bit should be used while other
+bits may be nonzero and should be ignored. Bitwise operations are
+useful for this.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org93f9742" class="outline-4">
+<h4 id="org93f9742">Display Port</h4>
+<div class="outline-text-4" id="text-org93f9742">
+<p>
+The battery meter has a digital display which shows the remaining
+battery capacity. This display is controlled by a special memory area
+exposed as another global variable in C.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">extern int BATT_DISPLAY_PORT;
+// Controls battery meter display. Readable and writable. C code
+// should mostly write this port with a sequence of bits which will
+// light up specific elements of the LCD panel.
+</pre>
+</div>
+<p>
+While listed as in <code>int</code>, each bit of the is actually tied to part of
+the LCD display screen. When bits are set to 1, part of the
+display is lit up while 0 means it is not lit.
+</p>
+
+<p>
+The following diagrams show how various bit patterns will light up
+parts of the LCD display. Some bits correspond to parts of digits like
+"9" and "4" while others light up portions for the decimal place,
+Volt/Percent indicator, and bars of the leftmost visual level
+indicator. Above the display is the bit string which results in the
+elements on the display being turned on with "1" and off with a "0".
+</p>
+
+<p>
+Notice the following.
+</p>
+<ul class="org-ul">
+<li>The <code>BATT_DISPLAY_PORT</code> is a 32-bit integer but only some bits
+control the display</li>
+<li>29 bits are used to control the full battery display (bits 0-28)</li>
+<li>Bits 0-6 control the rightmost digit</li>
+<li>Bits 7-13 control the middle digit</li>
+<li>Bits 14-20 control the left digit</li>
+<li>Each digit follows the same pattern: lowest bit controls the upper
+right LCD digit bar with each higher bit going in a clockwise
+fashion and the middle bar being controlled by the highest order bit</li>
+<li>Bit 21 controls whether the '%' Percent indicator is shown</li>
+<li>Bit 22 controls whether the 'V' Voltage indicator is shown</li>
+<li>Bit 23 controls whether the decimal place is on (for Volts) or off
+(for percent)</li>
+<li>Bits 24 and 28 control the 'bars' in the visual level indicator</li>
+</ul>
+
+<div class="org-center">
+
+<div id="org0585aad" class="figure">
+<p><img src="battery-meter-top-first.png" alt="battery-meter-top-first.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Full examples of how the 29 bits of the <code>BATT_DISPLAY_PORT</code> turns on/off parts of the LCD display.  Each digit follows the same pattern of bit to bar correspondence. The lowest order (rightmost) bit controls the upper bar of each digit and proceed around the outside clockwise with the final bit for each digit controlling the middle bar.  This pattern is followed for the 3 digits. Remaining bits control the decimal place, the V and % indicators, and the bars of the visual level indicator at the left of the display. Note that only certain patterns of display come up in standard use. For example, only one of the V or % indicator should be shown normally.</p>
+</div>
+</div>
+
+<p>
+For reference, each number to be displayed in the LCD battery meter
+follows the same patter of bits which is shown in the below diagram
+with the right-most digit bit positions.
+</p>
+
+<div class="org-center">
+
+<div id="org516863a" class="figure">
+<p><img src="digital-digits-top-first.png" alt="digital-digits-top-first.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 3: </span>Pattern of bits for all 10 numerals and a few extra symbols</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgaf094b4" class="outline-3">
+<h3 id="orgaf094b4"><span class="section-number-3">3.2</span> <code>batt_update.c</code>: Updating the Display with User Code</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Periodically the microcontroller will run code to adjust the battery
+display to show the current battery level.  This function is
+</p>
+<pre class="example">
+int batt_update();
+</pre>
+
+<p>
+and it will be your job to write it.
+</p>
+
+<p>
+Rather than write everything that needs to be done within
+<code>batt_update()</code>, several helper functions will be used to divide this
+task into several more manageable and testable chunks.
+</p>
+
+<p>
+These should all be written in <code>batt_update.c</code> and are as follows.
+</p>
+</div>
+
+<div id="outline-container-orgdc43a2f" class="outline-4">
+<h4 id="orgdc43a2f"><a id="orgc8a3a7a"></a> Converting Voltage Values to a Struct</h4>
+<div class="outline-text-4" id="text-orgdc43a2f">
+<div class="org-src-container">
+<pre class="src src-c">int set_batt_from_ports(batt_t *batt);
+// Uses the two global variables (ports) BATT_VOLTAGE_PORT and
+// BATT_STATUS_PORT to set the fields of the parameter 'batt'.  If
+// BATT_VOLTAGE_PORT is negative, then battery has been wired wrong;
+// no fields of 'batt' are changed and 1 is returned to indicate an
+// error.  Otherwise, sets fields of batt based on reading the voltage
+// value and converting to precent using the provided formula. Returns
+// 0 on a successful execution with no errors. This function DOES NOT
+// modify any global variables but may access global variables.
+//
+// CONSTRAINT: Uses only integer operations. No floating point
+// operations are used as the target machine does not have a FPU.
+// 
+// CONSTRAINT: Limit the complexity of code as much as possible. Do
+// not use deeply nested conditional structures. Seek to make the code
+// as short, and simple as possible. Code longer than 40 lines may be
+// penalized for complexity.
+</pre>
+</div>
+
+<p>
+This function works with the <code>struct batt_t</code> defined in <code>batt.h</code> which
+has the following layout.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// Breaks battery stats down into constituent parts
+typedef struct{
+  short volts;          // voltage read from port, units of 0.001 Volts
+  char  percent;        // percent full converted from voltage
+  char  mode;           // 0 for volts, 1 for percent
+} batt_t;
+</pre>
+</div>
+
+<p>
+The function <code>set_batt_from_ports()</code> will read the global variables
+mentioned above and fill in values for the struct fields of the
+parameter <code>batt</code>.  Keep the following in mind while implementing the
+function.
+</p>
+
+<ol class="org-ol">
+<li>Read the <code>BATT_VOLTAGE_PORT</code> value directly into the <code>volt</code> field.</li>
+<li><p>
+Use the previously mentioned conversion formula to convert Volts to
+Percentage to fill in the <code>percent</code> field of the struct.
+</p>
+<div class="org-src-container">
+<pre class="src src-text">   BattV = BattVoltPort / 2
+   Batt% = (BattV - 3000) / 8
+</pre>
+</div></li>
+<li><b>Note the constraint:</b> make use only of integer operations. <b>Do not
+use float or double</b> variables. This is emulates the somewhat
+common situation where simple microprocessors cannot perform
+floating point operations as they lack a <i>Floating Point Unit
+(FPU)</i>.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org9b913e1" class="outline-4">
+<h4 id="org9b913e1">Setting Display from a <code>batt_t</code></h4>
+<div class="outline-text-4" id="text-org9b913e1">
+<div class="org-src-container">
+<pre class="src src-c">int set_display_from_batt(batt_t batt, int *display);
+// Alters the bits of integer pointed to by display to reflect the
+// data in struct param 'batt'.  Selects either to show Volts (mode=0)
+// or Percent (mode=1). If Volts are displayed, only displays 3 digits
+// rounding the lowest digit up or down appropriate to the last digit.
+// Calculates each digit to display changes bits at 'display' to show
+// the volts/percent according to the pattern for each digit. Modifies
+// additional bits to show a decimal place for volts and a 'V' or '%'
+// indicator appropriate to the mode. In both modes, places bars in
+// the level display as indicated by percentage cutoffs in provided
+// diagrams. This function DOES NOT modify any global variables but
+// may access global variables. Always returns 0.
+// 
+// CONSTRAINT: Limit the complexity of code as much as possible. Do
+// not use deeply nested conditional structures. Seek to make the code
+// as short, and simple as possible. Code longer than 85 lines may be
+// penalized for complexity.
+</pre>
+</div>
+
+<p>
+Importantly, this function sets the bits in the integer pointed to by
+<code>display</code> which may or MAY NOT BE the global display variable.
+</p>
+
+<p>
+To properly set the display bits, <code>set_display_from_batt()</code> will need
+to do bit shifting along with bitwise operations to construct the
+correct bit pattern for the display.
+</p>
+
+<p>
+A good trick to use is to create a series of bit patterns that
+correspond to the various digits. For example, according to the
+diagrams above, the bit pattern for <code>9</code> is <code>0b1110111</code>.  If a <code>9</code>
+should appear on the display somewhere, this bit pattern should be
+shifted and combined with the existing bits in <code>display</code> so that a 9
+will show.  Creating similar constant <i>mask</i> patterns for each digit,
+the decimal place, the positions of the Voltage/Percent indicator, and
+the bars for the visual level indicator is a good way to make this
+problem manageable.
+</p>
+
+<p>
+A detailed explanation of one approach to the problem follows.
+</p>
+<ul class="org-ul">
+<li>Create an array of bit masks for each of the digits 0-9. The 0th
+element of the array contains a bit mask like <code>0b0111111</code> which
+represents the bits that should be set for a 0 digit, the 1th
+element of this array has a mask like <code>0b0000011</code> which are the bits
+to be set for a 1. There should be ten entries in this array in
+indices 0-9.</li>
+<li>Use modulo to determine the integer value for right, middle, and
+left digits for the display from <code>volts</code> or <code>percent</code>. Each digit
+should have a value from 0-9 and be Stored in its own variable.</li>
+<li>Start with an integer variable of 0 (all 0 bits).</li>
+<li>Use left digit variable to index into your array of masks to
+determine the bits that should be set for it and shift them over an
+appropriate amount combining with the existin display bits.</li>
+<li>Combining bits here is a logical operation of setting all bits that
+are one in the mask to 1 in the display variable.</li>
+<li>Repeat this process for the middle and right digits shifting left by
+appropriate to where the digits should line up.</li>
+<li>There are several special cases to consider such as leading 0's in a
+percent should be blanks so nothing should be drawn.</li>
+<li>Don't forget to set the additional bits like the decimal place, the
+V/% indicator, and the level bars for the visual indicator.</li>
+<li>Importantly <b>make code as simple as possible</b> as the target CPU has
+a limited amount of RAM and longer codes will occupy more RAM.
+<b>Avoid nesting conditionals</b> very deeply: <code>if/else if/else</code>
+structures are fine but nesting a conditional within this will be
+penalized.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge58019e" class="outline-4">
+<h4 id="orge58019e">Overall Update Function</h4>
+<div class="outline-text-4" id="text-orge58019e">
+<div class="org-src-container">
+<pre class="src src-c">int batt_update();
+// Called to update the battery meter display.  Makes use of
+// set_batt_from_ports() and set_display_from_batt() to access battery
+// voltage sensor then set the display. Checks these functions and if
+// they indicate an error, does NOT change the display.  If functions
+// succeed, modifies BATT_DISPLAY_PORT to show current battery level.
+// 
+// CONSTRAINT: Does not allocate any heap memory as malloc() is NOT
+// available on the target microcontroller.  Uses stack and global
+// memory only.
+</pre>
+</div>
+<p>
+This function makes use of the previous two functions and the global
+variables that correspond to the hardware to alter the display. It
+should be relatively short by making use of the previous functions.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6b211f7" class="outline-3">
+<h3 id="org6b211f7"><span class="section-number-3">3.3</span> Battery Meter Simulator</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+While we do not have actual hardware with the features mentioned, a
+simulator for the system is in the provided files <code>batt_main.c /
+batt_sim.c</code>.  You do not need to modify or understand code in either
+file to complete the assignment though it will certainly expand you C
+skills to spend some time examining them.
+</p>
+
+<p>
+The <code>main()</code> function in <code>batt_main.c</code> accepts two command line
+arguments which are the value for the voltage sensor and whether
+to show Voltage or Percent for the battery. It will call your
+functions for this problem and show results for it.  You are
+encouraged to use this <code>main()</code> to test your code incrementally.
+</p>
+<ul class="org-ul">
+<li>Examine whether <code>set_batt_from_ports()</code> is correct based on the first
+part of output in <code>batt_main.c</code></li>
+<li>Once <code>set_batt_from_ports()</code> is complete, examine whether the output
+of <code>set_display_from_batt()</code> is correct based on the latter part
+of the output.</li>
+<li>Once both these functions are correct, examine whether
+<code>batt_update()</code> is correct based on the final part of the output
+of the <code>main()</code> function.</li>
+</ul>
+
+<p>
+Note that there are a variety of functions in the <code>batt_sim.c</code>
+which are used to simulate how the battery meter will display. This is
+also where the global variables like <code>BATT_DISPLAY_PORT</code> are
+defined.  However, you do not need to modify or even understand the
+code; it is only used to show how the display would look when the
+<code>BATT_DISPLAY_PORT</code> bits are set.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org31c9182" class="outline-3">
+<h3 id="org31c9182"><span class="section-number-3">3.4</span> Sample Runs of <code>batt_main</code></h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+Below are samples generated by compiling and running the <code>main()</code>
+function in the <code>batt_main.c</code> file.  The code is compiled by using
+the provided <code>Makefile</code> to create the <code>batt_main</code> program.  It
+compiles the the functions you write in the file <code>batt_update.c</code> and
+combines them with functions in <code>batt_main.c</code>.
+</p>
+
+<pre class="example">
+&gt; make batt_main
+make: 'batt_main' is up to date.
+
+==========Voltage FOR 7884==========
+&gt; ./batt_main 7884 V
+BATT_VOLTAGE_PORT set to: 7884
+BATT_STATUS_PORT  set to: 0x79
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3942
+  .percent = 100
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 11111 1 10 1100111 1110111 1010011
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 11111 1 10 1100111 1110111 1010011
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+  ####   ####  #  #     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
+|#####|  ####   ####  ####  V  
+|#####|     #      #     #     
+|#####|     #      #     #     
++-----+  #### o ####     #     
+
+
+==========Percent FOR 7884==========
+&gt; ./batt_main 7884 P
+BATT_VOLTAGE_PORT set to: 7884
+BATT_STATUS_PORT  set to: 0x95
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3942
+  .percent = 100
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 11111 0 01 0000011 0111111 0111111
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 11111 0 01 0000011 0111111 0111111
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+     #   ####  ####     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #  %  
+|#####|     #   #  #  #  #     
++-----+     #   ####  ####     
+
+
+==========Voltage FOR 7600==========
+&gt; ./batt_main 7600 V
+BATT_VOLTAGE_PORT set to: 7600
+BATT_STATUS_PORT  set to: 0x79
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3800
+  .percent = 100
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 11111 1 10 1100111 1111111 0111111
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 11111 1 10 1100111 1111111 0111111
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
+|#####|  ####   ####  #  #  V  
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
++-----+  #### o ####  ####     
+
+
+==========Percent FOR 7600==========
+&gt; ./batt_main 7600 P
+BATT_VOLTAGE_PORT set to: 7600
+BATT_STATUS_PORT  set to: 0x95
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3800
+  .percent = 100
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 11111 0 01 0000011 0111111 0111111
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 11111 0 01 0000011 0111111 0111111
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+     #   ####  ####     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #  %  
+|#####|     #   #  #  #  #     
++-----+     #   ####  ####     
+
+
+==========Voltage FOR 7530==========
+&gt; ./batt_main 7530 V
+BATT_VOLTAGE_PORT set to: 7530
+BATT_STATUS_PORT  set to: 0x79
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3765
+  .percent = 95
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 11111 1 10 1100111 0100011 0100011
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 11111 1 10 1100111 0100011 0100011
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|#####|     #      #     #     
+|#####|     #      #     #     
+|#####|  ####      #     #  V  
+|#####|     #      #     #     
+|#####|     #      #     #     
++-----+  #### o    #     #     
+
+
+==========Percent FOR 7530==========
+&gt; ./batt_main 7530 P
+BATT_VOLTAGE_PORT set to: 7530
+BATT_STATUS_PORT  set to: 0x95
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3765
+  .percent = 95
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 11111 0 01 0000000 1110111 1110110
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 11111 0 01 0000000 1110111 1110110
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+         ####  ####     
+|#####|         #  #  #        
+|#####|         #  #  #        
+|#####|         ####  ####     
+|#####|            #     #  %  
+|#####|            #     #     
++-----+         ####  ####     
+
+
+==========Voltage FOR 7202==========
+&gt; ./batt_main 7202 V
+BATT_VOLTAGE_PORT set to: 7202
+BATT_STATUS_PORT  set to: 0x79
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3601
+  .percent = 75
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 01111 1 10 1100111 1111110 0111111
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 01111 1 10 1100111 1111110 0111111
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|     |     #   #     #  #     
+|#####|     #   #     #  #     
+|#####|  ####   ####  #  #  V  
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
++-----+  #### o ####  ####     
+
+
+==========Percent FOR 7202==========
+&gt; ./batt_main 7202 P
+BATT_VOLTAGE_PORT set to: 7202
+BATT_STATUS_PORT  set to: 0x95
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3601
+  .percent = 75
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 01111 0 01 0000000 0100011 1110110
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 01111 0 01 0000000 0100011 1110110
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+         ####  ####     
+|     |            #  #        
+|#####|            #  #        
+|#####|            #  ####     
+|#####|            #     #  %  
+|#####|            #     #     
++-----+            #  ####     
+
+
+==========Voltage FOR 7026==========
+&gt; ./batt_main 7026 V
+BATT_VOLTAGE_PORT set to: 7026
+BATT_STATUS_PORT  set to: 0x79
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3513
+  .percent = 64
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00111 1 10 1100111 1110110 0000011
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00111 1 10 1100111 1110110 0000011
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+  ####   ####     #     
+|     |     #   #        #     
+|     |     #   #        #     
+|#####|  ####   ####     #  V  
+|#####|     #      #     #     
+|#####|     #      #     #     
++-----+  #### o ####     #     
+
+
+==========Percent FOR 7026==========
+&gt; ./batt_main 7026 P
+BATT_VOLTAGE_PORT set to: 7026
+BATT_STATUS_PORT  set to: 0x95
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3513
+  .percent = 64
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00111 0 01 0000000 1111110 1010011
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00111 0 01 0000000 1111110 1010011
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+         ####  #  #     
+|     |         #     #  #     
+|     |         #     #  #     
+|#####|         ####  ####     
+|#####|         #  #     #  %  
+|#####|         #  #     #     
++-----+         ####     #     
+
+
+==========Voltage FOR 6666==========
+&gt; ./batt_main 6666 V
+BATT_VOLTAGE_PORT set to: 6666
+BATT_STATUS_PORT  set to: 0x79
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3333
+  .percent = 41
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00011 1 10 1100111 1100111 1100111
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00011 1 10 1100111 1100111 1100111
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|     |     #      #     #     
+|     |     #      #     #     
+|     |  ####   ####  ####  V  
+|#####|     #      #     #     
+|#####|     #      #     #     
++-----+  #### o ####  ####     
+
+
+==========Percent FOR 6666==========
+&gt; ./batt_main 6666 P
+BATT_VOLTAGE_PORT set to: 6666
+BATT_STATUS_PORT  set to: 0x95
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3333
+  .percent = 41
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00011 0 01 0000000 1010011 0000011
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00011 0 01 0000000 1010011 0000011
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+         #  #     #     
+|     |         #  #     #     
+|     |         #  #     #     
+|     |         ####     #     
+|#####|            #     #  %  
+|#####|            #     #     
++-----+            #     #     
+
+
+==========Voltage FOR 6596==========
+&gt; ./batt_main 6596 V
+BATT_VOLTAGE_PORT set to: 6596
+BATT_STATUS_PORT  set to: 0x79
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3298
+  .percent = 37
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00011 1 10 1100111 1100111 0111111
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00011 1 10 1100111 1100111 0111111
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|     |     #      #  #  #     
+|     |     #      #  #  #     
+|     |  ####   ####  #  #  V  
+|#####|     #      #  #  #     
+|#####|     #      #  #  #     
++-----+  #### o ####  ####     
+
+
+==========Percent FOR 6596==========
+&gt; ./batt_main 6596 P
+BATT_VOLTAGE_PORT set to: 6596
+BATT_STATUS_PORT  set to: 0x95
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3298
+  .percent = 37
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00011 0 01 0000000 1100111 0100011
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00011 0 01 0000000 1100111 0100011
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+         ####  ####     
+|     |            #     #     
+|     |            #     #     
+|     |         ####     #     
+|#####|            #     #  %  
+|#####|            #     #     
++-----+         ####     #     
+
+
+==========Voltage FOR 6214==========
+&gt; ./batt_main 6214 V
+BATT_VOLTAGE_PORT set to: 6214
+BATT_STATUS_PORT  set to: 0x79
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3107
+  .percent = 13
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00001 1 10 1100111 0000011 0000011
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00001 1 10 1100111 0000011 0000011
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+  ####      #     #     
+|     |     #      #     #     
+|     |     #      #     #     
+|     |  ####      #     #  V  
+|     |     #      #     #     
+|#####|     #      #     #     
++-----+  #### o    #     #     
+
+
+==========Percent FOR 6214==========
+&gt; ./batt_main 6214 P
+BATT_VOLTAGE_PORT set to: 6214
+BATT_STATUS_PORT  set to: 0x95
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3107
+  .percent = 13
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00001 0 01 0000000 0000011 1100111
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00001 0 01 0000000 0000011 1100111
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+            #  ####     
+|     |            #     #     
+|     |            #     #     
+|     |            #  ####     
+|     |            #     #  %  
+|#####|            #     #     
++-----+            #  ####     
+
+
+==========Voltage FOR 6148==========
+&gt; ./batt_main 6148 V
+BATT_VOLTAGE_PORT set to: 6148
+BATT_STATUS_PORT  set to: 0x79
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3074
+  .percent = 9
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00001 1 10 1100111 0111111 0100011
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00001 1 10 1100111 0111111 0100011
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|     |     #   #  #     #     
+|     |     #   #  #     #     
+|     |  ####   #  #     #  V  
+|     |     #   #  #     #     
+|#####|     #   #  #     #     
++-----+  #### o ####     #     
+
+
+==========Percent FOR 6148==========
+&gt; ./batt_main 6148 P
+BATT_VOLTAGE_PORT set to: 6148
+BATT_STATUS_PORT  set to: 0x95
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3074
+  .percent = 9
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00001 0 01 0000000 0000000 1110111
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00001 0 01 0000000 0000000 1110111
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+               ####     
+|     |               #  #     
+|     |               #  #     
+|     |               ####     
+|     |                  #  %  
+|#####|                  #     
++-----+               ####     
+
+
+==========Voltage FOR 6030==========
+&gt; ./batt_main 6030 V
+BATT_VOLTAGE_PORT set to: 6030
+BATT_STATUS_PORT  set to: 0x79
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3015
+  .percent = 1
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00000 1 10 1100111 0111111 1101101
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00000 1 10 1100111 0111111 1101101
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|     |     #   #  #     #     
+|     |     #   #  #     #     
+|     |  ####   #  #  ####  V  
+|     |     #   #  #  #        
+|     |     #   #  #  #        
++-----+  #### o ####  ####     
+
+
+==========Percent FOR 6030==========
+&gt; ./batt_main 6030 P
+BATT_VOLTAGE_PORT set to: 6030
+BATT_STATUS_PORT  set to: 0x95
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3015
+  .percent = 1
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00000 0 01 0000000 0000000 0000011
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00000 0 01 0000000 0000000 0000011
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+                  #     
+|     |                  #     
+|     |                  #     
+|     |                  #     
+|     |                  #  %  
+|     |                  #     
++-----+                  #     
+
+
+==========Voltage FOR 6000==========
+&gt; ./batt_main 6000 V
+BATT_VOLTAGE_PORT set to: 6000
+BATT_STATUS_PORT  set to: 0x79
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3000
+  .percent = 0
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00000 1 10 1100111 0111111 0111111
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00000 1 10 1100111 0111111 0111111
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|     |     #   #  #  #  #     
+|     |     #   #  #  #  #     
+|     |  ####   #  #  #  #  V  
+|     |     #   #  #  #  #     
+|     |     #   #  #  #  #     
++-----+  #### o ####  ####     
+
+
+==========Percent FOR 6000==========
+&gt; ./batt_main 6000 P
+BATT_VOLTAGE_PORT set to: 6000
+BATT_STATUS_PORT  set to: 0x95
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3000
+  .percent = 0
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00000 0 01 0000000 0000000 0111111
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00000 0 01 0000000 0000000 0111111
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+               ####     
+|     |               #  #     
+|     |               #  #     
+|     |               #  #     
+|     |               #  #  %  
+|     |               #  #     
++-----+               ####     
+
+
+==========Voltage FOR 5964==========
+&gt; ./batt_main 5964 V
+BATT_VOLTAGE_PORT set to: 5964
+BATT_STATUS_PORT  set to: 0x79
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 2982
+  .percent = 0
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00000 1 10 1101101 1110111 1111111
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00000 1 10 1101101 1110111 1111111
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|     |     #   #  #  #  #     
+|     |     #   #  #  #  #     
+|     |  ####   ####  ####  V  
+|     |  #         #  #  #     
+|     |  #         #  #  #     
++-----+  #### o ####  ####     
+
+
+==========Percent FOR 5964==========
+&gt; ./batt_main 5964 P
+BATT_VOLTAGE_PORT set to: 5964
+BATT_STATUS_PORT  set to: 0x95
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 2982
+  .percent = 0
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00000 0 01 0000000 0000000 0111111
+index:  29    24   21      14       7       0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00000 0 01 0000000 0000000 0111111
+index:  29    24   21      14       7       0
+
+Battery Meter Display:
++-^^^-+               ####     
+|     |               #  #     
+|     |               #  #     
+|     |               #  #     
+|     |               #  #  %  
+|     |               #  #     
++-----+               ####     
+
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org76d2d23" class="outline-3 grading">
+<h3 id="org76d2d23"><span class="section-number-3">3.5</span> Problem 1 Grading Criteria&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span></span></h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+Both sets automated tests can be run with <code>make test-p1</code>
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">AUTOMATED TESTS</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>make test-prob1</code> runs 35 tests for correctness</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">with Valgrind checking for memory problems</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">30</td>
+<td class="org-left"><code>test_batt_update.c</code> provides 30+ tests for functions in <code>batt_update.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">1 point per test passed</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Tests of the <code>batt_main</code> which uses functions from <code>batt_update.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">1 point per test passed</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">MANUAL INSPECTION of <code>batt_update.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><code>set_batt_from_ports()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear effort to do error checking of out of bounds values.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear flow to how each field of <code>batt</code> is calculated.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Correctly setting fields of <code>batt</code> via pointer dereference or arrow operator.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><b>Adherence to constraints: no floats, no float math ops, no deeply nested conditionals</b></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Short, simple code that is no more than 35 lines long.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Avoid nested conditionals wherever possible</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Make the code short as you will soon need to <b>translate it to assembly code</b></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><code>set_display_from_batt()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear code that calculates digits to be displayed</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of bit masks corresponding to digits to be displayed</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of bitwise operators to shift bits appropriately</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of bitwise operators to combine shifted digit bits</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear code to turn on decimal place, V/% indicator, and level indicators</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear dereference/set of the integer pointed to by the <code>display</code> parameter</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><b>Adherence to constraints: no floats, no math float ops, no deeply nested conditionals</b></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Short, simple code that is no more than 65 lines long.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Avoid nested conditionals wherever possible</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Make the code short as you will soon need to <b>translate it to assembly code</b></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><code>batt_update()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of the global variables like <code>BATT_DISPLAY_PORT</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Does not re-define these variables</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of previous two functions</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Error checking on sensor values</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">No use of <code>malloc()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Short, simple code.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7d6d0e9" class="outline-2">
+<h2 id="org7d6d0e9"><span class="section-number-2">4</span> <b>Problem 2</b>: Debugging the Puzzlebox</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org70d9e35" class="outline-3">
+<h3 id="org70d9e35"><span class="section-number-3">4.1</span> Overview</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+The file <code>puzzlebox.c</code> contains source code that reads inputs from a
+file named on the command line. If the inputs are correct, points are
+awarded. If inputs are incorrect, error messages are printed.  
+</p>
+
+<p>
+The <code>puzzlebox</code> is arranged into a series of <i>phases</i> each of which
+has some points associated with it.
+</p>
+<ul class="org-ul">
+<li>Not all phases must be completed to get full credit but the phases
+must done in order.</li>
+<li>Each phase reads inputs from the file provided on the command line
+and performs calculations on them to see if they are "correct"
+according to various criteria</li>
+<li>The very first input is your <b>internet ID</b> like <code>kauf0095</code> (first
+part of your UMN email address).  This input is used to add
+randomness to the puzzle so that <b>your answers will be different
+from most other students</b>. You must you use your own internet ID.</li>
+</ul>
+
+<p>
+<b>The purpose of this problem is get familiar with using a debugger.</b>
+This is a powerful tool that pauses programs, allows internal values
+to be printed and code to be stepped through line by line.  It is
+nearly essential to use as the code in <code>puzzlebox</code> is intentionally
+convoluted in places. Being able to pause execution and print values
+at various points make it <b>much easier</b> to solve the puzzles.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6e963d4" class="outline-3">
+<h3 id="org6e963d4"><span class="section-number-3">4.2</span> <code>input.txt</code> Input File</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Name your input file <code>input.txt</code> and put your internet ID in it along
+with some numbers like <code>1 2 3</code>. Then compile and run the <code>puzzlebox</code>
+program on it.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; make puzzlebox                             # compile puzzlebox
+gcc -Wall -g -c puzzlebox.c
+gcc -Wall -g -o puzzlebox puzzlebox.o
+
+&gt; cat input.txt                              # show contents of input.txt
+kauf0095 1 2 3
+
+&gt; ./puzzlebox input.txt                      # run puzzlebox with input.txt
+UserID 'kauf0095' accepted: hash value = 1397510491
+PHASE 1: A puzzle you say? Challenge accepted!
+
+Ah ah ah, you didn't say the magic word...
+Failure: Double debugger burger, order up!
+
+  * Score: 0 / 50 pts *
+</pre>
+</div>
+
+<p>
+This is automated with the <code>Makefile</code> target <code>make test-prob2</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; make test-prob2                       # compile/run puzzlebox with input.txt
+gcc -Wall -g -c puzzlebox.c
+gcc -Wall -g -o puzzlebox puzzlebox.o
+./puzzlebox input.txt
+UserID 'kauf0095' accepted: hash value = 1397510491
+PHASE 1: A puzzle you say? Challenge accepted!
+
+Ah ah ah, you didn't say the magic word...
+Failure: Double debugger burger, order up!
+
+  * Score: 0 / 50 pts *
+</pre>
+</div>
+
+<p>
+These initial forays are not positive (0 / 50 points) but the real
+meat of the problem is in examining the source code and determining
+inputs for <code>input.txt</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb579d08" class="outline-3">
+<h3 id="orgb579d08"><span class="section-number-3">4.3</span> <code>gdb</code> The GNU Debugger</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+You will definitely need to use a debugger to solve the puzzlebox and
+<code>gdb</code> is the quintessential debugger associated with our compiler
+<code>gcc</code>.  It is installed by default on all lab machines and is an easy
+install on must Linux machines.
+</p>
+
+<p>
+For a quick overview of GDB, here are some resources
+</p>
+<ul class="org-ul">
+<li><a href="http://www-users.cs.umn.edu/~kauffman/2021/gdb.html">CSCI 2021 Quick Guide to gdb: The GNU Debugger</a>: Page describing how to start the
+debugger, a sample session using <code>puzzlebox</code>, an overview of the
+most common commands.</li>
+<li><a href="https://www.youtube.com/watch?v%3DPorfLSr3DDI">CppCon 2015: Greg Law " Give me 15 minutes &amp; I'll change your view
+of GDB"</a>: Video giving basic overview of hope to run <code>gdb</code> on simple
+programs with an emphasis on differences between "normal" mode and
+TUI mode</li>
+<li><a href="http://www.yolinux.com/TUTORIALS/GDB-Commands.html">GNU GDB Debugger Command Cheat Sheet</a>: Extensive list of commands</li>
+<li><a href="https://sourceware.org/gdb/current/onlinedocs/gdb/">Debugging with GDB</a>: Official manual for <code>gdb</code></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3257c11" class="outline-3">
+<h3 id="org3257c11"><span class="section-number-3">4.4</span> Typical Cycle</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+A typical cycle of working on <code>puzzlebox</code> will be the following.
+</p>
+<ul class="org-ul">
+<li><p>
+Start the debugger with puzzlebox
+</p>
+<pre class="example">
+gdb -tui ./puzzlebox
+</pre></li>
+<li><p>
+Set the arguments array to <code>input.txt</code>
+</p>
+<pre class="example">
+set args input.txt
+</pre></li>
+<li><p>
+Set a breakpoint at a phase like <code>phase3</code>
+</p>
+<pre class="example">
+break phase3
+</pre></li>
+<li><p>
+Run the program
+</p>
+<pre class="example">
+run
+</pre></li>
+<li><p>
+Do some stepping / nexting
+</p>
+<pre class="example">
+step
+next
+</pre></li>
+<li><p>
+Print some variables
+</p>
+<pre class="example">
+print a
+print/x b
+</pre></li>
+<li>Make some changes to <code>input.txt</code> in a different window</li>
+<li><p>
+Re-run the program to see if things have changed favorably
+</p>
+<pre class="example">
+kill
+run
+</pre></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgce2b3e4" class="outline-3">
+<h3 id="orgce2b3e4"><span class="section-number-3">4.5</span> Kinds of Puzzles</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+The puzzles presented in the different phases make use of a variety of
+C program techniques which we have or will discuss including.
+</p>
+<ul class="org-ul">
+<li>Bit-wise operations and their use in place of arithmetic</li>
+<li>String and character array manipulations</li>
+<li>Interpreting bits as one of several kinds of things (integer, float,
+character) through pointers and unions</li>
+<li>More extensive C control structures like <code>goto</code> and labels</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge611ca3" class="outline-3 grading 50">
+<h3 id="orge611ca3"><span class="section-number-3">4.6</span> Tests for <code>puzzlebox.c</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div class="outline-text-3" id="text-4-6">
+<p>
+<code>puzzlebox.c</code> itself reports how many points one can earn at the end
+of its execution.
+</p>
+
+<p>
+Currently there are <b>60 points available but 50 points is considered
+full credit.</b> 
+</p>
+
+<p>
+If any additional points are earned, they will be counted as <b>Makeup
+Credit for Projects</b> to make up for credit last on past or future
+projects.  Your total score on All Projects cannot exceed 100% so any
+points beyond will simply be dropped.
+</p>
+
+<p>
+<b>Run the following command to 'test' puzzlebox</b>:
+</p>
+<pre class="example">
+make test-prob2
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfd366d0" class="outline-2">
+<h2 id="orgfd366d0"><span class="section-number-2">5</span> Assignment Submission</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-orgd778843" class="outline-3">
+<h3 id="orgd778843"><span class="section-number-3">5.1</span> <a id="org532d2e5"></a> Submit to Gradescope</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+Refer to the Project 1 instructions and adapt them for details of how
+to submit to Gradescope. In summary they are
+</p>
+
+<ol class="org-ol">
+<li>Type <code>make zip</code> in the project directory to create <code>p2-code.zip</code></li>
+<li>Log into <a href="https://www.gradescope.com/">Gradescope</a>, select Project 2, and upload <code>p2-code.zip</code></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org5a4a0f1" class="outline-3">
+<h3 id="org5a4a0f1"><span class="section-number-3">5.2</span> Late Policies</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+You may wish to review the policy on late project submission which
+will cost 1 Engagement Point per day late. <b>No projects will be
+accepted more than 48 hours after the deadline.</b>
+</p>
+
+<p>
+<a href="https://www-users.cs.umn.edu/~kauffman/2021/syllabus.html">https://www-users.cs.umn.edu/~kauffman/2021/syllabus.html</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-02-19 Fri 17:18 <br/> </i>
+</div>
+</body>
+</html>
