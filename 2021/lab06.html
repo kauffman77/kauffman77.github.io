@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-02-22 Mon 16:19 -->
+<!-- 2021-02-23 Tue 13:43 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CSCI 2021 Lab06: Shifting and Masking</title>
+<title>CSCI 2021 Lab06: GDB Basics</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
 <style type="text/css">
@@ -387,68 +387,57 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-02-22 Mon 16:19</i>
+<i>Last Updated: 2021-02-23 Tue 13:43</i>
 </div>
 <div id="content">
-<h1 class="title">CSCI 2021 Lab06: Shifting and Masking</h1>
+<h1 class="title">CSCI 2021 Lab06: GDB Basics</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 2/23/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm Tue 3/02/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-org69a8494" class="outline-4">
-<h4 id="org69a8494">CODE DISTRIBUTION: <a href="lab06-code.zip">lab06-code.zip</a></h4>
+<div id="outline-container-org3c6e69f" class="outline-4">
+<h4 id="org3c6e69f">CODE DISTRIBUTION: <a href="lab06-code.zip">lab06-code.zip</a></h4>
 </div>
 
-<div id="outline-container-orgbc3044b" class="outline-4">
-<h4 id="orgbc3044b">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-orgbc3044b">
-<dl class="org-dl">
-<dt>Wed Feb 17 08:52:30 AM CST 2021</dt><dd><p>
-There were some minor bugs in the code pack for Lab06. In
-particular, the MD5 hash for the QUESTIONS.txt file was incorrect so
-you may have correct answers but fail the <code>make test-quiz</code> tests.
-The codepack has been corrected update your files if needed. The
-correct contents of <code>QUESTIONS.md5</code> are:
-</p>
-<div class="org-src-container">
-<pre class="src src-sh">  &gt; cat QUESTIONS.md5
-  5948af7c6f363777419defea014e0b83  -
-</pre>
-</div></dd>
-</dl>
+<div id="outline-container-org6933646" class="outline-4">
+<h4 id="org6933646">CHANGELOG: Empty</h4>
+</div>
 
-
+<div id="outline-container-org2c05d92" class="outline-4">
+<h4 id="org2c05d92"></h4>
+<div class="outline-text-4" id="text-org2c05d92">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orga511ffa">1. Rationale</a></li>
-<li><a href="#org2a559b3">2. Codepack</a></li>
-<li><a href="#orga23d02a">3. QUESTIONS.txt File Contents</a></li>
-<li><a href="#orgbcbc7a5">4. Submission</a></li>
+<li><a href="#org546f6ca">1. Rationale</a></li>
+<li><a href="#orgf58f7c9">2. Codepack</a></li>
+<li><a href="#org4d6acc9">3. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org7a2bbc1">4. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orga511ffa" class="outline-2">
-<h2 id="orga511ffa"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org546f6ca" class="outline-2">
+<h2 id="org546f6ca"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-Certain applications utilize bits at an individual level. This is
-enabled by support for bit-level operations in most processors which
-are presented in C programs as bit-wise logical and shift
-operations. This lab explores the basic mechanics of these operations
-in preparation for project work which will provide a concrete
-application for them.
+Debuggers are an essential tool for any serious coder. They provide
+the ability to stop a program at any point and inspect its state by
+examining variables, traversing memory, and showing stack
+traces. This lab briefly surveys basic debugger capabilities by
+applying GDB to a small program drawn from the current programming
+project. Determining the behavior and required inputs for the program
+is made immensely easier through the use of the debugger.
 </p>
 </div>
 
-<div id="outline-container-org37df43e" class="outline-4">
-<h4 id="org37df43e">Grading Policy</h4>
-<div class="outline-text-4" id="text-org37df43e">
+<div id="outline-container-orga13cf71" class="outline-4">
+<h4 id="orga13cf71">Grading Policy</h4>
+<div class="outline-text-4" id="text-orga13cf71">
 <p>
 Credit for this Lab is earned by completing the exercises here and
 submitting a Zip of the work to Gradescope. Students are responsible
@@ -471,8 +460,8 @@ See the <a href="../syllabus.html">full policies in the course syllabus</a>.
 </div>
 </div>
 
-<div id="outline-container-org2a559b3" class="outline-2">
-<h2 id="org2a559b3"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orgf58f7c9" class="outline-2">
+<h2 id="orgf58f7c9"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for this lab is linked at the top of this
@@ -505,9 +494,15 @@ the following files which are briefly described.
 </tr>
 
 <tr>
-<td class="org-left"><code>masking.c</code></td>
+<td class="org-left"><code>phase03.c</code></td>
+<td class="org-left">Analyze</td>
+<td class="org-left">C program that emulating part of P2's <code>puzzlebox</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>input.txt</code></td>
 <td class="org-left">EDIT</td>
-<td class="org-left">C file to edit and complete; TODO sections are marked in the code</td>
+<td class="org-left">Input file for <code>phase03</code> which should be edited to contain correct inputs.</td>
 </tr>
 </tbody>
 <tbody>
@@ -552,8 +547,8 @@ the following files which are briefly described.
 </div>
 
 
-<div id="outline-container-orga23d02a" class="outline-2">
-<h2 id="orga23d02a"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org4d6acc9" class="outline-2">
+<h2 id="org4d6acc9"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -768,8 +763,8 @@ CODE input.txt for phase03
 </div>
 </div>
 
-<div id="outline-container-orgbcbc7a5" class="outline-2">
-<h2 id="orgbcbc7a5"><span class="section-number-2">4</span> Submission</h2>
+<div id="outline-container-org7a2bbc1" class="outline-2">
+<h2 id="org7a2bbc1"><span class="section-number-2">4</span> Submission</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -779,7 +774,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-02-22 Mon 16:19 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-02-23 Tue 13:43 <br/> </i>
 </div>
 </body>
 </html>
