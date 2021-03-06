@@ -1,0 +1,2171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-03-05 Fri 22:53 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 2021 Project 3: Assembly Coding and Debugging</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2021-03-05 Fri 22:53</i>
+</div>
+<div id="content">
+<h1 class="title">CSCI 2021 Project 3: Assembly Coding and Debugging</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Wed 3/17/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><i>Approximately 3.0-4.0% of total grade</i></li>
+<li>Projects are <b>individual work</b>: no collaboration with other students
+is allowed. Seek help from course staff if you get stuck for too long.</li>
+</ul>
+
+<div id="outline-container-org46b59f7" class="outline-4">
+<h4 id="org46b59f7">CODE/TEST DISTRIBUTION: <a href="p3-code.zip">p3-code.zip</a></h4>
+</div>
+<div id="outline-container-org13c7dc5" class="outline-4">
+<h4 id="org13c7dc5">VIDEO OVERVIEW: <a href="https://youtu.be/hpPIp9b_cgQ">https://youtu.be/hpPIp9b_cgQ</a></h4>
+</div>
+<div id="outline-container-orga00cdff" class="outline-4">
+<h4 id="orga00cdff">CHANGELOG: Empty</h4>
+</div>
+<div id="outline-container-orgd69a64d" class="outline-4">
+<h4 id="orgd69a64d"></h4>
+<div class="outline-text-4" id="text-orgd69a64d">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgad0b8e7">1. Introduction</a></li>
+<li><a href="#org89a9c3c">2. Download Code and Setup</a></li>
+<li><a href="#orgce87472">3. <b>Problem 1</b>: Battery Meter Assembly Functions</a>
+<ul>
+<li><a href="#org2d8bc92">3.1. Hand-Code Your Assembly</a></li>
+<li><a href="#org71c45e7">3.2. General Cautions when coding Assembly</a></li>
+<li><a href="#orgbe4c72a">3.3. Iterative Development Strategy</a></li>
+<li><a href="#orge286c77">3.4. Structure of <code>batt_update_asm.s</code></a></li>
+<li><a href="#org213e0b4">3.5. <code>set_batt_from_ports()</code></a></li>
+<li><a href="#org05f323f">3.6. <code>set_display_from_batt()</code></a></li>
+<li><a href="#org46ffab6">3.7. <code>batt_update()</code></a></li>
+<li><a href="#orgaa1b74e">3.8. Grading Criteria for Problem 1</a></li>
+</ul>
+</li>
+<li><a href="#orgd91f470">4. <b>Problem 2</b>: The Binary Bomb</a>
+<ul>
+<li><a href="#org0da6f35">4.1. Quick Links</a></li>
+<li><a href="#org3b28924">4.2. Overview</a></li>
+<li><a href="#org4911703">4.3. Machines on which bombs run</a></li>
+<li><a href="#org1f3622a">4.4. Bomb Download and Setup</a></li>
+<li><a href="#orga4c5023">4.5. Scoring and Scoreboard (50%)</a></li>
+<li><a href="#org384cb92">4.6. WARNING on Downloading Multiple Bombs</a></li>
+<li><a href="#org8bb2be9">4.7. Advice</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgad0b8e7" class="outline-2">
+<h2 id="orgad0b8e7"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+This project will feel somewhat familiar in that it is nearly
+identical to the preceding project: there is a coding problem and a
+puzzle-solving problem.  The major change is that everything is at the
+assembly level:
+</p>
+<ul class="org-ul">
+<li>Problem 1 re-works the Battery functions in x86-64 Assembly
+rather than C</li>
+<li>Problem 2 involves analyzing a binary executable to provide it with
+the correct input to "defuse" the executable</li>
+</ul>
+
+<p>
+Working with assembly will get you a much more acquainted with the
+low-level details of the x86-64 platform and give you a greater
+appreciation for "high-level" languages (like C).
+</p>
+</div>
+</div>
+
+<div id="outline-container-org89a9c3c" class="outline-2">
+<h2 id="org89a9c3c"><span class="section-number-2">2</span> <a id="org9f751f7"></a> Download Code and Setup</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Download the code pack linked at the top of the page. Unzip this which
+will create a project folder. Create new files in this
+folder. Ultimately you will re-zip this folder to submit it.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">State</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 Build file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batt.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 header file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batt_main.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 main() function</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batt_sim.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 battery simulator functions</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batt_update_asm.s</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Problem 1 Assembly functions, re-code C in x86-64, <b>main file to edit for problem 1</b></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batt_update.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Problem 1 C functions, COPY from Project 2 or see a staff member to discuss</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_batt_update.c</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 testing program for <code>batt_update_asm.c</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_prob1.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 testing data file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_hybrid.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 testing data file for mixed C/Assembly</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 test running script</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>bombNN.zip</code></td>
+<td class="org-left">Download</td>
+<td class="org-left">Problem 2 Debugging problem, <a href="#org545dbd7">download from server</a></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>bombNN/</code></td>
+<td class="org-left">Directory</td>
+<td class="org-left">Created by <code>unzip bombNN.zip</code> and contains the below files</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>bombNN/bomb.c</code></td>
+<td class="org-left">Unpack</td>
+<td class="org-left">Problem 2 <code>main()</code> for <code>bomb</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>bombNN/bomb</code></td>
+<td class="org-left">Unpack</td>
+<td class="org-left">Problem 2 Executable to debug: this is the important one</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>bombNN/README</code></td>
+<td class="org-left">Unpack</td>
+<td class="org-left">Problem 2 Describes "owner" of the bomb</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>input.txt</code></td>
+<td class="org-left">Edit</td>
+<td class="org-left">Problem 2 Input for <code>bomb</code>, fill this in to defuse stages</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgce87472" class="outline-2">
+<h2 id="orgce87472"><span class="section-number-2">3</span> <b>Problem 1</b>: Battery Meter Assembly Functions</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+The functions in this problem are identical to a previous project
+in which code to support a battery meter was written. These
+functions are:
+</p>
+<dl class="org-dl">
+<dt><code>int set_batt_from_ports(batt_t *batt)</code></dt><dd>Read global variables corresponding to sensor and mode
+information and set the fields of a <code>batt_t</code> structure
+accordingly.</dd>
+<dt><code>int set_display_from_batt(batt_t batt, int *display)</code></dt><dd>Given a <code>batt_t</code> struct, reset and alter the bits pointed to by
+<code>display</code> to cause a proper batterature display.</dd>
+<dt><code>int batt_update()</code></dt><dd>Update global <code>BATT_DISPLAY_PORT</code> using the above functions.</dd>
+</dl>
+
+<p>
+The big change in this iteration will be that <b>the functions must be
+written in x86-64 assembly code</b>. As C functions each of these is
+short, typically 40-65. The assembly versions will be longer as each C
+line typically needs 1-4 lines of assembly code to implement
+fully. Coding these functions in assembly gives real experience
+writing instruction-level code code and working with it in combination
+with C.
+</p>
+
+<p>
+<b>The code setup and tests are mostly identical</b> for this problem as
+for the previous C version of the problem.  <a href="https://www-users.cs.umn.edu/~kauffman/2021/p2.html">Refer to original Battery
+Meter Problem description</a> for a broad overview of the battery meter
+simulator and files associated with it.
+</p>
+</div>
+
+<div id="outline-container-org2d8bc92" class="outline-3">
+<h3 id="org2d8bc92"><span class="section-number-3">3.1</span> Hand-Code Your Assembly</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+As discussed in class, one can generate assembly code from C code with
+appropriate compiler flags. This can be useful for getting oriented
+and as a beginning to the code your assembly versions of the
+functions.  However, <b>code that is clearly compiler-generated with no
+hand coding will receive 0 credit</b>.
+</p>
+<ul class="org-ul">
+<li>No credit will be given on manual inspection</li>
+<li>Penalties will be assessed for Automated Tests which lower credit to 0</li>
+</ul>
+<p>
+Do not let that dissuade you from looking at compiler-generated
+assembly code from you C solution to the functions.  Make sure that
+you take the following steps which are part of the manual inspection
+criteria.
+</p>
+</div>
+
+<div id="outline-container-orgaa58f2f" class="outline-4">
+<h4 id="orgaa58f2f">Base your Assembly code on your C code</h4>
+<div class="outline-text-4" id="text-orgaa58f2f">
+<p>
+The files to be submitted for this problem include
+</p>
+<ul class="org-ul">
+<li><code>batt_update.c</code>: C version of the functions</li>
+<li><code>batt_update_asm.s</code>: Assembly version of the functions</li>
+</ul>
+<p>
+Graders may examine these for a correspondence between to the
+algorithm used in the C version to the Assembly version. Compiler
+generated assembly often does significant re-arrangements of assembly
+code with many intermediate labels that hand-written code will not
+have.
+</p>
+
+<p>
+<b>If you were not able to complete the C functions for the Project 2
+display problem from the previous project,</b> <b>see a course staff member
+who will help you get them up and running quickly.</b>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgcf8a34c" class="outline-4">
+<h4 id="orgcf8a34c">Annotate your Assembly Thoroughly</h4>
+<div class="outline-text-4" id="text-orgcf8a34c">
+<p>
+Comment your assembly code A LOT. While good C code can be quite
+self-explanatory with descriptive variable names and clear control
+structures, assembly is rarely so easy to understand. Include clear
+commentary on your assembly. This should include
+</p>
+<ul class="org-ul">
+<li>Subdividing functions into smaller blocks with comments describing
+what the blocks accomplish.</li>
+<li>Descriptions of which "variables" from the C side are held in which
+registers.</li>
+<li>Descriptions of most assembly lines and their effect on the
+variables held in the registers.</li>
+<li>Descriptions of any data such as bitmasks stored in the assembly
+code.</li>
+<li>Use informative label names like <code>.ROUNDING_UP</code> to convey further
+meaning about what goals certain positions in code are
+accomplishing.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb370e43" class="outline-4">
+<h4 id="orgb370e43">Use Division</h4>
+<div class="outline-text-4" id="text-orgb370e43">
+<p>
+While it is a slow instruction that is cumbersome to set up, using
+<code>idivX</code> division instruction is the most human-readable means to
+compute several results needed in the required functions. Compiler
+generated code uses many tricks to avoid integer division so a lack of
+<code>idivX</code> instructions along this line will be a clear sign little
+effort has been put into the assembly code.
+</p>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-org71c45e7" class="outline-3">
+<h3 id="org71c45e7"><span class="section-number-3">3.2</span> General Cautions when coding Assembly</h3>
+<div class="outline-text-3" id="text-3-2">
+<ol class="org-ol">
+<li>Get your editor set up to make coding assembly easier. If you are
+using VS Code, the following video will show you how to install an
+extension to do syntax highlighting and block comment/uncomment
+operations in assembly: <a href="https://youtu.be/AgmXUFOEgIw">https://youtu.be/AgmXUFOEgIw</a></li>
+<li>Be disciplined about your register use: comment what "variables" are
+in which registers as it is up to you to keep track. The #1 advice
+from past students to future students is "<b>Comment the Crap out of
+your assembly code</b>" on this project.</li>
+<li><p>
+Be Careful with constants: forgetting a <code>$</code> in constants will lead
+to a bare, absolute memory address which will likely segfault your
+program.  Contrast:
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">   movq    $0,%rax                 # rax = 0
+   movq    0, %rax                 # rax = *(0): segfault
+                                   # bare 0 is memory address 0 - out of bounds
+</pre>
+</div>
+<p>
+Running your programs, assembly code included, in Valgrind can help
+to identify these problems. In Valgrind output, look for a line
+number in the assembly code which has absolute memory addresses or a
+register that has an invalid address.
+</p></li>
+<li><p>
+Recognize that in x86-64 function parameters are passed in registers
+for up to 6 arguments. These are arranged as follows
+</p>
+<ol class="org-ol">
+<li><code>rdi / edi / di</code> (arg 1)</li>
+<li><code>rsi / esi / si</code> (arg 2)</li>
+<li><code>rdx / edx / dx</code> (arg 3)</li>
+<li><code>rcx / ecx / cx</code> (arg 4)</li>
+<li><code>r8 / r8d / r8w</code> (arg 5)</li>
+<li><code>r9 / r9d / r9w</code> (arg 6)</li>
+</ol>
+<p>
+and the specific register corresponds to how argument sizes (64 bit
+args in <code>rdi</code>, 32 bit in <code>edi</code>, etc). The functions you will write
+have few arguments so they will all be in registers.
+</p></li>
+<li><p>
+Use registers sparingly.  The following registers (64-bit names) are
+"scratch" registers or "caller save." Functions may alter them
+freely (though some may contain function arguments).
+</p>
+<pre class="example">
+rax rcx rdx rdi rsi r8 r9 r10 r11  # Caller save registers
+</pre>
+
+<p>
+No special actions need to be taken at the end of the function
+regarding these registers except that <code>rax</code> should contain the
+function return value.
+</p>
+
+<p>
+Remaining registers are "callee save": if used, their original
+values must be restored before returning from the function.
+</p>
+<pre class="example">
+rbx rbp r12 r13 r14 r15            # Callee save registers
+</pre>
+
+<p>
+This is typically done by pushing the callee registers to be used on
+the stack, using them, them popping them off the stack in reverse
+order. Avoid this if you can (and you probably can in our case).
+</p></li>
+<li>Be careful to adjust the stack pointer using <code>pushX/popX</code> or
+<code>subq/addq</code> . Keep in mind the stack must be aligned to 16-byte
+boundaries for function calls to work correctly.  Above all, don't
+treat <code>rsp</code> as a general purpose register.</li>
+</ol>
+
+<p>
+For reference, here is a picture that appears in the lecture slides
+that summarizes the names and special uses for the registers in
+x86-64.
+</p>
+
+<div class="org-center">
+
+<div class="figure">
+<p><img src="registers.png" alt="registers.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Summary of general purpose register usages in x86-64.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-orgbe4c72a" class="outline-3">
+<h3 id="orgbe4c72a"><span class="section-number-3">3.3</span> <a id="orge6693d0"></a> Iterative Development Strategy</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+With working C versions of the three required functions, you should be
+able to employ an iterative strategy while developing assembly
+versions: <b>focus on one assembly function while using working C
+functions for the remaining code</b>. The <code>Makefile</code> and support code are
+specifically set up for this and details iterative development are as
+follows.
+</p>
+<ol class="org-ol">
+<li>In <code>batt_update_asm.s</code>, comment all code/declarations of global
+symbols except for <code>set_batt_from_ports</code>.</li>
+<li>In <code>batt_update.c</code>, comment out the definition of the
+<code>set_batt_from_ports()</code> function. This leaves working C versions of
+the other two functions.</li>
+<li><p>
+Write some assembly code for <code>set_batt_from_ports</code>. Attempt to
+compile it on its own with
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">   &gt; make batt_update_asm.o 
+   gcc -Wall -g -c batt_update_asm.s
+</pre>
+</div>
+<p>
+which will report assembler errors if any are present.
+</p></li>
+<li><p>
+When there appear to be no assembler errors, create a <b>hybrid</b> main
+program which will combine the uncommented assembly and C functions
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">   &gt; make hybrid_main
+   gcc -Wall -g -c batt_main.c
+   gcc -Wall -g -c batt_sim.c
+   gcc -Wall -g -c batt_update_asm.s   # compiles assembly ..
+   gcc -Wall -g -c batt_update.c       # and C version to produce executable
+   gcc -Wall -g -o hybrid_main batt_main.o batt_sim.o batt_update_asm.o batt_update.o
+</pre>
+</div></li>
+<li><p>
+One can then experiment with the <code>hybrid_main</code> to see if the
+written assembly function is working correctly.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; ./hybrid_main 7578 V
+BATT_VOLTAGE_PORT set to: 7578
+set_batt_from_ports(&amp;batt );
+batt is {
+  .mlvolts = 3789
+  .percent = -27
+  .mode    = 0
+}
+...
+</pre>
+</div>
+<p>
+Something clearly looks wrong in the above so some debugging of the
+assembly function seems in order.
+</p></li>
+<li><p>
+When ready, run the "hybrid tests" which will do automated testing
+on the hybrid codes.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; make test-hybrid
+gcc -Wall -Wno-comment -Werror -g  -c batt_main.c
+gcc -Wall -Wno-comment -Werror -g  -c batt_sim.c
+gcc -Wall -Wno-comment -Werror -g  -c batt_update_asm.s
+gcc -Wall -Wno-comment -Werror -g  -c batt_update.c
+gcc -Wall -Wno-comment -Werror -g  -o hybrid_main batt_main.o batt_sim.o batt_update_asm.o batt_update.o
+gcc -Wall -Wno-comment -Werror -g  -c test_batt_update.c
+gcc -Wall -Wno-comment -Werror -g  -o test_hybrid_batt_update test_batt_update.o batt_sim.o batt_update_asm.o batt_update.o
+./testy test_hybrid.org 
+============================================================
+== test_hybrid.org : Problem 1 test_hybrid_batt_update_asm and hybrid_main tests
+== Running 35 / 35 tests
+1)  set_batt_from_ports() 0 V                 : ok
+2)  set_batt_from_ports() 0 P                 : ok
+3)  set_batt_from_ports() 7400 V              : ok
+4)  set_batt_from_ports() 7400 P              : ok
+5)  set_batt_from_ports() STATUS=0b10011001 V : ok
+6)  set_batt_from_ports() STATUS=0b01110110 P : ok
+7)  set_batt_from_ports() 7845 P is 100%      : ok
+...
+</pre>
+</div></li>
+<li>When all seems to be working correctly with the first assembly
+function, move on.  Comment another C function and uncomment the
+corresponding assembly, write some code and repeat.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orge286c77" class="outline-3">
+<h3 id="orge286c77"><span class="section-number-3">3.4</span> Structure of <code>batt_update_asm.s</code></h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+Below is a rough outline of the structure of <code>batt_updat_asm.s</code>.
+Consider copying this file as you get started and commenting parts of
+it out as needed.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-asm">.text
+.global  set_batt_from_ports
+        
+## ENTRY POINT FOR REQUIRED FUNCTION
+set_batt_from_ports:
+        ## assembly instructions here
+
+        ## a useful technique for this problem
+        movX    SOME_GLOBAL_VAR(%rip), %reg
+        # load global variable into register
+        # Check the C type of the variable
+        #    char / short / int / long
+        # and use one of
+        #    movb / movw / movl / movq 
+        # and appropriately sized destination register                                            
+
+### Change to definint semi-global variables used with the next function 
+### via the '.data' directive
+.data
+	
+my_int:                         # declare location an single integer named 'my_int'
+        .int 1234               # value 1234
+
+other_int:                      # declare another int accessible via name 'other_int'
+        .int 0b0101             # binary value as per C
+
+my_array:                       # declare multiple ints sequentially starting at location
+        .int 10                 # 'my_array' for an array. Each are spaced 4 bytes from the
+        .int 0x00014            # next and can be given values using the same prefixes as 
+        .int 0b11110            # are understood by gcc.
+
+
+## WARNING: Don't forget to switch back to .text as below
+## Otherwise you may get weird permission errors when executing 
+.text
+.global  set_display_from_batt
+
+## ENTRY POINT FOR REQUIRED FUNCTION
+set_display_from_batt:  
+        ## assembly instructions here
+
+	## two useful techniques for this problem
+        movl    my_int(%rip),%eax    # load my_int into register eax
+        leaq    my_array(%rip),%rdx  # load pointer to beginning of my_array into rdx
+
+
+.text
+.global batt_update
+        
+## ENTRY POINT FOR REQUIRED FUNCTION
+batt_update:
+	## assembly instructions here
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org213e0b4" class="outline-3">
+<h3 id="org213e0b4"><span class="section-number-3">3.5</span> <code>set_batt_from_ports()</code></h3>
+<div class="outline-text-3" id="text-3-5">
+<div class="org-src-container">
+<pre class="src src-c">int set_batt_from_ports(batt_t *batt);
+// Uses the two global variables (ports) BATT_VOLTAGE_PORT and
+// BATT_STATUS_PORT to set the fields of the parameter 'batt'.  If
+// BATT_VOLTAGE_PORT is negative, then battery has been wired wrong;
+// no fields of 'batt' are changed and 1 is returned to indicate an
+// error.  Otherwise, sets fields of batt based on reading the voltage
+// value and converting to percent using the provided formula. Returns
+// 0 on a successful execution with no errors. This function DOES NOT
+// modify any global variables but may access global variables.
+//
+// CONSTRAINT: Uses only integer operations. No floating point
+// operations are used as the target machine does not have a FPU.
+// 
+// CONSTRAINT: Limit the complexity of code as much as possible. Do
+// not use deeply nested conditional structures. Seek to make the code
+// as short, and simple as possible. Code longer than 40 lines may be
+// penalized for complexity.
+// 
+// ASSEMBLY CONSTRAINTS: Use shifts when dividing by powers of 2. This
+// should avoid the need to use the idivX instruction in this function.
+</pre>
+</div>
+
+<p>
+Note that this function uses a <code>batt_t</code> struct which is in <code>batt.h</code>
+described here:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// Breaks battery stats down into constituent parts
+typedef struct{
+  short mlvolts;        // voltage read from port, units of 0.001 Volts
+  char  percent;        // percent full converted from voltage
+  char  mode;           // 1 for volts, 2 for percent, leaving as 0 will generate errors
+} batt_t;
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org775720c" class="outline-4">
+<h4 id="org775720c">Assembly Implementation Notes for <code>set_batt_from_ports()</code></h4>
+<div class="outline-text-4" id="text-org775720c">
+<ol class="org-ol">
+<li>The function takes a single argument, a pointer in <code>rdi</code>.</li>
+<li>Return values or functions are to be placed <code>eax</code> for 32 bit
+quantities as is the case here (<code>int</code>).</li>
+<li><p>
+To access global symbols/variables which are not defined in the
+assembly file, use the relative position from the instruction
+pointer register which allows the linker to handle the
+task. Specifically relevant examples are
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">   movw  BATT_VOLTAGE_PORT(%rip), %dx   # copy global var to reg dx  (16-bit word)
+   movb  BATT_STATUS_PORT(%rip), %cl    # copy global var to reg cl  (8-bit byte)
+   movl  %r8d, BATT_DISPLAY_PORT(%rip)  # copy reg r8d to global var (32-bit long-word)
+</pre>
+</div></li>
+<li>Use comparisons and jump to a separate section of code that is
+clearly marked as "error" if you detect a bad arguments. Be careful
+to use appropriate assembly instructions for the type of data being
+compared.
+<ul class="org-ul">
+<li><code>cmpX</code> performs comparison based on subtraction; pick <code>cmpq /
+     cmpl / cmpw / cmpb</code> according to the size of data being compared.</li>
+<li>Jump instructions such as <code>jg</code> assume prior comparison was
+done on <b>signed quantities</b>.</li>
+<li>Jump instructions like <code>ja</code> assume prior comparison was done on
+<b>unsigned quantities</b>.</li>
+</ul></li>
+<li>When doing the conversion of Voltage to Percentage, one may need to
+divide by 8. Avoid the division and <b>use a shift instruction instead</b>.</li>
+<li><p>
+A pointer to a <code>batt_t</code> struct can access its fields using the
+following offset table which assume that <code>%reg</code> holds a pointer to
+the struct (substitute an actual register name).
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">Destination</th>
+<th scope="col" class="org-left">Assembly</th>
+</tr>
+
+<tr>
+<th scope="col" class="org-left">C Field Access</th>
+<th scope="col" class="org-left">Offset</th>
+<th scope="col" class="org-left">Size</th>
+<th scope="col" class="org-left">Assign '5' to field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>batt-&gt;mlvolts</code></td>
+<td class="org-left">0 bytes</td>
+<td class="org-left">2 bytes</td>
+<td class="org-left"><code>movw $5,0(%reg)</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batt-&gt;percent</code></td>
+<td class="org-left">2 bytes</td>
+<td class="org-left">1 byte</td>
+<td class="org-left"><code>movb $5,2(%reg)</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batt-&gt;mode</code></td>
+<td class="org-left">3 bytes</td>
+<td class="org-left">1 byte</td>
+<td class="org-left"><code>movb $5,3(%reg)</code></td>
+</tr>
+</tbody>
+</table>
+<p>
+You will need to use these offsets to set the fields of the struct
+near the end of the routine.
+</p></li>
+<li>There are several spots where division is required but it is always
+by powers of 2; e.g. divide the sensor value by 2 to get the
+voltage and divide by 8 during conversion of volts to percent.
+<b>Use shift operations</b> when dividing by powers of 2 to avoid the
+<code>idivX</code> instruction (though <code>idivX</code> will be used later).</li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org05f323f" class="outline-3">
+<h3 id="org05f323f"><span class="section-number-3">3.6</span> <code>set_display_from_batt()</code></h3>
+<div class="outline-text-3" id="text-3-6">
+<div class="org-src-container">
+<pre class="src src-c">
+int set_display_from_batt(batt_t batt, int *display);
+// Alters the bits of integer pointed to by 'display' to reflect the
+// data in struct param 'batt'.  Does not assume any specific bit
+// pattern stored at 'display' and completely resets all bits in it on
+// successfully completing.  Selects either to show Volts (mode=1) or
+// Percent (mode=2). If Volts are displayed, only displays 3 digits
+// rounding the lowest digit up or down appropriate to the last digit.
+// Calculates each digit to display changes bits at 'display' to show
+// the volts/percent according to the pattern for each digit. Modifies
+// additional bits to show a decimal place for volts and a 'V' or '%'
+// indicator appropriate to the mode. In both modes, places bars in
+// the level display as indicated by percentage cutoffs in provided
+// diagrams. This function DOES NOT modify any global variables but
+// may access global variables. 
+// 
+// ASSEMBLY NOTE: If batt.mode is not 1 or 2, then make no change to
+// 'display' and return 1 to indicate an error. This is a slight
+// change from the original C implementation.
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orga8ce685" class="outline-4">
+<h4 id="orga8ce685">Assembly Implementation Notes <code>set_display_from_batt()</code></h4>
+<div class="outline-text-4" id="text-orga8ce685">
+<ol class="org-ol">
+<li>Arguments will be
+<ul class="org-ul">
+<li>a packed <code>batt_t</code> struct in <code>rdi</code></li>
+<li>an integer pointer in <code>rsi</code></li>
+</ul></li>
+<li><p>
+The packed <code>batt_t</code> struct is entirely in the 64-bit <code>rdi</code> register
+which has the following layout.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-right">Bits</th>
+<th scope="col" class="org-left">Shift</th>
+<th scope="col" class="org-left">&#xa0;</th>
+</tr>
+
+<tr>
+<th scope="col" class="org-left">C Field Access</th>
+<th scope="col" class="org-right">in <code>rdi</code></th>
+<th scope="col" class="org-left">Required</th>
+<th scope="col" class="org-left">Size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>batt.volts</code></td>
+<td class="org-right">00-15</td>
+<td class="org-left">None</td>
+<td class="org-left">2 bytes</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batt.percent</code></td>
+<td class="org-right">16-23</td>
+<td class="org-left">Right by 16</td>
+<td class="org-left">1 byte</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batt.mode</code></td>
+<td class="org-right">24-31</td>
+<td class="org-left">Right by 24</td>
+<td class="org-left">1 byte</td>
+</tr>
+</tbody>
+</table>
+<p>
+To access individual fields of the struct, you will need to do
+shifting and masking to extract the values from the <code>rdi</code> register.
+</p></li>
+<li><p>
+As was the case in the C version of the problem, it is useful to
+create a table of bit masks corresponding to the bits that should be
+set for each display digit (e.g. digit "1" has bit pattern
+<code>0b0000110</code>). In assembly this is easiest to do by using a data
+section with successive integers. An example of how this can be done
+is below.
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">   .section .data
+   array:                          # an array of 3 ints
+           .int 0b101              # array[0] = 0b101
+           .int 0b010              # array[1] = 0b010
+           .int 0b111              # array[2] = 0b111
+   const:
+           .int 17                 # special constant
+    
+   .section .text
+   .globl func
+   func:
+           leaq array(%rip),%r8    # r8 points to array, rip used to enable relocation
+           movq $2,%r9             # r9 = 2, index into array
+           movl (%r8,%r9,4),%r10d  # r10d = array[2], note 32-bit movl and dest reg
+           movl const(%rip),%r11d  # r11d = 17 (const), rip used to enable relocation
+</pre>
+</div>
+<p>
+Adapt this example to create a table of useful bit masks for
+digits. The GCC assembler understands binary constants specified
+with the <code>0b0011011</code> style syntax.
+</p></li>
+<li>Early on in the function <b>check the batt.mode field</b>: it should be
+either 1 or 2 and if not, return from the function immediately with
+return value 1.</li>
+<li><p>
+Make use of division instructions to compute "digits" for the left,
+middle, and right digits of the battery meter. With cleverness, you
+should only need 2-3 divisions. Use these digits to reference into
+the table of digit bit masks you create to progressively build up
+the correct bit pattern for the display.
+</p>
+
+<p>
+Keep in mind that the <code>idivX</code> instruction must have <code>rax</code> as the
+dividend and <code>rdx</code> sign-extended from it. This may involve use of
+the following sequence of instructions:
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">   cwtl           # sign extend ax to long word
+   cltq           # sign extend eax to quad word
+   cqto           # sign extend ax to dx
+</pre>
+</div>
+<p>
+Any register can contain the divisor.  After the instruction, <code>rax
+   / eax / ax</code> will hold the <code>quotient</code> and <code>rdx / edx / dx</code> the
+remainder.  In this function, a single division will be sufficient.
+</p></li>
+
+<li>Use shifts with bitwise-or operations to combine the digit bit
+patterns to create the final display bit pattern.</li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org46ffab6" class="outline-3">
+<h3 id="org46ffab6"><span class="section-number-3">3.7</span> <code>batt_update()</code></h3>
+<div class="outline-text-3" id="text-3-7">
+<div class="org-src-container">
+<pre class="src src-c">int batt_update();
+// Called to update the battery meter display.  Makes use of
+// set_batt_from_ports() and set_display_from_batt() to access battery
+// voltage sensor then set the display. Checks these functions and if
+// they indicate an error, does NOT change the display.  If functions
+// succeed, modifies BATT_DISPLAY_PORT to show current battery level.
+// 
+// CONSTRAINT: Does not allocate any heap memory as malloc() is NOT
+// available on the target microcontroller.  Uses stack and global
+// memory only.
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org5e6d12a" class="outline-4">
+<h4 id="org5e6d12a">Assembly Implementation Notes for <code>batt_update()</code></h4>
+<div class="outline-text-4" id="text-org5e6d12a">
+<ol class="org-ol">
+<li>No arguments come into the function.</li>
+<li>Use the syntax described earlier to access global symbols/variables
+such as <code>BATT_VOLTAGE_PORT</code>.</li>
+<li><p>
+Call the two previous functions to create the struct and manipulate
+the bits of an the display.  Calling a function requires that the
+stack be aligned to 16-bytes; there is always an 8-byte quantity on
+the stack (previous value of the <code>rsp</code> stack pointer).  This means
+the stack must be extended with a <code>pushq</code> or <code>subq</code> instruction before any
+calls (but don't use both). A typical sequence is:
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">   subq    $8,%rsp     # extend the stack 8 bytes
+   ...
+   call    some_func   # stack aligned, call function
+   ## return val from func in rax or eax
+   ...
+   addq    $8,%rsp     # shrink the stack to restore it to its original position
+</pre>
+</div></li>
+<li><p>
+If several function calls will be made, a single extension of the
+stack is all that is needed as in the below
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">   subq    $8,%rsp     # extend the stack 8 bytes
+   ...
+   call    some_func1  # stack aligned, call function
+   ## return val from func in rax or eax
+
+   ## do some more stuff
+
+   call    some_func2   # stack aligned, call function
+   ## return val from func in rax or eax
+   ...
+   addq    $8,%rsp     # shrink the stack to restore it to its original position
+</pre>
+</div></li>
+<li>In order to call the <code>set_batt_from_ports()</code> function, this
+function will need to allocate space on the stack for a <code>batt_t</code>.
+As described previously, this struct can be packed to fit in 8
+bytes so a <code>pushq $0</code> will put a "zero" <code>batt_t</code> struct on the
+stack and <code>%rsp</code> is then a pointer to it which can be copied to
+other registers.</li>
+<li>Similarly, to call the <code>set_display_from_batt()</code> function, one will
+need a packed <code>batt_t</code> in a register. If the preceding
+<code>set_batt_from_ports()</code> call succeeded, this packed struct can be
+read from memory into a register with a <code>movq</code> instruction. That
+stack space can be re-used if needed.</li>
+<li>Keep in mind that you will need to do error checking of the return
+values from the two functions: if they return non-zero values jump
+to a clearly marked "error" section and return a 1. If an error
+occurs, <b>don't forget to pop any values off the stack that have been
+pushed before returning.</b></li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaa1b74e" class="outline-3 grading 50">
+<h3 id="orgaa1b74e"><span class="section-number-3">3.8</span> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div class="outline-text-3" id="text-3-8">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">AUTOMATED TESTS</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">35</td>
+<td class="org-left"><code>make test-prob1</code> which uses programs <code>test_batt_update</code> and <code>batt_main</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Provides 35 tests for functions in <code>batt_update_asm.s</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">1 point per test passed</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Note: can run <code>make test-hybrid</code> to run tests on mixed C/assembly during development but this</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">will not be done for evaluation so ensure that <code>make test-prob1</code> compiles and produces results.</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">MANUAL INSPECTION CRITERIA</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">General Criteria for all Functions</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear signs of hand-crafted assembly are present.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Detailed documentation/comments are provided showing the algorithm used in the assembly</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">There is a clear relation of the code to the C algorithm used in <code>batt_update.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of good label names to indicate jump targets: <code>.NEG_VOLTS</code> is good, <code>.L32</code> is bad</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">High-level variables and registers they occupy are documented in comments</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Error checking on the input values is done with a clear "error" section/label</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Any callee save registers used (<code>rbx rbp r12 r13 r14 r15</code>) are pushed at the top of functions and popped at the end</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><code>set_batt_from_ports()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Divisions by powers of 2 are done using a bitwise shift instruction.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">There is a clearly documented section which updates struct fields in memory</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">No function calls are made that would alter the stack contents</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left"><code>set_display_from_batt()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">There is a clearly documented data section setting up useful tables of bitmasks</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Struct fields are unpacked from an argument register using shift operations</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">The <code>idivX</code> instruction is used to compute quotients and remainders that are needed.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">No function calls are made that would alter the stack contents</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><code>batt_update()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Memory is pushed onto the stack for local variables that must be passed by reference</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Function calls to the earlier two functions are made with appropriate arguments passed</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">The stack is properly aligned at an 8-byte boundary for function calls, likely through a <code>subq/pushq</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Changes to the stack for local variables / alignment are undone via a complementary <code>addq/popq</code> instruction</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+<b>NOTE</b>: Passing all tests and earning all manual inspection criteria
+will earn up to <b>10 Points of Project Makeup Credit</b> which will offset
+past and future loss of credit on projects.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd91f470" class="outline-2">
+<h2 id="orgd91f470"><span class="section-number-2">4</span> <b>Problem 2</b>: The Binary Bomb</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org0da6f35" class="outline-3">
+<h3 id="org0da6f35"><span class="section-number-3">4.1</span> Quick Links</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+<b>Available only on Lab Machines or Vole</b>
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Download Bombs</td>
+<td class="org-left"><a href="http://atlas.cselabs.umn.edu:15213/">http://atlas.cselabs.umn.edu:15213/</a></td>
+</tr>
+
+<tr>
+<td class="org-left">Score Board</td>
+<td class="org-left"><a href="http://atlas.cselabs.umn.edu:15213/scoreboard">http://atlas.cselabs.umn.edu:15213/scoreboard</a></td>
+</tr>
+
+<tr>
+<td class="org-left">2021 GDB Quick Guide/Assembly</td>
+<td class="org-left"><a href="https://www-users.cs.umn.edu/~kauffman/2021/gdb.html">https://www-users.cs.umn.edu/~kauffman/2021/gdb.html</a></td>
+</tr>
+</tbody>
+</table>
+
+<p>
+More details on these are described in subsequent sections.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3b28924" class="outline-3">
+<h3 id="org3b28924"><span class="section-number-3">4.2</span> Overview</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+The nature of this problem is similar to the previous project's
+<code>puzzlebox</code>: there is a program called <code>bomb</code> which expects certain
+inputs from a parameter file or typed as input. If the inputs are
+"correct", a phase will be "defused" earning points and allowing
+access to a subsequent phases. The major change is that the <code>bomb</code>
+program is in binary so must be debugged in assembly. 
+</p>
+
+<p>
+Below is a summary of useful information concerning the binary bomb.
+</p>
+
+<dl class="org-dl">
+<dt>Bombs are Individual</dt><dd>The bomb you will download contains subtle
+variations so that the solution to yours will not work on other
+bombs. Feel free to discuss general techniques with classmates
+but know that you'll need to ultimately defuse your own bomb.</dd>
+<dt>Bombs are Binary</dt><dd>A small amount of C code with the <code>main()</code>
+function is included but the bulk of the code is binary which
+will require using <code>gdb</code> to debug the assembly code.</dd>
+<dt>Bombs only Run on Lab Machines</dt><dd>To stay in contact with the
+scoring server, bombs won't run on your laptop. You'll need to
+work on them on lab machines.</dd>
+<dt>Bombs Take Input</dt><dd>Similar to <code>puzzlebox</code>, create an <code>input.txt</code> file which will
+contain your answers. Run bombs with this input file. Note that
+if the bomb runs out of input, you can type input directly into
+the bomb though this may look a little funny in the debugger.</dd>
+<dt>Defusing Phases Earns Points</dt><dd>As with the earlier <code>puzzlebox</code>, points for this problem are
+earned based on how many phases are completed. Each phase that is
+completed will automatically be logged with the scoring server</dd>
+<dt>Bomb Explosions Lose Points</dt><dd>If incorrect input is entered and the bomb runs to completion, it
+will "explode" which causes credit to be deducted. See the
+scoring system for details. This can be prevented by setting
+breakpoints prior to the explosion sequence and restarting the
+bomb when those breakpoints are hit.</dd>
+<dt>Use GDB to work with Bombs</dt><dd>The debugger is the best tool to work with running bombs. It may
+be tempting to try to brute force the bomb by trying many
+possible inputs but this may lead to many explosions or crashing
+the scoring server. Both of these are a bad idea so work with
+your bomb by hand.</dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org4911703" class="outline-3">
+<h3 id="org4911703"><span class="section-number-3">4.3</span> Machines on which bombs run</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+The binary bomb makes frequent contact with a scoring server so you
+can only run it on a list of prescribed machines.  These comprise most
+of the valid CSELabs machines and are listed in the table
+below. 
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Machine</th>
+<th scope="col" class="org-left">Login Address</th>
+<th scope="col" class="org-left">Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">atlas</td>
+<td class="org-left">csel-atlas.cselabs.umn.edu</td>
+<td class="org-left">Machine Room</td>
+</tr>
+
+<tr>
+<td class="org-left">apollo</td>
+<td class="org-left">csel-apollo.cselabs.umn.edu</td>
+<td class="org-left">Machine Room</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">Vole</td>
+<td class="org-left">csel-vole-01.cselabs.umn.edu</td>
+<td class="org-left"><a href="http://vole.cse.umn.edu/">Virtual</a></td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">csel-vole-02.cselabs.umn.edu</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#x2026;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">csel-vole-99.cselabs.umn.edu</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">4-250 Lab</td>
+<td class="org-left">csel-kh4250-01.cselabs.umn.edu</td>
+<td class="org-left">Keller 4-250</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#x2026;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">csel-kh4250-49.cselabs.umn.edu</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">4-240 Lab</td>
+<td class="org-left">csel-kh4240-01.cselabs.umn.edu</td>
+<td class="org-left">Keller 4-240</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#x2026;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">csel-kh4240-10.cselabs.umn.edu</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">Lind Lab</td>
+<td class="org-left">csel-lind40-01.cselabs.umn.edu</td>
+<td class="org-left">Lind Hall 40</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#x2026;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">csel-lind40-43.cselabs.umn.edu</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Attempting to run a bomb on an un-authorized machine will error out
+immediately as in
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; ./bomb
+Initialization error: illegal host 'ck-laptop'.
+Legal hosts are as follows:
+  csel-apollo
+  csel-atlas
+  csel-vole-01
+  csel-vole-02
+  ...
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1f3622a" class="outline-3">
+<h3 id="org1f3622a"><span class="section-number-3">4.4</span> <a id="org545dbd7"></a> Bomb Download and Setup</h3>
+<div class="outline-text-3" id="text-4-4">
+<ul class="org-ul">
+<li>Download your bomb from the following web address
+<ul class="org-ul">
+<li><a href="http://atlas.cselabs.umn.edu:15213/">http://atlas.cselabs.umn.edu:15213/</a></li>
+</ul></li>
+<li><b>This site must be accessed from wired UMN machines or Vole</b> as it
+is behind the campus firewall. Using a browser on <a href="http://vole.cse.umn.edu/">Vole</a> is the
+easiest way get a bomb onto your CSELabs account (and will let you
+tell friends "I've used a browser inside a browser.").</li>
+<li>Enter your UMN X.500 information in the required fields: IDs that
+don't correspond to members of the class will be rejected. If you
+have problems getting a bomb, mail Prof Kauffman.</li>
+<li><p>
+The bomb will download as a <code>.zip</code> file. On Unix machines, extract
+the contents using the command <code>unzip</code> as in
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">  &gt; ls
+  bomb10.zip
+  
+  &gt; unzip bomb10.zip
+  bomb10/README
+  bomb10/bomb.c
+  bomb10/bomb
+  
+  &gt; ls
+  bomb10.zip    bomb10/
+  
+  &gt; cd bomb10
+  &gt; ls
+  bomb*  bomb.c  README
+</pre>
+</div></li>
+<li>The resulting bomb is unique for the downloader and the owner is in
+the <code>README</code> and logged on the download server.</li>
+<li>The file <code>bomb</code> (sometimes listed with a <code>*</code> to indicate it is
+executable) is a compiled binary so employ your assembly <code>gdb</code>
+skills to cracking it.</li>
+<li><p>
+Create a file <code>input.txt</code>. The bomb can be run with it as in
+</p>
+<pre class="example">
+&gt; ./bomb input.txt
+</pre>
+
+<p>
+but you'll likely want to do this in <code>gdb</code> to avoid exploding the
+bomb.
+</p></li>
+<li>Unlike previous puzzles, if <code>input.txt</code> runs out of input, the bomb
+will prompt for you to type input. This can be a way to explore
+ahead a little bit in the bomb after solving a phase.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orga4c5023" class="outline-3 grading 50">
+<h3 id="orga4c5023"><span class="section-number-3">4.5</span> Scoring and Scoreboard (50%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+Scoring is done according to the following table.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Pts</th>
+<th scope="col" class="org-left">Phase</th>
+<th scope="col" class="org-left">&#xa0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Phase 1</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Phase 2</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Phase 3</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Phase 4</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Phase 5</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Phase 6</td>
+<td class="org-left">Not Required</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Buffer</td>
+<td class="org-left">Reduced when Explosions occur</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">50</td>
+<td class="org-left">60 Max</td>
+<td class="org-left">50 pts is full credit</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+<b>Explosion Penalty</b>: 0.5 points are deducted for each explosion up to
+10 explosions. 5pt bonus is reduced for every 2 explosions.
+</p>
+
+<p>
+<a id="org16f29f3"></a>
+On successfully defusing stages, the bomb will contact a server which
+tracks scores by number. The scoreboard is here:
+</p>
+<ul class="org-ul">
+<li><a href="http://atlas.cselabs.umn.edu:15213/scoreboard">http://atlas.cselabs.umn.edu:15213/scoreboard</a></li>
+<li>The server is reachable only on UMN hardwired machines such as <b>lab
+machines or Vole</b></li>
+</ul>
+<p>
+You'll need to know your bomb number to see your score but can also
+see the scores of others.
+</p>
+</div>
+
+<div id="outline-container-org7bb90d1" class="outline-4">
+<h4 id="org7bb90d1">Examples of Scoring</h4>
+<div class="outline-text-4" id="text-org7bb90d1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Phases</th>
+<th scope="col" class="org-right">&#xa0;</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-right">Final</th>
+<th scope="col" class="org-left">&#xa0;</th>
+</tr>
+
+<tr>
+<th scope="col" class="org-right">Defused</th>
+<th scope="col" class="org-right">Explosions</th>
+<th scope="col" class="org-left">Computation</th>
+<th scope="col" class="org-right">Score</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">6</td>
+<td class="org-right">1</td>
+<td class="org-left">55 + (5 - floor(0.5*1) )</td>
+<td class="org-right">60</td>
+<td class="org-left">1 explosion for free</td>
+</tr>
+
+<tr>
+<td class="org-right">6</td>
+<td class="org-right">4</td>
+<td class="org-left">55 + (5 - floor(0.5*4) )</td>
+<td class="org-right">58</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">6</td>
+<td class="org-right">10</td>
+<td class="org-left">55 + (5 - floor(0.5*10))</td>
+<td class="org-right">55</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">6</td>
+<td class="org-right">20</td>
+<td class="org-left">55 + (5 - floor(0.5*10))</td>
+<td class="org-right">55</td>
+<td class="org-left">Only count 10 explosions</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-right">7</td>
+<td class="org-left">50 + (5 - floor(0.5*7))</td>
+<td class="org-right">52</td>
+<td class="org-left">Round down for explosion penalties</td>
+</tr>
+
+<tr>
+<td class="org-right">4</td>
+<td class="org-right">4</td>
+<td class="org-left">40 + (5 - floor(0.5*4))</td>
+<td class="org-right">43</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">0</td>
+<td class="org-left">10 + (5 - floor(0.5*0))</td>
+<td class="org-right">15</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">2</td>
+<td class="org-left">0  + (5 - floor(0.5*2))</td>
+<td class="org-right">4</td>
+<td class="org-left">Even trying with an explosion gets something</td>
+</tr>
+
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">10</td>
+<td class="org-left">0  + (5 - (floor(0.5*10)</td>
+<td class="org-right">0</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org6cf2344" class="outline-4">
+<h4 id="org6cf2344">Getting Credit for the Problem</h4>
+<div class="outline-text-4" id="text-org6cf2344">
+<ul class="org-ul">
+<li>Ensure that the score listed on the <a href="#org16f29f3">Scoreboard site</a> reflects your
+progress.</li>
+<li>Ensure your <code>input.txt</code> along with your <code>bombNN/</code> directory are in
+your project directory with the rest of your code.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org384cb92" class="outline-3">
+<h3 id="org384cb92"><span class="section-number-3">4.6</span> WARNING on Downloading Multiple Bombs</h3>
+<div class="outline-text-3" id="text-4-6">
+<p>
+It is possible to download multiple bombs but this will NOT reset your
+explosion count. Quite the opposite: the default scoring system for
+the server uses the following conventions.
+</p>
+<ul class="org-ul">
+<li>Only the maximum phase defused in any bomb adds points</li>
+<li><b>Total explosions across ALL bombs subtract points</b> with each
+separately downloaded bomb contributing up to -5.</li>
+</ul>
+<p>
+Since more bombs likely means more explosions, you are strongly
+advised to download a single bomb and work with it.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8bb2be9" class="outline-3">
+<h3 id="org8bb2be9"><span class="section-number-3">4.7</span> Advice</h3>
+<div class="outline-text-3" id="text-4-7">
+<ul class="org-ul">
+<li><p>
+If you accidentally run the bomb from the command line, you can kill
+it with the Unix interrupt key sequence <code>Ctrl-c</code> (hold control,
+press C key).
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">  &gt; ./bomb
+  Welcome to my fiendish little bomb. You have 6 phases with
+  which to blow yourself up. Have a nice day!
+  ^C
+  So you think you can stop the bomb with ctrl-c, do you?
+  Well...OK. :-)
+  &gt; 
+</pre>
+</div></li>
+<li><p>
+Most of the time you should run the bomb in <code>gdb</code> as in
+</p>
+<pre class="example">
+&gt; gdb ./bomb
+</pre>
+
+<p>
+Refer to the <a href="http://www-users.cs.umn.edu/~kauffman/2021/gdb">Quick Guide to GDB</a> if you have forgotten how to use
+<code>gdb</code> and pay particular attention to the sections on debugging
+assembly.
+</p></li>
+<li>Figure out what the explosion routine is called and <b>always set a
+breakpoint there</b>. This will allow you to stop the bomb</li>
+<li>Make use of other tools to analyze the binary bomb aside from the
+debugger.  Some of these are described at the end of the <a href="https://www-users.cs.umn.edu/~kauffman/2021/gdb.html#orgbeec3e9">Quick Guide
+to GDB</a>. They will allow you to search for "interesting" data in the
+executable <code>bomb</code>. The author of the bomb is encoded in the binary
+as a string somewhere which may be relevant to inputs for some
+phases.</li>
+<li><b>Disassemble</b> the executable to look at its entire source assembly code
+as a text file. The Quick Guide to GDB shows how to use <code>objdump</code> to
+do this. Looking at the whole source code reveals that one cannot
+hide <b>secrets</b> easily in programs.</li>
+<li>Feel free to do some internet research.  The "bomb lab" assignment
+has a long history and there are some useful guides out there that
+can help you through rough patches. Keep in mind that your bomb will
+differ but the techniques to defuse it may be similar to others.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-03-05 Fri 22:53 <br/> </i>
+</div>
+</body>
+</html>
