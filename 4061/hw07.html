@@ -1,0 +1,909 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-03-07 Sun 11:47 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 4061 HW07: Recursive Directory Traversal / pmap</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2021-03-07 Sun 11:47</i>
+</div>
+<div id="content">
+<h1 class="title">CSCI 4061 HW07: Recursive Directory Traversal / pmap</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Thu 6/9/2020</b></li>
+<li><i>Approximately 0.83% of total grade</i></li>
+<li>Homework and Quizzes are open resource/open collaboration. You must
+submit your own work but you may freely discuss HW topics with other
+members of the class.</li>
+</ul>
+
+<div id="outline-container-org8020c39" class="outline-4">
+<h4 id="org8020c39">CODE DISTRIBUTION: <a href="hw07-code.zip">hw07-code.zip</a></h4>
+</div>
+
+<div id="outline-container-orgaf69861" class="outline-4">
+<h4 id="orgaf69861">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orgaf69861">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org1d73a9b">1. Rationale</a>
+<ul>
+<li><a href="#org5d698e7">Associated Reading / Preparation</a></li>
+<li><a href="#org78205b8">Grading Policy</a></li>
+</ul>
+</li>
+<li><a href="#orgfa27fd2">2. Codepack</a></li>
+<li><a href="#org7087a3b">3. What to Understand</a></li>
+<li><a href="#org6ac0adb">4. Questions</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1d73a9b" class="outline-2">
+<h2 id="org1d73a9b"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+A variety of applications require code to traverse an entire directory
+structure visiting all files present in to perform some operation.
+At the shell level, utilities like <code>find</code> are good at doing this. For
+programs requiring lower-level interactions, such as version control
+software (e.g. git, svn, cvs), the C and system call interfaces to
+traversing directories are usually used.  As a tree-like structure,
+code that traverses directories will almost always have a recursive
+character to it whether explicit or implicit.
+</p>
+
+<p>
+This HW explores code to visit all files an a directory hierarchy
+using standard system calls. The <code>nftw()</code> library call which encodes
+this functionality is also examined. Completing the HW will inform on
+how to accomplish this task without breaking the brain.
+</p>
+
+<p>
+In addition, the <code>pmap</code> utility is useful to show portions of the page
+table associated with a running program and is explored in one
+problem.
+</p>
+</div>
+
+<div id="outline-container-org5d698e7" class="outline-3">
+<h3 id="org5d698e7">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-org5d698e7">
+<p>
+Stevens/Rago Ch 4.20-4.23 discuss functions like <code>opendir() /
+readdir()</code> in the context of traversing a directory hierarchy. They
+allude to the <code>nftw()</code> function and demonstrate their own
+implementation of it.
+</p>
+
+<p>
+Consult the manual page on <code>pmap</code> for more information on it.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org78205b8" class="outline-3">
+<h3 id="org78205b8">Grading Policy</h3>
+<div class="outline-text-3" id="text-org78205b8">
+<p>
+Credit for this HW is earned by taking the associate Quiz which is
+linked under <code>Gradescope</code>.  The quiz will ask similar questions as
+those that are present in the <code>QUESTIONS.txt</code> file and those that
+complete all answers in <code>QUESTIONS.txt</code> should have no trouble with
+the quiz.
+</p>
+
+<p>
+See the <a href="../4061/syllabus.html">full policy in the syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfa27fd2" class="outline-2">
+<h2 id="orgfa27fd2"><span class="section-number-2">2</span> Codepack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The codepack contains the following files:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">Questions to answer</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>nftw/</code></td>
+<td class="org-left">Directory for Problems 1-3</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Run <code>make</code> to set up the required directory structure and build programs for this HW</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>recursive_listing.c</code></td>
+<td class="org-left">Problem 1 code to analyze</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>print_file_info.c</code></td>
+<td class="org-left">Problem 2 code to analyze</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>nftw_listing.c</code></td>
+<td class="org-left">Problem 3 code to analyze</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>qsort_demo.c</code></td>
+<td class="org-left">Optional file demonstrating <code>qsort()</code> function</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>pmap-memory-parts/</code></td>
+<td class="org-left">Directory for Problem 4</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>memory_parts.c</code></td>
+<td class="org-left">Problem 4 code to analyze</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org7087a3b" class="outline-2">
+<h2 id="org7087a3b"><span class="section-number-2">3</span> What to Understand</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Ensure that you understand
+</p>
+<ul class="org-ul">
+<li>How to perform a recursive traversal of data in a hierarchy using
+system calls</li>
+<li>Why it is usually not necessary to write your own recursive traversal
+code as library functions often provide this functionality if you
+know how to access it.</li>
+<li>How to determine types and other data about files with the <code>stat() /
+  lstat()</code> calls along with associated functions/macros like</li>
+<li>The type of information that <code>pmap</code> displays and what OS data
+structures it corresponds to</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org6ac0adb" class="outline-2">
+<h2 id="org6ac0adb"><span class="section-number-2">4</span> Questions</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Analyze the files in the provided codepack and answer the questions
+given in <code>QUESTIONS.txt</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                           _________________
+
+                            HW 07 QUESTIONS
+                           _________________
+
+
+- Name: (FILL THIS in)
+- NetID: (THE kauf0095 IN kauf0095@umn.edu)
+
+Write your answers to the questions below directly in this text file.
+HW quiz questions will be related to the questions in this file.
+
+
+Overview
+========
+
+  Typing `make' will now create the subdirectory `subdir-small' which is
+  used in recursive traversals.
+
+  Compile and run the programs in the provide directory. A Makefile is
+  present to ease this task. After compiling, experiment with the
+  compiled programs as shown below and note the results they print.
+
+  ,----
+  | &gt; make
+  | chmod u+x make-subdir-small.sh
+  | ./make-subdir-small.sh
+  | gcc -Wall -g -c nftw_listing.c
+  | gcc -Wall -g -c print_file_info.c
+  | gcc -Wall -g -o nftw_listing nftw_listing.o print_file_info.o
+  | gcc -Wall -g -c recursive_listing.c
+  | gcc -Wall -g -o recursive_listing recursive_listing.o print_file_info.o
+  | 
+  | &gt; ./recursive_listing 
+  | T MTIME                    BYTES    FILENAME
+  | = ======================== ======== ================
+  | D Fri Mar 27 14:32:34 2020     4096 .
+  | F Thu Mar 26 14:29:47 2020    21912 ./nftw_demo
+  | ...
+  | 
+  | &gt; ./recursive_listing recursive_listing.c
+  | ...
+  | 
+  | &gt; ./recursive_listing subdir-small
+  | ...
+  | 
+  | &gt; ./nftw_listing 
+  | ...
+  | &gt; ./nftw_listing recursive_listing.c
+  | ...
+  | &gt; ./nftw_listing subdir-small
+  | ...
+  `----
+
+  The bulk of this problem is to examine the provided code to determine
+  how library and system calls are used to carry out their task: listing
+  the contents of an entire directory hierarchy.
+
+
+PROBLEM 1: Recursive Directory Traversal
+========================================
+
+  Examine the code in `recursive_listing.c'. A number of system calls
+  are used within it which are worth studying.
+
+
+(A) lstat()
+~~~~~~~~~~~
+
+  Near the top, a call to `lstat()' is made. As the name implies, this
+  call is related to the `stat()' system call.  Describe what these two
+  do and how they differ. You man need to consult the manual page for
+  them which is obtained via `man 2 stat' (section 2 for system calls).
+
+
+(B) opendir() / readdir()
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Later in the code, the system calls `opendir() / readdir()' are
+  employed.  Describe what these system calls do and how they are
+  employed in the code. Also mention a set of files that should be
+  "ignored" and how this is accomplished.
+
+
+(C) Base and Recursive Cases
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  As the name of the file and constituent functions implies,
+  `recursive_listing.c' takes a recursive approach. Some actions are
+  performed for all situations in `recursive_print()'. State these. Then
+  briefly describe what the Base and Recursive cases are for this code
+  are and how they work together to list all files in a directory tree.
+
+
+PROBLEM 2: Printing File Info
+=============================
+
+  Examine the `print_file_info.c' file which contains the function used
+  in `recursive_listing.c' to print information on files.
+
+
+(A) File Kinds
+~~~~~~~~~~~~~~
+
+  Describe the technique that is used in `print_file_info()' to
+  determine the kind of file (regular, directory, symlink, etc.).
+  - Where is this information stored?
+  - How can one set a variable to a character like 'D' if the file is a
+    directory?
+
+  Note that there are two control mechanisms shown to demonstrate
+  determining file kinds, one is used while the other is commented. Both
+  work similarly.
+
+
+(B) Time Printing
+~~~~~~~~~~~~~~~~~
+
+  From our previous discussion of the `stat()' system call, recall that
+  it produces several pieces of time information about files. One of
+  these is the Last Modification Time (`mtime').  This field is stored
+  in a in `sb-&gt;st_mtime' but is in binary format.
+
+  What function is used to produce a human-readable version of `mtime'
+  and what is an annoyning "gotchya" associated with this formatting
+  function which is demonstrated `print_file_info()'?
+
+
+PROBLEM 3: nftw() Library Call
+==============================
+
+  Coders have been known to "reinvent the wheel" at times, often due to
+  their being unaware of pre-established alternatives.  The code in
+  `recursive_listng.c' is simple enough but has a number of subtle
+  issues that can be crippling: what if it runs out of file descriptors?
+  how should it behave if the files in the directory are changing? what
+  if a different operation than print/total are desired?
+
+  To rectify these issues, most modern Unix systems have a library
+  function that performs a "File Tree Walk" recursively visiting every
+  file in a directory structure and allowing arbitrary actions to be
+  performed on it. One such function available on many Unixes is
+  `nftw()' with the `n' indicating a limit on the total file descriptors
+  used during the file tree walk.
+
+  This problem explores this interesting and useful function.
+
+
+(A) nftw_listing.c
+~~~~~~~~~~~~~~~~~~
+
+  Examine the `nftw_listing.c' program.  Describe the similarities and
+  differences you see in this program to `recursive_listing.c'.
+  Describe what you infer to be the purpose of the `nftw()' function.
+
+
+(B) Arguments to nftw()
+~~~~~~~~~~~~~~~~~~~~~~~
+
+  One extremely interesting aspect of the `nftw()' function is 2nd
+  argument.
+  - Describe what is unusual about this argument and relate it to how
+    the `print_file_info()' function is written.  You may wish to
+    consult `man nftw'.
+  - If one wanted to do something other than print file information
+    (such as just sum up the total files visited), how could one do this
+    with `nftw()'?
+
+
+(C) Additional Information on nftw()
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Several alternatives to `nftw()' exist including the older `ftw()'
+  which is a simplified version of it.  Some systems (including Linux)
+  feature a `fts()' function which provides an interface similar to
+  `opendir() / readdir()' but which recursively visits an entire
+  directory tree rather than a single directory.
+
+  While C is not widely known for it Functional Programming facilities,
+  there are several places where functions are passed as arguments. The
+  C syntax for this is often confusing compared to functional languages
+  like Ocaml and Lisp, but it is usually worth the effort as
+  higher-order functions that take other functions as arguments can
+  provide tremendous flexibility.
+
+  Aside from `nftw()' taking a function to perform on files, a much more
+  common application of higher-order functions in C is the standard
+  `qsort()' (quick sort) function. It sorts arbitrary types of data
+  using a "comparison" function associated with the function. A
+  demonstration appears of this appears in `qsort_demo.c' and is worth
+  examining.
+
+
+PROBLEM 1: Virtual Memory and pmap
+==================================
+
+(A) memory_parts memory areas
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Examine the source code for the provided `memory_parts.c'
+  program. Identify what region of program memory you expect the
+  following variables to be allocated into:
+  - global_arr[]
+  - local_arr[]
+  - malloc_arr
+
+
+(B) Running memory_parts and pmap
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Compile the `memory_parts' using the provided Makefile.
+  ,----
+  | &gt; make memory_parts
+  `----
+  Run the program and note that it prints several pieces of information
+  - The addresses of several of the variables allocated
+  - Its Process ID (PID) which is a unique number used to identify the
+    running program. This is an integer.
+  For example, the output might be
+  ,----
+  | &gt; ./memory-parts
+  | 0x5605a7c271e9 : main()
+  | 0x5605a7c2a0c0 : global_arr
+  | 0x7ffe5ff7d600 : local_arr
+  | 0x5605a92442a0 : malloc_arr
+  | 0x7f1fa7303000 : mmap'd file
+  | 0x600000000000 : mmap'd block1
+  | 0x600000001000 : mmap'd block2
+  | my pid is 8406
+  | press any key to continue
+  `----
+  so the programs PID is 11160
+
+  The program will also stop at this point until a key is pressed. DO
+  NOT PRESS A KEY YET.
+
+  Open another terminal and type the following command in that new
+  terminal.
+  ,----
+  | &gt; pmap THE-PID-NUMBER-THAT-WAS-PRINTED-EARLIER
+  `----
+
+  Paste the output of pmap below.
+
+
+(C) Program Addresses vs Mapped Addresses
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  pmap prints out the virtual address space table for the program. The
+  leftmost column is a virtual address mapped by the OS for the program
+  to some physical location.  The next column is the size of the area of
+  memory associated with that starting address. The 3rd column contains
+  permissions of the program has for the memory area: r for read, w for
+  read, x for execute. The final column is contains any identifying
+  information about the memory area that pmap can discern.
+
+  Compare the addresses of variables and functions from the paused
+  program to the output. Try to determine the virtual address space in
+  which each variable resides and what region of program memory that
+  virtual address must belong to (stack, heap, globals, text).  In some
+  cases, the identifying information provided by pmap may make this
+  obvious.
+
+
+(D) Min Size of Mapped Areas
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  The minimum size of any virtual area of memory appears to be 4K. Why
+  is this the case?
+
+
+(E) Additional Observations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Notice that in addition to the "normal" variables that are mapped,
+  there is also an entry for the mmap()'d file 'gettysburg.txt' in the
+  virtual address table.  The mmap() function is explored in the next
+  problem but note its calling sequence which involves use of a couple
+  system calls:
+  1. `open()' which is a low level file opening call which returns a
+     numeric file descriptor.
+  2. `fstat()' which obtains information such as size for an open file
+     based on its numeric file descriptor. The `stat()' system call was
+     explored earlier in the class and does the same thing provided the
+     name of a file.
+
+  There are additional calls to mmap() which allocate memory to the
+  program at a specific virtual address. Similar code to this is often
+  used to allocate and expand the heap area of memory for programs in
+  implementations of `malloc()'.
+
+  Some Unix implementations, Linux among them, include a `mremap()'
+  function. This function is related to `mmap()' as `realloc()' is
+  related to `malloc()'
+  - `mmap()' makes requests to map virtual memory into the address space
+    of the program, possibly associated with a file but sometimes just
+    DRAM. A specific size is specified for the mapping which remains
+    fixed independent of any underlying file.
+  - `mremap()' allows the size of the virtual memory mapping to be
+    changed, often to expand it if needed. This is useful in cases where
+    a file has been `mmap()''d but changes size: `mremap()' can be used
+    to grow the memory mapping to account for additions to the file.
+    `mremap()' may fail if there is insufficient space to grow a
+    specific region of mapping. However, additional options can be
+    passed to have the mapping moved to a new location with sufficient
+    size in a similar way to `realloc()'. Like `realloc()' though, this
+    movement invalidates all existing pointers to and into that area of
+    memory.
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-03-07 Sun 11:47 <br/> </i>
+</div>
+</body>
+</html>
