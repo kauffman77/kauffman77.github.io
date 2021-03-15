@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-03-07 Sun 12:22 -->
+<!-- 2021-03-14 Sun 21:54 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CSCI 4061 Lab07: nftw()</title>
+<title>CSCI 4061 Lab08: Signal Handlers</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
 <style type="text/css">
@@ -387,18 +387,18 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-03-07 Sun 12:22</i>
+<i>Last Updated: 2021-03-14 Sun 21:54</i>
 </div>
 <div id="content">
-<h1 class="title">CSCI 4061 Lab07: nftw()</h1>
+<h1 class="title">CSCI 4061 Lab08: Signal Handlers</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Mon 3/15/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm Mon 3/22/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-org70deb37" class="outline-4">
-<h4 id="org70deb37">CODE DISTRIBUTION: <a href="lab07-code.zip">lab07-code.zip</a></h4>
-<div class="outline-text-4" id="text-org70deb37">
+<div id="outline-container-org34d52f7" class="outline-4">
+<h4 id="org34d52f7">CODE DISTRIBUTION: <a href="lab08-code.zip">lab08-code.zip</a></h4>
+<div class="outline-text-4" id="text-org34d52f7">
 <ul class="org-ul">
 <li>Download the code distribution</li>
 <li>See further setup instructions below</li>
@@ -406,40 +406,41 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org212e540" class="outline-4">
-<h4 id="org212e540">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-org212e540">
+<div id="outline-container-org5f5eb73" class="outline-4">
+<h4 id="org5f5eb73">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org5f5eb73">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc8b0cd7">1. Rationale</a></li>
-<li><a href="#orgccb75eb">2. Codepack</a></li>
-<li><a href="#org1b0e2fd">3. Higher-order Functions in C Programs</a></li>
-<li><a href="#org0bf5384">4. QUESTIONS.txt File Contents</a></li>
-<li><a href="#orga9c1953">5. Submission</a></li>
+<li><a href="#org68f1a42">1. Rationale</a></li>
+<li><a href="#orgec3442a">2. Codepack</a></li>
+<li><a href="#org87ac3bf">3. Signal Handlers</a></li>
+<li><a href="#org21e08bb">4. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org6bdec2e">5. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgc8b0cd7" class="outline-2">
-<h2 id="orgc8b0cd7"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org68f1a42" class="outline-2">
+<h2 id="org68f1a42"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-This Lab focuses on a useful function called <code>nftw()</code> which greatly
-simplifies the otherwise tedious task of traversing an entire
-subdirectory to perform operations on files within it.  It also
-provides a good example of "higher-order" functions which take as
-functions arguments. The techniques demonstrated here will be employed
-fairly directly in an upcoming project.
+This Lab gives some practical experience setting up a signal handler
+in a standard utility. It demonstrates how the usual logic of a
+program can incorporate signals to allow "graceful shutdown":
+terminating the program as quickly as possible while still producing
+some output that has been calculated so far. This emulates the common
+situation of needing to finalize some file operations before shutting
+a sensitive program down due to a signal
 </p>
 </div>
 
-<div id="outline-container-org5ea6318" class="outline-4">
-<h4 id="org5ea6318">Grading Policy</h4>
-<div class="outline-text-4" id="text-org5ea6318">
+<div id="outline-container-org62dbcde" class="outline-4">
+<h4 id="org62dbcde">Grading Policy</h4>
+<div class="outline-text-4" id="text-org62dbcde">
 <p>
 Credit for this Lab is earned by completing the exercises here and
 submitting a Zip of the work to Gradescope. Students are responsible
@@ -462,8 +463,8 @@ See the <a href="../syllabus.html">full policies in the course syllabus</a>.
 </div>
 </div>
 
-<div id="outline-container-orgccb75eb" class="outline-2">
-<h2 id="orgccb75eb"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orgec3442a" class="outline-2">
+<h2 id="orgec3442a"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for this lab is linked at the top of this
@@ -496,21 +497,9 @@ the following files which are briefly described.
 </tr>
 
 <tr>
-<td class="org-left"><code>nftw_ls.c</code></td>
-<td class="org-left">Study</td>
-<td class="org-left">C file to study to help answer QUIZ questions</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>qsort_demo.c</code></td>
-<td class="org-left">Study</td>
-<td class="org-left">C file to study to help complete the CODE lab portion</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>nftw_listsize.c</code></td>
+<td class="org-left"><code>wc_signal.c</code></td>
 <td class="org-left">EDIT</td>
-<td class="org-left">C file to complete for CODE portion</td>
+<td class="org-left">C file to study to complete for the CODE portion</td>
 </tr>
 </tbody>
 <tbody>
@@ -533,7 +522,7 @@ the following files which are briefly described.
 </tr>
 
 <tr>
-<td class="org-left"><code>test_lab07.org</code></td>
+<td class="org-left"><code>test_lab08.org</code></td>
 <td class="org-left">Testing</td>
 <td class="org-left">Tests for this lab</td>
 </tr>
@@ -542,45 +531,69 @@ the following files which are briefly described.
 </div>
 </div>
 
-<div id="outline-container-org1b0e2fd" class="outline-2">
-<h2 id="org1b0e2fd"><span class="section-number-2">3</span> Higher-order Functions in C Programs</h2>
+<div id="outline-container-org87ac3bf" class="outline-2">
+<h2 id="org87ac3bf"><span class="section-number-2">3</span> Signal Handlers</h2>
 <div class="outline-text-2" id="text-3">
 <p>
-While C is oriented towards low-level programming, it does allow for
-some "higher-order" features, notably passing functions as 
-arguments to other functions. So-called "higher-order functions"
-feature more prominently in functional programming languages like Lisp
-and OCaml but due to their usefulness are supported in C as well.
+There are several signals that standard programs react to by
+terminating. One such utility is the <code>wc</code> which does 'word counts' as
+well as character and line counts. Its use is show below.
 </p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; seq 10                        # demonstrate 'seq' output: sequence of numbers
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
 
-<p>
-Higher-order functions appear in certain library interfaces and
-several are present in the current lab for two functions:
-</p>
-<ul class="org-ul">
-<li><code>nftw()</code> which takes a function argument to call on all files in a
-directory hierarchy.</li>
-<li><code>qsort()</code> which takes a "comparator" function to compare elements in
-an array; this function is used to dictate the order the elements
-will be sorted.</li>
-</ul>
+&gt; seq 10 | wc                   # pipe 'seq' to the 'wc' wordcount utility
+     10      10      21         # 10 lines, 10 words, 21 characters
 
-<p>
-There are demos and examples of how these work in the lab files which
-should be studied. The same demo files appear in the current HW.
-</p>
-
-
-<p>
-For more information on higher-order functions making use of "function
-poitners" in C, consult the following tutorial:
-<a href="https://www-users.cs.umn.edu/~kauffman/2021/function-pointers.html">https://www-users.cs.umn.edu/~kauffman/2021/function-pointers.html</a>
-</p>
-</div>
+&gt; yes | wc                      # pipe infinite 'yes' output to wc
+  C-c                           # send interrupt via Ctrl-c
+                                # no output from wc which was terminated
+</pre>
 </div>
 
-<div id="outline-container-org0bf5384" class="outline-2">
-<h2 id="org0bf5384"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
+<p>
+Note in the last case that the keyboard interrupt, triggered by
+pressing <code>Ctrl-C</code>, sends the <code>SIGINT</code> signal which terminates the
+running programs with no output.  
+</p>
+
+<p>
+In this lab, a similar program called <code>wc_signal</code> will be constructed
+which will "catch" a signal and handle it by exiting normally and
+outputting its current results. The basic behavior of <code>wc_signal</code> is
+below.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt; make                          # build wc_signal program
+gcc -Wall -Werror -g  -c wc_signal.c
+gcc -Wall -Werror -g  -o wc_signal wc_signal.o
+
+&gt; seq 10 | ./wc_signal          # pipe 'seq' output to wc_signal
+
+10 lines 10 words 21 chars      # input ends, reports amount read
+
+&gt; yes | ./wc_signal             # pipe inifinite 'yes' output to wc_signal
+  C-c                           # send interrupt via Ctrl-c, output still reported
+28725026 lines 28725027 words 57450053 chars
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org21e08bb" class="outline-2">
+<h2 id="org21e08bb"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -591,7 +604,7 @@ for the lab.
 <div class="org-src-container">
 <pre class="src src-text">                           __________________
 
-                            LAB 07 QUESTIONS
+                            LAB 08 QUESTIONS
                            __________________
 
 
@@ -620,113 +633,65 @@ Lab Instructions
     the names of their group.
 
 
-QUIZ Questions nftw() function
-==============================
+QUIZ Questions sigaction() function
+===================================
 
-  Analyze the `nftw_ls.c' program. A similar program is the focus of a
-  HW problem. Compile and run it via
-  ,----
-  | &gt; make nftw_ls
-  | ...
-  | &gt; ./nftw_ls subdir-small
-  `----
+  Which of the following options must be set in the `struct sigaction'
+  to indicate that on receiving a signal, system calls should be
+  restarted automatically? (You may wish to consult the manual pages for
+  `sigaction()').
 
-  Answer the following questions about the use of the `nftw()' function.
+  - ( ) SA_AGAIN
+  - ( ) SA_SYSCALL
+  - ( ) SA_RESTART
+  - ( ) SA_RESETHAND
 
+  How does one indicate that a custom handler function should be run
+  when a signal is received using the `sigaction()' function?
+  - ( ) The `.sa_handler' field of a `struct sigaction' is set to the
+    function and the struct is passed to `sigaction()'
+  - ( ) The a pointer is to the function is passed as an argument
+    `sigaction()'
+  - ( ) Global functions which start with the name `handler_...()' are
+    automatically assigned to be signal handlers
+  - ( ) Trick question: the `sigaction()' function cannot be used to set
+    up a signal handler.
 
-Acroynym
-~~~~~~~~
-
-  According to the manual page for the function, the "ftw" part of the
-  name `nftw()' stands for
-  - ( ) From Top down
-  - ( ) Full Traversal Width
-  - ( ) File Tree Walk
-  - ( ) Far Too Wacky
-
-
-Arguments
-~~~~~~~~~
-
-  `nftw()' takes 4 arguments, the most interesting being argument
-  #2. This argument is...
-  - ( ) The name of a file at which to begin the traversal
-  - ( ) A function to call on each file that is visited during the
-    recursive directory traversal
-  - ( ) A `struct statbuf' which has information on an open file
-  - ( ) The maximum number of file descriptors to keep open while
-    traversing the directory tree
+  An easy way to convey that a signal has been received from the signal
+  handling function to the main body of a code is..
+  - ( ) To send a second signal the process within the signal handler
+  - ( ) To call a recursive function defined by the code
+  - ( ) To call `printf()' to print out that the signal has been caught
+  - ( ) To change the value of a global variable
 
 
-Stat Calls
-~~~~~~~~~~
+CODE Complete wc_signal.c
+=========================
 
-  Which of the following best describes the usage of `stat()' during
-  calls to `nftw()'
-  - ( ) On visiting a file, `nftw()' will already have created a `struct
-      statbuf' for each file which is passed via a pointer to its
-      parameter function
-  - ( ) The parameter function should include code that calls `stat()'
-    on each file if stats are required on the files
-  - ( ) The parameter function must call `stat()' and set one parameter
-    to the results via a deref-set for each file; otherwise `nftw()'
-    will fail
-  - ( ) It is illegal to call `stat()' during `nftw()' and one cannot
-    get file statistics during the directory traversal, a major drawback
-    of the function.
-
-
-CODE Complete nftw_listsize.c
-=============================
-
-  An incomplete file called `nftw_listsize.c' is present in the code
-  pack which is intended to recursively list all files in a given
-  subdirectory but list them by size from smallest to largest.
-
-  A skeleton is provided but a number of TODO/??? items must be filled
-  into to complete the program. An example of correct output is below.
+  Complete the code in `wc_signal.c' so that the program catches
+  `SIGINT' and prints its current counts prior to shutting down as shown
+  in the demo below. Sections to do so are marked as TODO.
 
   ,----
-  | &gt; make                          # compile
-  | gcc -Wall -Werror -g  -o nftw_listsize nftw_listsize.c
+  | &gt; make                          # build wc_signal program
+  | gcc -Wall -Werror -g  -c wc_signal.c
+  | gcc -Wall -Werror -g  -o wc_signal wc_signal.o
   | 
-  | &gt; ./nftw_listsize subdir-small  # list directory files smallest to largest
-  |        2 subdir-small/file_7.txt
-  |        2 subdir-small/file_6.txt
-  |        2 subdir-small/file_4.txt
-  |        2 subdir-small/file_5.txt
-  |        2 subdir-small/file_1.txt
-  |        2 subdir-small/file_2.txt
-  |        4 subdir-small/dir_1/file_13.txt
-  |        4 subdir-small/dir_1/file_11.txt
-  |        6 subdir-small/dir_3/file_33.txt
-  |        6 subdir-small/dir_3/file_34.txt
-  |        6 subdir-small/dir_3/file_32.txt
-  |        6 subdir-small/dir_3/file_31.txt
-  |        8 subdir-small/dir_4/file_41.txt
-  |        8 subdir-small/dir_4/file_43.txt
-  |        8 subdir-small/dir_4/file_44.txt
-  |        8 subdir-small/dir_4/file_42.txt
-  |       17 subdir-small/dir_3/file_35.txt
-  |       29 subdir-small/file_3.txt
-  |       51 subdir-small/dir_1/file_12.txt
+  | &gt; seq 10 | ./wc_signal          # pipe 'seq' output to wc_signal
+  | 
+  | 10 lines 10 words 21 chars      # input ends, reports amount read
+  | 
+  | &gt; yes | ./wc_signal             # pipe inifinite 'yes' output to wc_signal
+  |   C-c                           # send interrupt via Ctrl-c, output still reported
+  | 28725026 lines 28725027 words 57450053 chars
   `----
-
-  Study this file and draw from the examples provided in the demo
-  program `nftw_ls.c' to complete it.  The demo program is similar to a
-  code that is studied in HW07 which has more details of its
-  behavior. Additionally, a call to `qsort()' is required so study the
-  `qsort_demo.c' program to get a sense of how to use it.
-
-  On completing the code in `nftw_listsize.c' use `make test-code' to
-  ensure it functions correctly.
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orga9c1953" class="outline-2">
-<h2 id="orga9c1953"><span class="section-number-2">5</span> Submission</h2>
+<div id="outline-container-org6bdec2e" class="outline-2">
+<h2 id="org6bdec2e"><span class="section-number-2">5</span> Submission</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -736,7 +701,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-03-07 Sun 12:22 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-03-14 Sun 21:54 <br/> </i>
 </div>
 </body>
 </html>
