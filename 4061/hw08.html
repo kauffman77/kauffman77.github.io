@@ -1,0 +1,825 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-03-14 Sun 22:01 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 4061 HW08: mmap() / Basic Signals and Handlers</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2021-03-14 Sun 22:01</i>
+</div>
+<div id="content">
+<h1 class="title">CSCI 4061 HW08: mmap() / Basic Signals and Handlers</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Mon 3/22/2021</b></li>
+<li><i>Approximately 0.83% of total grade</i></li>
+<li>Homework and Quizzes are open resource/open collaboration. You must
+submit your own work but you may freely discuss HW topics with other
+members of the class.</li>
+</ul>
+
+<div id="outline-container-orgbcf694f" class="outline-4">
+<h4 id="orgbcf694f">CODE DISTRIBUTION: <a href="hw08-code.zip">hw08-code.zip</a></h4>
+</div>
+
+<div id="outline-container-org6fec922" class="outline-4">
+<h4 id="org6fec922">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org6fec922">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgcf5a0fc">1. Rationale</a>
+<ul>
+<li><a href="#orgdf729bf">1.1. Associated Reading</a></li>
+<li><a href="#orgd745e8e">1.2. Grading Policy</a></li>
+</ul>
+</li>
+<li><a href="#orgbcc7e3f">2. Codepack</a></li>
+<li><a href="#orgc2a7937">3. What to Understand</a></li>
+<li><a href="#org284424a">4. Questions</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcf5a0fc" class="outline-2">
+<h2 id="orgcf5a0fc"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Files are often stored in "binary format" for efficiency of storage
+and access. Rather than more familiar formatted text formats, these
+formats require use of binary file I/O to manipulate them, frequently
+low level Unix <code>read() / write()</code> calls. They also often require
+jumping to different positions in the file which can be done via the
+<code>lseek()</code> system call.  These are explored in this HW.
+</p>
+
+<p>
+A viable alternative to file I/O is to make use of memory mapped files
+through <code>mmap()</code>.  This utilizes a system call to expose files as a
+pointer into operating system managed space which holds parts of the
+file in main memory.  While equivalent in power to standard I/O,
+<code>mmap()</code> avoids the need for intermediate buffers and allows pointer
+arithmetic to be used to locate and alter the file.
+</p>
+
+<p>
+Signals are one of the simplest forms of communication between
+processes. They are essential for management of running programs and
+can also be used for other purposes. This HW explores the C function
+<code>kill()</code> which sends signals and the signal handler setup function
+<code>signal()</code> which can allow signals to be caught and handled. It
+assumes basic familiarity with the shell commands <code>kill</code> and <code>pkill</code>
+which also send signals primarily to terminate misbehaving processes.
+</p>
+</div>
+
+<div id="outline-container-orgdf729bf" class="outline-3">
+<h3 id="orgdf729bf"><span class="section-number-3">1.1</span> Associated Reading</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Stevens/Rago Ch 3 covers basic I/O functions like <code>read() / write()</code>
+as well as <code>lseek()</code> in Ch 3.6. These functions work equally as well
+for text and binary data.
+</p>
+
+<p>
+Stevens/Rago Ch 14 discusses advanced I/O techniques with Ch 14.8
+covering <code>mmap()</code> for creating a memory mapped file.  Optionally,
+Bryant and O'Hallaron's "Computer Systems: A Programmers Perspective"
+also has some coverage of <code>mmap()</code> in section 9.8.4.  This textbook is
+mentioned as it is the required text for CSCI 2021, a prerequisite to
+CSCI 4061.
+</p>
+
+<p>
+Ch 10 of Stevens/Rago discusses basics of signals and signal handlers.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd745e8e" class="outline-3">
+<h3 id="orgd745e8e"><span class="section-number-3">1.2</span> Grading Policy</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Credit for this HW is earned by taking the associate Quiz which is
+linked under <code>Gradescope</code>.  The quiz will ask similar questions as
+those that are present in the <code>QUESTIONS.txt</code> file and those that
+complete all answers in <code>QUESTIONS.txt</code> should have no trouble with
+the quiz.
+</p>
+
+<p>
+See the <a href="../4061/syllabus.html">full policy in the syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbcc7e3f" class="outline-2">
+<h2 id="orgbcc7e3f"><span class="section-number-2">2</span> Codepack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The codepack for the HW contains the following files:
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">&#xa0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">Questions to answer</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>binfiles-mmap/</code></td>
+<td class="org-left">Directory for Problems 1-2</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Makefile to build Problem 2/3 programs</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>department.h</code></td>
+<td class="org-left">Header file for programs</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>make_dept_directory.c</code></td>
+<td class="org-left">Problem 1-2 program to create data file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>cse_depts.dat.bk</code></td>
+<td class="org-left">Backup of data file created in Problem 1-2</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>print_department_read.c</code></td>
+<td class="org-left">Problem 1 program to analyze</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>print_department_mmap.c</code></td>
+<td class="org-left">Problem 2 program to analyze</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>signals/</code></td>
+<td class="org-left">Problem 3 directory</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>circle_of_life.c</code></td>
+<td class="org-left">Problem 3 code to analyze</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>birth_death.c</code></td>
+<td class="org-left">Problem 3 code to analyze</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>no_interruptions.c</code></td>
+<td class="org-left">File with signal handler for Problem 2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgc2a7937" class="outline-2">
+<h2 id="orgc2a7937"><span class="section-number-2">3</span> What to Understand</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Ensure that you understand
+</p>
+<ul class="org-ul">
+<li>How data in files can be directly <code>read()</code> into arrays and structs.</li>
+<li>Use of the <code>lseek()</code> system call to move to a desired byte position
+in a file</li>
+<li>Use of <code>mmap()</code> to create a memory mapped file for reading</li>
+<li>How to send signals to other process with the <code>kill()</code> function</li>
+<li>How a process can detect whether a child was signaled and if the
+signal was terminal</li>
+<li>How processes can set up simple signal handlers and which signals
+cannot be handled.</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org284424a" class="outline-2">
+<h2 id="org284424a"><span class="section-number-2">4</span> Questions</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+<pre class="src src-text">                           _________________
+
+                            HW 08 QUESTIONS
+                           _________________
+
+
+- Name: (FILL THIS in)
+- NetID: (THE kauf0095 IN kauf0095@umn.edu)
+
+Write your answers to the questions below directly in this text file.
+HW quiz questions will be related to the questions in this file.
+
+
+PROBLEM 1: Binary File Format w/ Read
+=====================================
+
+A
+~
+
+  Compile all programs in the directory `binfiles/' with the provided
+  `Makefile'.  Run the command
+  ,----
+  | ./make_dept_directory cse_depts.dat
+  `----
+
+  to create the `cse_depts.dat' binary file. Examine the source code for
+  this program along with the header `department.h'.
+  - What system calls are used in `make_dept_directory.c' to create this
+    file?
+  - How is the `sizeof()' operator used to simplify some of the
+    computations in `make_dept_directory.c'?
+  - What data is in `cse_depts.dat' and how is it ordered?
+
+
+B
+~
+
+  Run the `print_department_read' program which takes a binary data file
+  and a department code to print.  Show a few examples of running this
+  program with the valid command line arguments. Include in your demo
+  runs that
+  - Use the `cse_depts.dat' with known and unknown department codes
+  - Use a file other than `cse_depts.dat'
+
+
+C
+~
+
+  Study the source code for `print_department_read' and describe how it
+  initially prints the table of offsets shown below.
+  ,----
+  | Dept Name: CS Offset: 104
+  | Dept Name: EE Offset: 2152
+  | Dept Name: IT Offset: 3688
+  `----
+  What specific sequence of calls leads to this information?
+
+
+D
+~
+
+  What system call is used to skip immediately to the location in the
+  file where desired contacts are located? What arguments does this
+  system call take? Consult the manual entry for this function to find
+  out how else it can be used.
+
+
+PROBLEM 2: mmap() and binary files
+==================================
+
+  An alternative to using standard I/O functions is "memory mapped"
+  files through the system call `mmap()'. The program
+  `print_department_mmap.c' provides the functionality as the previous
+  `print_department_read.c' but uses a different mechanism.
+
+
+(A)
+~~~
+
+  Early in `print_department_mmap.c' an `open()' call is used as in the
+  previous program but it is followed shortly by a call to `mmap()' in
+  the lines
+  ,----
+  |   char *file_bytes =
+  |     mmap(NULL, size, PROT_READ, MAP_SHARED,
+  |          fd, 0);
+  `----
+  Look up reference documentation on `mmap()' and describe some of the
+  arguments to it including the `NULL' and `size' arguments. Also
+  describe its return value.
+
+
+(B)
+~~~
+
+  The initial setup of the program uses `mmap()' to assign a pointer to
+  variable `char *file_bytes'.  This pointer will refer directly to the
+  bytes of the binary file.
+
+  Examine the lines
+  ,----
+  |   ////////////////////////////////////////////////////////////////////////////////
+  |   // CHECK the file_header_t struct for integrity, size of department array
+  |   file_header_t *header = (file_header_t *) file_bytes; // binary header struct is first thing in the file
+  `----
+
+  Explain what is happening here: what value will the variable `header'
+  get and how is it used in subsequent lines.
+
+
+(C)
+~~~
+
+  After finishing with the file header, the next section of the program
+  begins with the following.
+  ,----
+  |   ////////////////////////////////////////////////////////////////////////////////
+  |   // SEARCH the array of department offsets for the department named
+  |   // on the command line
+  | 
+  |   dept_offset_t *offsets =           // after file header, array of dept_offset_t structures
+  |     (dept_offset_t *) (file_bytes + sizeof(file_header_t));
+  | 
+  `----
+
+  Explain what value the `offsets_arr' variable is assigned and how it
+  is used in the remainder of the SEARCH section.
+
+
+(D)
+~~~
+
+  The final phase of the program begins below
+  ,----
+  |   ////////////////////////////////////////////////////////////////////////////////
+  |   // PRINT out all personnel in the specified department
+  |   ...
+  |   contact_t *dept_contacts = (contact_t *) (file_bytes + offset);
+  `----
+  Describe what value `dept_contacts' is assigned and how the final
+  phase uses it.
+
+
+PROBLEM 3: `birth_death.c'
+==========================
+
+A
+~
+
+  Compile `circle_of_life.c' to the program `circle_of_life' and run
+  it. Examine the results and feel free to terminate execution
+  early. Examine the source code if desired though it is merely a
+  print/sleep loop.
+
+  Compile `birth_death.c' to the program `birth_death'. This program is
+  invoked with two arguments, another program name and a "lifetime"
+  which is an integer number of seconds. Run it like
+  ,----
+  | $&gt; ./birth_death ./circle_of_life 4
+  `----
+
+  and show the output below.
+
+
+B
+~
+
+  Examine the source code for `birth_death.c' and determine the system
+  call the parent program (`birth_death') uses to send signals to the
+  child program. Paste this line below and explain which signal is being
+  sent.
+
+
+C
+~
+
+  `birth_death.c' waits for a child to finish then outputs what signal
+  caused it to be terminated if that was the cause of death. Paste the
+  lines of code which determine if a child was terminated due to a
+  signal below and mention the macros used for this purpose.
+
+
+D
+~
+
+  Compile the program `no_interruptions.c' and run it with
+  `birth_death'. Show your results below.
+
+  Note that you may need to send signals to `no_interruptions' to
+  forcibly end it. The `pkill' command is useful for this as in
+  ,----
+  | pkill no_inter        # send TERM signal to proc name matching "no_inter"
+  | pkill -KILL no_inter  # send KILL signal to proc name matching "no_inter"
+  `----
+
+
+E
+~
+
+  Examine the `no_interruptions.c' code and describe how it is able to
+  avoid being killed when receiving the interrupt and TERM signals. Show
+  the lines of code used to accomplish this signal handling.
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-03-14 Sun 22:01 <br/> </i>
+</div>
+</body>
+</html>
