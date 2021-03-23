@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-03-23 Tue 12:20 -->
+<!-- 2021-03-23 Tue 12:16 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CSCI 4061 Lab09: Simple Pipelines</title>
+<title>CSCI 4061 HW09: FIFOs servers Server and Clients</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
 <style type="text/css">
@@ -387,95 +387,106 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-03-23 Tue 12:20</i>
+<i>Last Updated: 2021-03-23 Tue 12:16</i>
 </div>
 <div id="content">
-<h1 class="title">CSCI 4061 Lab09: Simple Pipelines</h1>
+<h1 class="title">CSCI 4061 HW09: FIFOs servers Server and Clients</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 3/30/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
-<li><i>Approximately 1.00% of total grade</i></li>
+<li><b>Due: 11:59pm Wed 3/30/2020</b></li>
+<li><i>Approximately 0.83% of total grade</i></li>
+<li>Homework and Quizzes are open resource/open collaboration. You must
+submit your own work but you may freely discuss HW topics with other
+members of the class.</li>
 </ul>
 
-<div id="outline-container-org92bf2e6" class="outline-4">
-<h4 id="org92bf2e6">CODE DISTRIBUTION: <a href="lab09-code.zip">lab09-code.zip</a></h4>
-<div class="outline-text-4" id="text-org92bf2e6">
+<div id="outline-container-orgae5e969" class="outline-4">
+<h4 id="orgae5e969">CODE DISTRIBUTION: <a href="hw09-code.zip">hw09-code.zip</a></h4>
+<div class="outline-text-4" id="text-orgae5e969">
 <ul class="org-ul">
-<li>Download the code distribution</li>
+<li>Download the code distribution every lab</li>
 <li>See further setup instructions below</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org6b06c17" class="outline-4">
-<h4 id="org6b06c17">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-org6b06c17">
+<div id="outline-container-orgb55857b" class="outline-4">
+<h4 id="orgb55857b">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orgb55857b">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org468ba06">1. Rationale</a></li>
-<li><a href="#org69fdb06">2. Codepack</a></li>
-<li><a href="#org959c3f8">3. QUESTIONS.txt File Contents</a></li>
-<li><a href="#orgb5d0139">4. Submission</a></li>
-<li><a href="#org4429797">5. For More Information</a></li>
+<li><a href="#org479fe7a">1. Rationale</a>
+<ul>
+<li><a href="#org640af6e">1.1. Associated Reading</a></li>
+<li><a href="#org02d842d">1.2. Grading Policy</a></li>
+</ul>
+</li>
+<li><a href="#org65c607c">2. Overview</a>
+<ul>
+<li><a href="#org6db8734">2.1. Codepack</a></li>
+<li><a href="#orgd3927f0">2.2. Programs</a></li>
+</ul>
+</li>
+<li><a href="#org4dcc88e">3. What to Understand</a></li>
+<li><a href="#org65d288d">4. Questions</a></li>
+<li><a href="#orgcf191ab">5. Again, What to Understand</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org468ba06" class="outline-2">
-<h2 id="org468ba06"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org479fe7a" class="outline-2">
+<h2 id="org479fe7a"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-The true power of Unix pipelines is only available if one is aware of
-the primitive tools, particularly text processing programs, that are
-available on Unix.  This lab gives a brief demonstration of how these
-can be combined in interesting ways to solve new problems such as
-extracting specific data with relative ease.
-</p>
-
-<p>
-NOTE: A recent lecture discusses specifically how to solve this lab
-and watching the video recording can help students needing assistance
-with it.
+FIFOs provide a nice way for two unrelated processes to communicate.
+However, if multiple processes wish to work on a FIFO, some sort of
+protocol must be used to ensure that their communication is
+coordinated and does not result in problems such as deadlocks or
+stalls. This lab explores both these issues.
 </p>
 </div>
 
-<div id="outline-container-orgf8df176" class="outline-4">
-<h4 id="orgf8df176">Grading Policy</h4>
-<div class="outline-text-4" id="text-orgf8df176">
+<div id="outline-container-org640af6e" class="outline-3">
+<h3 id="org640af6e"><span class="section-number-3">1.1</span> Associated Reading</h3>
+<div class="outline-text-3" id="text-1-1">
 <p>
-Credit for this Lab is earned by completing the exercises here and
-submitting a Zip of the work to Gradescope. Students are responsible
-to check that the results produced locally via <code>make test</code> are
-reflected on Gradescope after submitting their completed
-Zip. Successful completion earns 1 Engagement Point.
+Ch 15.1-5 of Stevens &amp; Rago discusses pipes, FIFOs, and simple
+client-server models
+</p>
+</div>
+</div>
+
+<div id="outline-container-org02d842d" class="outline-3">
+<h3 id="org02d842d"><span class="section-number-3">1.2</span> Grading Policy</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Credit for this HW is earned by taking the associate Quiz which is
+linked under <code>Gradescope</code>.  The quiz will ask similar questions as
+those that are present in the <code>QUESTIONS.txt</code> file and those that
+complete all answers in <code>QUESTIONS.txt</code> should have no trouble with
+the quiz.
 </p>
 
 <p>
-Lab Exercises are open resource/open collaboration and <b>students are
-encouraged to coopearte on labs.</b> Students may submit work as groups
-of up to 5 to Gradescope: one person submits then adds the names of
-their group members to the submission.
-</p>
-
-<p>
-See the <a href="../syllabus.html">full policies in the course syllabus</a>.
+See the <a href="../4061/syllabus.html">full policy in the syllabus</a>.
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org69fdb06" class="outline-2">
-<h2 id="org69fdb06"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org65c607c" class="outline-2">
+<h2 id="org65c607c"><span class="section-number-2">2</span> Overview</h2>
 <div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org6db8734" class="outline-3">
+<h3 id="org6db8734"><span class="section-number-3">2.1</span> Codepack</h3>
+<div class="outline-text-3" id="text-2-1">
 <p>
-The codepack for this lab is linked at the top of this
-document. Always download it and unzip/unpack it.  It should contain
-the following files which are briefly described.
+The codepack for the lab contains the following files:
 </p>
-
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -483,270 +494,290 @@ the following files which are briefly described.
 <col  class="org-left" />
 
 <col  class="org-left" />
-
-<col  class="org-left" />
 </colgroup>
 <thead>
 <tr>
 <th scope="col" class="org-left">File</th>
-<th scope="col" class="org-left">Use</th>
 <th scope="col" class="org-left">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="org-left"><code>QUESTIONS.txt</code></td>
-<td class="org-left">EDIT</td>
-<td class="org-left">Questions to answer: fill in the multiple choice selections in this file.</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>biggest_increases.c</code></td>
-<td class="org-left">CREATE</td>
-<td class="org-left">Shell file to create to complete for the CODE portion</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>stock-apple.csv</code></td>
-<td class="org-left">Data</td>
-<td class="org-left">Comma Separate Value files which are data to process</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>stock-gamestop.csv</code></td>
-<td class="org-left">Data</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>stock-uber.csv</code></td>
-<td class="org-left">Data</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>column-data.txt</code></td>
-<td class="org-left">Data</td>
-<td class="org-left">Simple test file to experiment on with text tools</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>topk.sh</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Shell script demonstrating a pipeline that was discussed in lecture</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>gettysburg.txt</code></td>
-<td class="org-left">Data</td>
-<td class="org-left">Plain text to process using <code>topk.sh</code></td>
-</tr>
-</tbody>
-<tbody>
-<tr>
-<td class="org-left"><code>QUESTIONS.txt.bk</code></td>
-<td class="org-left">Backup</td>
-<td class="org-left">Backup copy of the original file to help revert if needed</td>
+<td class="org-left">Questions to answer</td>
 </tr>
 
 <tr>
 <td class="org-left"><code>Makefile</code></td>
-<td class="org-left">Build</td>
-<td class="org-left">Enables <code>make test</code> and <code>make zip</code></td>
+<td class="org-left">Makefile to build programs below</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>testy</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">Test running scripts</td>
+<td class="org-left"><code>em_server.c</code></td>
+<td class="org-left">Small server to look up email based on name</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>test_lab09.org</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">Tests for this lab</td>
+<td class="org-left"><code>em_client.c</code></td>
+<td class="org-left">Client to connect to server with a name to get an email</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>run_simulations.sh</code></td>
+<td class="org-left">Script to start server and arbitrary number of clients</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 
-<div id="outline-container-org959c3f8" class="outline-2">
-<h2 id="org959c3f8"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-orgd3927f0" class="outline-3">
+<h3 id="orgd3927f0"><span class="section-number-3">2.2</span> Programs</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Compile and run the <code>em_client</code> and <code>em_server</code> programs. To do so
+interactively, you will need <b>two terminals</b>, one for the continually
+running server and one for the client. Running them will produce
+something like the following:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"># SERVER
+&gt; ./em_server
+SERVER 14841: starting up
+SERVER 14841: created new requests.fifo, now opening it
+SERVER 14841: opened requests.fifo, listening for requests
+SERVER 14841: received request {client_fifo='14842.fifo' query_name='Chris Kauffman' }
+...
+
+-------
+# CLIENT TERMINAL
+&gt; ./em_client "Chris Kauffman"
+CLIENT 14842: sending request: {fifo_file='14842.fifo' query_name='Chris Kauffman' }
+CLIENT 14842: opening '14842.fifo'
+CLIENT 14842: fifo opened, awaiting server response
+CLIENT 14842: response for name 'Chris Kauffman' is email 'kauffman@umn.edu'
+
+&gt; ./em_client "Amy Larson"
+CLIENT 14882: sending request: {fifo_file='14882.fifo' query_name='Amy Larson' }
+CLIENT 14882: opening '14882.fifo'
+CLIENT 14882: fifo opened, awaiting server response
+CLIENT 14882: response for name 'Amy Larson' is email 'larson@cs.umn.edu'
+
+&gt; 
+</pre>
+</div>
+
+<p>
+You can also simulate a larger number of clients connecting to a
+server using the <code>run_simulations.sh</code> program as below. Ensure you do
+not servers running in this case.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"># run the server and start up 10 clients to connect to it
+&gt; ./run_simulation.sh 10
+SERVER 14893: starting up
+SERVER 14893: created new requests.fifo, now opening it
+SERVER 14893: opened requests.fifo, listening for requests
+CLIENT 14895: sending request: {fifo_file='14895.fifo' query_name='Chris Kauffman' }
+CLIENT 14895: opening '14895.fifo'
+CLIENT 14895: fifo opened, awaiting server response
+SERVER 14893: received request {client_fifo='14895.fifo' query_name='Chris Kauffman' }
+SERVER 14893: opening client FIFO '14895.fifo'
+SERVER 14893: writing email 'kauffman@umn.edu' for query_name 'Chris Kauffman'
+CLIENT 14895: response for name 'Chris Kauffman' is email 'kauffman@umn.edu'
+...
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4dcc88e" class="outline-2">
+<h2 id="org4dcc88e"><span class="section-number-2">3</span> What to Understand</h2>
 <div class="outline-text-2" id="text-3">
 <p>
-Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
-Follow the instructions in it to complete the QUIZ and CODE questions
-for the lab.
+Ensure that you understand
+</p>
+<ul class="org-ul">
+<li>How FIFOs are created by the server and used by clients to
+communicate with the server and receive information without being a
+child process</li>
+<li>Some basic ideas of how a protocol determines who does what when in
+order for cooperating parties to avoid conflicts and errors</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org65d288d" class="outline-2">
+<h2 id="org65d288d"><span class="section-number-2">4</span> Questions</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Analyze these files and answer the questions given in <code>QUESTIONS.txt</code>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">                           __________________
+<pre class="src src-text">                           _________________
 
-                            LAB 09 QUESTIONS
-                           __________________
-
-
+                            HW 09 QUESTIONS
+                           _________________
 
 
+- Name: (FILL THIS in)
+- NetID: (THE kauf0095 IN kauf0095@umn.edu)
 
-Lab Instructions
-================
-
-  Follow the instructions below to experiment with topics related to
-  this lab.
-  - For sections marked QUIZ, fill in an (X) for the appropriate
-    response in this file. Use the command `make test-quiz' to see if
-    all of your answers are correct.
-  - For sections marked CODE, complete the code indicated. Use the
-    command `make test-code' to check if your code is complete.
-  - DO NOT CHANGE any parts of this file except the QUIZ sections as it
-    may interfere with the tests otherwise.
-  - If your `QUESTIONS.txt' file seems corrupted, restore it by copying
-    over the `QUESTIONS.txt.bk' backup file.
-  - When you complete the exercises, check your answers with `make test'
-    and if all is well, create a zip file with `make zip' and upload it
-    to Gradescope. Ensure that the Autograder there reflects your local
-    results.
-  - IF YOU WORK IN A GROUP only one member needs to submit and then add
-    the names of their group.
+Write your answers to the questions below directly in this text file.
+HW quiz questions will be related to the questions in this file.
 
 
-QUIZ Text tools for Pipelines
-=============================
+PROBLEM 1 `em_server.c'
+=======================
 
-  Experiment with the options provided below to familiarize with some
-  common text tools that are used in constructing pipelines.
+A
+~
 
-  Which of following uses of `sort' will sort the data in
-  `column-data.txt' in reverse numerical order by the first "key"
-  (column)?
-  - ( ) `cat column-data.txt | sort -k 2 -r'
-  - ( ) `cat column-data.txt | sort -n'
-  - ( ) `cat column-data.txt | sort -rn'
-  - ( ) `cat column-data.txt | sort -k 1 -n'
-
-  Which of the following uses of `tr' will replace the `.' (period)
-  character in `column-data.txt' with a space?
-  - ( ) `cat column-data.txt | tr -d '.''
-  - ( ) `cat column-data.txt | tr '.' ' ''
-  - ( ) `cat column-data.txt | tr ' ' '.''
-  - ( ) `cat column-data.txt | tr -c '.' ' ''
-
-  Which of the following uses of `awk' will print the 3rd column
-  followed by the sum of the 1st and 4th columns?
-  - ( ) `cat column-data.txt | awk '{print $3,($1+$4)}''
-  - ( ) `cat column-data.txt | awk '{$3,($1+$4)}''
-  - ( ) `cat column-data.txt | awk 'print $3,($1+$4)''
-  - ( ) `cat column-data.txt | awk '{print
-    fields[3],(fields[1]+fields[4])}''
+  Examine the source code for `em_server.c'. Describe the
+  `requests.fifo' item that it creates.  Resolve theses specific items
+  1. What system call is used initially to delete any existing version
+     of `requests.fifo'?
+  2. What system call is used to create `requests.fifo'?
+  3. What system call is used to set up reading from `requests.fifo'?
 
 
-CODE biggest_increases.sh
-=========================
+B
+~
 
-  Use the tool knowledge that you accumulated above and do some manual
-  reading to write a small shell script which does the following:
+  In the main `while()' loop of the server, describe how the server
+  handles requests from the client.
+  1. What C data type represents the requests from clients and what
+     parts does it have?
+  2. How does the server use the request data to search for a name/email
+     association?
+  3. How does the server use the request data to communicate back to the
+     client?
 
-  Print the dates of the biggest single day increase in a stock file CSV
-  that is formatted like those provided.
 
-  As an example, the `stock-gamestop.csv' is a Comman Separated Value
-  (CSV) file which looks like the following:
+PROBLEM 2 `em_client.c' and Protocol
+====================================
 
+A
+~
+
+  Examine the code for `em_client.c'. Describe the steps that it
+  performs to contact the server to make a request and then receive the
+  response.  Describe how system calls are used in this process.
+
+
+B
+~
+
+  Describe the overall Protocol of communication of between the server
+  and client. Which entity is responsible for creating, reading, and
+  writing each FIFO at what time.
+
+
+C
+~
+
+  Use the provided script `run_simulation.sh &lt;N&gt;' to launch start a
+  server and run a specified number of clients such as 5 as below
   ,----
-  | Date,Open,High,Low,Close,Volume
-  | 03/19/2021,"195.73","227.00","182.66","200.27","24,677,301"
-  | 03/18/2021,"214.00","218.88","195.65","201.75","11,799,910"
-  | 03/17/2021,"217.84","231.47","204.00","209.81","16,481,590"
-  | 03/16/2021,"203.16","220.70","172.35","208.17","35,422,871"
+  | &gt; ./run_simulation.sh 5
+  | SERVER 14205: starting up
+  | SERVER 14205: created new requests.fifo, now opening it
+  | SERVER 14205: opened requests.fifo, listening for requests
+  | CLIENT 14208: sending request: {fifo_file='14208.fifo' query_name='Christopher Jonathan' }
+  | CLIENT 14208: opening '14208.fifo'
   | ...
+  | SERVER 14205: closing connection to fifo '14212.fifo'
+  | CLIENT 14211: response for name 'Dan Knights' is email 'knights@cs.umn.edu'
+  | CLIENT 14212: response for name 'George Karypis' is email 'karypis@cs.umn.edu'
+  | &gt; 
   `----
+  Examine the output for this run along with running the simulation
+  several more times with different numbers of clients.
 
-  Each column is divided by commas. The first column is the date, 2nd
-  column the opening price for a stock, and 5th column the closing price
-  for the stock.  The price increase/decrease in a single day is found
-  by subtracting: Column 5 minus Column 2.
+  Explain why there never seems to be any problem with multiple clients
+  overwriting data associated with each other particularly in the
+  `requests.fifo' and the client responses.
 
-  This program is easily completed using a Pipeline of UNIX text
-  utilities, likely in a configuration like
+
+PROBLEM 3: Pitfalls
+===================
+
+A
+~
+
+  Compile the server/client with `make' and run the server via
   ,----
-  | cat stock-file.csv | tool1 | tool2 | ...
+  | &gt; ./em_server
   `----
+  Note the output that it prints. Then kill the server, perhaps with a
+  C-c interrupt signal.
 
-  Some good choices for tools are
-  - `cat' to output the entire contents of a file
-  - `head / tail' to output the first few or last few lines of a file
-  - `tr / sed' to transform input to newly formatted output
-  - `awk' to extract individual, space-separated items on a line or
-    perform simple arithmetic between line elements
-  - `sort' to sort input according alphabetic/numeric criteria and print
-    the sorted output
-
-  To complete the code, place the finished pipeline in a shell script
-  file called `biggest_increases.sh' which can be passed parameters that
-  indicate which stock file to run on and how many of the top increases
-  to show. See the provided `topk.sh' script which was discussed in
-  lecture to see examples of how to formulate this shell script file.
-
-  Some demos of the `biggest_increases.sh' script are as follows. Note
-  the output format is `INCREASE DATE' for the script.
+  Edit the `em_server.c' code to use the line marked `ALTERNATE
+  OPEN'. You should comment on the preceding `open()' line to get
   ,----
-  | &gt;&gt; ./biggest_increases.sh 3 stocks-gamestop.csv 
-  | 59.42 01/26/2021
-  | 47.01 02/24/2021
-  | 39.61 03/08/2021
-  | 
-  | &gt;&gt; ./biggest_increases.sh 8 stocks-gamestop.csv 
-  | 59.42 01/26/2021
-  | 47.01 02/24/2021
-  | 39.61 03/08/2021
-  | 29.19 03/09/2021
-  | 22.42 01/22/2021
-  | 18.36 03/11/2021
-  | 15.86 03/01/2021
-  | 10.98 01/13/2021
-  | 
-  | &gt;&gt; ./biggest_increases.sh 5 stocks-apple.csv 
-  | 5.54 09/21/2020
-  | 5.11 08/21/2020
-  | 4.34 10/12/2020
-  | 4.04 03/01/2021
-  | 3.85 09/25/2020
-  |  
-  | &gt;&gt; ./biggest_increases.sh 2 stocks-uber.csv 
-  | 4.53 03/19/2020
-  | 3.83 12/02/2020
+  | // int requests_fd = open("requests.fifo", O_RDWR);               // open FIFO read/write to avoid blocking
+  | int requests_fd = open("requests.fifo", O_RDONLY);             // ALTERNATE OPEN: read only
   `----
+
+  Recompile and re-run `em_server' and explain why the output of the
+  server changes in this case. To understand the change in output, you
+  may need to review what happens when a process opens only one end of a
+  pipe/FIFO.
+
+
+B
+~
+
+  With the ALTERNATE OPEN line in use (uncommented), start the
+  `em_server' which should appear to be 'waiting' for something. Then in
+  a separate terminal, run `em_client'.  Describe if the client and
+  server behave differently than when the original `open()' line was in
+  use by the server.
+
+
+C
+~
+
+  With the ALTERNATE OPEN line in use (uncommented), run the
+  `run_simulation.sh 5' script a few times until it appears to stall and
+  fail to complete.
+
+  Examine the output of the simulation run carefully and find a line
+  involving the server that gives some hints as to why the simulation
+  fails. Show that line below.
+
+
+D
+~
+
+  Do some careful thinking, reading, and exploration and explain why the
+  ALTERNATE OPEN line creates a flaw in the server/client protocol that
+  is NOT present in the original version.
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgb5d0139" class="outline-2">
-<h2 id="orgb5d0139"><span class="section-number-2">4</span> Submission</h2>
-<div class="outline-text-2" id="text-4">
-<p>
-Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
-how to upload your completed lab zip to Gradescope.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org4429797" class="outline-2">
-<h2 id="org4429797"><span class="section-number-2">5</span> For More Information</h2>
+<div id="outline-container-orgcf191ab" class="outline-2">
+<h2 id="orgcf191ab"><span class="section-number-2">5</span> Again, What to Understand</h2>
 <div class="outline-text-2" id="text-5">
 <p>
-While not a core operating system topic such as memory management,
-concurrency, or process creation, pipelines of tools are extremely
-useful.  To gain some more insight into possibilities, consider the
-<a href="https://www-users.cs.umn.edu/~kauffman/tooltime/03-text-tools.html">Tool Time</a> session which goes into some more detail on the topic.
+Ensure that you understand
 </p>
+<ul class="org-ul">
+<li>How FIFOs are created by the server and used by clients to
+communicate with the server and receive information without being a
+child process</li>
+<li>Some basic ideas of how a protocol determines who does what when in
+order for cooperating parties to avoid conflicts and errors</li>
+</ul>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-03-23 Tue 12:20 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-03-23 Tue 12:16 <br/> </i>
 </div>
 </body>
 </html>
