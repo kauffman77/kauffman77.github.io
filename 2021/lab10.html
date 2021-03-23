@@ -1,0 +1,828 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-03-23 Tue 15:44 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 2021 Lab10: Timing Code and Machine Speed</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2021-03-23 Tue 15:44</i>
+</div>
+<div id="content">
+<h1 class="title">CSCI 2021 Lab10: Timing Code and Machine Speed</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Tue 3/30/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><i>Approximately 1.00% of total grade</i></li>
+</ul>
+
+<div id="outline-container-orgd333794" class="outline-4">
+<h4 id="orgd333794">CODE DISTRIBUTION: <a href="lab10-code.zip">lab10-code.zip</a></h4>
+</div>
+
+<div id="outline-container-org91fb38a" class="outline-4">
+<h4 id="org91fb38a">CHANGELOG: Empty</h4>
+</div>
+
+<div id="outline-container-org73dfd86" class="outline-4">
+<h4 id="org73dfd86"></h4>
+<div class="outline-text-4" id="text-org73dfd86">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org87daf66">1. Rationale</a></li>
+<li><a href="#org1ae35e3">2. Codepack</a></li>
+<li><a href="#org70aaff5">3. Timing on Two Machines</a></li>
+<li><a href="#orgd4f49e3">4. Using the time and lscpu Utilities</a></li>
+<li><a href="#orgc98b2a9">5. QUESTIONS.txt File Contents</a></li>
+<li><a href="#orge4ffe8c">6. Submission</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org87daf66" class="outline-2">
+<h2 id="org87daf66"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Differences and oddities in CPU architecture are often revealed
+through observations about the time certain programs take to run.
+This lab explores these issues through a program that is provided as
+part of the most recent HW. The code implements some
+"micro-benchmarks" by repeatedly performing arithmetic operations with
+slight variations. Timing these, along with some knowledge of CPU
+architecture, is instructive for observing some of the implementation
+differences that constitute low-level CPU implementation.
+</p>
+</div>
+
+<div id="outline-container-org66fd4e0" class="outline-4">
+<h4 id="org66fd4e0">Grading Policy</h4>
+<div class="outline-text-4" id="text-org66fd4e0">
+<p>
+Credit for this Lab is earned by completing the exercises here and
+submitting a Zip of the work to Gradescope. Students are responsible
+to check that the results produced locally via <code>make test</code> are
+reflected on Gradescope after submitting their completed
+Zip. Successful completion earns 1 Engagement Point.
+</p>
+
+<p>
+Lab Exercises are open resource/open collaboration and <b>students are
+encouraged to coopearte on labs.</b> Students may submit work as groups
+of up to 5 to Gradescope: one person submits then adds the names of
+their group members to the submission.
+</p>
+
+<p>
+See the <a href="../syllabus.html">full policies in the course syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1ae35e3" class="outline-2">
+<h2 id="org1ae35e3"><span class="section-number-2">2</span> Codepack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The codepack for the HW contains the following files:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Questions to answer: fill in the multiple choice selections in this file.</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>superscalar_main</code></td>
+<td class="org-left">HW10</td>
+<td class="org-left">C code in HW10 code pack that is used to observe CPU timing differences</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Build</td>
+<td class="org-left">Enables <code>make test</code> and <code>make zip</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>QUESTIONS.txt.bk</code></td>
+<td class="org-left">Backup</td>
+<td class="org-left">Backup copy of the original file to help revert if needed</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>QUESTIONS.md5</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Checksum for answers in questions file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_quiz_filter</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Filter to extract answers from Questions file, used in testing</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_lab07.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for this lab</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running scripts</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>00_ID.txt</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">ID file</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org70aaff5" class="outline-2">
+<h2 id="org70aaff5"><span class="section-number-2">3</span> Timing on Two Machines</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+HW10 has students timing the execution speed of the several different
+arithmetic functions.  For this the <code>time</code> utility is used and your
+lab demoer will briefly discuss the <code>time</code> utility and the information
+it provides about program runs. This information is coverd in HW10
+posted here:
+</p>
+
+<p>
+<a href="https://www-users.cs.umn.edu/~kauffman/2021/hw10.html">https://www-users.cs.umn.edu/~kauffman/2021/hw10.html</a>
+</p>
+
+<p>
+Timing code runs is interesting as one fully expects the results to
+vary from one computer to the next. Lab leaders will demonstrate as
+much by showing timings of the same program runs on two different
+processors available through the CSE Labs system
+</p>
+<ol class="org-ol">
+<li><code>atlas.cselabs.umn.edu</code> which is single, large computer in the
+Keller Hall machine room (SSH only).</li>
+<li><code>csel-kh1250-NN.cselabs.umn.edu</code> machines such as <code>csel-kh1250-01</code>
+which are desktop workstations in the Keller 1-250 (physical access
+or SSH login)</li>
+</ol>
+<p>
+Running the same programs on these two machines will lead to different
+times, sometimes in ways that are quite surprising.
+</p>
+
+<p>
+Lab staff will focus their presentation on timing the
+<code>superscalar_main</code> program which is central to HW10.  It is used to
+run small integer benchmarks that repeatedly add / multiply in
+different combinations. Timings of these operations reveal
+peculiarities of some processors.
+</p>
+
+<p>
+<b><b>NOTE:</b></b> Staff will show results on both the machines <code>atlas</code> and
+<code>csel-kh1250-NN</code> during the lab but for HW10, the focus is timing only
+in <code>csel-kh1250-NN</code> machines.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd4f49e3" class="outline-2">
+<h2 id="orgd4f49e3"><span class="section-number-2">4</span> Using the time and lscpu Utilities</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Staff will briefly discuss the <code>time</code> utility and cover the 3 types of
+times it reports. They may timing of programs like the following and
+explain the differing times for these.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">
+&gt; time make                   # build a program using a makefile
+...
+&gt; time ls -lR /usr            # recursive listing of /usr system directory
+..
+&gt; time -c 3 ping google.com   # contact google 3 times to see if it responding
+...
+</pre>
+</div>
+<p>
+Staff will mention which of the measures that <code>time</code> reports is most
+important to evaluating integer arithmetic code like
+<code>superscalara_main</code>.
+</p>
+
+<p>
+Make sure to download the <code>superscalar_main</code> application from the HW10 specification here:
+</p>
+
+<p>
+<a href="https://www-users.cs.umn.edu/~kauffman/2021/hw10.html">https://www-users.cs.umn.edu/~kauffman/2021/hw10.html</a>
+</p>
+
+<p>
+Staff will Compile and time runs of it as students will do in HW10.
+</p>
+
+<p>
+On a run of the program such as
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; time ./superscalar_main 1 30 add1_diff
+...
+
+</pre>
+</div>
+
+
+<p>
+When timing programs, it is good to know something about the CPU on
+which the program is being run. This can be obtained via the `lscpu`
+utility on Linux systems. It can be run just by typing
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; lscpu
+...
+</pre>
+</div>
+<p>
+and reports a variety of information including <a href="https://en.wikipedia.org/wiki/BogoMips">BogoMIPS</a>, a "crude
+measure of CPU speed" which can be used to roughly compare processor
+clock speed.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc98b2a9" class="outline-2">
+<h2 id="orgc98b2a9"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
+Follow the instructions in it to complete the QUIZ and CODE questions
+for the lab.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                           __________________
+
+                            LAB 10 QUESTIONS
+                           __________________
+
+
+
+
+
+Lab Instructions
+================
+
+  Follow the instructions below to experiment with topics related to
+  this lab.
+  - For sections marked QUIZ, fill in an (X) for the appropriate
+    response in this file. Use the command `make test-quiz' to see if
+    all of your answers are correct.
+  - For sections marked CODE, complete the code indicated. Use the
+    command `make test-code' to check if your code is complete.
+  - DO NOT CHANGE any parts of this file except the QUIZ sections as it
+    may interfere with the tests otherwise.
+  - If your `QUESTIONS.txt' file seems corrupted, restore it by copying
+    over the `QUESTIONS.txt.bk' backup file.
+  - When you complete the exercises, check your answers with `make test'
+    and if all is well, create a zip file with `make zip' and upload it
+    to Gradescope. Ensure that the Autograder there reflects your local
+    results.
+  - IF YOU WORK IN A GROUP only one member needs to submit and then add
+    the names of their group.
+
+
+QUIZ Timing Code
+================
+
+  Using the HW10 code pack which contains the `superscalar_main'
+  benchmark program, answer the following questions concerning timing on
+  several lab machines. You will need to SSH into several machines to
+  complete the questions.
+
+
+time utility
+~~~~~~~~~~~~
+
+  On a run of the program such as
+  ,----
+  | &gt; time ./superscalar_main 1 30 add1_diff
+  | ...
+  `----
+  which of the reported times is the most relevant to understanding
+  processor speed?
+  - ( ) The `real' time as it reports how many seconds the user has to
+    wait for the program to complete
+  - ( ) The `user' time which is the number of seconds that the CPU
+    spends executing the code in the user's program
+  - ( ) The `sys' time because it indicates how much time the program
+    spends in OS system calls
+
+
+Processor types
+~~~~~~~~~~~~~~~
+
+  Use the `lscpu' utility on the two machines
+  - atlas.cselabs.umn.edu
+  - csel-kh1250-05.cselabs.umn.edu
+  to determine the types of processors and their relative processing
+  speed according to the "BogoMIPS" measure.
+  - ( ) `atlas' and `csel-kh1250-NN' both have Intel processors and the
+    BogoMIPS measure indicates `csel-kh1250-NN' is faster
+  - ( ) `atlas' and `csel-kh1250-NN' both have AMD processors and the
+    BogoMIPS measure indicates `atlas' is faster
+  - ( ) `atlas' has Intel processors and `csel-kh1250-NN' has AMD
+    processors and the BogoMIPS measure indicates `atlas' is faster
+  - ( ) `atlas' has AMD processors and `csel-kh1250-NN' has Intel
+    processors and the BogoMIPS measure indicates `csel-kh1250-NN' is
+    faster
+
+
+Timings using `superscalar_main'
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Compile HW10's `superscalar_main' program using the provided
+  `Makefile' and time runs of it on both `atlas' and `csel-kh1250-05'
+  using the command:
+  ,----
+  | time ./superscalar_main 1 30 add1_diff
+  `----
+
+  According to what you observe for this, which of the following best
+  reflects the outcome of the runs between the two machines?
+  - ( ) `atlas' takes about 0.95s to run while `csel-kh1250-NN' takes
+    about 0.28s to run indicating `csel-kh1250-NN' is faster
+  - ( ) `atlas' takes about 0.50s to run while `csel-kh1250-NN' takes
+    about 0.85s to run indicating `atlas' is faster
+  - ( ) `atlas' takes about 1.23s to run while `csel-kh1250-NN' takes
+    about 0.61s to run indicating `csel-kh1250-NN' is faster
+  - ( ) `atlas' takes about 0.10s to run while `csel-kh1250-NN' takes
+    about 0.15s to run indicating `atlas' is faster
+
+
+Mysteries
+~~~~~~~~~
+
+  Among the micro 'benchmarks' implemented in `superscalar_main` are the
+  following two
+  ,----
+  |   add2_diff : add 2 times in same loop; different destination variables
+  |   add2_same : add 2 times in same loop; same destination variable
+  `----
+  Examining the code for these two should reveal only minor differences
+  but even this minor difference has some strange performance
+  implications. Time runs of the benchmark as
+  ,----
+  | time ./superscalar_main 1 30 add2_diff
+  | time ./superscalar_main 1 30 add2_same
+  `----
+  on BOTH `atlas' and `csel-kh1250-NN' and report on the relations
+  below.
+
+  On atlas
+  - ( ) atlas: time for `add2_diff &lt; add2_same'
+  - ( ) atlas: time for `add2_diff &gt; add2_same'
+  - ( ) atlas: time for `add2_diff = add2_same'
+
+  On csel-kh1250-NN
+  - ( ) csel-kh1250-NN: time for `add2_diff &lt; add2_same'
+  - ( ) csel-kh1250-NN: time for `add2_diff &gt; add2_same'
+  - ( ) csel-kh1250-NN: time for `add2_diff = add2_same'
+
+
+CODE None
+=========
+
+  None for this lab
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orge4ffe8c" class="outline-2">
+<h2 id="orge4ffe8c"><span class="section-number-2">6</span> Submission</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
+how to upload your completed lab zip to Gradescope.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-03-23 Tue 15:44 <br/> </i>
+</div>
+</body>
+</html>
