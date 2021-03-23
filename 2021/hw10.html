@@ -1,0 +1,1075 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-03-23 Tue 15:32 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 2021 HW10: Timing Code and Superscalar Processors</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2021-03-23 Tue 15:32</i>
+</div>
+<div id="content">
+<h1 class="title">CSCI 2021 HW10: Timing Code and Superscalar Processors</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Tue 3/30/2021</b></li>
+<li><i>Approximately 0.83% of total grade</i></li>
+<li>Homework and Quizzes are open resource/open collaboration. You must
+submit your own work but you may freely discuss HW topics with other
+members of the class.</li>
+</ul>
+
+<div id="outline-container-org5888463" class="outline-4">
+<h4 id="org5888463">CODE DISTRIBUTION: <a href="hw10-code.zip">hw10-code.zip</a></h4>
+<div class="outline-text-4" id="text-org5888463">
+<ul class="org-ul">
+<li>Download the code distribution</li>
+<li>See further setup instructions below</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org00b6337" class="outline-4">
+<h4 id="org00b6337">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org00b6337">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org54cc0da">1. Rationale</a>
+<ul>
+<li><a href="#orga4af66d">Associated Reading / Preparation</a></li>
+<li><a href="#orgbb055b4">Grading Policy</a></li>
+</ul>
+</li>
+<li><a href="#orgfe1a888">2. Codepack</a></li>
+<li><a href="#orgd59afcb">3. The <code>time</code> Command</a></li>
+<li><a href="#orgced5bd3">4. Important: Run on csel-kh1250-NN</a></li>
+<li><a href="#orge3cac6d">5. What to Understand</a></li>
+<li><a href="#org2879737">6. Questions</a></li>
+<li><a href="#org420792c">7. Optional Information</a>
+<ul>
+<li><a href="#org205784b">Additional Information on <code>time</code> Results</a></li>
+<li><a href="#org9b0829b">Use of Function Pointers</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org54cc0da" class="outline-2">
+<h2 id="org54cc0da"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Measuring and understanding program performance is a vital aspect to
+improving efficiency. The notion of time itself can be tricky to
+understand in computing. Modern processors often exhibit unintuitive
+behavior for seemingly simple code which can only be accounted for by
+their pipelined and superscalar nature: multiple functional units
+exist in the CPU which can at times be utilized in parallel.
+</p>
+
+<p>
+This HW introduces basic timing techniques and analyzes some simple
+loop variations to illustrate peculiarities of modern processors.
+</p>
+</div>
+
+<div id="outline-container-orga4af66d" class="outline-3">
+<h3 id="orga4af66d">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-orga4af66d">
+<ul class="org-ul">
+<li>Bryant and O'Hallaron: Ch 4, paricularly the "Aside:
+State-of-the-art microprpocessor design" on page 471 (3rd ed) which
+overviews pipelined and superscalar processors</li>
+<li>The <a href="http://man.he.net/?topic%3Dtime&amp;section%3Dall">manual page for the <code>time</code> command</a> which discusses how it is
+used to measure the amount of time taken by the programs</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgbb055b4" class="outline-3">
+<h3 id="orgbb055b4">Grading Policy</h3>
+<div class="outline-text-3" id="text-orgbb055b4">
+<p>
+Credit for this HW is earned by taking the associated HW Quiz which is
+linked under <code>Gradescope</code>.  The quiz will ask similar questions as
+those that are present in the <code>QUESTIONS.txt</code> file and those that
+complete all answers in <code>QUESTIONS.txt</code> should have no trouble with
+the quiz.
+</p>
+
+<p>
+Homework and Quizzes are open resource/open collaboration. You must
+submit your own work but you may freely discuss HW topics with other
+members of the class.
+</p>
+
+<p>
+See the <a href="../2021/syllabus.html">full policies in the course syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgfe1a888" class="outline-2">
+<h2 id="orgfe1a888"><span class="section-number-2">2</span> Codepack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The codepack for the lab contains the following files:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">Questions to answer</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Makefile to buil the <code>superscalar_main</code> program</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>superscalar_funcs.c</code></td>
+<td class="org-left">Small "algorithms" to time arithmetic operations</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>superscalar_main.c</code></td>
+<td class="org-left">Main function that allows different algs to be specified on command line</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>runall.sh</code></td>
+<td class="org-left">Optional script that runs all functions in <code>superscalar_main</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgd59afcb" class="outline-2">
+<h2 id="orgd59afcb"><span class="section-number-2">3</span> The <code>time</code> Command</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+The Unix <code>time</code> command is used to measure the execution time of a
+program.  It is simple to use: to measure how long <code>prog</code> takes to
+run, write
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; time prog arg1 arg2
+...
+</pre>
+</div>
+<p>
+For example, to see how long GCC takes to complete a compilation of a
+program, use <code>time</code> as follows.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; time gcc -c superscalar_main.c
+
+real	0m0.052s
+user	0m0.035s
+sys	0m0.017s
+</pre>
+</div>
+<p>
+The times reported are as follows
+</p>
+<ul class="org-ul">
+<li><b>real</b>: "wall clock" time for the program to complete; how long one
+must wait around for it to finish</li>
+<li><b>user</b>: the amount of time the CPU was busy executing user code</li>
+<li><b>sys</b>: the amount of time the CPU was executing operating system
+code on behalf of the user program such as reading from files or
+communicating over the network.</li>
+</ul>
+
+<p>
+For this lab, we will mainly be timing runs of the <code>superscalar_main</code>
+program which can be obtained using the following invocation.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">csel-kh1250-01&gt; make                                    # BUILD PROGRAM using provided Makefile
+gcc -Wall -g -Og -c superscalar_main.c		
+gcc -Wall -g -Og -c superscalar_funcs.c		
+gcc -Wall -g -Og -o superscalar_main superscalar_main.o superscalar_funcs.o		
+
+csel-kh1250-01&gt; time ./superscalar_main 1 32 add1_diff  # TIME RUN OF PROGRAM with options specified
+add2_diff for 1 * 2^{32} = 4294967296 iterations... complete
+
+real	0m1.071s
+user	0m1.040s
+sys	0m0.009s
+</pre>
+</div>
+<p>
+Mostly there should be a direct correspondence between <code>real</code> and
+<code>user</code> time so either works while little <code>sys</code> computation is required.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgced5bd3" class="outline-2">
+<h2 id="orgced5bd3"><span class="section-number-2">4</span> Important: Run on csel-kh1250-NN</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+The provided code that you will analyze is meant to demonstrate some
+interesting facets of hardware. Different hardware will give different
+results. To make sure your results are consistent with the
+expectations <b>run your code on csel-kh1250-NN.cselabs.umn.edu</b>
+machines. These machines are number <code>csel-kh1250-01</code> to <code>csel-kh1250-37</code>.
+You can log in using
+</p>
+<pre class="example">
+&gt; ssh kauf0095@csel-kh1250-07.cselabs.umn.edu
+</pre>
+
+<p>
+or something similar, adjusting the final number from 07 to any number
+01 to 37.
+</p>
+
+<p>
+Use your X.500 username/password to get access. All CSE labs machines
+share the same home directory so any code you download to Vole or a
+physical lab machine will be available on all machines.
+</p>
+
+<p>
+Importantly, expect INCONSISTENT RESULTS in the following environments 
+</p>
+<ul class="org-ul">
+<li>VOLE: this is a virtualized environment, not real hardware. Results
+are likely to vary from one run to the next</li>
+<li>apollo.cselabs.umn.edu: This is also a virtualized environment and
+will not produce consistent results.</li>
+<li>Personal machines: hardware will vary for you on your own
+machine. Results may be faster, slower, consistent with those above
+or very different. It is may be interesting to compare the results
+on your own machine to those on the test machines.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge3cac6d" class="outline-2">
+<h2 id="orge3cac6d"><span class="section-number-2">5</span> What to Understand</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Ensure that you understand
+</p>
+<ul class="org-ul">
+<li>How to time the run of a program using the <code>time</code> command and what
+measurements it reports</li>
+<li>Some specifics about how processor pipelining and superscalar
+operations can lead to unintuitive run times for seemingly similar
+codes</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2879737" class="outline-2">
+<h2 id="org2879737"><span class="section-number-2">6</span> Questions</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Analyze the files in the provided codepack and answer the questions
+given in <code>QUESTIONS.txt</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                           _________________
+
+                            HW 10 QUESTIONS
+                           _________________
+
+
+- Name: (FILL THIS in)
+- X.500: (THE kauf0095 IN kauf0095@umn.edu)
+
+Write your answers to the questions below directly in this text file to
+prepare for the associated quiz.
+
+
+Important: Run on csel-kh1250-NN
+================================
+
+  The provided code that you will analyze is meant to demonstrate some
+  interesting facets of hardware. Different hardware will give different
+  results. To make sure your results are consistent with the
+  expectations *run your code on csel-kh1250-NN.cselabs.umn.edu*
+  machines. These machines are number `csel-kh1250-01' to
+  `csel-kh1250-37'.  You can log in using
+  ,----
+  | &gt; ssh kauf0095@csel-kh1250-07.cselabs.umn.edu
+  `----
+
+  or something similar, adjusting the final number from 07 to any number
+  01 to 37.
+
+  Use your X.500 username/password to get access. All CSE labs machines
+  share the same home directory so any code you download to Vole or a
+  physical lab machine will be available on all machines.
+
+  Importantly, expect INCONSISTENT RESULTS in the following environments
+  - VOLE: this is a virtualized environment, not real hardware. Results
+    are likely to vary from one run to the next
+  - apollo.cselabs.umn.edu: This is also a virtualized environment and
+    will not produce consistent results.
+  - Personal machines: hardware will vary for you on your own
+    machine. Results may be faster, slower, consistent with those above
+    or very different. It is may be interesting to compare the results
+    on your own machine to those on the test machines.
+
+
+Compiling and Timing
+====================
+
+  Use the provided Makefile to compile as in
+  ,----
+  | &gt; make
+  | gcc -Wall -g -Og -c superscalar_main.c		
+  | gcc -Wall -g -Og -c superscalar_funcs.c		
+  | gcc -Wall -g -Og -o superscalar_main superscalar_main.o superscalar_funcs.o		
+  `----
+  The compilation uses `-Og' (debug level optimization) which is
+  necessary to stop the compiler from modifying some loops.
+
+  This will produce the `superscalar_main' program which has the
+  following usage:
+  ,----
+  | &gt; ./superscalar_main
+  | usage: ./superscalar_main &lt;MULT&gt; &lt;EXP&gt; &lt;ALG&gt;
+  |   &lt;MULT&gt; and &lt;ALG&gt; are integers, iterates for MULT * 2^{EXP} iterations
+  |   &lt;ALG&gt; is one of
+  |          add1_diff : add 1 times in loop
+  |          add2_diff : add 2 times in same loop; different destinations
+  |          add3_diff : add 3 times in same loop; different destinations
+  |          add2_same : add 2 times in same loop; same destinations
+  |          mul1_diff : multiply 1 times in loop
+  |          mul2_diff : multiply 2 times in same loop; different destinations
+  |          mul3_diff : multiply 3 times in same loop; different destinations
+  |          mul4_diff : multiply 4 times in same loop; different destinations
+  |          mul2_same : multiply 2 times in same loop; same destinations
+  | add1_then_mul_diff : add and multiply in different loops; different destinations
+  | add1_then_mul_same : add and multiply in different loops; same destinations
+  |  add2_and_mul_diff : add twice and multiply in the same loop; different destinations
+  |  add2_and_mul_same : add twice and multiply in the same loop; same destination 
+  `----
+
+  Experiment with algorithm `add1_diff' and parameters `MULT' and `EXP'
+  which control the number of iterations run. Experiment until you get a
+  run time of about 1 second such as MULT=1 and EXP=32 on kh-1250-01.
+  ,----
+  | kh-1250-01&gt; time ./superscalar_main 1 32 add1_diff 
+  | add1_diff for 18 * 2^{27} = 2415919104 iterations... complete
+  | 
+  | real    0m1.010s                                                                                                                                                                                                                  
+  | user    0m1.009s                                                                                                                                                                                                                  
+  | sys     0m0.000s      
+  `----
+
+
+PROBLEM 1: Addition
+===================
+
+(A) add1_diff / add2_diff / add3_diff
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Examine the source code in `superscalar_funcs.c' for the following
+  algorithms.
+  - add1_diff : add 1 times in loop
+  - add2_diff : add 2 times in same loop; different destinations
+  - add3_diff : add 3 times in same loop; different destinations
+  Note that each does some additions in a loop. Time each of these WITH
+  THE SAME MULT/EXP parameters and show your timings. Describe how the
+  timings compare and speculate on why.
+
+  Note that all of these involve incrementing a counter (`i++') so the
+  number of additions is one greater than the algorithm name suggests.
+
+
+(B) add2_diff / add2_same
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Compare the source code of the two algorithms below.
+  - add1_diff : add 1 times in loop
+  - add2_diff : add 2 times in same loop; different destinations
+  - add2_same : add 2 times in same loop; same destinations
+  Note that the only difference between the add2_X algorithms is that
+  the destination for the results.
+
+  Compare timings for these and speculate on the reasons for any
+  unexpected results.
+
+
+PROBLEM 2: Multiplication
+=========================
+
+(A) add1_diff / mul1_diff
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Compare the following two algorithms.
+  - add1_diff : add 1 times in loop
+  - mul1_diff : multiply 1 times in loop
+  Time them on the same parameters and speculate on the timing
+  differences.
+
+
+(B) mul1_diff / mul2_diff / mul3_diff / mul4_diff
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Compare the following two algorithms.
+  - mul1_diff : multiply 1 times in loop
+  - mul2_diff : multiply 2 times in same loop; different destinations
+  - mul3_diff : multiply 3 times in same loop; different destinations
+  - mul4_diff : multiply 4 times in same loop; different destinations
+  Time them on the same parameters and speculate on the timing
+  differences.
+
+
+(C) mul1_diff / mul2_diff / mul2_same
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Compare the following two algorithms.
+  - mul1_diff : multiply 1 times in loop
+  - mul2_diff : multiply 2 times in same loop; different destinations
+  - mul2_same : multiply 2 times in same loop; same destinations
+  Time them on the same parameters and speculate on the timing
+  differences.
+
+
+PROBLEM 3: Combined Addition/Multiplication
+===========================================
+
+(A) add1_then_mul_diff / add2_and_mul_diff
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Compare the following two algorithms.
+  - add1_then_mul_diff : add and multiply in different loops; different
+    destinations
+  - add2_and_mul_diff : add twice and multiply in the same loop;
+    different destinations
+  Note that each loop involves incrementing a counter so both of the
+  above algorithms should do the same number of operations for N
+  iterations:
+  ------------------------------------------------
+                       loop        total  overall 
+   Algorithm           incr  adds  adds   total   
+  ------------------------------------------------
+   add1_then_mul_diff  2*N   1*N   3*N    4*N     
+   add2_and_mul_diff   1*N   2*N   3*N    4*N     
+  ------------------------------------------------
+
+  Time these algorithms on the same parameters and speculate on the
+  timing differences.
+
+  Compare the timings to your earlier results for add1_diff and
+  mul1_diff.
+
+
+(B) Table of Timings
+~~~~~~~~~~~~~~~~~~~~
+
+  Consider table of algorithm variants given below.  Part A of this
+  question compared two of these algorithms. Add their times into the
+  table below under the 'User Time' column then time the other two
+  algorithms to complete the table of timings. The table will be
+  analyzed in the next part.
+
+  ---------------------------------------------
+           Memory                         User 
+   #Loops  Locations  Algorithm           Time 
+  ---------------------------------------------
+        2  Different  add1_then_mul_diff       
+        1  Different  add2_and_mul_diff        
+        2  Same       add1_then_mul_same       
+        1  Same       add2_and_mul_same        
+  ---------------------------------------------
+
+
+(C) Table Analysis
+~~~~~~~~~~~~~~~~~~
+
+  Explain why the following observations can be made about the timing
+  table from part B.
+
+   Alg1                vs  Alg2                Reason 
+  ----------------------------------------------------
+   add1_then_mul_diff  =   add1_then_mul_same  ??     
+   add2_and_mul_diff   &lt;   add2_and_mul_same   ??     
+   add1_then_mul_diff  &gt;   add2_and_mul_diff   ??     
+   add1_then_mul_same  &lt;   add2_and_mul_same   ??     
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org420792c" class="outline-2">
+<h2 id="org420792c"><span class="section-number-2">7</span> Optional Information</h2>
+<div class="outline-text-2" id="text-7">
+</div>
+<div id="outline-container-org205784b" class="outline-3">
+<h3 id="org205784b">Additional Information on <code>time</code> Results</h3>
+<div class="outline-text-3" id="text-org205784b">
+<p>
+In the examples provided earlier for <code>time</code>, it happens that the <code>real</code> time is the sum of
+<code>user</code> and <code>sys</code> times.  
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; time gcc -c superscalar_main.c
+
+real	0m0.052s
+user	0m0.035s
+sys	0m0.017s
+</pre>
+</div>
+
+<p>
+This is not always the case: consider timing a run of <code>ping</code> which
+contacts a remote machine to determine how fast messages can be
+exchanged.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; time ping -c 3 google.com
+PING google.com(ord38s09-in-x0e.1e100.net (2607:f8b0:4009:816::200e)) 56 data bytes
+64 bytes from ord38s09-in-x0e.1e100.net (2607:f8b0:4009:816::200e): icmp_seq=1 ttl=54 time=21.1 ms
+64 bytes from ord38s09-in-x0e.1e100.net (2607:f8b0:4009:816::200e): icmp_seq=2 ttl=54 time=29.1 ms
+64 bytes from ord38s09-in-x0e.1e100.net (2607:f8b0:4009:816::200e): icmp_seq=3 ttl=55 time=18.3 ms
+
+--- google.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 18.386/22.898/29.192/4.589 ms
+
+real	0m2.095s
+user	0m0.004s
+sys	0m0.006s
+</pre>
+</div>
+<p>
+In this case <code>real</code> time to execute the program was about 2
+seconds. During that period though, very little <code>user</code> or <code>sys</code>
+computation was done. Most of the time was spent waiting for the
+remote machine to respond so that the sum of <code>user</code> and <code>sys</code> is far
+less than <code>real</code>.
+</p>
+
+<p>
+Conversely, <code>real</code> may be less than the sum of <code>user</code> and
+<code>sys</code>. Consider this timing of <code>make</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; time make -j 4
+gcc -Wall -g -Og -c superscalar_main.c		
+gcc -Wall -g -Og -c superscalar_funcs.c		
+gcc -Wall -g -Og -o superscalar_main superscalar_main.o superscalar_funcs.o		
+
+real	0m0.095s
+user	0m0.111s
+sys	0m0.036s
+</pre>
+</div>
+<p>
+Note the use of <code>-j 4</code> which instructs the <code>make</code> program to use up to
+4 CPUs to complete jobs that can be done in parallel. This allows
+several files to be compiled simultaneously leading to a shorter
+<code>real</code> time than the sum of <code>user</code> and <code>sys</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9b0829b" class="outline-3">
+<h3 id="org9b0829b">Use of Function Pointers</h3>
+<div class="outline-text-3" id="text-org9b0829b">
+<p>
+The <code>superscalar_main.c</code>  and <code>superscalar_funcs.c</code> uses an
+interesting technique: <i>function pointers</i>. Examining
+<code>superscalar_funcs.c</code> one will see a long series of functions.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">void add1_diff(unsigned long iters, unsigned long *start, unsigned long *delta)
+{
+  ...
+}
+void mul1_diff(unsigned long iters, unsigned long *start, unsigned long *delta)
+{
+  ...
+}
+...
+</pre>
+</div>
+<p>
+Each of these has the same prototype: the same return type and
+parameter types.
+</p>
+
+<p>
+The functions are followed by a "table" (array) of structs which
+includes a pointer to the function (first entry), a string ID
+associated with the function which is identical to its name (second
+entry), and a string giving some information on the algorithm.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">alg_t algs[] = {
+  // func name          string id            description
+  {add1_diff,          "add1_diff",          "add 1 times in loop"},
+  {add2_diff,          "add2_diff",          "add 2 times in same loop; different destinations"},            
+  ...
+  {add2_and_mul_diff,  "add2_and_mul_diff",  "add twice and multiply in the same loop; different destinations"},  
+  {add2_and_mul_same,  "add2_and_mul_same",  "add twice and multiply in the same loop; same destination "},       
+  {NULL,               NULL,                 NULL}
+};
+</pre>
+</div>
+<p>
+The array is "null" terminated in that its last entries are comprised
+of a struct with all NULL fields making it possible to identify the
+end of the array without knowing its size.
+</p>
+
+<p>
+This creates a convenient way for a <code>main()</code> program to select one of
+the functions via a string name.  This can be done in a loop over the
+array as is seen in <code>superscalar_main.c</code>.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">  char *alg_name = argv[1];
+  alg_func = NULL;
+
+  // select algorithm to use
+  for(int i=0; algs[i].alg_func != NULL; i++){
+    if(strcmp(alg_name, algs[i].name) == 0){
+      alg_func = algs[i].alg_func;
+    }
+  }
+</pre>
+</div>
+
+<p>
+After selecting the function to run in the above loop, it is called
+with parameters later as in the following line.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">  alg_func(iters, &amp;start, &amp;delta);         // run the specified algorithm
+</pre>
+</div>
+
+<p>
+In this way, one can select from a variety of "algorithms" to run by
+naming the function to run via command line arguments as in
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; ./superscalar_main add1_diff 1 32          # function add1_diff
+
+&gt; ./superscalar_main mul1_diff 1 32          # function mul1_diff
+
+&gt; ./superscalar_main add2_and_mul_diff 1 32  # function add2_and_mul_diff
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-03-23 Tue 15:32 <br/> </i>
+</div>
+</body>
+</html>
