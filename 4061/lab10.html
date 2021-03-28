@@ -1,0 +1,799 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-03-28 Sun 16:31 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 4061 Lab10: Email Lookup Upgrade</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2021-03-28 Sun 16:31</i>
+</div>
+<div id="content">
+<h1 class="title">CSCI 4061 Lab10: Email Lookup Upgrade</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Mon 4/12/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><i>Approximately 1.00% of total grade</i></li>
+</ul>
+
+<div id="outline-container-orgb4fa94b" class="outline-4">
+<h4 id="orgb4fa94b">CODE DISTRIBUTION: <a href="lab10-code.zip">lab10-code.zip</a></h4>
+<div class="outline-text-4" id="text-orgb4fa94b">
+<ul class="org-ul">
+<li>Download the code distribution</li>
+<li>See further setup instructions below</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org6206735" class="outline-4">
+<h4 id="org6206735">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org6206735">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org2036c29">1. Rationale</a></li>
+<li><a href="#org574c283">2. Codepack</a></li>
+<li><a href="#orga4c1e72">3. Review HW09</a></li>
+<li><a href="#org0e3c32f">4. Version 2</a></li>
+<li><a href="#orgb2dc1a4">5. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org9797327">6. Submission</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2036c29" class="outline-2">
+<h2 id="org2036c29"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+This Lab revisits the email lookup client/server programs from a
+previous HW. These programs use a FIFO to communicate and to get more
+experience with them, they will be improved to a "version 2".  This
+upgrade allows email addresses to be looked up via a <code>GET</code> request
+from the client as well as email addresses to be changed via a <code>PUT</code>
+request.  This gives some practical experience working with FIFOs and
+protocols on them along with practicing how to use a signal handler to
+gracefully shut down the server which may be in the middle of a
+<code>read()</code> from the reqeust FIFO.
+</p>
+</div>
+
+<div id="outline-container-org4b4e9a8" class="outline-4">
+<h4 id="org4b4e9a8">Grading Policy</h4>
+<div class="outline-text-4" id="text-org4b4e9a8">
+<p>
+Credit for this Lab is earned by completing the exercises here and
+submitting a Zip of the work to Gradescope. Students are responsible
+to check that the results produced locally via <code>make test</code> are
+reflected on Gradescope after submitting their completed
+Zip. Successful completion earns 1 Engagement Point.
+</p>
+
+<p>
+Lab Exercises are open resource/open collaboration and <b>students are
+encouraged to coopearte on labs.</b> Students may submit work as groups
+of up to 5 to Gradescope: one person submits then adds the names of
+their group members to the submission.
+</p>
+
+<p>
+See the <a href="../syllabus.html">full policies in the course syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org574c283" class="outline-2">
+<h2 id="org574c283"><span class="section-number-2">2</span> Codepack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The codepack for this lab is linked at the top of this
+document. Always download it and unzip/unpack it.  It should contain
+the following files which are briefly described.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">Use</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Questions to answer: fill in the multiple choice selections in this file.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>em_client2.c</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">C file to study to complete for the CODE portion; TODO sections are marked</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>em_server2.c</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">C file to study to complete for the CODE portion; TODO sections are marked</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>em.h</code></td>
+<td class="org-left">Header</td>
+<td class="org-left">Header file with includes and types for programs</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt.bk</code></td>
+<td class="org-left">Backup</td>
+<td class="org-left">Backup copy of the original file to help revert if needed</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Build</td>
+<td class="org-left">Enables <code>make test</code> and <code>make zip</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running scripts</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_lab10.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for this lab</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_pid_filter</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Used to standardize PIDs during testing</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_quiz_filter</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Used to simplify quiz checksum</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orga4c1e72" class="outline-2">
+<h2 id="orga4c1e72"><span class="section-number-2">3</span> Review HW09</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+If you have not yet worked on HW09's <code>em_server / em_client</code>, you
+should spend some time examining the code and exercises there as this
+lab builds on them.  Briefly, the programs introduced there are
+</p>
+<ul class="org-ul">
+<li><code>em_server.c</code>: creates a <code>requests.fifo</code> FIFO and lists for requests
+on it which are structs of type <code>request_t</code>. Uses the data passed in
+to look up an the email address for a person based on their name and
+respond to it.</li>
+<li><code>em_client.c</code>: accepts a person's name as a command line argument
+and then communicates with <code>em_server</code> to get their email
+address. First creates a personalized FIFO based on the process's
+PID to receive a response, then writes a request to the server's
+<code>requests.fifo</code> for the given name. Waits on a response and prints
+it to the screen.</li>
+</ul>
+
+<p>
+These programs are upgraded to <code>em_client2.c</code> and <code>em_server2.c</code> with
+some expanded functionality. This upgrade is much easier if one is
+already familiar with the old version.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0e3c32f" class="outline-2">
+<h2 id="org0e3c32f"><span class="section-number-2">4</span> Version 2</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+This lab upgrades the server and client to allow existing email
+addresses to be changed. This is done via calling the client in one of
+two ways:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; ./em_client2 GET 'James Moen'                          # retrieve email address for for person
+
+&gt; ./em_client2 PUT 'James Moen' 'NEWADDRESS@MAIL.COM'    # assign a new address to person
+</pre>
+</div>
+
+
+<p>
+To facilitate either of <code>PUT / GET</code>, the structs that go into the
+<code>requests.fifo</code> have been changed to the following type which includes
+more information.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// From em.h header file
+#define BUFSIZE 128
+
+typedef struct {
+  char client_fifo[BUFSIZE];        // filename of FIFO on which to respond
+  char command[BUFSIZE];            // GET or PUT
+  char name[BUFSIZE];               // name of person for GET / PUT command
+  char new_email[BUFSIZE];          // new email address for PUT
+} request_t;
+</pre>
+</div>
+
+<p>
+The new fields allow clients to formulate either a <code>GET / PUT</code> request
+to which the server must respond appropriately.  
+</p>
+
+<p>
+Study the code in the original version and the provided outlines in
+<code>em_server2.c / em_client2.c</code> and complete the TODO portions of the code.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb2dc1a4" class="outline-2">
+<h2 id="orgb2dc1a4"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
+Follow the instructions in it to complete the QUIZ and CODE questions
+for the lab.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                           __________________
+
+                            LAB 10 QUESTIONS
+                           __________________
+
+
+
+
+
+Lab Instructions
+================
+
+  Follow the instructions below to experiment with topics related to
+  this lab.
+  - For sections marked QUIZ, fill in an (X) for the appropriate
+    response in this file. Use the command `make test-quiz' to see if
+    all of your answers are correct.
+  - For sections marked CODE, complete the code indicated. Use the
+    command `make test-code' to check if your code is complete.
+  - DO NOT CHANGE any parts of this file except the QUIZ sections as it
+    may interfere with the tests otherwise.
+  - If your `QUESTIONS.txt' file seems corrupted, restore it by copying
+    over the `QUESTIONS.txt.bk' backup file.
+  - When you complete the exercises, check your answers with `make test'
+    and if all is well, create a zip file with `make zip' and upload it
+    to Gradescope. Ensure that the Autograder there reflects your local
+    results.
+  - IF YOU WORK IN A GROUP only one member needs to submit and then add
+    the names of their group.
+
+
+QUIZ Questions sigaction() function
+===================================
+
+  When a signal is received while a `read()' call is taking place, the
+  OS will automatically restart the `read()' system call if the
+  `SA_RESTART' flag is used when setting up a signal handler. However,
+  if one wants to cause a program to shut down on receiving a signal, it
+  is best to
+  - ( ) Use SA_RESTART as normal; all `read()' calls will eventually
+    complete.
+  - ( ) Don't use signal handlers at all: it is not possible to perform
+    `read()' calls and perform signal handling.
+  - ( ) NOT use the SA_RESTART flag; then check for `read()' to return
+    -1 along with some global variable being set by a signal handler.
+
+  The correct system call to create a FIFO / named pipe is with user
+  read/write permission is:
+  - ( ) `pipe("requests.fifo", S_IRUSR | S_IWUSR);'
+  - ( ) `mkfifo("requests.fifo", S_IRUSR | S_IWUSR);'
+  - ( ) `newfifo("requests.fifo", S_IRUSR | S_IWUSR);'
+  - ( ) `creat("requests.fifo", S_IRUSR | S_IWUSR);'
+
+
+CODE Complete em_client2 and em_server2
+=======================================
+
+  Complete the template for upgraded versions of the em_client /
+  em_server from a previous HW.  These programs cooperate in the
+  following way:
+  - em_server2.c maintains a small database of name / email addresses
+    for people and responds to requests concerning that data via
+    `requests.fifo'
+  - em_client2.c allows one to GET email addresses, like the old version
+    or PUT a new email address in associated with an existing person
+
+  Much of the code in these is provided with some TODO and ??? portions
+  that must be filled in.
+
+  As indicated above, the improvement over the original version of the
+  server/client is the ability to modify the email address associated
+  with existing names. The basic functionality for the two programs is
+  shown in the following demo.
+
+  Note that the example intersperses two terminals, the first which runs
+  `em_server2' and the second which runs several instances of
+  `em_client2'.
+
+  ,----
+  | $term1&gt;&gt; ./em_server2 
+  | SERVER #167476: starting up
+  | SERVER #167476: created new requests.fifo, now opening it
+  | SERVER #167476: opened requests.fifo, listening for requests
+  | 
+  |           $term2&gt;&gt; ./em_client2 GET 'Chris Kauffman'
+  |           CLIENT #167477: sending request {client_fifo='167477.fifo' command='GET' name='Chris Kauffman' new_email=''}
+  |           CLIENT #167477: opening '167477.fifo'
+  |           CLIENT #167477: fifo opened, awaiting server response
+  |           CLIENT #167477: response for 'GET Chris Kauffman' is: kauffman@umn.edu
+  | 
+  | SERVER #167476: received request {client_fifo='167477.fifo' command='GET' name='Chris Kauffman' new_email=''}
+  | SERVER #167476: opening client FIFO '167477.fifo'
+  | SERVER #167476: for name 'Chris Kauffman' writing response 'kauffman@umn.edu'
+  | SERVER #167476: closing connection to fifo '167477.fifo'
+  | 
+  |           $term2&gt;&gt; ./em_client2 GET 'James Moen'
+  |           CLIENT #167482: sending request {client_fifo='167482.fifo' command='GET' name='James Moen' new_email=''}
+  |           CLIENT #167482: opening '167482.fifo'
+  |           CLIENT #167482: fifo opened, awaiting server response
+  |           CLIENT #167482: response for 'GET James Moen' is: moen0017@cs.umn.edu
+  | 
+  | SERVER #167476: received request {client_fifo='167482.fifo' command='GET' name='James Moen' new_email=''}
+  | SERVER #167476: opening client FIFO '167482.fifo'
+  | SERVER #167476: for name 'James Moen' writing response 'moen0017@cs.umn.edu'
+  | SERVER #167476: closing connection to fifo '167482.fifo'
+  | 
+  |           $term2&gt;&gt; ./em_client2 PUT 'James Moen' 'NEWADDRESS@MAIL.COM'
+  |           CLIENT #167486: sending request {client_fifo='167486.fifo' command='PUT' name='James Moen' new_email='NEWADDRESS@MAIL.COM'}
+  |           CLIENT #167486: opening '167486.fifo'
+  |           CLIENT #167486: fifo opened, awaiting server response
+  |           CLIENT #167486: response for 'PUT James Moen' is: email for 'James Moen' updated to 'NEWADDRESS@MAIL.COM'
+  | 
+  | SERVER #167476: received request {client_fifo='167486.fifo' command='PUT' name='James Moen' new_email='NEWADDRESS@MAIL.COM'}
+  | SERVER #167476: opening client FIFO '167486.fifo'
+  | SERVER #167476: for name 'James Moen' writing response 'email for 'James Moen' updated to 'NEWADDRESS@MAIL.COM''
+  | SERVER #167476: closing connection to fifo '167486.fifo'
+  | 
+  |          $term2&gt;&gt; ./em_client2 GET 'James Moen'
+  |          CLIENT #167488: sending request {client_fifo='167488.fifo' command='GET' name='James Moen' new_email=''}
+  |          CLIENT #167488: opening '167488.fifo'
+  |          CLIENT #167488: fifo opened, awaiting server response
+  |          CLIENT #167488: response for 'GET James Moen' is: NEWADDRESS@MAIL.COM
+  | 
+  | SERVER #167476: received request {client_fifo='167488.fifo' command='GET' name='James Moen' new_email=''}
+  | SERVER #167476: opening client FIFO '167488.fifo'
+  | SERVER #167476: for name 'James Moen' writing response 'NEWADDRESS@MAIL.COM'
+  | SERVER #167476: closing connection to fifo '167488.fifo'
+  | 
+  | C-c
+  | SERVER #167476: Signalled to shut down
+  | SERVER #167476: main loop complete, cleaning up
+  | 
+  | $term1&gt;&gt;
+  `----
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9797327" class="outline-2">
+<h2 id="org9797327"><span class="section-number-2">6</span> Submission</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
+how to upload your completed lab zip to Gradescope.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-03-28 Sun 16:31 <br/> </i>
+</div>
+</body>
+</html>

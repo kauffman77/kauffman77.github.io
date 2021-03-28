@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-03-28 Sun 17:15 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 4061 HW10: IPC Message Queues and Server/Clients</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2021-03-28 Sun 17:15</i>
+</div>
+<div id="content">
+<h1 class="title">CSCI 4061 HW10: IPC Message Queues and Server/Clients</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Mon 4/12/2021</b></li>
+<li><i>Approximately 0.83% of total grade</i></li>
+<li>Homework and Quizzes are open resource/open collaboration. You must
+submit your own work but you may freely discuss HW topics with other
+members of the class.</li>
+</ul>
+
+<div id="outline-container-org661eb4f" class="outline-4">
+<h4 id="org661eb4f">CODE DISTRIBUTION: <a href="hw10-code.zip">hw10-code.zip</a></h4>
+</div>
+
+<div id="outline-container-org727539e" class="outline-4">
+<h4 id="org727539e">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org727539e">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org151c6eb">1. Rationale</a>
+<ul>
+<li><a href="#org294195e">1.1. Associated Reading</a></li>
+<li><a href="#orgb71cf37">1.2. Grading Policy</a></li>
+</ul>
+</li>
+<li><a href="#org966d92a">2. Overview</a>
+<ul>
+<li><a href="#org34cdbbe">2.1. Codepack</a></li>
+<li><a href="#orgdb31973">2.2. Programs</a></li>
+</ul>
+</li>
+<li><a href="#org7d21bb8">3. What to Understand</a></li>
+<li><a href="#org433b904">4. Questions</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org151c6eb" class="outline-2">
+<h2 id="org151c6eb"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Basic IPC mechanisms are important to allow unrelated processes to
+cooperate. The three standard types are Semaphores, Shared Memory, and
+Message Queues.  This HW illustrates the use of POSIX Message Queues
+to solve a similar server/client problem from a previous HW and
+contrast that solution.
+</p>
+</div>
+
+<div id="outline-container-org294195e" class="outline-3">
+<h3 id="org294195e"><span class="section-number-3">1.1</span> Associated Reading</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li>Manual Page Entries on POSIX Message Queues such as <a href="http://man7.org/linux/man-pages/man7/mq_overview.7.html"><code>man mq_overview</code></a>.</li>
+
+<li>Stevens &amp; Rago <b>does not</b> discuss POSIX message queues instead
+covering older System V message Queues in 15.6 and 15.7; concepts
+are similar but the specific functions and capabilities of these are
+significantly different from POSIX message queues.</li>
+
+<li>Stevens &amp; Rago 15.11 on Client/Server Properties and arrangements of
+them with FIFOs (in 15.5) are also informative.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb71cf37" class="outline-3">
+<h3 id="orgb71cf37"><span class="section-number-3">1.2</span> Grading Policy</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Credit for this HW is earned by taking the associate Quiz which is
+linked under <code>Gradescope</code>.  The quiz will ask similar questions as
+those that are present in the <code>QUESTIONS.txt</code> file and those that
+complete all answers in <code>QUESTIONS.txt</code> should have no trouble with
+the quiz.
+</p>
+
+<p>
+See the <a href="../4061/syllabus.html">full policy in the syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org966d92a" class="outline-2">
+<h2 id="org966d92a"><span class="section-number-2">2</span> Overview</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org34cdbbe" class="outline-3">
+<h3 id="org34cdbbe"><span class="section-number-3">2.1</span> Codepack</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+The codepack for the HW contains the following files:
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">Questions to answer</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Makefile to build programs below</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>em_client_fifo.c</code></td>
+<td class="org-left">Code from a previous HW for lookup using FIFOs</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>em_server_fifo.c</code></td>
+<td class="org-left">Code from a previous HW for lookup using FIFOs</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>run_simulation_fifo.sh</code></td>
+<td class="org-left">Script to run server with many clients</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>em_server_mq.c</code></td>
+<td class="org-left">Problem 1: Small server to look up email based on name using message queues</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>em_client_mq.c</code></td>
+<td class="org-left">Problem 1: Client to connect to server with a name to get an email using message queues</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>run_simulation_mq.sh</code></td>
+<td class="org-left">Script to run server with many clients</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>faulty_em_server_mq.c</code></td>
+<td class="org-left">Problem 2 faulty server</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>faulty_em_client_mq.c</code></td>
+<td class="org-left">Problem 2 faulty client</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>run_simulation_faulty.sh</code></td>
+<td class="org-left">Script to run server with many clients</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgdb31973" class="outline-3">
+<h3 id="orgdb31973"><span class="section-number-3">2.2</span> Programs</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+There are 3 sets of programs in this HW each fulfilling the same role
+as the email lookup server/client from the last HW.
+</p>
+<ol class="org-ol">
+<li>Last HWs FIFO version</li>
+<li>A new version which uses POSIX message queues which is explored in
+Problem 1</li>
+<li>A message queue version which is faulty explored in Problem 2.</li>
+</ol>
+
+<p>
+As before, running these programs interactively requires 2 terminals,
+1 for server and 1 for client as in the below.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"># TERMINAL 1
+./em_server_mq
+SERVER 32443: starting up
+SERVER 32443: created message queue, listening for requests
+SERVER 32443: received request {client_queue_name='/32557_q' query_name='George Karypis' }
+SERVER 32443: opening client queue '/32557_q'
+SERVER 32443: writing email 'karypis@cs.umn.edu' for query_name 'George Karypis'
+SERVER 32443: closing connection to queue '/32557_q'
+SERVER 32443: received request {client_queue_name='/32594_q' query_name='Mats Heimdal' }
+SERVER 32443: opening client queue '/32594_q'
+SERVER 32443: writing email 'NOT FOUND' for query_name 'Mats Heimdal'
+SERVER 32443: closing connection to queue '/32594_q'
+...
+
+# TERMINAL 2
+&gt; ./em_client_mq 'George Karypis'
+CLIENT 32557: sending request: {client_queue_name='/32557_q' query_name='George Karypis' }
+CLIENT 32557: awaiting server response
+CLIENT 32557: response for name 'George Karypis' is email 'karypis@cs.umn.edu'
+
+&gt; ./em_client_mq 'Mats Heimdal'
+CLIENT 32594: sending request: {client_queue_name='/32594_q' query_name='Mats Heimdal' }
+CLIENT 32594: awaiting server response
+CLIENT 32594: response for name 'Mats Heimdal' is email 'NOT FOUND'
+
+&gt; 
+</pre>
+</div>
+
+<p>
+Also, each script has a script that allows a "simulation" of an
+arbitrary number of clients to be run as in
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"># run with 10 clients
+./run_simulation_mq.sh 10
+SERVER   686: starting up
+SERVER   686: created message queue, listening for requests
+CLIENT   689: sending request: {client_queue_name='/689_q' query_name='Christopher Jonathan' }
+CLIENT   689: awaiting server response
+SERVER   686: received request {client_queue_name='/689_q' query_name='Christopher Jonathan' }
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org7d21bb8" class="outline-2">
+<h2 id="org7d21bb8"><span class="section-number-2">3</span> What to Understand</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Ensure that you understand
+</p>
+<ul class="org-ul">
+<li>The basic semantics of message sending and receiving</li>
+<li>Similarities between Message Queues and FIFOs</li>
+<li>Difficulties that arise when cooperating programs can act on a
+shared resource in an arbitrary order which makes concurrent
+programming tough.</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org433b904" class="outline-2">
+<h2 id="org433b904"><span class="section-number-2">4</span> Questions</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Analyze these files and answer the questions given in <code>QUESTIONS.txt</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                           _________________
+
+                            HW 10 QUESTIONS
+                           _________________
+
+
+- Name: (FILL THIS in)
+- NetID: (THE kauf0095 IN kauf0095@umn.edu)
+
+Write your answers to the questions below directly in this text file.
+HW quiz questions will be related to the questions in this file.
+
+
+PROBLEM 1 `em_server_mq.c' and `em_client_mq.c'
+===============================================
+
+  Examine the source code for `em_server_mq.c' and
+  `em_client_mq.c'. Compile and run these codes running the server in
+  one terminal with clients in another terminal. You may also try
+  `./run_simulation_mq.sh 100' which will start the server and 100
+  clients to communicate with it.
+
+
+A
+~
+
+  After gaining familiarity with the code, describe the lines of code
+  which are used to create POSIX Message Queues.
+  - What specific system calls are used to create/access message queues?
+  - Which of the server/clients create message queues?
+  - How does this compare to the previous FIFO version in the code pack?
+
+
+B
+~
+
+  Describe the sending and receiving functions used in the server/client
+  to interact with message queues.
+  - What arguments are required for the sending function?
+  - What arguments are required for the receiving function?
+  - Does the same data type of message go from client to server as from
+    server to client?
+  - What are the equivalent send/receive functions in the FIFO version
+    of the server?
+
+
+C
+~
+
+  Overall, contrast the protocol and architecture of the POSIX Message
+  Queue version of the server/client with the FIFO version studied in
+  last week's lab.  Are there any major similarities or difference
+  between these two?
+
+
+PROBLEM 2: The Faulty Server
+============================
+
+  Examine the provided `faulty_em_server.c' and `faulty_em_client.c'
+  which use POSIX Message Queues for communication.  Compile these via
+  `make' and run the server in a terminal with clients in another
+  terminal. This should appear to work normally. However,
+  `./run_simulation_faulty.sh 100' which will launch the server with 100
+  clients will report errors. This problem determines why.
+
+
+A
+~
+
+  Examine the architecture for communication that is used between
+  `faulty_em_server.c' and `faulty_em_client.c'.
+  - How many message queues are there?
+  - What appears to be the protocol for communication?
+
+
+B
+~
+
+  Run the "simulation" script for the faulty server and examine the
+  results.
+  ,----
+  | &gt; ./run_simulation_faulty.sh 100
+  `----
+  To ease the analysis, the script gives clients the expected email
+  associated with each name and the client verifies if it gets the
+  correct email or reports and ERROR.
+
+  For small runs such as with 10 clients, there may be no errors but for
+  larger runs like 100 there are always errors.
+
+  - Construct an argument as to why the protocol used in this version is
+    "faulty" as the name suggests.
+  - Is this issue specific to Message Queues or would FIFOs have similar
+    problems with the faulty protocol?
+  - What concurrency issues are present that are not a problem in the
+    previous message queue/FIFO versions of the server/client?
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-03-28 Sun 17:15 <br/> </i>
+</div>
+</body>
+</html>
