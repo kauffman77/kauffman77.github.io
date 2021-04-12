@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-04-02 Fri 17:33 -->
+<!-- 2021-04-12 Mon 11:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Project 4: Performance Optimization and Timing</title>
@@ -40,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -52,7 +52,7 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
@@ -254,6 +254,7 @@ background-color: inherit; font-family: inherit;
 padding: inherit; font-size: 80%; font-weight: inherit;
 text-transform: uppercase;
 }
+
 .figure p { text-align: inherit; }
 figure-number { font-style: italic; }
 #table-of-contents {
@@ -329,6 +330,7 @@ margin-left: 0.5em;
 }
 .linenr { font-size: xx-small; }
 }
+
 @media print {
 html {
 font-family: serif;
@@ -339,55 +341,31 @@ text-align: justify;
 }
 </style>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-04-02 Fri 17:33</i>
+<i>Last Updated: 2021-04-12 Mon 11:37</i>
 </div>
 <div id="content">
 <h1 class="title">CSCI 2021 Project 4: Performance Optimization and Timing</h1>
@@ -399,58 +377,64 @@ for the JavaScript code in this tag.
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-org5876318" class="outline-4">
-<h4 id="org5876318">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
+<div id="outline-container-org4120396" class="outline-4">
+<h4 id="org4120396">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org039f453" class="outline-4">
-<h4 id="org039f453">VIDEO OVERVIEW: <a href="https://youtu.be/jfrYPZ5UlOM">https://youtu.be/jfrYPZ5UlOM</a></h4>
+<div id="outline-container-org082e5aa" class="outline-4">
+<h4 id="org082e5aa">VIDEO OVERVIEW: <a href="https://youtu.be/jfrYPZ5UlOM">https://youtu.be/jfrYPZ5UlOM</a></h4>
 </div>
 
-<div id="outline-container-orgcb0d94f" class="outline-4">
-<h4 id="orgcb0d94f">CHANGELOG: Empty</h4>
+<div id="outline-container-orgf3bca33" class="outline-4">
+<h4 id="orgf3bca33">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-orgf3bca33">
+<dl class="org-dl">
+<dt>Mon Apr 12 11:37:13 AM CDT 2021</dt><dd>Added in the missing <code>00_ID.txt</code>
+file to <code>p4-code.zip</code> according to the report on <a href="https://piazza.com/class/kjx0d5e4nhg9z?cid=754">Post 754</a>.</dd>
+</dl>
+</div>
 </div>
 
-<div id="outline-container-org5068312" class="outline-4">
-<h4 id="org5068312"></h4>
-<div class="outline-text-4" id="text-org5068312">
+<div id="outline-container-orgf864204" class="outline-4">
+<h4 id="orgf864204"></h4>
+<div class="outline-text-4" id="text-orgf864204">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org79db340">1. Introduction</a></li>
-<li><a href="#org6f3ea9e">2. Download Code and Setup</a></li>
-<li><a href="#orgb11a5a0">3. <b>Problem 1</b>: Matrix Diagonal Sums</a>
+<li><a href="#orgc6e0226">1. Introduction</a></li>
+<li><a href="#orgcdb7ce1">2. Download Code and Setup</a></li>
+<li><a href="#orgd6dda4c">3. <b>Problem 1</b>: Matrix Diagonal Sums</a>
 <ul>
-<li><a href="#orgf0ca252">3.1. Overview</a></li>
-<li><a href="#orga8e0fb0">3.2. Optimize Diagonal Sums</a></li>
-<li><a href="#orgb5c6f15">3.3. Evaluation on <code>csel-kh125-NN</code></a></li>
-<li><a href="#org0f5e8f7">3.4. <code>sumdiag_print.c</code> Testing Program</a></li>
-<li><a href="#org5908eeb">3.5. Optimization Suggestions and Documentation</a></li>
-<li><a href="#org60360da">3.6. Grading Criteria for Problem 1 (50%)</a></li>
+<li><a href="#org1e86b6b">3.1. Overview</a></li>
+<li><a href="#org111d54d">3.2. Optimize Diagonal Sums</a></li>
+<li><a href="#org77659bc">3.3. Evaluation on <code>csel-kh125-NN</code></a></li>
+<li><a href="#org4a69d93">3.4. <code>sumdiag_print.c</code> Testing Program</a></li>
+<li><a href="#org1f9b935">3.5. Optimization Suggestions and Documentation</a></li>
+<li><a href="#orga37ae10">3.6. Grading Criteria for Problem 1 (50%)</a></li>
 </ul>
 </li>
-<li><a href="#org05aa46b">4. <b>Problem 2</b>: Timing Search Algorithms</a>
+<li><a href="#org58c1e31">4. <b>Problem 2</b>: Timing Search Algorithms</a>
 <ul>
-<li><a href="#org4c183db">4.1. Overview</a></li>
-<li><a href="#orgddc94ba">4.2. <code>main()</code> in <code>search_benchmark.c</code></a></li>
-<li><a href="#orga1f9838">4.3. Running Algorithms based on Command Line Arguments</a></li>
-<li><a href="#orgc400395">4.4. Sample <code>main()</code> Runs</a></li>
-<li><a href="#org62286c5">4.5. Proper Setup and Cleanup for Searches</a></li>
-<li><a href="#org579577a">4.6. What to Measure</a></li>
-<li><a href="#orgba9e01f">4.7. MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></a></li>
-<li><a href="#org19ea12f">4.8. Grading Criteria for Problem 2 (50%)</a></li>
+<li><a href="#org9d7a4a6">4.1. Overview</a></li>
+<li><a href="#orgb23446f">4.2. <code>main()</code> in <code>search_benchmark.c</code></a></li>
+<li><a href="#orgae59ce8">4.3. Running Algorithms based on Command Line Arguments</a></li>
+<li><a href="#orgbcb12b4">4.4. Sample <code>main()</code> Runs</a></li>
+<li><a href="#org164b2ce">4.5. Proper Setup and Cleanup for Searches</a></li>
+<li><a href="#orge2117f6">4.6. What to Measure</a></li>
+<li><a href="#org0e7fa44">4.7. MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></a></li>
+<li><a href="#org97171ce">4.8. Grading Criteria for Problem 2 (50%)</a></li>
 </ul>
 </li>
-<li><a href="#orgca347dd">5. Writeup</a></li>
+<li><a href="#org65f522a">5. Writeup</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org79db340" class="outline-2">
-<h2 id="org79db340"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orgc6e0226" class="outline-2">
+<h2 id="orgc6e0226"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This assignment focuses on aspects of optimizing and measuring
@@ -468,8 +452,8 @@ benchmark the performance of those functions.</li>
 </div>
 </div>
 
-<div id="outline-container-org6f3ea9e" class="outline-2">
-<h2 id="org6f3ea9e"><span class="section-number-2">2</span> <a id="orge73979d"></a> Download Code and Setup</h2>
+<div id="outline-container-orgcdb7ce1" class="outline-2">
+<h2 id="orgcdb7ce1"><span class="section-number-2">2</span> <a id="orgba8ad17"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -587,12 +571,12 @@ folder. Ultimately you will re-zip this folder to submit it.
 </div>
 
 
-<div id="outline-container-orgb11a5a0" class="outline-2">
-<h2 id="orgb11a5a0"><span class="section-number-2">3</span> <b>Problem 1</b>: Matrix Diagonal Sums</h2>
+<div id="outline-container-orgd6dda4c" class="outline-2">
+<h2 id="orgd6dda4c"><span class="section-number-2">3</span> <b>Problem 1</b>: Matrix Diagonal Sums</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgf0ca252" class="outline-3">
-<h3 id="orgf0ca252"><span class="section-number-3">3.1</span> Overview</h3>
+<div id="outline-container-org1e86b6b" class="outline-3">
+<h3 id="org1e86b6b"><span class="section-number-3">3.1</span> Overview</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 A problem that occasionally arises in numerical computing when working
@@ -605,7 +589,7 @@ the following diagram which also shows the sums of the diagonals.
 
 <div class="org-center">
 
-<div class="figure">
+<div id="org25dad7f" class="figure">
 <p><img src="sumdiag.png" alt="sumdiag.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>5 by 5 matrix with diagonals colored. The diagram shows our numbering scheme for diagonals and the corresponding diagonal sums. Diagonal numbers start at 0 and progress counter-clockwise around the bottom and right of the matrix. For square matrices, the main diagonal is always numbered as the #rows-1 or #cols-1 which are equal.</p>
@@ -664,8 +648,8 @@ systems.
 </div>
 </div>
 
-<div id="outline-container-orga8e0fb0" class="outline-3">
-<h3 id="orga8e0fb0"><span class="section-number-3">3.2</span> Optimize Diagonal Sums</h3>
+<div id="outline-container-org111d54d" class="outline-3">
+<h3 id="org111d54d"><span class="section-number-3">3.2</span> Optimize Diagonal Sums</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 The purpose of this problem is to write <code>sumdiag_OPTM()</code> which is a
@@ -704,8 +688,8 @@ Some details are provided in subsequent sections.
 </div>
 
 
-<div id="outline-container-orgb5c6f15" class="outline-3">
-<h3 id="orgb5c6f15"><span class="section-number-3">3.3</span> Evaluation on <code>csel-kh125-NN</code></h3>
+<div id="outline-container-org77659bc" class="outline-3">
+<h3 id="org77659bc"><span class="section-number-3">3.3</span> Evaluation on <code>csel-kh125-NN</code></h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The provided file <code>sumdiag_benchmark.c</code> provides a benchmark for the
@@ -817,8 +801,8 @@ problem.
 </div>
 </div>
 
-<div id="outline-container-org0f5e8f7" class="outline-3">
-<h3 id="org0f5e8f7"><span class="section-number-3">3.4</span> <code>sumdiag_print.c</code> Testing Program</h3>
+<div id="outline-container-org4a69d93" class="outline-3">
+<h3 id="org4a69d93"><span class="section-number-3">3.4</span> <code>sumdiag_print.c</code> Testing Program</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 As one works on implementing optimizations in <code>sumdiag_OPTM()</code>, bugs
@@ -858,8 +842,8 @@ Diagnonal Sums:                        # prints diag sums for BASE/OPTM
 </div>
 
 
-<div id="outline-container-org5908eeb" class="outline-3">
-<h3 id="org5908eeb"><span class="section-number-3">3.5</span> <a id="orgb44ecbf"></a> Optimization Suggestions and Documentation</h3>
+<div id="outline-container-org1f9b935" class="outline-3">
+<h3 id="org1f9b935"><span class="section-number-3">3.5</span> <a id="org087818a"></a> Optimization Suggestions and Documentation</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 Labs and lectures have covered several kinds of optimizations which
@@ -893,8 +877,8 @@ diag_num = col_num - row_num + mat.cols - 1;    // calculate the diagonal number
 </div>
 </div>
 
-<div id="outline-container-org60360da" class="outline-3 grading 50">
-<h3 id="org60360da"><span class="section-number-3">3.6</span> Grading Criteria for Problem 1 (50%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div id="outline-container-orga37ae10" class="outline-3 grading 50">
+<h3 id="orga37ae10"><span class="section-number-3">3.6</span> Grading Criteria for Problem 1 (50%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 The file <code>P4-WRITEUP.txt</code> has several questions that should be
@@ -974,12 +958,12 @@ their use.
 </div>
 </div>
 
-<div id="outline-container-org05aa46b" class="outline-2">
-<h2 id="org05aa46b"><span class="section-number-2">4</span> <b>Problem 2</b>: Timing Search Algorithms</h2>
+<div id="outline-container-org58c1e31" class="outline-2">
+<h2 id="org58c1e31"><span class="section-number-2">4</span> <b>Problem 2</b>: Timing Search Algorithms</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org4c183db" class="outline-3">
-<h3 id="org4c183db"><span class="section-number-3">4.1</span> Overview</h3>
+<div id="outline-container-org9d7a4a6" class="outline-3">
+<h3 id="org9d7a4a6"><span class="section-number-3">4.1</span> Overview</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 This problem centers on timing several algorithms to measure their
@@ -1022,8 +1006,8 @@ any platform but the analysis should be conducted on
 </div>
 
 
-<div id="outline-container-orgddc94ba" class="outline-3">
-<h3 id="orgddc94ba"><span class="section-number-3">4.2</span> <code>main()</code> in <code>search_benchmark.c</code></h3>
+<div id="outline-container-orgb23446f" class="outline-3">
+<h3 id="orgb23446f"><span class="section-number-3">4.2</span> <code>main()</code> in <code>search_benchmark.c</code></h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 The requirements from this problem is that you provide a <code>main()</code>
@@ -1122,8 +1106,8 @@ and cleanup for the searches.</li>
 </div>
 </div>
 
-<div id="outline-container-orga1f9838" class="outline-3">
-<h3 id="orga1f9838"><span class="section-number-3">4.3</span> Running Algorithms based on Command Line Arguments</h3>
+<div id="outline-container-orgae59ce8" class="outline-3">
+<h3 id="orgae59ce8"><span class="section-number-3">4.3</span> Running Algorithms based on Command Line Arguments</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 Many folks who have not had to handle command line arguments struggle
@@ -1133,9 +1117,9 @@ additional guidance on handling this aspect of the program.
 </div>
 
 
-<div id="outline-container-orge59f8ba" class="outline-4">
-<h4 id="orge59f8ba">Run the algorithms in a fixed order</h4>
-<div class="outline-text-4" id="text-orge59f8ba">
+<div id="outline-container-org2b2b743" class="outline-4">
+<h4 id="org2b2b743">Run the algorithms in a fixed order</h4>
+<div class="outline-text-4" id="text-org2b2b743">
 <p>
 An invocation like
 </p>
@@ -1192,9 +1176,9 @@ trust.
 </div>
 </div>
 
-<div id="outline-container-org7adda71" class="outline-4">
-<h4 id="org7adda71">Use Boolean-like variables to track which algorithms to run</h4>
-<div class="outline-text-4" id="text-org7adda71">
+<div id="outline-container-org3bab8c4" class="outline-4">
+<h4 id="org3bab8c4">Use Boolean-like variables to track which algorithms to run</h4>
+<div class="outline-text-4" id="text-org3bab8c4">
 <p>
 If following the advice of the previous section, to run the 4
 algorithms in a fixed order, one can simple assign variables in
@@ -1244,9 +1228,9 @@ and compared which is all that is needed to complete the timing.
 </div>
 </div>
 
-<div id="outline-container-org4c78cbb" class="outline-4">
-<h4 id="org4c78cbb">Free and Re-allocate Memory for Different Sizes</h4>
-<div class="outline-text-4" id="text-org4c78cbb">
+<div id="outline-container-org9789a88" class="outline-4">
+<h4 id="org9789a88">Free and Re-allocate Memory for Different Sizes</h4>
+<div class="outline-text-4" id="text-org9789a88">
 <p>
 While the search functions for Linked Lists and Binary Search Trees
 both take size arguments, these are ignored in the searches.  Instead,
@@ -1264,8 +1248,8 @@ timings for the linked structures.
 </div>
 
 
-<div id="outline-container-orgc400395" class="outline-3">
-<h3 id="orgc400395"><span class="section-number-3">4.4</span> Sample <code>main()</code> Runs</h3>
+<div id="outline-container-orgbcb12b4" class="outline-3">
+<h3 id="orgbcb12b4"><span class="section-number-3">4.4</span> Sample <code>main()</code> Runs</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 Below are some sample runs of the <code>main()</code> function and output that is
@@ -1330,8 +1314,8 @@ usage: ./search_benchmark &lt;minpow&gt; &lt;maxpow&gt; &lt;repeats&gt; [which]
 </div>
 
 
-<div id="outline-container-org62286c5" class="outline-3">
-<h3 id="org62286c5"><span class="section-number-3">4.5</span> Proper Setup and Cleanup for Searches</h3>
+<div id="outline-container-org164b2ce" class="outline-3">
+<h3 id="org164b2ce"><span class="section-number-3">4.5</span> Proper Setup and Cleanup for Searches</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 Each search algorithm requires setup and cleanup which is described
@@ -1341,9 +1325,9 @@ bonus credit.
 </p>
 </div>
 
-<div id="outline-container-org65e01a4" class="outline-4">
-<h4 id="org65e01a4">Linear and Binary Array Search</h4>
-<div class="outline-text-4" id="text-org65e01a4">
+<div id="outline-container-org2d32ec2" class="outline-4">
+<h4 id="org2d32ec2">Linear and Binary Array Search</h4>
+<div class="outline-text-4" id="text-org2d32ec2">
 <p>
 Use the function <code>make_evens_array()</code> to create an appropriately
 sized <code>int</code> array for these functions.  Call <code>free()</code> on this array
@@ -1352,9 +1336,9 @@ when finished with it.
 </div>
 </div>
 
-<div id="outline-container-org20779d2" class="outline-4">
-<h4 id="org20779d2">Linked List Search</h4>
-<div class="outline-text-4" id="text-org20779d2">
+<div id="outline-container-org4306f24" class="outline-4">
+<h4 id="org4306f24">Linked List Search</h4>
+<div class="outline-text-4" id="text-org4306f24">
 <p>
 Use the function <code>make_evens_list()</code> to create an appropriately
 sized <code>list_t</code>.  Call <code>list_free()</code> on this list when finished with
@@ -1363,9 +1347,9 @@ it.
 </div>
 </div>
 
-<div id="outline-container-orgf296ad3" class="outline-4">
-<h4 id="orgf296ad3">Binary Tree Search</h4>
-<div class="outline-text-4" id="text-orgf296ad3">
+<div id="outline-container-orga910d6c" class="outline-4">
+<h4 id="orga910d6c">Binary Tree Search</h4>
+<div class="outline-text-4" id="text-orga910d6c">
 <p>
 Use the function <code>make_evens_tree()</code> to create an appropriately
 sized <code>bst_t</code>.  Call <code>bst_free()</code> on this list when finished with
@@ -1375,8 +1359,8 @@ it.
 </div>
 </div>
 
-<div id="outline-container-org579577a" class="outline-3">
-<h3 id="org579577a"><span class="section-number-3">4.6</span> What to Measure</h3>
+<div id="outline-container-orge2117f6" class="outline-3">
+<h3 id="orge2117f6"><span class="section-number-3">4.6</span> What to Measure</h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
 The reason for the requirements mentioned above is to study the
@@ -1398,8 +1382,8 @@ provided.
 </div>
 </div>
 
-<div id="outline-container-orgba9e01f" class="outline-3">
-<h3 id="orgba9e01f"><span class="section-number-3">4.7</span> MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></h3>
+<div id="outline-container-org0e7fa44" class="outline-3">
+<h3 id="org0e7fa44"><span class="section-number-3">4.7</span> MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></h3>
 <div class="outline-text-3" id="text-4-7">
 <p>
 "Makeup" credit will allow the score on this assignment to exceed 100%
@@ -1511,8 +1495,8 @@ questions, <b>and then</b> move on to the MAKEUP credit.
 </div>
 </div>
 
-<div id="outline-container-org19ea12f" class="outline-3 grading 50">
-<h3 id="org19ea12f"><span class="section-number-3">4.8</span> Grading Criteria for Problem 2 (50%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div id="outline-container-org97171ce" class="outline-3 grading 50">
+<h3 id="org97171ce"><span class="section-number-3">4.8</span> Grading Criteria for Problem 2 (50%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
 <div class="outline-text-3" id="text-4-8">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1632,8 +1616,8 @@ questions, <b>and then</b> move on to the MAKEUP credit.
 </div>
 
 
-<div id="outline-container-orgca347dd" class="outline-2">
-<h2 id="orgca347dd"><span class="section-number-2">5</span> Writeup</h2>
+<div id="outline-container-org65f522a" class="outline-2">
+<h2 id="org65f522a"><span class="section-number-2">5</span> Writeup</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 This assignment involves answering questions in the file
@@ -1793,7 +1777,7 @@ PROBLEM 2: Timing Search Algorithms
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-04-02 Fri 17:33 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-04-12 Mon 11:37 <br/> </i>
 </div>
 </body>
 </html>
