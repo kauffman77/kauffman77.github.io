@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-04-11 Sun 22:17 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 4061 Lab11: Job Runner with Semaphores</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2021-04-11 Sun 22:17</i>
+</div>
+<div id="content">
+<h1 class="title">CSCI 4061 Lab11: Job Runner with Semaphores</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Mon 4/19/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><i>Approximately 1.00% of total grade</i></li>
+</ul>
+
+<div id="outline-container-orgc21bcab" class="outline-4">
+<h4 id="orgc21bcab">CODE DISTRIBUTION: <a href="lab11-code.zip">lab11-code.zip</a></h4>
+<div class="outline-text-4" id="text-orgc21bcab">
+<ul class="org-ul">
+<li>Download the code distribution</li>
+<li>See further setup instructions below</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgad16c06" class="outline-4">
+<h4 id="orgad16c06">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orgad16c06">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org1245482">1. Rationale</a></li>
+<li><a href="#org3919a75">2. Codepack</a></li>
+<li><a href="#org1319bae">3. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org084d030">4. Submission</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1245482" class="outline-2">
+<h2 id="org1245482"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Semaphores are a classic means of coordinating multiple cooperating
+processes so that they access a shared resource without creating
+conflicts. This lab provides a small but nontrivial application which
+requires semaphores to be added to ensure no duplication / corruption
+occurs while processes compete to manipulate a data file.
+</p>
+</div>
+
+<div id="outline-container-orgf6ca141" class="outline-4">
+<h4 id="orgf6ca141">Grading Policy</h4>
+<div class="outline-text-4" id="text-orgf6ca141">
+<p>
+Credit for this Lab is earned by completing the exercises here and
+submitting a Zip of the work to Gradescope. Students are responsible
+to check that the results produced locally via <code>make test</code> are
+reflected on Gradescope after submitting their completed
+Zip. Successful completion earns 1 Engagement Point.
+</p>
+
+<p>
+Lab Exercises are open resource/open collaboration and <b>students are
+encouraged to coopearte on labs.</b> Students may submit work as groups
+of up to 5 to Gradescope: one person submits then adds the names of
+their group members to the submission.
+</p>
+
+<p>
+See the <a href="../syllabus.html">full policies in the course syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3919a75" class="outline-2">
+<h2 id="org3919a75"><span class="section-number-2">2</span> Codepack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The codepack for this lab is linked at the top of this
+document. Always download it and unzip/unpack it.  It should contain
+the following files which are briefly described.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">Use</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Questions to answer: fill in the multiple choice selections in this file.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>runner.c</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">C file to study and complete for the CODE portion. See instructions in <code>QUESTIONS.txt</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>mmap_file.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">C file that memory maps a whole file; used in <code>runner.c</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>runner.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Header file with constants / includes for runner application.</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt.bk</code></td>
+<td class="org-left">Backup</td>
+<td class="org-left">Backup copy of the original file to help revert if needed</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Build</td>
+<td class="org-left">Enables <code>make test</code> and <code>make zip</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running scripts</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_lab11.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for this lab</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_quiz_filter</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Used to simplify quiz checksum</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org1319bae" class="outline-2">
+<h2 id="org1319bae"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
+Follow the instructions in it to complete the QUIZ and CODE questions
+for the lab.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                           __________________
+
+                            LAB 11 QUESTIONS
+                           __________________
+
+
+
+
+
+Lab Instructions
+================
+
+  Follow the instructions below to experiment with topics related to
+  this lab.
+  - For sections marked QUIZ, fill in an (X) for the appropriate
+    response in this file. Use the command `make test-quiz' to see if
+    all of your answers are correct.
+  - For sections marked CODE, complete the code indicated. Use the
+    command `make test-code' to check if your code is complete.
+  - DO NOT CHANGE any parts of this file except the QUIZ sections as it
+    may interfere with the tests otherwise.
+  - If your `QUESTIONS.txt' file seems corrupted, restore it by copying
+    over the `QUESTIONS.txt.bk' backup file.
+  - When you complete the exercises, check your answers with `make test'
+    and if all is well, create a zip file with `make zip' and upload it
+    to Gradescope. Ensure that the Autograder there reflects your local
+    results.
+  - IF YOU WORK IN A GROUP only one member needs to submit and then add
+    the names of their group.
+
+
+QUIZ Semaphore Usage
+====================
+
+  Review use of POSIX semaphores from lecture examples and answer the
+  following questions.
+
+  Which of the following calls is used to open/create a semaphore?
+  - ( ) sem_t *sem = sem_open(sem_name, O_CREAT, S_IRUSR | S_IWUSR);
+  - ( ) sem_t *sem = open(sem_name, O_CREAT, S_IRUSR | S_IWUSR);
+  - ( ) int fd = sem_open(sem_name, O_CREAT, S_IRUSR | S_IWUSR);
+  - ( ) int fd = open(sem_name, O_CREAT, S_IRUSR | S_IWUSR);
+
+  Which of the following calls will ensure that an opened semaphore is
+  initialized to have value 1 (e.g. is unlocked)?
+  - ( ) sem = 1;
+  - ( ) init(&amp;sem, 1);
+  - ( ) sem_init(sem, 1, 1);
+  - ( ) write(semfd, &amp;vals, 1);
+
+  Which pair of functions are used to "lock" and "unlock" a semaphore?
+  - ( ) sem = 0; AND sem = 1;
+  - ( ) sem_lock(sem); AND sem_unlock(sem);
+  - ( ) sem.acquire(); AND sem.release();
+  - ( ) sem_wait(sem); AND sem_post(sem);
+
+
+CODE Add Initialization + Coordination to runner.c
+==================================================
+
+  The provided runner.c code traverses a "job" file to execute each of
+  the lines of it as though it were typed into a shell. It can be
+  built/run using the following setup.
+
+  ,----
+  | &gt; make                                   # build
+  | gcc -Wall -Werror -g -Wno-format-truncation -c runner.c
+  | gcc -Wall -Werror -g -Wno-format-truncation -c mmap_file.c
+  | gcc -Wall -Werror -g -Wno-format-truncation -o runner runner.o mmap_file.o -lpthread
+  | 
+  | &gt; cp test_jobs.1.txt test_jobs.tmp       # copy jobs file to a temporary file as runner will change it
+  | 
+  | &gt; head test_jobs.tmp                     # lines that start with a '-' are incomplete jobs
+  | - seq 10000
+  | - gcc --version
+  | - sleep 1.5
+  | ...
+  | 
+  | &gt; ./runner test_jobs.tmp                 # start the runner
+  | 001: 232927 RUN 'seq 10000'              # each line reported is handled by the runner which reports
+  | 002: 232927 RUN 'gcc --version'          # the line, its own PID, and the job being run. Output for 
+  | 003: 232927 RUN 'sleep 1.5'              # each job is suppressed but in a real setting would be stored.
+  | ...
+  | 099: 232927 RUN 'wc jobs.txt'
+  | 100: 232927 RUN 'seq 500'
+  | 
+  | &gt; ./runner test_jobs.tmp                 # running second time returns immediately...
+  | 
+  | &gt; head test_jobs.tmp                     # because all jobs are marked "D" for Done
+  | D seq 10000
+  | D gcc --version
+  | D sleep 1.5
+  | D ls
+  | D ls -l
+  | D sleep 2.0
+  | D ls -li
+  | D gcc --help
+  | D sleep 2.0
+  | D wc jobs.txt
+  `----
+
+
+  The `runner.c' program is mostly written so that multiple such runners
+  can be started such as in the following where 2 such jobs get started.
+  ,----
+  | &gt; ./runner test_jobs.tmp &amp; ./runner test_jobs.tmp &amp;      # start 2 runners
+  | [1] 233292
+  | [2] 233293
+  | 001: 233292 RUN 'seq 10000'                              # first runner
+  | 002: 233293 RUN 'gcc --version'                          # second runner
+  | 003: 233292 RUN 'sleep 1.5'                              # first runner - takes a while to finish
+  | 004: 233293 RUN 'ls'                                     # second runner
+  | 005: 233293 RUN 'ls -l'                                  # second runner
+  | 006: 233293 RUN 'sleep 2.0'                              # second runner
+  | ...
+  | 098: 233293 RUN 'sleep 2.0'
+  | 099: 233292 RUN 'wc test_jobs.1.txt'
+  | 100: 233292 RUN 'seq 500'
+  `----
+
+  Executing multiple runners can speed up the completion of all jobs BUT
+  there is no coordination between processes. This can lead to
+  duplication of effort between processes. To see this, use the provided
+  "simulation" testing program which is run as follows.
+  ,----
+  | &gt; ./test_runner.sh runner          # starts 10 runners working on the same jobs file
+  | ITER  1: 10 unique pids did jobs   # reports that 10 processes cooperated on jobs BUT...
+  | Duplicate Job Detected:            # at least one duplication ocurred due to lack of coordination
+  | 019: 233594 RUN 'seq 100000'
+  | 019: 233598 RUN 'seq 100000'
+  | ITER  2: 10 unique pids did jobs   # The test is repeated but this time no duplicatation occurred
+  | ITER  3: 10 unique pids did jobs   # On a further repeat, a different job was indadvertently duplicated
+  | Duplicate Job Detected:
+  | 001: 234031 RUN 'sleep 0.25'
+  | 001: 234032 RUN 'sleep 0.25'
+  | ITER  4: 10 unique pids did jobs
+  | ...
+  `----
+
+  Modify the `runner.c' code so that any number of runners can be
+  started which will cooperate to complete a jobs file. The program must
+  satisfy several constraints.
+  1. Make use of semaphores as a coordination mechanism including
+     initialization a semaphore at the beginning of the program in a
+     marked code block.
+  2. Lock / Unlock the semaphore to protect the Critical Region where it
+     would be dangerous for several processes to attempt "own" a job.
+  3. Ensure that when several runners are started, all of them have fair
+     access to cooperate. If a process locks the jobs file for over its
+     entire processing of the file OR fails to release a lock after
+     "owning" a job, the simulation will likely report a single runner
+     process completed all jobs rather all 10 runners cooperating.
+
+  Correct code for runner.c will be execute jobs files faster when
+  multiple runners are started and will have the following output from
+  the test_runner.sh script which is checked via `make test'.
+
+  ,----
+  | &gt; ./test_runner.sh runner
+  | ITER  1: 10 unique pids did jobs
+  | ITER  2: 10 unique pids did jobs
+  | ITER  3: 10 unique pids did jobs
+  | ...
+  | ITER 23: 10 unique pids did jobs
+  | ITER 24: 10 unique pids did jobs
+  | ITER 25: 10 unique pids did jobs
+  `----
+
+  NOTE: Several interesting techniques are demonstrated in runner.c /
+  mmap_file.c including memory mapping a file to ease sharing its data
+  between multiple processes and parsing that file using the `sscanf()'
+  function. You do not need to understand all of this to complete the
+  exercise but for those interested in learning some new coding tricks,
+  this may provide some opportunities.
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org084d030" class="outline-2">
+<h2 id="org084d030"><span class="section-number-2">4</span> Submission</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
+how to upload your completed lab zip to Gradescope.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-04-11 Sun 22:17 <br/> </i>
+</div>
+</body>
+</html>
