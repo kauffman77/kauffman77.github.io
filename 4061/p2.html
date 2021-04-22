@@ -1,0 +1,2743 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-04-21 Wed 20:37 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 4061 Project 2: Blather Chat Server/Client</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2021-04-21 Wed 20:37</i>
+</div>
+<div id="content">
+<h1 class="title">CSCI 4061 Project 2: Blather Chat Server/Client</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Wed 7/29/2020</b></li>
+<li><i>Approximately 20.0% of total grade</i></li>
+<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a> (<i>Submission will open soon</i>)</li>
+<li>Projects may be done in groups of 1 or 2. Indicate groups in the
+<code>GROUP_MEMBERS.txt</code> file and on Gradescope when submitting</li>
+<li>No additional collaboration with other students is allowed. Seek
+help from course staff if you get stuck for too long.</li>
+</ul>
+
+<div id="outline-container-orga56466a" class="outline-4">
+<h4 id="orga56466a">CODE DISTRIBUTION: <a href="p2-code.zip">p2-code.zip</a></h4>
+</div>
+<div id="outline-container-orga35918f" class="outline-4">
+<h4 id="orga35918f">TEST CODE: <i>Coming Soon</i></h4>
+<div class="outline-text-4" id="text-orga35918f">
+</div>
+</div>
+<div id="outline-container-orgc6772e5" class="outline-4">
+<h4 id="orgc6772e5">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orgc6772e5">
+</div>
+</div>
+
+<div id="outline-container-org65ad353" class="outline-4">
+<h4 id="org65ad353"></h4>
+<div class="outline-text-4" id="text-org65ad353">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgdfafa9c">1. Introduction: A Chat Service</a>
+<ul>
+<li><a href="#orga71eb18">1.1. Basic Features</a></li>
+<li><a href="#orgc452af1">1.2. ADVANCED Features : Makeup Credit</a></li>
+</ul>
+</li>
+<li><a href="#org6785fd6">2. Download Code and Setup</a></li>
+<li><a href="#orgd9a8cca">3. Demo / ScreenShot</a></li>
+<li><a href="#org116e582">4. Overall Architecture</a>
+<ul>
+<li><a href="#orgbd363b2">4.1. What Needs to be Implemented</a></li>
+<li><a href="#orgfe4f528">4.2. What's Already Done</a></li>
+<li><a href="#org7373261">4.3. Provide a Makefile</a></li>
+<li><a href="#org252d601">4.4. No malloc() / free() required</a></li>
+</ul>
+</li>
+<li><a href="#orgf689a28">5. Basic Protocol and Architecture</a>
+<ul>
+<li><a href="#org0cf2283">5.1. Server and Clients</a></li>
+<li><a href="#org91da338">5.2. Joining</a></li>
+<li><a href="#org5d482a5">5.3. Normal Messages</a></li>
+<li><a href="#org440474f">5.4. Departures and Removing Clients</a></li>
+<li><a href="#orgeaf4a94">5.5. Protocol Data Types</a></li>
+</ul>
+</li>
+<li><a href="#org9d80eeb">6. The Server</a>
+<ul>
+<li><a href="#orgc1e30df">6.1. Server and Client Data</a></li>
+<li><a href="#org6726dd1">6.2. Logging and Debugging Messages in the Server</a></li>
+<li><a href="#org981ef30">6.3. Server Operations: <code>server_funcs.c</code></a></li>
+<li><a href="#org042a840">6.4. Messages Handled by the Server</a></li>
+<li><a href="#org5773f52">6.5. Other Messages Sent by the Server</a></li>
+<li><a href="#org522a301">6.6. <code>bl_server.c</code> main function</a></li>
+</ul>
+</li>
+<li><a href="#orge35b158">7. The Client</a>
+<ul>
+<li><a href="#orgf946217">7.1. Simplified Terminal I/O</a></li>
+<li><a href="#org4ea7eb5">7.2. <code>bl_client.c</code> Features</a></li>
+<li><a href="#org8cf2ea6">7.3. Client Main Approach</a></li>
+</ul>
+</li>
+<li><a href="#orgff4fcd5">8. Grading Criteria</a></li>
+<li><a href="#org0ca5acd">9. ADVANCED Features</a>
+<ul>
+<li><a href="#org0d32d69">9.1. Server Ping and Disconnected Clients (10%)</a></li>
+<li><a href="#org6dae710">9.2. Binary Server Log File (10%)</a></li>
+<li><a href="#orgc71c330">9.3. Last Messages for Client (10%)</a></li>
+<li><a href="#org6bcf53a">9.4. <code>who_t</code> for Client and Server (10%)</a></li>
+</ul>
+</li>
+<li><a href="#org2f9ed92">10. Automated Tests and Project Submission</a>
+<ul>
+<li><a href="#orgabc66e5">10.1. Setting up and Running the Automated Tests</a></li>
+<li><a href="#org7c17cae">10.2. Submit to Gradescope</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdfafa9c" class="outline-2">
+<h2 id="orgdfafa9c"><span class="section-number-2">1</span> Introduction: A Chat Service</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Systems programming is often associated with communication as this
+invariably requires coordinating multiple entities that are related
+only based on their desire to share information. This project focuses
+on developing a simple <b>chat server and client</b> called <code>blather</code>. The
+basic usage is in two parts.
+</p>
+<dl class="org-dl">
+<dt>Server</dt><dd>Some user starts <code>bl_server</code> which manages the chat "room". The
+server is non-interactive and will likely only print debugging
+output as it runs.</dd>
+<dt>Client</dt><dd>Any user who wishes to chat runs <code>bl_client</code> which takes input
+typed on the keyboard and sends it to the server. The server
+broadcasts the input to all other clients who can respond by
+typing their own input.</dd>
+</dl>
+
+<p>
+Chat servers are an old idea dating to the late 1970's and if you have
+never used one previously, get online a bit more or <a href="https://en.wikipedia.org/wiki/Online_chat">read about them on
+Wikipedia</a>.  Even standard Unix terminals have a built-in ability to
+communicate with other users through <a href="http://man7.org/linux/man-pages/man1/mesg.1.html">commands like <code>write</code>, <code>wall</code>,
+and <code>talk</code></a>.
+</p>
+
+<p>
+Unlike standard internet chat services, <code>blather</code> will be restricted
+to a single Unix machine and to users with permission to read related
+files.  However, extending the programs to run via the internet will
+be the subject of some discussion.
+</p>
+
+<p>
+Like most interesting projects, <code>blather</code> utilizes a combination of
+many different system tools.  Look for the following items to arise.
+</p>
+<ul class="org-ul">
+<li>Multiple communicating processes: clients to servers</li>
+<li>Communication through FIFOs</li>
+<li>Signal handling for graceful server shutdown</li>
+<li>Alarm signals for periodic behavior</li>
+<li>Input multiplexing with <code>poll()</code></li>
+<li>Multiple threads in the client to handle typed input versus info
+from the server</li>
+</ul>
+
+<p>
+Finally, this project includes some <b>advanced features</b> which may be
+implemented for Makeup Credit: this credit will be added to your
+overall Project total to make up for mistakes in this and previous
+projects.
+</p>
+</div>
+
+<div id="outline-container-orga71eb18" class="outline-3">
+<h3 id="orga71eb18"><span class="section-number-3">1.1</span> Basic Features</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+The specification below is mainly concerned with basic features of the
+<code>blather</code> server and client. Implementing these can garner full credit
+for the assignment.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc452af1" class="outline-3">
+<h3 id="orgc452af1"><span class="section-number-3">1.2</span> ADVANCED Features : Makeup Credit</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Some portions of the specification and code are marked ADVANCED to
+indicate optional features that can be implemented for Makeup
+Credit. Some of these have dependencies so take care to read
+carefully.
+</p>
+
+<p>
+ADVANCED features may be evaluated using tests and manual inspection
+criteria that are made available after the standard tests are
+distributed. 
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6785fd6" class="outline-2">
+<h2 id="org6785fd6"><span class="section-number-2">2</span> Download Code and Setup</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+As in labs, download the code pack linked at the top of the
+page. Unzip this which will create a folder and create your files in
+that folder.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">State</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>GROUP_MEMBERS.txt</code></td>
+<td class="org-left">Edit</td>
+<td class="org-left">Fill in names of group members to indicate partnerships</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Create</td>
+<td class="org-left">Build project, run tests</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>server_funcs.c</code></td>
+<td class="org-left">Create</td>
+<td class="org-left">Service routines for the server</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>bl_server.c</code></td>
+<td class="org-left">Create</td>
+<td class="org-left">Main function for <code>bl_server</code> executable</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>bl_client.c</code></td>
+<td class="org-left">Create</td>
+<td class="org-left">Main function for <code>bl_client</code> executable</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>blather.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Header file which contains required structs, defines, and prototypes</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>util.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Utility methods debug messages and checking system call returns</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>simpio.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Simplified terminal I/O to get nice interactive sessions</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>simpio_demo.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Demonstrates simpio features, model for <code>bl_client.c</code></td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">Testing</td>
+<td class="org-left">TBD</td>
+<td class="org-left">Will be released separately.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<div id="outline-container-orgd9a8cca" class="outline-2">
+<h2 id="orgd9a8cca"><span class="section-number-2">3</span> Demo / ScreenShot</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Demonstrating an interactive, dynamic chat session between multiple
+users is difficult but the screenshot below attempts to do so.  It
+shows the server and several clients mid-chat.
+</p>
+<ul class="org-ul">
+<li>The server <code>bl_server</code> is started in the large terminal on the left
+and shows output about what is going on. The server is required to
+show some specific output through the use of the <code>log_printf()</code>
+function as it performs certain operations and can print additional
+debug information using the <code>dbg_printf()</code> function.</li>
+<li>There are 4 <code>bl_client</code> instances run by various users who log into
+the server and specify their name.  The lower-right user <code>Barbara</code>
+joins later while the upper left user <code>Bruce</code> logs out near the end
+of the session.</li>
+</ul>
+
+<p>
+NOTE: A few of the message formats might differ in the image from the
+expectations described in the rest of the project specification.
+</p>
+
+<div class="org-center">
+
+<div id="org5c27c56" class="figure">
+<p><img src="blather-demo.png" alt="blather-demo.png" width="100%" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Sample <code>blather</code> server and client runs.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org116e582" class="outline-2">
+<h2 id="org116e582"><span class="section-number-2">4</span> Overall Architecture</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-orgbd363b2" class="outline-3">
+<h3 id="orgbd363b2"><span class="section-number-3">4.1</span> What Needs to be Implemented</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+<code>blather</code> has two parts: the server and client. Both need to be
+written along with service routines in <code>server.c</code>
+</p>
+</div>
+<div id="outline-container-org8f20a39" class="outline-4">
+<h4 id="org8f20a39"><code>server_funcs.c</code> data structure manipulations</h4>
+<div class="outline-text-4" id="text-org8f20a39">
+<p>
+Implement the functions in this file to manipulate the <code>server_t</code> and
+<code>client_t</code> data that will ultimately be used by the server to fulfill
+its role.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1b86adf" class="outline-4">
+<h4 id="org1b86adf"><code>bl_server.c</code> main function and signal handlers</h4>
+<div class="outline-text-4" id="text-org1b86adf">
+<p>
+Implement the server which manages the interactions between clients in
+this file making use of the service functions in <code>server_funcs.c</code> to get the
+job done.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfabc9a0" class="outline-4">
+<h4 id="orgfabc9a0"><code>bl_client.c</code> main function and thread workers</h4>
+<div class="outline-text-4" id="text-orgfabc9a0">
+<p>
+Implement the client which allows a single user to communicate with
+the server in this file. The client must have multiple threads so you
+will need to implement some worker functions as thread entry points
+here. 
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfe4f528" class="outline-3">
+<h3 id="orgfe4f528"><span class="section-number-3">4.2</span> What's Already Done</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Examine the provided files closely as they give some insight into what
+work is already done.
+</p>
+<ul class="org-ul">
+<li><code>blather.h</code> can be included in most files to make programs aware of
+the data structures and required functions. It contains
+documentation of the central data structures.</li>
+<li><code>util.c</code> contains a few functions for logging server messages,
+debugging, and checking system calls.</li>
+<li><code>simpio.c</code> and <code>simpio_demo.c</code> provide a small library and data
+structure to do terminal I/O nicely. The demo program shows how it
+works.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org7373261" class="outline-3">
+<h3 id="org7373261"><span class="section-number-3">4.3</span> Provide a Makefile</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Provide a <code>Makefile</code> which has at least the following targets.
+</p>
+<ul class="org-ul">
+<li><code>bl_server</code> : builds the server executable, be included in the
+default targets.</li>
+<li><code>bl_client</code> : builds the client executable, be included in the
+default targets.</li>
+</ul>
+
+<p>
+<i>Correction: An earlier version of the spec stated that testing
+targets are required. This has been changed as the included</i>
+<code>test_Makefile</code> <i>provides these.</i>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org252d601" class="outline-3">
+<h3 id="org252d601"><span class="section-number-3">4.4</span> No malloc() / free() required</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+It may come as a surprise, but this set of programs is specifically
+oriented so that no dynamic memory allocation is required. All of the
+data structures are fixed size, strings have a maximum length, and
+communication is done through FIFOs.  Keep this in mind as you code
+and avoid <code>malloc()</code> unless you see no other way around it as it will
+likely make things harder than they need to be.
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgf689a28" class="outline-2">
+<h2 id="orgf689a28"><span class="section-number-2">5</span> Basic Protocol and Architecture</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Clients communicate with the server along the following lines.
+</p>
+<ul class="org-ul">
+<li><p>
+<code>bl_server</code> creates a FIFO at startup time. The FIFO is created with
+a name specified according to naming convention at startup. Examples:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">  $&gt; bl_server server1               # creates the server1.fifo
+  $&gt; bl_server batcave               # creates the batcave.fifo
+  $&gt; bl_server fortress-of-solitude  # creates the fortress-of-solitude.fifo
+</pre>
+</div>
+<p>
+This FIFO is <b>only for join requests</b> to the server. The name of
+this file must be known for the clients to connect to server.
+</p></li>
+<li>The server then waits for clients to write join requests to join
+FIFO.</li>
+<li><code>bl_client</code> creates two FIFOs on startup:
+<ul class="org-ul">
+<li>A <b>to-client FIFO</b> for the server to write data intended for the
+client. The client reads this FIFO.</li>
+<li>A <b>to-server FIFO</b> to which the client writes and from which the
+server reads.</li>
+<li>The names of these files are inconsequential so long as they are
+fairly unique. Basing names for the FIFOs on the PID of the client
+is an easy way to do this. This avoids multiple clients in the
+same directory mistakenly using each other's FIFOs.</li>
+</ul></li>
+<li>A client writes a join request to the server which includes the
+names of its to-client and to-server FIFOs. All subsequent
+communication between client and server is done through the
+to-client and to-server FIFOs.</li>
+<li>A client reads typed input from users. When input is ready, it is
+sent as a <b>mesg<sub>t</sub></b> to the server.</li>
+<li>As a server receives messages from clients, it will <b>broadcast</b> the
+message to all clients including the sender.</li>
+<li>The server sends notices of other kinds to the clients such as when
+a new client <b>joins</b>. Clients may send <b>departure</b> notices which are
+re-broadcast by the server.</li>
+</ul>
+
+<p>
+The sections below give graphical depictions of some of the ideas of
+the protocols.
+</p>
+</div>
+
+<div id="outline-container-org0cf2283" class="outline-3">
+<h3 id="org0cf2283"><span class="section-number-3">5.1</span> Server and Clients</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+The following diagram illustrates the single server <code>server1</code> with 2
+clients connected. Each client has its own FIFOs for communication
+with the server and the server knows about these FIFOs.
+</p>
+<div class="org-center">
+
+<div id="orgd6368a5" class="figure">
+<p><img src="schematic.png" alt="schematic.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Schematic of server data which has been joined by 2 clients.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org91da338" class="outline-3">
+<h3 id="org91da338"><span class="section-number-3">5.2</span> Joining</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+This diagram illustrates how a new client can join the server. It
+creates FIFOs for communication and then writes a <code>join_t</code> request on
+the server's FIFO.  The server then adds the client information to its
+array and broadcasts the join to all clients.
+</p>
+
+<div class="org-center">
+
+<div id="orgabc5a1e" class="figure">
+<p><img src="join-request.png" alt="join-request.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 3: </span>New client joining the server which has two existing clients.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5d482a5" class="outline-3">
+<h3 id="org5d482a5"><span class="section-number-3">5.3</span> Normal Messages</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+A client wanting to communicate with others sends a normal <code>mesg_t</code> to
+the server with its name and body filled in. The client's to-server
+FIFO is used for this. The server then broadcasts the same message to
+all clients including the sender.
+</p>
+
+<div class="org-center">
+
+<div id="org4ebe33c" class="figure">
+<p><img src="broadcast.png" alt="broadcast.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 4: </span>Client sending a message which is broadcast to all other clients.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org440474f" class="outline-3">
+<h3 id="org440474f"><span class="section-number-3">5.4</span> Departures and Removing Clients</h3>
+<div class="outline-text-3" id="text-5-4">
+<p>
+A client can indicate it is leaving by sending an appropriate
+message. The server will remove its FIFOs and shift all elements in
+its clients array. The departure is broadcast to all clients.
+</p>
+
+<div class="org-center">
+
+<div id="org24ac1a1" class="figure">
+<p><img src="depart.png" alt="depart.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 5: </span>Client sending a message which is broadcast to all other clients.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgeaf4a94" class="outline-3">
+<h3 id="orgeaf4a94"><span class="section-number-3">5.5</span> Protocol Data Types</h3>
+<div class="outline-text-3" id="text-5-5">
+<p>
+The header file <code>blather.h</code> describes several data types associated
+with basic communication operations. One of these is the <code>mesg_t</code>
+struct which is used to convey information between clients and server.
+</p>
+<pre class="example">
+// mesg_t: struct for messages between server/client
+typedef struct {
+  mesg_kind_t kind;               // kind of message
+  char name[MAXNAME];             // name of sending client or subject of event
+  char body[MAXLINE];             // body text, possibly empty depending on kind
+} mesg_t;
+</pre>
+
+
+<p>
+Each message has a <b>kind</b> which helps determine what to do with the
+messages. The kinds are defined in the <code>mesg_kind_t</code> enumeration which
+sets up specific integers associated with each kind.
+</p>
+<pre class="example">
+// mesg_kind_t: Kinds of messages between server/client
+typedef enum {
+  BL_MESG         = 10,         // normal messasge from client with name/body
+  BL_JOINED       = 20,         // client joined the server, name only
+  BL_DEPARTED     = 30,         // client leaving/left server normally, name only
+  BL_SHUTDOWN     = 40,         // server to client : server is shutting down, no name/body
+  BL_DISCONNECTED = 50,         // ADVANCED: client disconnected abnormally, name only
+  BL_PING         = 60,         // ADVANCED: ping to ask or show liveness
+} mesg_kind_t;
+</pre>
+
+
+<p>
+Messages are sent both from client to server and from server to client
+through the FIFOs that connect them.  The specification below will
+describe what actions need be taken on receiving messages.
+</p>
+
+<p>
+Finally, when the a client wishes to initially join the server, it
+fills in and sends a <code>join_t</code>.
+</p>
+<pre class="example">
+// join_t: structure for requests to join the chat room
+typedef struct {
+  char name[MAXPATH];            // name of the client joining the server
+  char to_client_fname[MAXPATH]; // name of file server writes to to send to client
+  char to_server_fname[MAXPATH]; // name of file client writes to to send to server
+} join_t;
+</pre>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-org9d80eeb" class="outline-2">
+<h2 id="org9d80eeb"><span class="section-number-2">6</span> The Server</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+The <code>bl_server.c</code> program is responsible for allowing clients to
+connect, become aware of one another, and communicate.  It's main
+functionality is to <b>broadcast</b> messages from one client to all others
+and to broadcast status changes such as new clients that join or
+depart. 
+</p>
+</div>
+
+
+<div id="outline-container-orgc1e30df" class="outline-3">
+<h3 id="orgc1e30df"><span class="section-number-3">6.1</span> Server and Client Data</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+To that end, the server process should maintain a <code>server_t</code> data
+structure which is defined in <code>blather.h</code> as below
+</p>
+
+<pre class="example" id="org5584735">
+// server_t: data pertaining to server operations
+typedef struct {
+  char server_name[MAXPATH];    // name of server which dictates file names for joining and logging
+  int join_fd;                  // file descriptor of join file/FIFO
+  int join_ready;               // flag indicating if a join is available
+  int n_clients;                // number of clients communicating with server
+  client_t client[MAXCLIENTS];  // array of clients populated up to n_clients
+  int time_sec;                 // ADVANCED: time in seconds since server started
+  int log_fd;                   // ADVANCED: file descriptor for log
+  sem_t *log_sem;               // ADVANCED: posix semaphore to control who_t section of log file
+} server_t;
+</pre>
+
+<p>
+The most prominent features of this structure are as follows.
+</p>
+<ul class="org-ul">
+<li>The <code>server_name</code> which determines the name of the FIFO filename for
+joining and a few other things.</li>
+<li>A <code>join_fd</code> file descriptor which should be attached to a FIFO to
+read requests from clients to join the server.</li>
+<li>The <code>client[][</code> array of <code>client_t</code> structs that track clients
+connected to the server. The field <code>n_clients</code> determines how full
+this array is.</li>
+</ul>
+
+<p>
+Associated closely with the <code>server_t</code> is the <code>client_t</code> struct which
+contains data on each client.
+</p>
+<pre class="example" id="orgb5240a4">
+// client_t: data on a client connected to the server
+typedef struct {
+  char name[MAXPATH];             // name of the client
+  int to_client_fd;               // file descriptor to write to to send to client
+  int to_server_fd;               // file descriptor to read from to receive from client
+  char to_client_fname[MAXPATH];  // name of file (FIFO) to write into send to client
+  char to_server_fname[MAXPATH];  // name of file (FIFO) to read from receive from client
+  int data_ready;                 // flag indicating a mesg_t can be read from to_server_fd
+  int last_contact_time;          // ADVANCED: server time at which last contact was made with client
+} client_t;
+</pre>
+
+<p>
+While the client program <code>bl_client</code> may make use of this struct as
+well its main purpose is to help track data for the server. Prominent
+features are as follows.
+</p>
+<ul class="org-ul">
+<li>The user name of the client which is provided when it joins.</li>
+<li>Names and file descriptors of the to-client and to-server FIFOs. The
+file descriptors are opened by the server based on the file names
+the provided by the client and used for communication between them.</li>
+<li>A <code>data_ready</code> flag which is set and cleared by the server as
+messages are available.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org6726dd1" class="outline-3">
+<h3 id="org6726dd1"><span class="section-number-3">6.2</span> Logging and Debugging Messages in the Server</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+The <code>bl_server</code> program is somewhat complex and to ease the task of
+understanding what it is doing at any given moment, it is required
+that it print certain information its current state as it works. This
+output will be checked in the automated tests.  
+</p>
+
+<p>
+Make use of the provided <code>log_printf()</code> function which is in
+<code>util.c</code>.  This function works just like <code>printf()</code> in that code like
+</p>
+<div class="org-src-container">
+<pre class="src src-c">log_printf("This is a message with a '%s' and a number '%d'\n","string",42);
+</pre>
+</div>
+<p>
+will print a message to the screen with format specifiers. However, it
+is special in that the can be silenced by setting the <code>BL_NOLOG</code>
+environment variable as demonstrated below:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; ./bl_server serv1             # log messages printed by default
+LOG: BEGIN: server_start()
+LOG: END: server_start()
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 1 input sources
+  C-c 
+LOG: poll() completed with return value -1
+LOG: poll() interrupted by a signal
+LOG: END: server_check_sources()
+LOG: BEGIN: server_shutdown()
+LOG: END: server_shutdown()
+
+&gt; export BL_NOLOG=1             # disable logging
+&gt; ./bl_server serv1
+  C-c
+&gt; 
+</pre>
+</div>
+<p>
+No special actions need to be taken to get this effect. Keep in mind
+that logging the messages described is REQUIRED.
+</p>
+
+<p>
+Conversely, while debugging it is often useful to print more detailed
+information. The should e done with the provided <code>dbg_printf()</code> which
+will only print if the <code>BL_DEBUG</code> environment variable is set. This
+variable will not be enabled during grading but is useful for
+debugging as shown below.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt; unset BL_NOLOG                # ensure logging printed
+&gt; export BL_DEBUG=1             # also print debug messages
+&gt; ./bl_server serv1
+LOG: BEGIN: server_start()
+LOG: END: server_start()
+DEBUG: At the top of main loop
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 1 input sources
+  C-c 
+LOG: poll() completed with return value -1
+LOG: poll() interrupted by a signal
+LOG: END: server_check_sources()
+DEBUG: Finished checking sources
+DEBUG: Checking 0 clients
+LOG: BEGIN: server_shutdown()
+DEBUG: server_broadcast(): 40 from  - 
+LOG: END: server_shutdown()
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org981ef30" class="outline-3">
+<h3 id="org981ef30"><span class="section-number-3">6.3</span> Server Operations: <code>server_funcs.c</code></h3>
+<div class="outline-text-3" id="text-6-3">
+<p>
+To facilitate operations of <code>bl_server</code> main program, complete the
+<code>server_funcs.c</code> file which provides service routines that mainly manipulate
+<code>server_t</code> structures. Each of these has a purpose to serve in the
+ultimate goal of the server.
+</p>
+
+<p>
+Note that some functions have ADVANCED features listed that pertain to
+the Makeup credit for the project.
+</p>
+
+<p>
+Also note that a number of functions have a "LOG Messages" section
+indicating which messages should be printed by the server and under
+what circumstances.
+</p>
+
+<pre class="example" id="orgb4681bb">
+client_t *server_get_client(server_t *server, int idx);
+// Gets a pointer to the client_t struct at the given index. If the
+// index is beyond n_clients, the behavior of the function is
+// unspecified and may cause a program crash.
+
+void server_start(server_t *server, char *server_name, int perms);
+// Initializes and starts the server with the given name. A join fifo
+// called "server_name.fifo" should be created. Removes any existing
+// file of that name prior to creation. Opens the FIFO and stores its
+// file descriptor in join_fd.
+//
+// ADVANCED: create the log file "server_name.log" and write the
+// initial empty who_t contents to its beginning. Ensure that the
+// log_fd is position for appending to the end of the file. Create the
+// POSIX semaphore "/server_name.sem" and initialize it to 1 to
+// control access to the who_t portion of the log.
+// 
+// LOG Messages:
+// log_printf("BEGIN: server_start()\n");              // at beginning of function
+// log_printf("END: server_start()\n");                // at end of function
+
+void server_shutdown(server_t *server);
+// Shut down the server. Close the join FIFO and unlink (remove) it so
+// that no further clients can join. Send a BL_SHUTDOWN message to all
+// clients and proceed to remove all clients in any order.
+// 
+// ADVANCED: Close the log file. Close the log semaphore and unlink
+// it.
+//
+// LOG Messages:
+// log_printf("BEGIN: server_shutdown()\n");           // at beginning of function
+// log_printf("END: server_shutdown()\n");             // at end of function
+
+int server_add_client(server_t *server, join_t *join);
+// Adds a client to the server according to the parameter join which
+// should have fileds such as name filed in.  The client data is
+// copied into the client[] array and file descriptors are opened for
+// its to-server and to-client FIFOs. Initializes the data_ready field
+// for the client to 0. Returns 0 on success and non-zero if the
+// server as no space for clients (n_clients == MAXCLIENTS).
+//
+// LOG Messages:
+// log_printf("BEGIN: server_add_client()\n");         // at beginning of function
+// log_printf("END: server_add_client()\n");           // at end of function
+
+int server_remove_client(server_t *server, int idx);
+// Remove the given client likely due to its having departed or
+// disconnected. Close fifos associated with the client and remove
+// them.  Shift the remaining clients to lower indices of the client[]
+// preserving their order in the array; decreases n_clients. Returns 0
+// on success, 1 on failure.
+
+void server_broadcast(server_t *server, mesg_t *mesg);
+// Send the given message to all clients connected to the server by
+// writing it to the file descriptors associated with them.
+//
+// ADVANCED: Log the broadcast message unless it is a PING which
+// should not be written to the log.
+
+void server_check_sources(server_t *server);
+// Checks all sources of data for the server to determine if any are
+// ready for reading. Sets the servers join_ready flag and the
+// data_ready flags of each of client if data is ready for them.
+// Makes use of the poll() system call to efficiently determine which
+// sources are ready.
+// 
+// NOTE: the poll() system call will return -1 if it is interrupted by
+// the process receiving a signal. This is expected to initiate server
+// shutdown and is handled by returning immediagely from this function.
+// 
+// LOG Messages:
+// log_printf("BEGIN: server_check_sources()\n");             // at beginning of function
+// log_printf("poll()'ing to check %d input sources\n",...);  // prior to poll() call
+// log_printf("poll() completed with return value %d\n",...); // after poll() call
+// log_printf("poll() interrupted by a signal\n");            // if poll interrupted by a signal
+// log_printf("join_ready = %d\n",...);                       // whether join queue has data
+// log_printf("client %d '%s' data_ready = %d\n",...)         // whether client has data ready
+// log_printf("END: server_check_sources()\n");               // at end of function
+
+int server_join_ready(server_t *server);
+// Return the join_ready flag from the server which indicates whether
+// a call to server_handle_join() is safe.
+
+void server_handle_join(server_t *server);
+// Call this function only if server_join_ready() returns true. Read a
+// join request and add the new client to the server. After finishing,
+// set the servers join_ready flag to 0.
+//
+// LOG Messages:
+// log_printf("BEGIN: server_handle_join()\n");               // at beginnning of function
+// log_printf("join request for new client '%s'\n",...);      // reports name of new client
+// log_printf("END: server_handle_join()\n");                 // at end of function
+
+int server_client_ready(server_t *server, int idx);
+// Return the data_ready field of the given client which indicates
+// whether the client has data ready to be read from it.
+
+void server_handle_client(server_t *server, int idx);
+// Process a message from the specified client. This function should
+// only be called if server_client_ready() returns true. Read a
+// message from to_server_fd and analyze the message kind. Departure
+// and Message types should be broadcast to all other clients.  Ping
+// responses should only change the last_contact_time below. Behavior
+// for other message types is not specified. Clear the client's
+// data_ready flag so it has value 0.
+//
+// ADVANCED: Update the last_contact_time of the client to the current
+// server time_sec.
+//
+// LOG Messages:
+// log_printf("BEGIN: server_handle_client()\n");           // at beginning of function
+// log_printf("client %d '%s' DEPARTED\n",                  // indicates client departed
+// log_printf("client %d '%s' MESSAGE '%s'\n",              // indicates client message
+// log_printf("END: server_handle_client()\n");             // at end of function 
+
+void server_tick(server_t *server);
+// ADVANCED: Increment the time for the server
+
+void server_ping_clients(server_t *server);
+// ADVANCED: Ping all clients in the server by broadcasting a ping.
+
+void server_remove_disconnected(server_t *server, int disconnect_secs);
+// ADVANCED: Check all clients to see if they have contacted the
+// server recently. Any client with a last_contact_time field equal to
+// or greater than the parameter disconnect_secs should be
+// removed. Broadcast that the client was disconnected to remaining
+// clients.  Process clients from lowest to highest and take care of
+// loop indexing as clients may be removed during the loop
+// necessitating index adjustments.
+
+void server_write_who(server_t *server);
+// ADVANCED: Write the current set of clients logged into the server
+// to the BEGINNING the log_fd. Ensure that the write is protected by
+// locking the semaphore associated with the log file. Since it may
+// take some time to complete this operation (acquire semaphore then
+// write) it should likely be done in its own thread to preven the
+// main server operations from stalling.  For threaded I/O, consider
+// using the pwrite() function to write to a specific location in an
+// open file descriptor which will not alter the position of log_fd so
+// that appends continue to write to the end of the file.
+
+void server_log_message(server_t *server, mesg_t *mesg);
+// ADVANCED: Write the given message to the end of log file associated
+// with the server.
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org042a840" class="outline-3">
+<h3 id="org042a840"><span class="section-number-3">6.4</span> Messages Handled by the Server</h3>
+<div class="outline-text-3" id="text-6-4">
+<p>
+The function <code>server_handle_client()</code> is a workhorse that will read a
+message from a client and respond take appropriate action. Here are
+the messages that the server should accept and respond to.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">kind</th>
+<th scope="col" class="org-left">Name</th>
+<th scope="col" class="org-left">Body?</th>
+<th scope="col" class="org-left">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>BL_MESG</code></td>
+<td class="org-left">Yes</td>
+<td class="org-left">Yes</td>
+<td class="org-left">Broadcast message to all clients.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>BL_DEPARTED</code></td>
+<td class="org-left">Yes</td>
+<td class="org-left">No</td>
+<td class="org-left">Broadcast message to all clients.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org5773f52" class="outline-3">
+<h3 id="org5773f52"><span class="section-number-3">6.5</span> Other Messages Sent by the Server</h3>
+<div class="outline-text-3" id="text-6-5">
+<p>
+The server will broadcast several other kinds of messages to clients
+under the following circumstances.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">kind</th>
+<th scope="col" class="org-left">Name</th>
+<th scope="col" class="org-left">Body?</th>
+<th scope="col" class="org-left">Circumstance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>BL_JOINED</code></td>
+<td class="org-left">Yes</td>
+<td class="org-left">No</td>
+<td class="org-left">Broadcast when a new client joins the server</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>BL_SHUTDOWN</code></td>
+<td class="org-left">No</td>
+<td class="org-left">No</td>
+<td class="org-left">Broadcast when the server starts shutting down</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">ADVANCED</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>BL_PING</code></td>
+<td class="org-left">No</td>
+<td class="org-left">No</td>
+<td class="org-left">Broadcast periodically, clients should respond with a ping to indicate liveness</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>BL_DISCONNECTED</code></td>
+<td class="org-left">Yes</td>
+<td class="org-left">No</td>
+<td class="org-left">Broadcast when a client has not pinged in a while to indicate disconnection.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<div id="outline-container-org522a301" class="outline-3">
+<h3 id="org522a301"><span class="section-number-3">6.6</span> <code>bl_server.c</code> main function</h3>
+<div class="outline-text-3" id="text-6-6">
+<p>
+Define a <code>main()</code> entry point in <code>bl_server</code> that ties all of the
+server operations together into a function unit.
+</p>
+</div>
+
+<div id="outline-container-org8799b26" class="outline-4">
+<h4 id="org8799b26">Listen, Select, Respond</h4>
+<div class="outline-text-4" id="text-org8799b26">
+<p>
+The server <code>main()</code> function in its simplest form boils down to the
+following pseudocode.
+</p>
+<div class="org-src-container">
+<pre class="src src-text">REPEAT:
+  check all sources
+  handle a join request if one is ready
+  for each client{
+    if the client is ready handle data from it
+  }
+}
+</pre>
+</div>
+
+<p>
+The advanced features build somewhat on this but not by much.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org04cb048" class="outline-4">
+<h4 id="org04cb048">Signal Handling</h4>
+<div class="outline-text-4" id="text-org04cb048">
+<p>
+The server should run indefinitely without interaction from an
+interactive user.  To stop it, send signals.  The server should handle
+<code>SIGTERM</code> and <code>SIGINT</code> by shutting down gracefully: exit the main
+computation, call <code>server_shutdown()</code> and return 0. A typical means to
+set this up is to control the main loop with a global variable which
+is changed in signal handlers to terminate the loop. After ending the
+loop, perform shutdown tasks.
+</p>
+
+<p>
+Keep in mind that certain system calls will return immediately if the
+process is signaled and may need to check for this in certain
+functions in  <code>server_funcs.c</code>.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge35b158" class="outline-2">
+<h2 id="orge35b158"><span class="section-number-2">7</span> The Client</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+While <code>bl_server</code> is a perpetual, non-interactive program, it is
+fairly boring in the absence of clients.. <code>bl_client</code> is a simple
+program that allows a user to type into the terminal to send text to
+the server and receive text back from the server which is printed to
+the screen. The sections below describe how to build it.
+</p>
+</div>
+
+<div id="outline-container-orgf946217" class="outline-3">
+<h3 id="orgf946217"><span class="section-number-3">7.1</span> Simplified Terminal I/O</h3>
+<div class="outline-text-3" id="text-7-1">
+<p>
+Standard terminal input and output work well in many situations but
+<code>bl_client</code> must intermingle the user typing while data may be printed
+to the screen.  This calls for somewhat finer control. To simplify the
+murky area that is terminal control, the file <code>simpio.c</code> provides
+functions which have the following net effect.
+</p>
+<ul class="org-ul">
+<li>A prompt can be set that is always displayed as the last final
+advancing line in the terminal.</li>
+<li>Text can be typed and deleted by the user.</li>
+<li>Any thread printing with the <code>iprintf()</code> function will advance the
+prompt forwards without disrupting the text a user may be typing.</li>
+</ul>
+
+<p>
+The program <code>simpio_demo.c</code> demonstrates this facility by spinning up
+a user and background thread which both print to the screen. Text
+printed by the background thread using <code>iprintf()</code> does not disrupt
+text being typed by the user at the prompt.
+</p>
+
+<p>
+Use <code>simpio_demo.c</code> as a template to begin you development on
+<code>bl_client.c</code> noting the following.
+</p>
+<ul class="org-ul">
+<li><p>
+Initialize the simplified terminal I/O with the following sequence
+</p>
+<div class="org-src-container">
+<pre class="src src-c">  simpio_set_prompt(simpio, prompt);         // set the prompt
+  simpio_reset(simpio);                      // initialize io
+  simpio_noncanonical_terminal_mode();       // set the terminal into a compatible mode
+</pre>
+</div></li>
+<li>When threads want to print, use the <code>iprintf()</code> function. It works
+like <code>printf()</code> but takes as its first argument a <code>simpio_t</code> object
+which manages the prompt and typed text.</li>
+<li>Analyze the input loop in <code>simpio_demo.c</code> to see how to read
+characters from the prompt, detect a completed line, and end of
+input.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org4ea7eb5" class="outline-3">
+<h3 id="org4ea7eb5"><span class="section-number-3">7.2</span> <code>bl_client.c</code> Features</h3>
+<div class="outline-text-3" id="text-7-2">
+<p>
+Unlike the server, there are no required C functions for the
+client. Instead, there are a series of required features and
+suggestions on how to implement them. 
+</p>
+</div>
+
+<div id="outline-container-org7738aba" class="outline-4">
+<h4 id="org7738aba">Client Name and FIFO Creation</h4>
+<div class="outline-text-4" id="text-org7738aba">
+<p>
+The client program is run as follows
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">$&gt; bl_client server1 Lois
+# join the server1 as a user Lois
+
+$&gt; bl_client dc-serv Bruce
+# join the dc-serv server as user Bruce
+</pre>
+</div>
+
+<p>
+The first argument is the server to join and corresponds to a FIFO
+name that is owned by the server.
+</p>
+
+<p>
+The client should create its own to-client and to-server FIFOs which
+become part of the join request to the server. The names of these
+FIFOs can be selected arbitrarily so long as they do not conflict with
+other user FIFO names. Examples are to create temporary file names or
+use the PID of the client process to choose the FIFO names.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc635f2d" class="outline-4">
+<h4 id="orgc635f2d">Joining the Server</h4>
+<div class="outline-text-4" id="text-orgc635f2d">
+<p>
+The client should construct a <code>join_t</code> with its name and the names of
+its to-client and to-server FIFOs. This should be written to the name
+of the server's FIFO which will notify the server and other clients of
+the new user's arrival.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgae6764c" class="outline-4">
+<h4 id="orgae6764c">Messages Handled by Client</h4>
+<div class="outline-text-4" id="text-orgae6764c">
+<p>
+The client should handle the following kinds of messages from the server.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">kind</th>
+<th scope="col" class="org-left">Name</th>
+<th scope="col" class="org-left">Body?</th>
+<th scope="col" class="org-left">Action</th>
+<th scope="col" class="org-left">Print Format / Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>BL_MESG</code></td>
+<td class="org-left">Yes</td>
+<td class="org-left">Yes</td>
+<td class="org-left">Print</td>
+<td class="org-left"><code>[Bruce] : check this out</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>BL_JOINED</code></td>
+<td class="org-left">Yes</td>
+<td class="org-left">No</td>
+<td class="org-left">Print</td>
+<td class="org-left"><code>-- Bruce JOINED --</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>BL_DEPARTED</code></td>
+<td class="org-left">Yes</td>
+<td class="org-left">No</td>
+<td class="org-left">Print</td>
+<td class="org-left"><code>-- Clark DEPARTED --</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>BL_SHUTDOWN</code></td>
+<td class="org-left">No</td>
+<td class="org-left">No</td>
+<td class="org-left">Print</td>
+<td class="org-left"><code>!!! server is shutting down !!!</code></td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">ADVANCED</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>BL_DISCONNECTED</code></td>
+<td class="org-left">Yes</td>
+<td class="org-left">No</td>
+<td class="org-left">Print</td>
+<td class="org-left"><code>-- Clark DISCONNECTED --</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>BL_PING</code></td>
+<td class="org-left">No</td>
+<td class="org-left">No</td>
+<td class="org-left">Reply</td>
+<td class="org-left">Send <code>BL_PING</code> message back to server</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org2e3d113" class="outline-4">
+<h4 id="org2e3d113">User Input and Messages from the Server</h4>
+<div class="outline-text-4" id="text-org2e3d113">
+<p>
+To make the user experience reasonable, server messages should be
+received and printed to the screen as soon as they are available. 
+Printing server messages should not disrupt the text input too
+much. This combination of requirements suggests the following.
+</p>
+<ul class="org-ul">
+<li><b>Use two threads</b>, one for user interactions and the other for
+server interactions.</li>
+<li>The user thread performs an input loop until the user has completed
+a line. It then writes message data into the to-server FIFO to get
+it to the server and goes back to reading user input.</li>
+<li>The server thread reads data from the to-client FIFO and prints to
+the screen as data is read.</li>
+<li>Both user and server threads use the <code>iprintf()</code> function to ensure
+that data appears correctly on the screen and cooperates with input
+being typed.</li>
+</ul>
+
+<p>
+A few additional notes are in order on the interaction of these two
+threads.
+</p>
+<ul class="org-ul">
+<li>Should the user thread receive and end of input, it should send a
+message to the server with kind <code>BL_DEPARTED</code> to indicate the client
+is shutting down. This will notify other users of the departure. The
+user thread should cancel the server thread and return.</li>
+<li>If the server thread receives a <code>BL_SHUTDOWN</code> message, the server is
+shutting down. This means the client should exit as well. The server
+thread should cancel the user thread and return.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org70aa280" class="outline-4">
+<h4 id="org70aa280">Typed Input is Sent to the Server, not Printed</h4>
+<div class="outline-text-4" id="text-org70aa280">
+<p>
+When users type input, it is echoed onto the screen by <code>simpio</code> at the
+prompt. However, on hitting enter, the data is sent immediately to the
+server as a <code>mesg_t</code> with kind <code>MESG</code>, <code>name</code> filled in with the
+user's name and <code>body</code> filled in with the text line typed.
+</p>
+
+<p>
+Though the message body is known by the client which just sent it, the
+body is not printed to the screen. Instead, the client waits for the
+server to broadcast the message back and prints its own message just
+as if it were a message from another user. This ensures that no
+special actions need to be taken to avoid duplicate messages.
+</p>
+
+<p>
+This "print only what the server sends" feature restriction is
+somewhat modified by some of the advanced features described later.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org092ece2" class="outline-4">
+<h4 id="org092ece2">The Client has No Signal Handlers</h4>
+<div class="outline-text-4" id="text-org092ece2">
+<p>
+Unlike the server, <code>bl_client</code> should not establish an signal
+handlers. It will be assumed during testing that the client behaves in
+the following way.
+</p>
+<ul class="org-ul">
+<li><p>
+Pressing <code>Ctrl-d</code> while running the client indicates the end of
+input and should cause the client to depart but it is NOT a
+signal. It should be detected with the client and trigger a normal
+shutdown of the client after using <code>iprintf()</code> to display the
+message:
+</p>
+<pre class="example">
+End of Input, Departing
+</pre></li>
+<li>Pressing <code>Ctrl-c</code> while running the client will send an interrupt
+signal and should trigger the client to terminate immediately and
+ungracefully.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8cf2ea6" class="outline-3">
+<h3 id="org8cf2ea6"><span class="section-number-3">7.3</span> Client Main Approach</h3>
+<div class="outline-text-3" id="text-7-3">
+<p>
+To summarize, <code>bl_client</code> will roughly take the following steps.
+</p>
+<div class="org-src-container">
+<pre class="src src-text">read name of server and name of user from command line args
+create to-server and to-client FIFOs
+write a join_t request to the server FIFO
+start a user thread to read inpu
+start a server thread to listen to the server
+wait for threads to return
+restore standard terminal output
+
+user thread{
+  repeat:
+    read input using simpio
+    when a line is ready
+    create a mesg_t with the line and write it to the to-server FIFO
+  until end of input
+  print "End of Input, Departing"
+  write a DEPARTED mesg_t into to-server
+  cancel the server thread
+
+server thread{
+  repeat:
+    read a mesg_t from to-client FIFO
+    print appropriate response to terminal with simpio
+  until a SHUTDOWN mesg_t is read
+  cancel the user thread
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgff4fcd5" class="outline-2 grading">
+<h2 id="orgff4fcd5"><span class="section-number-2">8</span> Grading Criteria&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span></span></h2>
+<div class="outline-text-2" id="text-8">
+<p>
+The following criteria will be examined during manual inspection of
+code by graders. Use this as a guide to avoid omitting important steps
+or committing bad style fouls.
+</p>
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Location</th>
+<th scope="col" class="org-right">Wgt</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">40</td>
+<td class="org-left"><b>AUTOMATED TESTS</b></td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Automated tests will be released at a later time with instructions</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><b>MANUAL INSPECTION</b></td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><b><code>Makefile</code></b></td>
+<td class="org-right">5</td>
+<td class="org-left">A Makefile is provided which compiles <code>bl_server, bl_client</code> and any ADVANCED programs implemented</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Required <code>test_Makefile</code> is included via <code>include test_Makefile</code></td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><b><code>server_funcs.c</code></b></td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>server_start()</code></td>
+<td class="org-right">5</td>
+<td class="org-left">creates and opens FIFO correctly for joins, removes existing FIFO</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>server_shutdown()</code></td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">closes and removes FIFO to prevent additional joins</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">broadcasts a shutdown message</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>server_add_client()</code></td>
+<td class="org-right">5</td>
+<td class="org-left">does bounds checking to prevent overflow on add</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">adds client to end of array and increments <code>n_clients</code></td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">fills in fixed fields of client data based on join parameter</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">makes use of strncpy() to prevent buffer overruns</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">opens to-client and to-server FIFOs for reading/writing</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>server_remove_client()</code></td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">uses <code>server_get_client()</code> for readability</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">closes to-client and from-client FIFOs</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">correctly shifts array of clients to maintain contiguous client array and order of joining</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>server_check_sources()</code></td>
+<td class="org-right">5</td>
+<td class="org-left">makes use of <code>poll()</code> system call to detect ready clients/joins</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">checks the return value of <code>poll()</code> to determine if it completed or was signaled</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">checks join FIFO and all clients in <code>poll()</code> call</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">does not read data but sets <code>read</code> flags for join and clients</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>server_handle_join()</code></td>
+<td class="org-right">5</td>
+<td class="org-left">reads a <code>join_t</code> from join FIFO correctly</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">adds client with <code>server_add_client()</code></td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">broadcasts join</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>server_handle_client()</code></td>
+<td class="org-right">5</td>
+<td class="org-left">reads a <code>mesg_t</code> from the to-server FIFO</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">processes message properly and broadcasts if needed</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">Overall Style</td>
+<td class="org-right">5</td>
+<td class="org-left">makes use of the <code>log_printf()</code> function to print required log messages</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">makes some use of the <code>dbg_printf()</code> function to print debug messages</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">does basic error checking of system calls to check for errors, possibly using the <code>check_fail()</code> function</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">handles interrupt/term signals but avoids calling non-reentrant functions in the handlers</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">includes comments on complex portions of the code which require explanation</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><b><code>bl_server.c</code></b></td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">5</td>
+<td class="org-left">main loop makes use of the <code>server_funcs.c</code> routines extensively</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">clear code to check input sources and handle ready input</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">signal handling for graceful shutdown is clear</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><b><code>bl_client.c</code></b></td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">main and overall</td>
+<td class="org-right">10</td>
+<td class="org-left">proper setup of terminal with simpio</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">use of simpio for input and output</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">clear creation and joining of threads</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">resets terminal at end of run</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">user thread</td>
+<td class="org-right">5</td>
+<td class="org-left">clear use of a user thread to handle typed input</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">user thread sends data to server</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">cancels server thread at end of input before returning</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">server thread</td>
+<td class="org-right">5</td>
+<td class="org-left">clear use of a server thread to listen data on to-client FIFO</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">clear handling of different kinds of messages coming from server</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">cancels user thread on receiving shutdown message and returns</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">60</td>
+<td class="org-left">Manual Inspection Total</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<div id="outline-container-org0ca5acd" class="outline-2">
+<h2 id="org0ca5acd"><span class="section-number-2">9</span> <a id="org09bd368"></a> ADVANCED Features</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+The following advanced features may be implemented to garner Makeup
+Credit on the total project score for the semester. Each additional
+feature is worth the Makeup credit indicated.
+</p>
+
+<p>
+<b>Update:</b> To be compatible with the automated tests, only enable 
+advanced features if the environment variable <code>BL_ADVANCED</code> is set.
+Particularly the "Ping" feature may cause the server to output
+different log messages when pinging than normal. A standard way to do
+this that we have discussed is early in the <code>main()</code> function for
+<code>bl_server</code>, have code that looks like following.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">int main(...) {
+  ...
+  if(getenv("BL_ADVANCED")){
+    DO_ADVANCED=1;
+  }
+  ..
+</pre>
+</div>
+<p>
+Here <code>DO_ADVANCED</code> is a variable that, when 0, will do normal server
+operations but when non-zero will enable the ADVANCED features
+described in this section.
+</p>
+
+<p>
+Later in <code>bl_main.c</code> one do
+</p>
+<div class="org-src-container">
+<pre class="src src-c">  if( DO_ADVANCED ){
+    ... // code an advanced feature like server pinging
+  }
+</pre>
+</div>
+<p>
+which will only utilized the advanced feature when enabled.
+</p>
+</div>
+
+<div id="outline-container-org0d32d69" class="outline-3">
+<h3 id="org0d32d69"><span class="section-number-3">9.1</span> <a id="org977d1e8"></a> Server Ping and Disconnected Clients (10%)</h3>
+<div class="outline-text-3" id="text-9-1">
+<p>
+Clients may terminate abruptly in the real world before they have a
+chance to send a <code>BL_DEPARTED</code> message to the server. This additional
+feature adds period <b>pinging</b> to the server and clients. A ping is a
+short message just to establish whether a communication partner is
+still present.  In this case, it is a message with kind <code>BL_PING</code>.
+</p>
+
+<p>
+Implementing this feature will cause the server broadcast a ping to
+all clients every second.  Clients should respond immediately by
+sending a ping back.
+</p>
+
+<p>
+To detect disconnected clients, the server should maintain its
+<code>time_sec</code> incrementing it each second. Whenever a message is
+received from a client, including <code>BL_PING</code> messages, the server
+updates the client's <code>last_contact_time</code> to the current server
+time. Any client that abruptly departs will eventually have a large
+gap between its <code>last_contact_time</code> and the <code>time_sec</code>.
+</p>
+
+<p>
+Every second, the server runs the function
+<code>server_remove_disconnected(server, disconnect_secs)</code>. Any client
+with a difference in its <code>client-&gt;last_contact_time</code> and <code>server-&gt;time_sec</code> that
+is larger than the argument <code>disconnect_secs</code> should be removed. A
+<code>BL_DISCONNECTED</code> message should be broadcast for this client to
+notify other clients of the change.
+</p>
+
+<p>
+<b>A good way to implement periodic activity</b> is to use the <code>alarm()</code>
+function. This arranges for a periodic signal to be sent to the server
+process. This should be done in <code>main()</code> for <code>bl_server.c</code>.  The
+signal handler for the <code>SIGALRM</code> that is raised can set a variable to
+indicate that 1 second has passed. In the main loop of the server, a
+condition checks this variable and performs the ping broadcast and
+checks for disconnected clients.
+</p>
+
+<p>
+All changes for this feature are on the server side. Additional
+functions to write or modify are as follows.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// server_funcs.c
+// Modify
+int server_handle_client(server_t *server, int idx)
+
+// Write 
+void server_tick(server_t *server)
+void server_ping_clients(server_t *server)
+void server_remove_disconnected(server_t *server, int disconnect_secs)
+
+// bl_server.c
+int main(int argc, char *argv[])
+</pre>
+</div>
+
+<p>
+<b>Update:</b> Make sure only to start the pinging / <code>alarm()</code> if the
+<code>BL_ADVANCED</code> environment variable is set.  Alarms send signals to a
+process which will cause the output of the server to change if the
+Pinging feature is implemented.  This may break compatibility with
+automated tests if it is always done. By starting the alarms ONLY when
+<code>BL_ADVANCED</code> is set, one can produce "normal" output in those cases
+get the pinging effect when the environment variable indicates it is
+desired. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6dae710" class="outline-3">
+<h3 id="org6dae710"><span class="section-number-3">9.2</span> Binary Server Log File (10%)</h3>
+<div class="outline-text-3" id="text-9-2">
+<p>
+There is cause to want a log of all messages that pass through a
+server. This feature will cause the server to write such a log in a
+binary file. 
+</p>
+
+<p>
+The file should be named after the server name similarly to the join
+FIFO. For example
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">$&gt; bl_server server1               
+# creates server1.fifo
+# creates server1.log
+
+$&gt; bl_server batcave          
+# creates batcave.fifo
+# creates batcave.log
+</pre>
+</div>
+
+
+<p>
+The format of this binary log file is as follows.
+</p>
+<ul class="org-ul">
+<li>The first part should contain a binary <code>who_t</code> structure which has
+the active users in it.  To complete the logging feature, the
+<code>who_t</code> does not need to be kept to date.</li>
+<li>After the <code>who_t</code> is a growing sequence of <code>mesg_t</code> structs in the
+log file. Any message that is broadcast by the server EXCEPT for
+pings is written to the end of this log, NOT in text format but as
+the direct binary representation of a <code>mesg_t</code>.</li>
+<li>Each new message that is broadcast is appended to the end of the log
+in binary format.</li>
+</ul>
+
+<p>
+When the server starts up, the log file should be created and the
+<code>log_fd</code> field filled with its file descriptor. A good place to write
+log messages is during <code>server_broadcast()</code>. In it, any message that
+is not a ping should be written to the end of log.
+</p>
+
+<p>
+When the server shuts down, close the file descriptor of the log but
+do not remove the file. On startup, re-open any existing log and
+continue appending to it.
+</p>
+
+<p>
+This feature is implemented entirely in the server and requires
+modification of the following functions.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// server_funcs.c
+void server_start(server_t *server, char *server_name, int perms)
+void server_shutdown(server_t *server)
+int server_broadcast(server_t *server, mesg_t *mesg)
+void server_write_who(server_t *server)
+void server_log_message(server_t *server, mesg_t *mesg)
+
+// bl_server.c
+int main(int argc, char *argv[])
+</pre>
+</div>
+
+<p>
+In addition, provide a file called <code>bl_showlog.c</code> which will read the
+binary log file and print its output. This should include the <code>who_t</code>
+at the beginning and all log messages. Here is a demo run including
+the presumed <code>Makefile</code> target. Output is nearly identical to what is
+shown in the client.
+</p>
+<div class="org-src-container">
+<pre class="src src-text">&gt; make bl_showlog
+gcc -Wall -g -c bl_showlog.c
+gcc -Wall -g -c util.c
+gcc -Wall -g -o bl_showlog bl_showlog.o util.o -lpthread
+
+&gt; file server1.log
+server1.log: data
+
+&gt; ./bl_showlog server1.log
+3 CLIENTS
+0: Clark
+1: Lois
+2: Barbara
+MESSAGES
+-- Bruce JOINED --
+-- Clark JOINED --
+-- Lois JOINED --
+[Bruce] : hey, want to know secret identity?
+[Clark] : dude, I have x-ray vision
+[Lois] : wait, you have x-ray vision
+[Clark] : ah, er, I mean...
+[Bruce] : ha ha. I'd never do something dumb like that.
+[Lois] : why not?
+[Clark] : oh boy, here it comes...
+[Bruce] : because...
+[Lois] : ??
+[Bruce] : AHYM BAAATMAN!!!
+[Clark] : walked into that one
+[Lois] : yup
+-- Barbara JOINED --
+[Barbara] : hey guys
+[Clark] : hey Barbara
+[Lois] : what up!
+[Barbara] : Did I miss anything important?
+[Clark] : the big "reveal" from Bruce...
+[Barbara] : what, that he's Batman?
+[Lois] : yup
+[Bruce] : wait, how did you know that?
+[Barbara] : you told me when we were dating
+[Lois] : me too
+[Bruce] : awkward. time for a SMOKE BOMB!!!
+-- Bruce DEPARTED --
+[Barbara] : that guy
+&gt; 
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc71c330" class="outline-3">
+<h3 id="orgc71c330"><span class="section-number-3">9.3</span> Last Messages for Client (10%)</h3>
+<div class="outline-text-3" id="text-9-3">
+<p>
+This feature requires the Binary Server Log File Feature.
+</p>
+
+<p>
+Clients that recently join a server have no idea what has transpired
+prior to their joining. This can be ameliorated if clients can access
+the binary log to examine the last N messages. For example:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">$&gt; bl_client server1 Lois
+-- Lois JOINED --
+[Clark] : eek!
+-- Clark DEPARTED --
+[Lois] : what's his deal?
+[Bruce] : um..
+
+Lois&gt; %last 10
+====================
+LAST 10 MESSAGES
+[Bruce] : what up man?
+[Clark] : not much, just down in the fortress of solitude
+[Bruce] : with lois
+[Clark] : nope. lana
+[Bruce] : nice
+-- Lois JOINED --
+[Clark] : eek!
+-- Clark DEPARTED --
+[Lois] : what's his deal?
+[Bruce] : um..
+====================
+Lois&gt;&gt; wtf?!?
+</pre>
+</div>
+
+<p>
+To accomplish this <code>bl_client</code> should examine the typed line that is
+entered to see if it starts with the string <code>%last</code> in which case it
+will be followed by an integer which is the number of messages
+requested.
+</p>
+
+<p>
+On detecting this command request, client should open the binary log
+file for the server and seek to the end of it using <code>lseek()</code>.  Note
+that the exact position in the binary log file can be calculated
+immediately by using.
+</p>
+<ul class="org-ul">
+<li><code>sizeof(mesg_t</code></li>
+<li>The number of messages requested</li>
+<li>The argument <code>SEEK_END</code> to <code>lseek()</code></li>
+</ul>
+<p>
+Thus no looping is required to find that position.
+</p>
+
+<p>
+The client should then read off these messages and print them to the
+screen. It is a good idea to write function that will print logged
+messages to keep the main loop and thread loops simple in the client.
+</p>
+
+<p>
+<b>No server interaction</b> is required for this feature so long as the
+server is producing the binary log file. Modify only <code>bl_client.c</code>.
+</p>
+
+<p>
+Modify the following code for this feature.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// bl_client.c
+// helper functions and maybe main()
+int main(int argc, char *argv[])
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6bcf53a" class="outline-3">
+<h3 id="org6bcf53a"><span class="section-number-3">9.4</span> <code>who_t</code> for Client and Server (10%)</h3>
+<div class="outline-text-3" id="text-9-4">
+<p>
+Users who log into the server have no way of knowing who is logged
+in.  This feature ameliorates that.
+</p>
+<ul class="org-ul">
+<li>The server writes its active users as a <code>who_t</code> structure to the
+beginning of its binary log every second at the same time as it
+would check for disconnected users.</li>
+<li>Clients can read the <code>who_t</code> at the beginning of the log file to
+determine which users are connected to the server. The client the
+provides a <code>%who</code> command which prints active users.</li>
+<li>To prevent the server from writing the <code>who_t</code> structure while a
+client is reading or vice versa, the server creates a semaphore
+which must be acquired to access this part of the log.</li>
+</ul>
+
+<p>
+The <code>who_t</code> structure is a simple, fixed size array of strings.
+</p>
+<pre class="example">
+// who_t: data to write into server log for current clients (ADVANCED)
+typedef struct {
+  int n_clients;                   // number of clients on server
+  char names[MAXCLIENTS][MAXNAME]; // names of clients
+} who_t;
+</pre>
+
+
+<p>
+This fixed size means every time it is written it will overwrite the
+same bytes. The server should write it every second in the same block
+using the same approach as is used to check for disconnected clients
+(<code>alarm(1)</code>).  Use of <code>pwrite()</code> is suggested to allow the <code>log_fd</code> to
+stay in position to write to the end of the log file.
+</p>
+
+<p>
+The client should implement the <code>%who</code> command by checking the
+<code>simpio-&gt;buf</code> for the string. It should then acquire the semaphore,
+read the <code>who_t</code> and print the results the screen similar to the
+following.
+</p>
+<div class="org-src-container">
+<pre class="src src-text">-- Barbara JOINED --
+[Barbara] : Bruce?
+[Barbara] : Bruce, are you there?
+[Clark] : Ummm....
+[Barbara] : hang on
+
+Barbara&gt;&gt; %who
+====================
+3 CLIENTS
+0: Batman
+1: Clark
+2: Barbara
+====================
+[Barbara] : (sigh) Batman?
+[Batman] : I AM THE NIGHT!
+Barbara&gt;&gt; 
+</pre>
+</div>
+
+<p>
+The server is responsible for creating the semaphore which controls
+access to the <code>who_t</code> portion of the log. Follow the same naming
+convention as before.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">$&gt; bl_server server1               
+# creates server1.fifo  FIFO
+# creates server1.log   binary log file
+# creates /server1.sem  POSIX semaphore
+
+$&gt; bl_server batcave          
+# creates batcave.fifo  FIFO
+# creates batcave.log   binary log file
+# creates /batcave.sem  POSIX semaphore
+</pre>
+</div>
+<p>
+Recall the following about POSIX semaphores which are relevant to
+their use here.
+</p>
+<ul class="org-ul">
+<li>They are created / accessed with the <code>sem_open()</code> function which
+takes a name which must start with a forward slash, thus the
+<code>/server1.sem</code> convention.</li>
+<li>POSIX semaphores use <code>sem_wait()</code> (decrement) and <code>sem_post()</code>
+(increment) operations to lock/unlock the semaphore.</li>
+<li>When the server wants to write a <code>who_t</code> into the log, it acquires
+the semaphore with <code>sem_wait()</code>, writes, then releases with
+<code>sem_post()</code>.</li>
+<li>Clients follow a similar protocol when reading the <code>who_t</code>.</li>
+<li>When shutting down the, server should unlink the semaphore with
+<code>sem_unlink()</code>.</li>
+</ul>
+
+<p>
+Modify the following code for this feature.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// server_funcs.c
+void server_start(server_t *server, char *server_name, int perms)
+void server_shutdown(server_t *server)
+void server_write_who(server_t *server)
+
+// bl_server.c
+int main(int argc, char *argv[])
+
+
+// bl_client.c
+// helper functions and maybe main()
+int main(int argc, char *argv[])
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2f9ed92" class="outline-2">
+<h2 id="org2f9ed92"><span class="section-number-2">10</span> <a id="orga16ffba"></a> Automated Tests and Project Submission</h2>
+<div class="outline-text-2" id="text-10">
+</div>
+<div id="outline-container-orgabc66e5" class="outline-3">
+<h3 id="orgabc66e5"><span class="section-number-3">10.1</span> Setting up and Running the Automated Tests</h3>
+<div class="outline-text-3" id="text-10-1">
+<ul class="org-ul">
+<li><p>
+Unzip <code>p2-tests.zip</code>  and copy all the files into your project
+directory. Doing an <code>ls</code> should give something like
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">p2-code&gt; ls
+Makefile
+test_Makefile
+test_blather.sh
+server_funcs.c
+...
+</pre>
+</div></li>
+
+<li><p>
+Place the following line at the END of your <code>Makefile</code>
+</p>
+<pre class="example">
+include test_Makefile
+</pre></li>
+
+<li><p>
+This will enable you to run the automated tests 
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">p2-code&gt; make test       # run all tests
+...
+RUNNING TESTS without Valgrind
+TEST  1 server-only        : ALL OK
+TEST  2 1client-1          : ALL OK
+...
+TEST 20 stress-1           : ALL OK
+
+Finished:
+20 / 20 Normal correct
+
+RUNNING VALGRIND TESTS
+TEST  1 server-only        : ALL OK
+TEST  2 1client-1          : ALL OK
+...
+=====================================
+Finished:
+20 / 20 Valgrind correct
+
+=====================================
+RESULTS: 40 / 40
+
+</pre>
+</div></li>
+
+<li><p>
+A single test can be run using the following
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">p2-code&gt; make test testnum=5    # run a single test
+./test_blather.sh 5
+ticktime_norm: 0.05
+ticktime_valg: 0.10
+COLUMNS is 136
+Loading tests from... 20 tests loaded
+Running single TEST 5
+
+RUNNING TESTS without Valgrind
+TEST  5 2client-2          : ALL OK
+
+Finished:
+ 1 /  1 Normal correct
+
+RUNNING VALGRIND TESTS
+TEST  5 2client-2          : ALL OK
+=====================================
+Finished:
+ 1 /  1 Valgrind correct
+
+=====================================
+RESULTS: 2 / 2
+</pre>
+</div></li>
+
+<li><p>
+To create a zip for submission, use
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">p2-code&gt; make zip
+...
+Zip created in p2-code.zip
+</pre>
+</div></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org7c17cae" class="outline-3">
+<h3 id="org7c17cae"><span class="section-number-3">10.2</span> <a id="org040cb12"></a> Submit to Gradescope</h3>
+<div class="outline-text-3" id="text-10-2">
+<p>
+After creating a Zip file via <code>make zip</code>, refer to the P1 Submission
+instructions on how to upload your project to Gradescope, retrieve
+results from the autograder, and indicate what partner you worked with
+(if any).
+</p>
+
+<p>
+<a href="https://www-users.cs.umn.edu/~kauffman/4061/p1.html#org41f3c24">https://www-users.cs.umn.edu/~kauffman/4061/p1.html#org41f3c24</a>
+</p>
+
+<p>
+Don't forget to add your partner on Gradescope as per:
+<a href="https://www-users.cs.umn.edu/~kauffman/4061/p1.html#orge5a44e1">https://www-users.cs.umn.edu/~kauffman/4061/p1.html#orge5a44e1</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-04-21 Wed 20:37 <br/> </i>
+</div>
+</body>
+</html>
