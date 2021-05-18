@@ -12,7 +12,7 @@ var model = [
     Assignment("Exam 1", 70, 15, false),
     Assignment("Exam 2", 70, 15, false),
     Assignment("Final Exam", 80, 20, false),
-    Assignment("Total of Top 11 HW Quizzes", 110, 10, false),
+    Assignment("Total of Top 10 HW Quizzes", 100, 10, false),
     Assignment("Lab Engagement", 10, 0, true),
     Assignment("Bonus Engagement", 0, 0, true),
     Assignment("Project Late Days", 0, 0, true),
