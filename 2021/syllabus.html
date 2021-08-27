@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-03-15 Mon 11:39 -->
+<!-- 2021-08-27 Fri 16:36 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021: Machine Architecture and Organization</title>
@@ -40,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -52,7 +52,7 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
@@ -254,6 +254,7 @@ background-color: inherit; font-family: inherit;
 padding: inherit; font-size: 80%; font-weight: inherit;
 text-transform: uppercase;
 }
+
 .figure p { text-align: inherit; }
 figure-number { font-style: italic; }
 #table-of-contents {
@@ -329,6 +330,7 @@ margin-left: 0.5em;
 }
 .linenr { font-size: xx-small; }
 }
+
 @media print {
 html {
 font-family: serif;
@@ -339,114 +341,96 @@ text-align: justify;
 }
 </style>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-03-15 Mon 11:39</i>
+<i>Last Updated: 2021-08-27 Fri 16:36</i>
 </div>
 <div id="content">
 <h1 class="title">CSCI 2021: Machine Architecture and Organization</h1>
 <div class="subtitle" align="center">
-<h2> Lecture Sections 001 and 020</h2>
+<h2> Lecture Section 020</h2>
 <h2> University of Minnesota</h2>
-<h2> 4 credits, Spring 2021 </h2>
+<h2> 4 credits, Fall 2021 </h2>
 </div>
 
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgfe5b6ee">1. Basic Information</a>
+<li><a href="#org98247e9">1. Basic Information</a>
 <ul>
-<li><a href="#org30d94ae">1.1. Catalog Description</a></li>
-<li><a href="#org9af79c5">1.2. Prerequisites</a></li>
-<li><a href="#orga3d3941">1.3. Course Goals</a></li>
-<li><a href="#orgf2a1523">1.4. Staff</a></li>
-<li><a href="#org0b28150">1.5. Meetings</a></li>
-<li><a href="#org9619d4a">1.6. Course Materials</a></li>
-<li><a href="#orge63123e">1.7. Office Hours</a></li>
-<li><a href="#org05d542b">1.8. Communication</a></li>
+<li><a href="#org05971ce">1.1. Catalog Description</a></li>
+<li><a href="#org64196e6">1.2. Prerequisites</a></li>
+<li><a href="#orga2a88c7">1.3. Course Goals</a></li>
+<li><a href="#orgf09573c">1.4. Staff</a></li>
+<li><a href="#orgd22db9c">1.5. Meetings</a></li>
+<li><a href="#orgf5ec850">1.6. Course Materials</a></li>
+<li><a href="#org582b7c9">1.7. Office Hours</a></li>
+<li><a href="#org2caf21e">1.8. Communication</a></li>
 </ul>
 </li>
-<li><a href="#orgd8cc493">2. Coursework and Grading</a>
+<li><a href="#org6874524">2. Coursework and Grading</a>
 <ul>
-<li><a href="#org5e0f7bb">2.1. Graded Components</a></li>
-<li><a href="#orge8a711b">2.2. Final Grade Determination</a></li>
-<li><a href="#org492942c">2.3. Engagement Points</a></li>
-<li><a href="#org2abc0ad">2.4. Lectures and "Hot Seats"</a></li>
-<li><a href="#org1a72405">2.5. Lab Activities</a></li>
-<li><a href="#org4bcfe8b">2.6. Weekly Homework Quizzes</a></li>
-<li><a href="#org31541bc">2.7. Projects</a></li>
-<li><a href="#org2d8e7c1">2.8. Late Project Submission</a></li>
-<li><a href="#orgd058a8c">2.9. Exams</a></li>
-<li><a href="#orgf193ef2">2.10. Regrade Requests</a></li>
-<li><a href="#org3ee22e0">2.11. Textbook Readings</a></li>
+<li><a href="#org8d9799d">2.1. Graded Components</a></li>
+<li><a href="#orga3f23a1">2.2. Final Grade Determination</a></li>
+<li><a href="#org07fd46b">2.3. Engagement Points</a></li>
+<li><a href="#org79a8b9d">2.4. Lectures and "Hot Seats"</a></li>
+<li><a href="#orgbc7da59">2.5. Lab Activities</a></li>
+<li><a href="#org24e24aa">2.6. Weekly Homework Quizzes</a></li>
+<li><a href="#org13ad1b6">2.7. Projects</a></li>
+<li><a href="#orgd284523">2.8. Late Project Submission</a></li>
+<li><a href="#org9d851c5">2.9. Exams</a></li>
+<li><a href="#org62c172f">2.10. Regrade Requests</a></li>
+<li><a href="#org1bb1780">2.11. Textbook Readings</a></li>
 </ul>
 </li>
-<li><a href="#orge2ea33f">3. Academic Integrity</a>
+<li><a href="#org0108b62">3. Academic Integrity</a>
 <ul>
-<li><a href="#org1e9a661">3.1. Thou Shalt Not</a></li>
-<li><a href="#org6e60a1b">3.2. Penalties</a></li>
-<li><a href="#org377c768">3.3. Fair Collaboration</a></li>
-<li><a href="#orgd229bb8">3.4. Collaboration and other Sections</a></li>
+<li><a href="#org780574c">3.1. Thou Shalt Not</a></li>
+<li><a href="#orgbec30ce">3.2. Penalties</a></li>
+<li><a href="#orgcbf0bbc">3.3. Fair Collaboration</a></li>
+<li><a href="#orga3ac596">3.4. Collaboration and other Sections</a></li>
 </ul>
 </li>
-<li><a href="#orge661d24">4. General Policies</a></li>
+<li><a href="#orgb033423">4. General Policies</a>
+<ul>
+<li><a href="#orgcb888d5">4.1. Masking During Class Meetings</a></li>
+<li><a href="#org28a9874">4.2. Online Behavior</a></li>
+<li><a href="#org172339a">4.3. Use of Recordings</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgfe5b6ee" class="outline-2">
-<h2 id="orgfe5b6ee"><span class="section-number-2">1</span> Basic Information</h2>
+<div id="outline-container-org98247e9" class="outline-2">
+<h2 id="org98247e9"><span class="section-number-2">1</span> Basic Information</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org30d94ae" class="outline-3">
-<h3 id="org30d94ae"><span class="section-number-3">1.1</span> Catalog Description</h3>
+<div id="outline-container-org05971ce" class="outline-3">
+<h3 id="org05971ce"><span class="section-number-3">1.1</span> Catalog Description</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Introduction to hardware/software components of computer system. Data
@@ -457,11 +441,12 @@ memory, compiling, linking. Programming in C.
 </div>
 </div>
 
-<div id="outline-container-org9af79c5" class="outline-3">
-<h3 id="org9af79c5"><span class="section-number-3">1.2</span> Prerequisites</h3>
+<div id="outline-container-org64196e6" class="outline-3">
+<h3 id="org64196e6"><span class="section-number-3">1.2</span> Prerequisites</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
-Grade of C or better in CSCI 1913 or 1933 or instructor consent.  
+Grade of C or better in CSCI 1913, CSCI 1933, or equivalent courses or
+instructor consent.
 </p>
 
 <p>
@@ -474,8 +459,8 @@ experience is a must.
 </div>
 </div>
 
-<div id="outline-container-orga3d3941" class="outline-3">
-<h3 id="orga3d3941"><span class="section-number-3">1.3</span> Course Goals</h3>
+<div id="outline-container-orga2a88c7" class="outline-3">
+<h3 id="orga2a88c7"><span class="section-number-3">1.3</span> Course Goals</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 Students that complete CSCI 2021 will posses the following
@@ -511,13 +496,13 @@ pipe-lining for efficiency, and out of order instruction execution.</li>
 </div>
 </div>
 
-<div id="outline-container-orgf2a1523" class="outline-3">
-<h3 id="orgf2a1523"><span class="section-number-3">1.4</span> Staff</h3>
+<div id="outline-container-orgf09573c" class="outline-3">
+<h3 id="orgf09573c"><span class="section-number-3">1.4</span> Staff</h3>
 <div class="outline-text-3" id="text-1-4">
 </div>
-<div id="outline-container-orgd3bd15c" class="outline-4">
-<h4 id="orgd3bd15c">Instructor</h4>
-<div class="outline-text-4" id="text-orgd3bd15c">
+<div id="outline-container-org68f949e" class="outline-4">
+<h4 id="org68f949e">Instructor</h4>
+<div class="outline-text-4" id="text-org68f949e">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -534,7 +519,7 @@ pipe-lining for efficiency, and out of order instruction execution.</li>
 
 <tr>
 <td class="org-left"><b>Sections</b></td>
-<td class="org-left">001 and 020</td>
+<td class="org-left">020</td>
 </tr>
 
 <tr>
@@ -556,9 +541,9 @@ pipe-lining for efficiency, and out of order instruction execution.</li>
 </div>
 </div>
 
-<div id="outline-container-orgd4e82ad" class="outline-4">
-<h4 id="orgd4e82ad">Teaching Assistants</h4>
-<div class="outline-text-4" id="text-orgd4e82ad">
+<div id="outline-container-orgf9d9345" class="outline-4">
+<h4 id="orgf9d9345">Teaching Assistants</h4>
+<div class="outline-text-4" id="text-orgf9d9345">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -578,14 +563,8 @@ pipe-lining for efficiency, and out of order instruction execution.</li>
 </thead>
 <tbody>
 <tr>
-<td class="org-left">Minjun Wu</td>
-<td class="org-left">wuxx1354@umn.edu</td>
-<td class="org-left">GTA 50%</td>
-</tr>
-
-<tr>
-<td class="org-left">Runsheng Ma</td>
-<td class="org-left">maxx0173@umn.edu</td>
+<td class="org-left">Yang He</td>
+<td class="org-left">he000242@umn.edu</td>
 <td class="org-left">GTA 50%</td>
 </tr>
 
@@ -597,38 +576,26 @@ pipe-lining for efficiency, and out of order instruction execution.</li>
 </tbody>
 <tbody>
 <tr>
-<td class="org-left">Abdul Ibrahim</td>
-<td class="org-left">ibrah171@umn.edu</td>
+<td class="org-left">Ambrose Dukek</td>
+<td class="org-left">dukek007@umn.edu</td>
 <td class="org-left">UTA</td>
 </tr>
 
 <tr>
-<td class="org-left">Austin Casey</td>
-<td class="org-left">casey440@umn.edu</td>
+<td class="org-left">Aniket Nuthalapati</td>
+<td class="org-left">nutha010@umn.edu</td>
 <td class="org-left">UTA</td>
 </tr>
 
 <tr>
-<td class="org-left">Caroline Heine</td>
-<td class="org-left">heine315@umn.edu</td>
+<td class="org-left">Dat Luong</td>
+<td class="org-left">luong096@umn.edu</td>
 <td class="org-left">UTA</td>
 </tr>
 
 <tr>
-<td class="org-left">Daniel Frink</td>
-<td class="org-left">frink021@umn.edu</td>
-<td class="org-left">UTA</td>
-</tr>
-
-<tr>
-<td class="org-left">Evan Merlock</td>
-<td class="org-left">merlo010@umn.edu</td>
-<td class="org-left">UTA</td>
-</tr>
-
-<tr>
-<td class="org-left">Jacob Walters</td>
-<td class="org-left">walte735@umn.edu</td>
+<td class="org-left">Erin Collins</td>
+<td class="org-left">coll1052@umn.edu</td>
 <td class="org-left">UTA</td>
 </tr>
 
@@ -639,50 +606,20 @@ pipe-lining for efficiency, and out of order instruction execution.</li>
 </tr>
 
 <tr>
-<td class="org-left">Lin Huynh</td>
-<td class="org-left">huynh365@umn.edu</td>
+<td class="org-left">Joon Kim</td>
+<td class="org-left">kim00967@umn.edu</td>
 <td class="org-left">UTA</td>
 </tr>
 
 <tr>
-<td class="org-left">Matthew Chandra</td>
-<td class="org-left">chand703@umn.edu</td>
-<td class="org-left">UTA</td>
-</tr>
-
-<tr>
-<td class="org-left">Samuel Symynkywicz</td>
-<td class="org-left">symyn002@umn.edu</td>
-<td class="org-left">UTA</td>
-</tr>
-
-<tr>
-<td class="org-left">Samuel Highbargin</td>
-<td class="org-left">highb015@umn.edu</td>
-<td class="org-left">UTA</td>
-</tr>
-
-<tr>
-<td class="org-left">Sean Mangan</td>
-<td class="org-left">manga093@umn.edu</td>
+<td class="org-left">Ngan Nguyen</td>
+<td class="org-left">nguy4068@umn.edu</td>
 <td class="org-left">UTA</td>
 </tr>
 
 <tr>
 <td class="org-left">Swati Rampalli</td>
 <td class="org-left">rampa009@umn.edu</td>
-<td class="org-left">UTA</td>
-</tr>
-
-<tr>
-<td class="org-left">Thomas Atkins</td>
-<td class="org-left">atkin423@umn.edu</td>
-<td class="org-left">UTA</td>
-</tr>
-
-<tr>
-<td class="org-left">Vayam Agarwal</td>
-<td class="org-left">agarw214@umn.edu</td>
 <td class="org-left">UTA</td>
 </tr>
 </tbody>
@@ -698,8 +635,8 @@ pipe-lining for efficiency, and out of order instruction execution.</li>
 </div>
 </div>
 
-<div id="outline-container-org0b28150" class="outline-3">
-<h3 id="org0b28150"><span class="section-number-3">1.5</span> Meetings</h3>
+<div id="outline-container-orgd22db9c" class="outline-3">
+<h3 id="orgd22db9c"><span class="section-number-3">1.5</span> Meetings</h3>
 <div class="outline-text-3" id="text-1-5">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -715,84 +652,52 @@ pipe-lining for efficiency, and out of order instruction execution.</li>
 <tr>
 <th scope="col" class="org-left">Meeting</th>
 <th scope="col" class="org-left">Day / Time</th>
-<th scope="col" class="org-left">Online</th>
+<th scope="col" class="org-left">Location</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="org-left">Lec 01</td>
-<td class="org-left">MWF 01:25 PM‑02:15 PM</td>
-<td class="org-left">Zoom</td>
-</tr>
-</tbody>
-<tbody>
-<tr>
-<td class="org-left">Lab 02</td>
-<td class="org-left">Wed 09:05 AM‑09:55 AM</td>
-<td class="org-left">Discord</td>
-</tr>
-
-<tr>
-<td class="org-left">Lab 03</td>
-<td class="org-left">Wed 10:10 AM‑11:00 AM</td>
-<td class="org-left">Discord</td>
-</tr>
-
-<tr>
-<td class="org-left">Lab 04</td>
-<td class="org-left">Wed 10:10 AM‑11:00 AM</td>
-<td class="org-left">Discord</td>
-</tr>
-
-<tr>
-<td class="org-left">Lab 05</td>
-<td class="org-left">Wed 11:15 AM‑12:05 PM</td>
-<td class="org-left">Discord</td>
-</tr>
-
-<tr>
-<td class="org-left">Lab 06</td>
-<td class="org-left">Wed 11:15 AM‑12:05 PM</td>
-<td class="org-left">Discord</td>
-</tr>
-
-<tr>
-<td class="org-left">Lab 07</td>
-<td class="org-left">Wed 12:20 PM‑01:10 PM</td>
-<td class="org-left">Discord</td>
-</tr>
-</tbody>
-<tbody>
-<tr>
 <td class="org-left">Lec 20</td>
-<td class="org-left">MWF 10:10 AM‑11:00 AM</td>
-<td class="org-left">Zoom</td>
+<td class="org-left">MWF 2:30 PM‑3:20 PM</td>
+<td class="org-left">Tate 105</td>
 </tr>
 </tbody>
 <tbody>
 <tr>
 <td class="org-left">Lab 21</td>
 <td class="org-left">Wed 08:00 AM‑08:50 AM</td>
-<td class="org-left">Discord</td>
+<td class="org-left">Keller 1-262</td>
 </tr>
 
 <tr>
 <td class="org-left">Lab 22</td>
-<td class="org-left">Wed 09:00 AM‑09:50 AM</td>
-<td class="org-left">Discord</td>
+<td class="org-left">Wed 09:05 AM‑09:55 AM</td>
+<td class="org-left">Keller 1-262</td>
+</tr>
+
+<tr>
+<td class="org-left">Lab 23</td>
+<td class="org-left">Wed 10:10 AM‑11:00 AM</td>
+<td class="org-left">Keller 1-262</td>
+</tr>
+
+<tr>
+<td class="org-left">Lab 24</td>
+<td class="org-left">Wed 11:15 AM‑12:05 PM</td>
+<td class="org-left">Keller 1-262</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 
-<div id="outline-container-org9619d4a" class="outline-3">
-<h3 id="org9619d4a"><span class="section-number-3">1.6</span> Course Materials</h3>
+<div id="outline-container-orgf5ec850" class="outline-3">
+<h3 id="orgf5ec850"><span class="section-number-3">1.6</span> Course Materials</h3>
 <div class="outline-text-3" id="text-1-6">
 </div>
-<div id="outline-container-org69cf97c" class="outline-4">
-<h4 id="org69cf97c">Textbooks</h4>
-<div class="outline-text-4" id="text-org69cf97c">
+<div id="outline-container-orge835f0b" class="outline-4">
+<h4 id="orge835f0b">Textbooks</h4>
+<div class="outline-text-4" id="text-orge835f0b">
 <dl class="org-dl">
 <dt><i>Computer Systems: A Programmer's Perspective</i>, Third Edition by R. Bryant, D. O'Hallaron, Pearson, 2016 </dt><dd><b>(Required)</b> This is our main course text and covers a wide range of computer
 architecture issues. The textbook website is here: <a href="http://csapp.cs.cmu.edu/">http://csapp.cs.cmu.edu/</a></dd>
@@ -810,9 +715,9 @@ architecture will be posted online.
 </div>
 </div>
 
-<div id="outline-container-org261dbcc" class="outline-4">
-<h4 id="org261dbcc">Computing</h4>
-<div class="outline-text-4" id="text-org261dbcc">
+<div id="outline-container-org34fa2da" class="outline-4">
+<h4 id="org34fa2da">Computing</h4>
+<div class="outline-text-4" id="text-org34fa2da">
 <p>
 It is assumed you will have access to a computer with the ability to
 edit, compile, and run Unix programs.  Some university labs provide
@@ -826,19 +731,30 @@ You will need to create a CSE Labs account for use on assignments and
 during Discussion. Accounts can be created here:
 <a href="https://wwws.cs.umn.edu/account-management/">https://wwws.cs.umn.edu/account-management/</a>
 </p>
+
+<p>
+Environments to compile and run all parallel programs will be through
+the CSE Labs system so it is imperative that students set up their CSE
+Labs account and know how to remotely access CSE Labs systems. Some
+tactics to do so are described here:
+</p>
+
+<p>
+<a href="https://www-users.cse.umn.edu/~kauffman/tutorials/unix-environment">https://www-users.cse.umn.edu/~kauffman/tutorials/unix-environment</a>
+</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orge63123e" class="outline-3">
-<h3 id="orge63123e"><span class="section-number-3">1.7</span> Office Hours</h3>
+<div id="outline-container-org582b7c9" class="outline-3">
+<h3 id="org582b7c9"><span class="section-number-3">1.7</span> Office Hours</h3>
 <div class="outline-text-3" id="text-1-7">
 <p>
 <b>Office Hours</b> for staff will be posted on the course Canvas
 site. Office hours for all staff are open to all students in any
 section of the course governed by this syllabus. No appointments are
-necessary but usually students receive help on a
-first-come-first-serve basis at office hours.
+necessary but usually students receive help on a first-come /
+first-serve basis.
 </p>
 
 <p>
@@ -854,9 +770,8 @@ using Discord as be described in the first week of the course.
 </div>
 </div>
 
-
-<div id="outline-container-org05d542b" class="outline-3">
-<h3 id="org05d542b"><span class="section-number-3">1.8</span> Communication</h3>
+<div id="outline-container-org2caf21e" class="outline-3">
+<h3 id="org2caf21e"><span class="section-number-3">1.8</span> Communication</h3>
 <div class="outline-text-3" id="text-1-8">
 <p>
 This offering of the course will be administered Online which means
@@ -867,24 +782,23 @@ on communication in the class.
 <ul class="org-ul">
 <li><a href="https://canvas.umn.edu/courses/17031">Canvas</a> (Course Management): used to provide links to other resources
 and for Overall grade dissemination</li>
-<li><a href="https://umn.zoom.us/">Zoom</a> (Video Conferencing): used to present audio/video synchronously
-such as during lectures.</li>
-<li><a href="https://discord.com/">Discord</a> (Labs/Office Hours): used to visit office hours and attend
-labs, allows real-time audio/video communication, grouping into
-"rooms/tables", support for text chat also which is used to
-facilitate help queues. The invite link to our "guild" is available
-on our Canvas site.</li>
+<li><a href="https://discord.com/">Discord</a> (Office Hours): used to visit office hours, allows real-time
+audio/video communication, grouping into "rooms/tables", support for
+text chat which is used to facilitate help queues. The invite link
+to our "guild" is available on our Canvas site.</li>
 <li><a href="https://www.gradescope.com/">Gradescope</a> (Assignments/Exams): used to submit most graded work,
 receive grades on that work, and make requests for regrades.</li>
 <li><a href="http://piazza.com">Piazza</a> (Announcements/Async Q&amp;A): used to ask questions on course
 material outside of synchronous meetings and for staff to make
 announcements to students.</li>
+<li><a href="https://umn.zoom.us/">Zoom</a> (Video Conferencing): used to present audio/video synchronously
+such for individual online appointments.</li>
 </ul>
 </div>
 
-<div id="outline-container-orgcbaa4cf" class="outline-4">
-<h4 id="orgcbaa4cf">How should I contact staff?</h4>
-<div class="outline-text-4" id="text-orgcbaa4cf">
+<div id="outline-container-orgef391c5" class="outline-4">
+<h4 id="orgef391c5">How should I contact staff?</h4>
+<div class="outline-text-4" id="text-orgef391c5">
 <p>
 Here are common situations for students and the best method to use to
 contact staff.
@@ -995,12 +909,12 @@ to support the inevitable conflicts that arise.
 </div>
 </div>
 
-<div id="outline-container-orgd8cc493" class="outline-2">
-<h2 id="orgd8cc493"><span class="section-number-2">2</span> Coursework and Grading</h2>
+<div id="outline-container-org6874524" class="outline-2">
+<h2 id="org6874524"><span class="section-number-2">2</span> Coursework and Grading</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org5e0f7bb" class="outline-3">
-<h3 id="org5e0f7bb"><span class="section-number-3">2.1</span> Graded Components</h3>
+<div id="outline-container-org8d9799d" class="outline-3">
+<h3 id="org8d9799d"><span class="section-number-3">2.1</span> Graded Components</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Final grades will be determined by scores obtained on the components
@@ -1058,8 +972,8 @@ below according to their associated weight.
 </div>
 </div>
 
-<div id="outline-container-orge8a711b" class="outline-3">
-<h3 id="orge8a711b"><span class="section-number-3">2.2</span> Final Grade Determination</h3>
+<div id="outline-container-orga3f23a1" class="outline-3">
+<h3 id="orga3f23a1"><span class="section-number-3">2.2</span> Final Grade Determination</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Final grades will be assigned <b>without rounding</b> according to the
@@ -1147,8 +1061,8 @@ generally in the students' favor.
 </div>
 </div>
 
-<div id="outline-container-org492942c" class="outline-3">
-<h3 id="org492942c"><span class="section-number-3">2.3</span> <a id="orgdb69746"></a> Engagement Points</h3>
+<div id="outline-container-org07fd46b" class="outline-3">
+<h3 id="org07fd46b"><span class="section-number-3">2.3</span> <a id="org9ca9bf8"></a> Engagement Points</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Throughout the semester, students will have opportunities to earn and
@@ -1156,7 +1070,7 @@ use engagement points. These are:
 </p>
 <ul class="org-ul">
 <li>Attending lecture and participating in discussion</li>
-<li>Completing Lab Work</li>
+<li>Completing Lab Work - each lab is worth 1 EP</li>
 <li>Answering discussion board questions from other students and
 receiving "Good Answer" marks from course staff</li>
 <li>Participating in optional activities announced during the course</li>
@@ -1173,15 +1087,15 @@ and Lab to earn Engagement points.
 </div>
 </div>
 
-<div id="outline-container-org2abc0ad" class="outline-3">
-<h3 id="org2abc0ad"><span class="section-number-3">2.4</span> Lectures and "Hot Seats"</h3>
+<div id="outline-container-org79a8b9d" class="outline-3">
+<h3 id="org79a8b9d"><span class="section-number-3">2.4</span> Lectures and "Hot Seats"</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
-Lectures will be delivered synchronously at the times mentioned in the
-course schedule via Zoom.  During lectures, students will frequently
-be asked to work on short exercises in Breakout Rooms with a few of
-their colleagues.  After working on these exercises, the Professor
-will select a 1-2 "Hot Seat" groups to discuss their answers with the
+Lectures will be delivered in person at the times/locations mentioned
+in the course schedule.  During lectures, students will frequently be
+asked to work on short exercises in Breakout Rooms with a few of their
+colleagues.  After working on these exercises, the Professor will
+select a 1-2 "Hot Seat" groups to discuss their answers with the
 remainder of the class. Showing effort on these exercises will <b>earn
 Engagement Points</b> for the group facilitating the discussion of
 answers.
@@ -1197,13 +1111,13 @@ of acquiring Engagement Points such as completing required Lab work.
 </div>
 </div>
 
-<div id="outline-container-org1a72405" class="outline-3">
-<h3 id="org1a72405"><span class="section-number-3">2.5</span> Lab Activities</h3>
+<div id="outline-container-orgbc7da59" class="outline-3">
+<h3 id="orgbc7da59"><span class="section-number-3">2.5</span> Lab Activities</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
-Lab sections meet once per week online. Credit for Labs will be earned
-by submitting work online which, if completed correctly, will earn 1
-Engagement Point.
+Lab sections meet once per week in the locations mentioned. Credit for
+Labs will be earned by submitting work online which, if completed
+correctly, will earn 1 Engagement Point.
 </p>
 
 <p>
@@ -1230,8 +1144,8 @@ completed by the next week's lab.
 </div>
 </div>
 
-<div id="outline-container-org4bcfe8b" class="outline-3">
-<h3 id="org4bcfe8b"><span class="section-number-3">2.6</span> Weekly Homework Quizzes</h3>
+<div id="outline-container-org24e24aa" class="outline-3">
+<h3 id="org24e24aa"><span class="section-number-3">2.6</span> Weekly Homework Quizzes</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 Each week a set of Homework exercises will be posted online which
@@ -1242,7 +1156,7 @@ Collaboration: students <b>may work together</b> with other students in our
 section(s) of the course to complete homework/quizzes and are
 encouraged to do so.  Submitting identical answers for
 homework/quizzes is acceptable so long as it does not violate the
-<a href="#org176de56">PRIME DIRECTIVE</a>.
+<a href="#org8333700">PRIME DIRECTIVE</a>.
 </p>
 
 <p>
@@ -1260,15 +1174,15 @@ calculations
 </div>
 </div>
 
-<div id="outline-container-org31541bc" class="outline-3">
-<h3 id="org31541bc"><span class="section-number-3">2.7</span> Projects</h3>
+<div id="outline-container-org13ad1b6" class="outline-3">
+<h3 id="org13ad1b6"><span class="section-number-3">2.7</span> Projects</h3>
 <div class="outline-text-3" id="text-2-7">
 <p>
 Students will receive a number of programming projects during the
 semester.  Each project will involve writing programs and answering
 questions about them to illustrate an understanding of course
 material. <b>Generally Projects are Individual Work</b> with sharing of
-code or detailed solutions being a violation of the <a href="#org176de56">PRIME
+code or detailed solutions being a violation of the <a href="#org8333700">PRIME
 DIRECTIVE</a>. Pay careful attention to the guidelines for each
 programming project.  Projects are usually large and require a
 significant amount of work to complete.
@@ -1292,8 +1206,8 @@ while working on the assignment.</li>
 </div>
 </div>
 
-<div id="outline-container-org2d8e7c1" class="outline-3">
-<h3 id="org2d8e7c1"><span class="section-number-3">2.8</span> Late Project Submission</h3>
+<div id="outline-container-orgd284523" class="outline-3">
+<h3 id="orgd284523"><span class="section-number-3">2.8</span> Late Project Submission</h3>
 <div class="outline-text-3" id="text-2-8">
 <p>
 Late submission of Projects is governed by the following.
@@ -1305,7 +1219,7 @@ Late submission of Projects is governed by the following.
 <li>Submitting 25-48 hours late will result in the loss of 2 Engagement
 Points</li>
 <li>Engagement points can be earned in a variety of ways mentioned in
-the <a href="#orgdb69746">Engagement Points Section</a>.</li>
+the <a href="#org9ca9bf8">Engagement Points Section</a>.</li>
 <li>Students may submit projects as many times as they wish: the most
 recent submission will be graded though if it is submitted late it
 will cost Engagement Points.</li>
@@ -1313,22 +1227,26 @@ will cost Engagement Points.</li>
 
 <p>
 NOTE: If students attend all 14 Labs, they will earn full engagement
-scores and have 4 days of late submissions possible.
+scores and have 4 days of late submissions possible while maintaining
+full credit.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgd058a8c" class="outline-3">
-<h3 id="orgd058a8c"><span class="section-number-3">2.9</span> Exams</h3>
+<div id="outline-container-org9d851c5" class="outline-3">
+<h3 id="org9d851c5"><span class="section-number-3">2.9</span> Exams</h3>
 <div class="outline-text-3" id="text-2-9">
 <p>
 There will be a series of midterm exams during the semester and a
 comprehensive final exam at the end of the semester. Exams take place
 during the regularly scheduled lecture period and are worth a
-significant portion of the overall course grade. Exams will be
-administered Online via Gradescope. No special monitoring/proctoring
-software is required but students are expected to work individually
-and adhere standard academic integrity policies.
+significant portion of the overall course grade.
+</p>
+
+<p>
+At the time of this writing, Exams will take place during lecture
+meetings in the normal lecture location. Any changes to this will be
+posted in advance of the exams.
 </p>
 
 <p>
@@ -1339,8 +1257,8 @@ have written or received from course staff.  No communication is
 allowed during the exam (no email/texting/chat), and no Internet
 searches are allowed (do not "google for answers"). In addition, you
 may only use exams from previous versions of 2021 if you personally
-took the exams. If in doubt, ask about specifics before or during the
-exam.
+took those exams. If in doubt, ask about specifics before or during
+the exam.
 </p>
 
 <p>
@@ -1357,12 +1275,12 @@ of such circumstances will be required for a make-up to be considered.
 </div>
 </div>
 
-<div id="outline-container-orgf193ef2" class="outline-3">
-<h3 id="orgf193ef2"><span class="section-number-3">2.10</span> <a id="org132370b"></a> Regrade Requests</h3>
+<div id="outline-container-org62c172f" class="outline-3">
+<h3 id="org62c172f"><span class="section-number-3">2.10</span> <a id="orgbdb618d"></a> Regrade Requests</h3>
 <div class="outline-text-3" id="text-2-10">
 <p>
-Most Project and Exams will be graded via <b>Gradescope</b> which features
-a <b>Request Regrade Button</b> associated with specific problems and
+Most coursework will be graded via <b>Gradescope</b> which features a
+<b>Request Regrade Button</b> associated with specific problems and
 criteria. This will notify the specific individual responsible grading
 about the dispute. Raise regrade requests respectfully and
 specifically: mention what you think a grader missed in your answer or
@@ -1386,8 +1304,8 @@ time will forfeit further opportunity to contest the grade.
 </div>
 </div>
 
-<div id="outline-container-org3ee22e0" class="outline-3">
-<h3 id="org3ee22e0"><span class="section-number-3">2.11</span> Textbook Readings</h3>
+<div id="outline-container-org1bb1780" class="outline-3">
+<h3 id="org1bb1780"><span class="section-number-3">2.11</span> Textbook Readings</h3>
 <div class="outline-text-3" id="text-2-11">
 <p>
 Readings from the textbook relevant to each lecture are listed in the
@@ -1400,12 +1318,12 @@ textbook which will be posted on the course web page.
 </div>
 </div>
 
-<div id="outline-container-orge2ea33f" class="outline-2">
-<h2 id="orge2ea33f"><span class="section-number-2">3</span> Academic Integrity</h2>
+<div id="outline-container-org0108b62" class="outline-2">
+<h2 id="org0108b62"><span class="section-number-2">3</span> Academic Integrity</h2>
 <div class="outline-text-2" id="text-3">
 <b>
 <p>
-<a id="org176de56">PRIME DIRECTIVE</a>: Be able to explain your own work including
+<a id="org8333700">PRIME DIRECTIVE</a>: Be able to explain your own work including
 assignment answers, program code, and exam solutions. The work you
 submit should be the product of your own effort and reflect your
 personal understanding.
@@ -1414,14 +1332,14 @@ personal understanding.
 
 <p>
 Nearly all cheating in programming can be averted by adhering to the
-<a href="#org176de56">PRIME DIRECTIVE</a>. Students may be asked at any time to explain code
+<a href="#org8333700">PRIME DIRECTIVE</a>. Students may be asked at any time to explain code
 or exam solutions they submit.  Inability to do so will be construed
 as evidence of misconduct.  More specific guidelines are given below.
 </p>
 </div>
 
-<div id="outline-container-org1e9a661" class="outline-3">
-<h3 id="org1e9a661"><span class="section-number-3">3.1</span> Thou Shalt Not</h3>
+<div id="outline-container-org780574c" class="outline-3">
+<h3 id="org780574c"><span class="section-number-3">3.1</span> Thou Shalt Not</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Some coursework is to be done individually, usually programming
@@ -1480,8 +1398,8 @@ Refer to the following links for additional information.
 </div>
 </div>
 
-<div id="outline-container-org6e60a1b" class="outline-3">
-<h3 id="org6e60a1b"><span class="section-number-3">3.2</span> Penalties</h3>
+<div id="outline-container-orgbec30ce" class="outline-3">
+<h3 id="orgbec30ce"><span class="section-number-3">3.2</span> Penalties</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Any instance of misconduct that is detected will be referred to the
@@ -1493,8 +1411,8 @@ computer code so keep your nose clean.
 </div>
 </div>
 
-<div id="outline-container-org377c768" class="outline-3">
-<h3 id="org377c768"><span class="section-number-3">3.3</span> Fair Collaboration</h3>
+<div id="outline-container-orgcbf0bbc" class="outline-3">
+<h3 id="orgcbf0bbc"><span class="section-number-3">3.3</span> Fair Collaboration</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The purpose of this course is to learn about programming and learning
@@ -1507,7 +1425,7 @@ from one another is a great help.  To that end, the following actions
 Exercises/Quizzes is allowed and encouraged. These are a great
 opportunity to help one another on work that counts towards your
 final grade. Just make sure that you understand any solutions you
-submit as per the <a href="#org176de56">PRIME DIRECTIVE</a>.</li>
+submit as per the <a href="#org8333700">PRIME DIRECTIVE</a>.</li>
 <li>Discussing projects at a high level with other course students is
 fair so long as no code is shared. Take great care at the point of
 directly showing your work to others as your answers are
@@ -1527,15 +1445,15 @@ the activity and clear it with your instructor.</li>
 </ul>
 
 <p>
-At all times keep the <a href="#org176de56">PRIME DIRECTIVE</a> in mind when studying with other
+At all times keep the <a href="#org8333700">PRIME DIRECTIVE</a> in mind when studying with other
 students.  The above collaborations should be limited to getting
 someone over a hurdle, not carrying them across the finish line.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgd229bb8" class="outline-3">
-<h3 id="orgd229bb8"><span class="section-number-3">3.4</span> Collaboration and other Sections</h3>
+<div id="outline-container-orga3ac596" class="outline-3">
+<h3 id="orga3ac596"><span class="section-number-3">3.4</span> Collaboration and other Sections</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 There is another section of CSCI 2021 running under a different
@@ -1549,8 +1467,8 @@ their own section to avoid problems.
 </div>
 </div>
 
-<div id="outline-container-orge661d24" class="outline-2">
-<h2 id="orge661d24"><span class="section-number-2">4</span> General Policies</h2>
+<div id="outline-container-orgb033423" class="outline-2">
+<h2 id="orgb033423"><span class="section-number-2">4</span> General Policies</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 General university policies which apply to our course are listed here:
@@ -1575,28 +1493,52 @@ any faith. All possible accommodations will be made for students with
 disabilities.  Please contact the <a href="https://diversity.umn.edu/disability/">Disability Resource Center</a> and the
 instructor for further information.
 </p>
+
+<p>
+Some special policies in effect for the semester are below.
+</p>
 </div>
 
-<div id="outline-container-orgd94d8fc" class="outline-4">
-<h4 id="orgd94d8fc">Online Behavior</h4>
-<div class="outline-text-4" id="text-orgd94d8fc">
+<div id="outline-container-orgcb888d5" class="outline-3">
+<h3 id="orgcb888d5"><span class="section-number-3">4.1</span> Masking During Class Meetings</h3>
+<div class="outline-text-3" id="text-4-1">
 <p>
-This being an online class, the following additional policies on
-student/staff behavior and Academic Integrity also apply:
+All students and staff will be required to where protective masks
+during class meetings. This directive comes from the University and is
+intended to stop the spread of disease during the pandemic. No
+eating/drinking will be allowed during class meetings so masks will
+stay on everyone throughout each meeting. If students feel they merit
+an exception to the policy should contact the Professor via email
+before attending class.
+</p>
+
+<p>
+Full details of the University Mask policy are here:
+<a href="https://safe-campus.umn.edu/return-campus/face-coverings">https://safe-campus.umn.edu/return-campus/face-coverings</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org28a9874" class="outline-3">
+<h3 id="org28a9874"><span class="section-number-3">4.2</span> Online Behavior</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+This course will have a number of online interactions and the
+following additional policies on student/staff behavior and Academic
+Integrity also apply:
 <a href="https://communitystandards.umn.edu/know-code/online-learning-expectations">https://communitystandards.umn.edu/know-code/online-learning-expectations</a>
 </p>
 
 <p>
 The gist of the behavior policies are "Don't be a troll" and the
-Academic Integrity portion reflects our <a href="#org176de56">PRIME DIRECTIVE</a>.
+Academic Integrity portion reflects our <a href="#org8333700">PRIME DIRECTIVE</a>.
 </p>
 </div>
 </div>
 
-
-<div id="outline-container-org7f7d858" class="outline-4">
-<h4 id="org7f7d858">Use of Recordings</h4>
-<div class="outline-text-4" id="text-org7f7d858">
+<div id="outline-container-org172339a" class="outline-3">
+<h3 id="org172339a"><span class="section-number-3">4.3</span> Use of Recordings</h3>
+<div class="outline-text-3" id="text-4-3">
 <p>
 This course will include video and audio recordings of class
 lectures and classroom activities. These recordings will be used for
@@ -1612,7 +1554,7 @@ permission from students whose image or voice are in these recordings.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-03-15 Mon 11:39 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-08-27 Fri 16:36 <br/> </i>
 </div>
 </body>
 </html>
