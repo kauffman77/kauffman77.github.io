@@ -1,0 +1,1326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-09-02 Thu 11:34 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 5451: Introduction to Parallel Computing</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2021-09-02 Thu 11:34</i>
+</div>
+<div id="content">
+<h1 class="title">CSCI 5451: Introduction to Parallel Computing</h1>
+<div class="subtitle" align="center">
+<h2> University of Minnesota</h2>
+<h2> 3 credits, Fall 2021 </h2>
+</div>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org49c9594">1. Basic Information</a>
+<ul>
+<li><a href="#org55ce9c3">1.1. Catalog Description</a></li>
+<li><a href="#orgc82dfce">1.2. Prerequisites</a></li>
+<li><a href="#orgf42d4a9">1.3. Couse Goals</a></li>
+<li><a href="#org224accc">1.4. Staff</a></li>
+<li><a href="#org13f6fad">1.5. Meetings</a></li>
+<li><a href="#orgd7cdaa1">1.6. Course Materials</a></li>
+<li><a href="#org6ec7bd2">1.7. Office Hours</a></li>
+<li><a href="#org05e6ac1">1.8. Communication</a></li>
+</ul>
+</li>
+<li><a href="#org89532ae">2. Coursework and Grading</a>
+<ul>
+<li><a href="#org3067849">2.1. Graded Components</a></li>
+<li><a href="#org98f4e06">2.2. Final Grade Determination</a></li>
+<li><a href="#org402c5f0">2.3. Assignments</a></li>
+<li><a href="#org67c7256">2.4. Late Assignment Submission</a></li>
+<li><a href="#org77bb5f0">2.5. Exams</a></li>
+<li><a href="#org99c57bd">2.6. Regrade Requests</a></li>
+<li><a href="#orgd8f37a8">2.7. Textbook Readings</a></li>
+</ul>
+</li>
+<li><a href="#org6d89cb9">3. Academic Integrity</a>
+<ul>
+<li><a href="#org67609a4">3.1. Thou Shalt Not</a></li>
+<li><a href="#org136dce6">3.2. Penalties</a></li>
+<li><a href="#orge3f39ec">3.3. Fair Collaboration</a></li>
+</ul>
+</li>
+<li><a href="#org6c22334">4. General Policies</a>
+<ul>
+<li><a href="#orgc8c7d28">4.1. Masking During Class Meetings</a></li>
+<li><a href="#org8dc6d16">4.2. Online Behavior</a></li>
+<li><a href="#org5f9ea32">4.3. Use of Recordings</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org49c9594" class="outline-2">
+<h2 id="org49c9594"><span class="section-number-2">1</span> Basic Information</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org55ce9c3" class="outline-3">
+<h3 id="org55ce9c3"><span class="section-number-3">1.1</span> Catalog Description</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Parallel architectures design, embeddings, routing. Examples of
+parallel computers. Fundamental communication operations. Performance
+metrics. Parallel algorithms for sorting. Matrix problems, graph
+problems, dynamic load balancing, types of parallelisms. Parallel
+programming paradigms. Message passing programming in
+MPI. Shared-address space programming in OpenMP or threads.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc82dfce" class="outline-3">
+<h3 id="orgc82dfce"><span class="section-number-3">1.2</span> Prerequisites</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Grade of C or better in CSCI 4041 or instructor consent.  
+</p>
+
+<p>
+Students are presumed to have significant experience writing and
+debugging programs along with some background in basic computer
+systems architecture such as what is offered through CSCI 2021 and
+CSCI 4061.  Programming assignments will be in the C programming
+language and students without prior experience working with C programs
+will be at a major disadvantage.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgf42d4a9" class="outline-3">
+<h3 id="orgf42d4a9"><span class="section-number-3">1.3</span> Couse Goals</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+This course focuses on parallel computing, the art of using multiple
+processing units to solve computational problems.  The primary goal of
+this effort is either to solve a problem in a shorter time than is
+possible with a single computer or use the same amount of time to
+solve a larger problem.  The course will primarily focus on tightly
+coupled parallel computers which have a relatively low overhead to
+communicate in contrast to networked computers in which communication
+time is high.  
+</p>
+
+<p>
+Typical topics covered in the course include the following:
+</p>
+<ul class="org-ul">
+<li>Basic parallel computing architecture</li>
+<li>Shared and distributed memory computers</li>
+<li>POSIX Threads and OpenMP for shared memory computers</li>
+<li>MPI: Message Passing Interface for distributed memory computers</li>
+<li>CUDA for GPU/Co-processor programming</li>
+<li>Common communication patterns in parallel programs</li>
+<li>Parallel algorithms for matrix operations, sorting, graphs, and
+discrete optimization</li>
+<li>Evaluation metrics for parallel computing including speedup,
+efficiency, and isoefficiency</li>
+<li>Emerging technologies such as parallel programming languages and
+supercomputing architectures</li>
+</ul>
+
+<p>
+By the end of the semester, a passing student will be able to carry
+out the following types of activities:
+</p>
+<ul class="org-ul">
+<li>Describe the differences, advantages, and limitations of various
+parallel computer hardware architectures.</li>
+<li>Convert an existing serial program into a parallel version
+accounting for coordination, load balancing, and efficient
+communication.</li>
+<li>Identify common communication patterns that arise in parallel
+programming and how several programming platforms make them
+possible.</li>
+<li>Implement a parallel programs using distributed memory, shared
+memory, and GPU/Co-processor paradigms.</li>
+<li>Evaluate the theoretical and actual efficiency of parallel programs
+using standard metrics.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org224accc" class="outline-3">
+<h3 id="org224accc"><span class="section-number-3">1.4</span> Staff</h3>
+<div class="outline-text-3" id="text-1-4">
+</div>
+<div id="outline-container-orgd163c43" class="outline-4">
+<h4 id="orgd163c43">Instructor</h4>
+<div class="outline-text-4" id="text-orgd163c43">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><b>Name</b></td>
+<td class="org-left">Chris Kauffman</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>Email</b></td>
+<td class="org-left">kauffman@umn.edu</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>Office</b></td>
+<td class="org-left">Shepherd 327</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>Phone</b></td>
+<td class="org-left">612-626-9351</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org3a2cefe" class="outline-4">
+<h4 id="org3a2cefe">Teaching Assistants</h4>
+<div class="outline-text-4" id="text-org3a2cefe">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><b>Name</b></td>
+<td class="org-left">James Mooney</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>Email</b></td>
+<td class="org-left">moone174@umn.edu</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org13f6fad" class="outline-3">
+<h3 id="org13f6fad"><span class="section-number-3">1.5</span> Meetings</h3>
+<div class="outline-text-3" id="text-1-5">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Meeting</th>
+<th scope="col" class="org-left">Day / Time</th>
+<th scope="col" class="org-left">Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Lec 01</td>
+<td class="org-left">MW 09:45 AM‑11:00 AM</td>
+<td class="org-left">Akerman 319</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgd7cdaa1" class="outline-3">
+<h3 id="orgd7cdaa1"><span class="section-number-3">1.6</span> Course Materials</h3>
+<div class="outline-text-3" id="text-1-6">
+</div>
+<div id="outline-container-org71c7e9e" class="outline-4">
+<h4 id="org71c7e9e">Textbooks</h4>
+<div class="outline-text-4" id="text-org71c7e9e">
+<p>
+There is no required textbook for the course. However, we will utilize
+parts of the following texts which may be found via online search.
+</p>
+
+<dl class="org-dl">
+<dt>Introduction to Parallel Computing, 2nd Edition by Grama, Gupta, Karypis, and Kumar. Addison Wesley 2003.</dt><dd>(Optional) This text covers 90% of the material in the course and is
+a classic despite its &gt;15 year age.  It will not be available at the
+bookstore but excerpts can be located through internet search.</dd>
+
+<dt>GPU parallel program development using CUDA by Tolga Soyata. CRC Press 2018</dt><dd><p>
+(Optional) A good introduction to GPU programming as well as
+PThreads. It includes a very accessible history of GPU development
+based on the authors personal experience. 
+</p>
+
+<p>
+This text is <a href="https://primo.lib.umn.edu/permalink/f/1q7ssba/UMN_ALMA51702449520001701">available online through the UMN library</a> for UMN
+students.
+</p></dd>
+</dl>
+
+<p>
+Additional online resources associated with C programming and parallel
+architecture will be posted online.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5ba59a2" class="outline-4">
+<h4 id="org5ba59a2">Computing</h4>
+<div class="outline-text-4" id="text-org5ba59a2">
+<p>
+It is assumed you will have access to a computer with the ability to
+edit, compile, and run Unix programs.  Some university labs provide
+this ability; the first week of the course will cover how to set up
+your personal environment as well.  If you have difficulty accessing a
+suitable environment, contact the course staff.
+</p>
+
+<p>
+You will need to create a CSE Labs account for use on assignments and
+during Discussion. Accounts can be created here:
+<a href="https://wwws.cs.umn.edu/account-management/">https://wwws.cs.umn.edu/account-management/</a>
+</p>
+
+<p>
+Environments to compile and run all parallel programs will be through
+the CSE Labs system so it is imperative that students set up their CSE
+Labs account and know how to remotely access CSE Labs systems. Some
+tactics to do so are described here:
+</p>
+
+<p>
+<a href="https://www-users.cse.umn.edu/~kauffman/tutorials/unix-environment">https://www-users.cse.umn.edu/~kauffman/tutorials/unix-environment</a>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6ec7bd2" class="outline-3">
+<h3 id="org6ec7bd2"><span class="section-number-3">1.7</span> Office Hours</h3>
+<div class="outline-text-3" id="text-1-7">
+<p>
+<b>Office Hours</b> for staff will be posted on the course Canvas
+site. Office hours for all staff are open to all students in any
+section of the course governed by this syllabus. No appointments are
+necessary but usually students receive help on a first-come /
+first-serve basis.
+</p>
+
+<p>
+Students are strongly encouraged to visit the professor and teaching
+assistant(s) during office hours to further their understanding of the
+material: <b>we are here to help you learn</b>.
+</p>
+
+<p>
+<b>Special Note for Online Offerings</b>: Office hours will be held online
+using Zoom as be described in the first week of the course.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org05e6ac1" class="outline-3">
+<h3 id="org05e6ac1"><span class="section-number-3">1.8</span> Communication</h3>
+<div class="outline-text-3" id="text-1-8">
+<p>
+This offering of the course will be administered Online which means
+you should acquaint yourself with the following resources / policies
+on communication in the class.
+</p>
+
+<ul class="org-ul">
+<li><a href="https://canvas.umn.edu/courses/17031">Canvas</a> (Course Management): used to provide links to other resources
+and for Overall grade dissemination</li>
+<li><a href="https://www.gradescope.com/">Gradescope</a> (Assignments/Exams): used to submit most graded work,
+receive grades on that work, and make requests for regrades.</li>
+<li><a href="http://piazza.com">Piazza</a> (Announcements/Async Q&amp;A): used to ask questions on course
+material outside of synchronous meetings and for staff to make
+announcements to students.</li>
+<li><a href="https://umn.zoom.us/">Zoom</a> (Video Conferencing): used to present audio/video synchronously
+such for individual online appointments and Office Hours.</li>
+</ul>
+</div>
+
+<div id="outline-container-org8e13643" class="outline-4">
+<h4 id="org8e13643">How should I contact staff?</h4>
+<div class="outline-text-4" id="text-org8e13643">
+<p>
+Here are common situations for students and the best method to use to
+contact staff.
+</p>
+<ul class="org-ul">
+<li><p>
+I want to get some real-time assistance with some coursework.
+</p>
+<blockquote>
+<p>
+Stop by office online. Locations and times for office hours are listed
+on the course Canvas site. Keep in mind that <b>office hours get busy</b>
+around project deadlines so there may be a queue to wait in to get help.
+</p>
+</blockquote></li>
+
+<li><p>
+I have a question on an assignment or course content and there
+aren't any office hours coming up soon.
+</p>
+<blockquote>
+<p>
+Post your question on <b>Piazza</b>; staff members check several times a
+day and answer questions there. Make sure to post an <b>answerable
+question</b> as described in the Etiquette Piazza post and <b>avoid
+publicly posting large portions of your code</b>. 
+</p>
+
+<p>
+You might also try <b>searching Piazza first</b> to see if someone
+already asked your question and received an answer.
+</p>
+</blockquote></li>
+<li><p>
+I have a logistics questions such as when something is due, when
+something will happen, etc.
+</p>
+<blockquote>
+<p>
+Also use <b>Piazza</b> for most of these. If a staff member isn't sure how
+to answer the question, they'll give you they're best guess sooner and
+ask the Professor to confirm later.  
+</p>
+
+<p>
+Staff will often use <b>Piazza for Announcements</b> such as upcoming
+deadlines or canceled office hours. These announcements will go to
+student email so check your UMN account regularly.
+</p>
+</blockquote></li>
+<li><p>
+I think some of my work was graded wrong and I want someone to look
+at it again.
+</p>
+<blockquote>
+<p>
+<b>Gradescope</b> has a "Request Regrade" feature which will be open for
+students to use after grades are posted. Using this feature will
+notify whoever graded your work to have another look. If you cannot
+resolve the issue, your grader will involve the professor.  There
+are some exceptions to this:
+</p>
+<ul class="org-ul">
+<li>Homework Quizzes allow you to retake the Quiz to improve your
+score. No online Regrade Requests will be available, just retake
+the quiz up to the deadline.</li>
+<li>Lab Quizzes can only be regraded in Labs/Office Hours up to the
+next lab. No online Regrade Requests will be available, visit your
+lab or office hours to talk to a staff member about your mistakes.</li>
+</ul>
+</blockquote></li>
+<li><p>
+I need help some one-on-one help and I can't make it to office hours
+to talk to a staff about it.
+</p>
+<blockquote>
+<p>
+<b>Email</b> one or two of your favorite staff members to see if they can
+meet outside of their normal office hours. If you don't have luck in
+the first go, try contacting a different staff member including Prof
+Kauffman.
+</p>
+</blockquote></li>
+<li><p>
+I had a major life event (got sick / family problem / mental health
+problem) and I'm wondering how to cope with it and this class.
+</p>
+<blockquote>
+<p>
+<b>Email Prof Kauffman</b> as soon as you can. Explain the situation and
+we'll work out a plan for how to proceed such as rescheduling exams,
+extending deadlines, or providing some additional help
+</p>
+</blockquote></li>
+<li><p>
+I'm going to miss a lecture / lab meeting. What should I do?
+</p>
+<blockquote>
+<p>
+<b>No special action is required</b>: all course meetings will be
+recorded and will be viewable within a day or two of them happening
+to support the inevitable conflicts that arise.
+</p>
+</blockquote></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org89532ae" class="outline-2">
+<h2 id="org89532ae"><span class="section-number-2">2</span> Coursework and Grading</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org3067849" class="outline-3">
+<h3 id="org3067849"><span class="section-number-3">2.1</span> Graded Components</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Final grades will be determined by scores obtained on the components
+below according to their associated weight.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Component</th>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Assignments (5 x 10%)</td>
+<td class="org-right">50%</td>
+<td class="org-left">Combinations of written work and coding</td>
+</tr>
+
+<tr>
+<td class="org-left">Mini-Exams (4 x 10%)</td>
+<td class="org-right">40%</td>
+<td class="org-left">30-minutes during lecture on posted dates</td>
+</tr>
+
+<tr>
+<td class="org-left">Final Exam</td>
+<td class="org-right">10%</td>
+<td class="org-left">Comprehensive</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org98f4e06" class="outline-3">
+<h3 id="org98f4e06"><span class="section-number-3">2.2</span> Final Grade Determination</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Final grades will be assigned <b>without rounding</b> according to the
+following criteria.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Percent</th>
+<th scope="col" class="org-left">Grade</th>
+<th scope="col" class="org-right">Percent</th>
+<th scope="col" class="org-left">Grade</th>
+<th scope="col" class="org-right">Percent</th>
+<th scope="col" class="org-left">Grade</th>
+<th scope="col" class="org-right">Percent</th>
+<th scope="col" class="org-left">Grade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&gt;= 93</td>
+<td class="org-left">A</td>
+<td class="org-right">87-89</td>
+<td class="org-left">B+</td>
+<td class="org-right">77-79</td>
+<td class="org-left">C+</td>
+<td class="org-right">65-69</td>
+<td class="org-left">D+</td>
+</tr>
+
+<tr>
+<td class="org-right">90-92</td>
+<td class="org-left">A-</td>
+<td class="org-right">83-86</td>
+<td class="org-left">B</td>
+<td class="org-right">73-76</td>
+<td class="org-left">C</td>
+<td class="org-right">60-64</td>
+<td class="org-left">D</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-right">80-82</td>
+<td class="org-left">B-</td>
+<td class="org-right">70-72</td>
+<td class="org-left">C-</td>
+<td class="org-right">&lt;60</td>
+<td class="org-left">F</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+If circumstances require it, the grading scale may be adjusted,
+generally in the students' favor.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org402c5f0" class="outline-3">
+<h3 id="org402c5f0"><span class="section-number-3">2.3</span> Assignments</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Students will receive a number of assignments during the semester.
+Each will involve combine writing programs, answering theoretical
+questions, and demonstrating knowledge of the recent course topics.
+Assignments are usually large and require a significant amount of work
+to complete.
+</p>
+
+<p>
+Specific assignments may allow collaboration between pairs of
+students or require individual work. Pay careful attention to the
+guidelines for each assignment. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org67c7256" class="outline-3">
+<h3 id="org67c7256"><span class="section-number-3">2.4</span> Late Assignment Submission</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Late assignment submission will be penalized as follows.
+</p>
+<ul class="org-ul">
+<li>On-time submissions receive no penalties</li>
+<li>Submitting 1-24 hours will result in the loss of 10% absolute credit</li>
+<li>Submitting 25-48 hours late will result in the loss 20% absolute
+credit</li>
+<li><b>No submissions will be accepted more than 48 hours after a deadline</b></li>
+<li>Late penalties may be assessed later in the semester after the
+initial round of grading.</li>
+</ul>
+
+<p>
+Example: Villanelle is running short on time and so takes an extra
+night to finish HW2. She submits it 16 hours after the deadline. Her
+grader gives her a 85% but <b>later in the semester her score is lowered
+to 75%</b> due to her late submission incurring a 10% penalty
+</p>
+</div>
+</div>
+
+<div id="outline-container-org77bb5f0" class="outline-3">
+<h3 id="org77bb5f0"><span class="section-number-3">2.5</span> Exams</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+There will be a series of 30-minute Mini-Exams through the
+semester. These will occur at the end of the lecture on the dates they
+occur.  Dates for the Mini-exams appear in the schedule.
+</p>
+
+<p>
+There will also be a comprehensive Final Exam at the end semester.
+Refer to the schedule for dates of the exams.
+</p>
+
+<p>
+At the time of this writing, Exams will take place during lecture
+meetings in the normal lecture location. Any changes to this will be
+posted in advance of the exams.
+</p>
+
+<p>
+All exams are <b>Open Resource Exams:</b> unless otherwise specified you
+may use any course content during exams including lecture slides, your
+notes, the textbook, editors/compilers/shells, and any code the you
+have written or received from course staff.  No communication is
+allowed during the exam (no email/texting/chat), and no Internet
+searches are allowed (do not "google for answers"). In addition, you
+may only use exams from previous versions of 2021 if you personally
+took those exams. If in doubt, ask about specifics before or during
+the exam.
+</p>
+
+<p>
+Missing an exam results in a zero score and make-up exams will be
+considered only in situations involving significant life events. Proof
+of such circumstances will be required for a make-up to be considered.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org99c57bd" class="outline-3">
+<h3 id="org99c57bd"><span class="section-number-3">2.6</span> <a id="org377fff8"></a> Regrade Requests</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+Most coursework will be graded via <b>Gradescope</b> which features a
+<b>Request Regrade Button</b> associated with specific problems and
+criteria. This will notify the specific individual responsible grading
+about the dispute. Raise regrade requests respectfully and
+specifically: mention what you think a grader missed in your answer or
+why you feel a deduction was unfair. Keep in mind that graders assign
+credit based on what appears on the project and exams, not post-hoc
+explanations of answers.
+</p>
+
+<p>
+If a Student and Grader are not able to resolve a grading issue to the
+satisfaction of both, the student can <b>ask the grader to consult the
+Professor</b> who will review the dispute and resolve it. Students should
+ask their grader to do this, not email the Professor directly.
+</p>
+
+<p>
+When grades are published, there will generally be a <b>1 week window</b>
+in which disputes are considered. Failing to request a regrade in that
+time will forfeit further opportunity to contest the grade.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd8f37a8" class="outline-3">
+<h3 id="orgd8f37a8"><span class="section-number-3">2.7</span> Textbook Readings</h3>
+<div class="outline-text-3" id="text-2-7">
+<p>
+Readings from the textbook relevant to each lecture are listed in the
+schedule.  You will increase your understanding of lectures by reading
+associated textbook sections ahead of time, though this is not
+assumed.  We may provide additional reading material to supplement the
+textbook which will be posted on the course web page.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6d89cb9" class="outline-2">
+<h2 id="org6d89cb9"><span class="section-number-2">3</span> Academic Integrity</h2>
+<div class="outline-text-2" id="text-3">
+<b>
+<p>
+<a id="org1dc2212">PRIME DIRECTIVE</a>: Be able to explain your own work including
+assignment answers, program code, and exam solutions. The work you
+submit should be the product of your own effort and reflect your
+personal understanding.
+</p>
+</b>
+
+<p>
+Nearly all cheating in programming can be averted by adhering to the
+<a href="#org1dc2212">PRIME DIRECTIVE</a>. Students may be asked at any time to explain code
+or exam solutions they submit.  Inability to do so will be construed
+as evidence of misconduct.  More specific guidelines are given below.
+</p>
+</div>
+
+<div id="outline-container-org67609a4" class="outline-3">
+<h3 id="org67609a4"><span class="section-number-3">3.1</span> Thou Shalt Not</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Some coursework is to be done individually, usually programming
+Projects and Exams.  For this individual work, the following actions
+constitute scholastic misconduct (cheating) and will be reported.
+</p>
+<ul class="org-ul">
+<li>Directly copying someone else's solution to an assessment problem,
+including student solutions from a previous semester</li>
+<li>Directly copying an answer from some outside source such as the
+Internet or friend for a homework problem.</li>
+<li>Making use of an Instructor Solution manual to complete problems.</li>
+<li>Submitting someone else's work as your own.</li>
+<li>Using or sharing Exam materials from another student from past
+offerings of this course; you may view your own past copies of exams
+but not share them with others.</li>
+<li>Paying someone for a solutions to assignments/exams.</li>
+<li>Posting solutions to any web site including public posts to our
+course web site.</li>
+<li>Collaborating or copying the work of others during an exam.</li>
+<li>Taking another student's code with or without their consent.</li>
+<li>Giving another student one's own code on assignments or exams</li>
+<li>Aiding or abetting any of the above.</li>
+<li>Witnessing any of the above and failing to report it to an
+instructor immediately.</li>
+</ul>
+
+<p>
+<b>REMEMBER:</b> Once you give away your code/work, you lose control of
+it. This may lead to pain in the following non-obvious cases
+</p>
+<ul class="org-ul">
+<li>Using a public Github repository to track your code allows anyone to
+copy it and submit it as their own.</li>
+<li>Sharing code with a classmate "just to help them" may lead to them
+submitting it as their own, sharing it with others, or selling it
+for profit</li>
+<li>Giving someone access to your accounts or devices to help them may
+mean that they use your account to steal your work subsequently.</li>
+<li>Leaving your work open in a public space may allow someone to take
+snapshots of your screen and use it as their own.</li>
+</ul>
+<p>
+<b>All Of This Has Happened Before And Will Happen Again.</b> Don't
+become one of your Professor's stories.
+</p>
+
+<p>
+Refer to the following links for additional information.
+</p>
+<ul class="org-ul">
+<li><a href="https://regents.umn.edu/sites/regents.umn.edu/files/policies/Student_Conduct_Code.pdf">UMN Student Conduct Code</a></li>
+<li><a href="https://www.cs.umn.edu/sites/cs.umn.edu/files/cse-department-academicconductpolicy.pdf">Computer Science Department policies on scholastic dishonesty</a></li>
+<li><a href="https://communitystandards.umn.edu/">Office of Community Standards</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org136dce6" class="outline-3">
+<h3 id="org136dce6"><span class="section-number-3">3.2</span> Penalties</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Any instance of misconduct that is detected will be referred to the
+Office of Community Standards and will likely result in failing the
+course.  Be advised that the teaching team will be employing
+<b>electronic means to detect plagiarism</b>.  This is extremely easy with
+computer code so keep your nose clean.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge3f39ec" class="outline-3">
+<h3 id="orge3f39ec"><span class="section-number-3">3.3</span> Fair Collaboration</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+The purpose of this course is to learn about programming and learning
+from one another is a great help.  To that end, the following actions
+<b>will NOT be considered cheating in this course.</b>
+</p>
+
+<ul class="org-ul">
+<li>Collaborating with a partner on Assignments that allow it is
+perfectly acceptable. Limit your collaborations to within your
+partnership to avoid trouble.</li>
+<li>Discussing code at a high level with students other than a partner
+is fair so long as no code is shared. Take great care at the point
+of directly showing your work to others as your answers are
+subsequently out of your own control.</li>
+<li>Asking public questions on the course discussion board so long as
+limited information about your own solution is included. To convey
+details of your solution, use private posts.</li>
+<li>Asking any course staff member questions in person or online is
+acceptable and encouraged. Staff members may initiate small group
+discussions in which collaboration is fine.</li>
+<li>Making use of your own code or exam materials which you accumulated
+from past semesters of this class is fine. If you are retaking the
+course, make sure staff know this so that no misunderstandings
+occur.</li>
+<li>If you are unsure whether a given collaboration is fair or not, stop
+the activity and clear it with your instructor.</li>
+</ul>
+
+<p>
+At all times keep the <a href="#org1dc2212">PRIME DIRECTIVE</a> in mind when studying with other
+students.  The above collaborations should be limited to getting
+someone over a hurdle, not carrying them across the finish line.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6c22334" class="outline-2">
+<h2 id="org6c22334"><span class="section-number-2">4</span> General Policies</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+General university policies which apply to our course are listed here:
+<a href="https://policy.umn.edu/education/syllabusrequirements-appa">https://policy.umn.edu/education/syllabusrequirements-appa</a>
+</p>
+
+<p>
+Summaries of those policies are below.
+</p>
+
+<p>
+Students are expected to maintain a high level of civility for all
+participants in and out of class meetings.  This includes respecting
+participants of all genders, ethnicities, and social backgrounds.
+Harassment of any type will not be tolerated and failure to behave in
+a respectful manner will be reported to the University.
+</p>
+
+<p>
+Observance of religious events will be accommodated for students of
+any faith. All possible accommodations will be made for students with
+disabilities.  Please contact the <a href="https://diversity.umn.edu/disability/">Disability Resource Center</a> and the
+instructor for further information.
+</p>
+
+<p>
+Some special policies in effect for the semester are below.
+</p>
+</div>
+
+<div id="outline-container-orgc8c7d28" class="outline-3">
+<h3 id="orgc8c7d28"><span class="section-number-3">4.1</span> Masking During Class Meetings</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+All students and staff will be required to where protective masks
+during class meetings. This directive comes from the University and is
+intended to stop the spread of disease during the pandemic. No
+eating/drinking will be allowed during class meetings so masks will
+stay on everyone throughout each meeting. If students feel they merit
+an exception to the policy should contact the Professor via email
+before attending class.
+</p>
+
+<p>
+Full details of the University Mask policy are here:
+<a href="https://safe-campus.umn.edu/return-campus/face-coverings">https://safe-campus.umn.edu/return-campus/face-coverings</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8dc6d16" class="outline-3">
+<h3 id="org8dc6d16"><span class="section-number-3">4.2</span> Online Behavior</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+This course will have a number of online interactions and the
+following additional policies on student/staff behavior and Academic
+Integrity also apply:
+<a href="https://communitystandards.umn.edu/know-code/online-learning-expectations">https://communitystandards.umn.edu/know-code/online-learning-expectations</a>
+</p>
+
+<p>
+The gist of the behavior policies are "Don't be a troll" and the
+Academic Integrity portion reflects our <a href="#org1dc2212">PRIME DIRECTIVE</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5f9ea32" class="outline-3">
+<h3 id="org5f9ea32"><span class="section-number-3">4.3</span> Use of Recordings</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+This course will include video and audio recordings of class
+lectures and classroom activities. These recordings will be used for
+educational purposes and the instructor will make these available to
+students currently enrolled in this course. Students must seek
+instructor permission in order to share either course recordings or
+course content/materials.  Similarly, instructors who wish to share
+zoom recordings with other sections or classes must seek and document
+permission from students whose image or voice are in these recordings.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-09-02 Thu 11:34 <br/> </i>
+</div>
+</body>
+</html>
