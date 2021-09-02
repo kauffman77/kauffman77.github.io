@@ -1,0 +1,900 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-09-02 Thu 11:30 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CS 5451 Assignment 1: Basic Parallel Architecture and Communication</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<style type="text/css">
+.org-ol { list-style-type: upper-alpha; }
+</style>
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2021-09-02 Thu 11:30</i>
+</div>
+<div id="content">
+<h1 class="title">CS 5451 Assignment 1: Basic Parallel Architecture and Communication</h1>
+<ul class="org-ul">
+<li><b>Due: Fri 9/18/2021 by 11:59 pm</b></li>
+<li><i>Approximately 10% of total grade</i></li>
+<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a> in PDF format</li>
+<li>You may work in groups of 2 and submit one assignment per group.</li>
+</ul>
+
+<div id="outline-container-org6c727d3" class="outline-4">
+<h4 id="org6c727d3">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org6c727d3">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org052799a">1. (20pts) <b>Problem 1</b>: Store-and-forward Routing (Grama 2.26)</a></li>
+<li><a href="#orgb0a7895">2. (10pts) <b>Problem 2</b>: Shared vs. Distributed Memory Architectures (Grama 2.7, 2.8)</a></li>
+<li><a href="#orgd11f0a9">3. (10pts) <b>Problem 3</b>: Task-dependence Graphs (Grama 3.2)</a></li>
+<li><a href="#org5ddae32">4. (20pts) <b>Problem 4</b>: Parallel Bucket Sort (Grama 3.19, 3.20)</a></li>
+<li><a href="#orgcd0716e">5. (20pts) <b>Problem 5</b>: Parallel One-to-All Broadcast in 2D Torus</a></li>
+<li><a href="#orgcbdd369">6. (20pts) <b>Problem 6</b>: Bring the Heat</a></li>
+<li><a href="#org5e4da6d">7. Submission Instructions</a>
+<ul>
+<li><a href="#orga5ef273">7.1. Picture Sequence of Uploading an Assignment</a></li>
+<li><a href="#org70d75be">7.2. Adding a Group Member on Gradescope</a></li>
+<li><a href="#org5f2ea72">7.3. Late Submission</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org052799a" class="outline-2">
+<h2 id="org052799a"><span class="section-number-2">1</span> (20pts) <b>Problem 1</b>: Store-and-forward Routing (Grama 2.26)</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Consider the routing of messages in a parallel computer that uses
+store-and-forward routing. In such a network, the cost of sending a
+single message of size \(m\) from \(P_{source}\) to \(P_{destination}\) via a
+path of length \(d\) is \(t_s + t_w \times d \times m\). An alternate way
+of sending a message of size m is as follows. The user breaks the
+message into \(k\) parts each of size \(m/k\), and then sends these \(k\)
+distinct messages one by one from \(P_{source}\) to
+\(P_{destination}\). For this new method, derive the expression for time
+to transfer a message of size \(m\) to a node \(d\) hops away under the
+following two cases:
+</p>
+
+<ol class="org-ol">
+<li>Assume that another message can be sent from \(P_{source}\) as soon
+as the previous message has reached the next node in the path.</li>
+<li>Assume that another message can be sent from \(P_{source}\) only after the
+previous message has reached \(P_{destination}\).</li>
+</ol>
+
+<p>
+For each case, comment on the value of this expression as the value of
+\(k\) varies between 1 and \(m\). Also, what is the optimal value of \(k\)
+if \(t_s\) is very large, or if \(t_s = 0\)?
+</p>
+
+<p>
+<b>Clarification</b>: To start sending any message, a cost of \(t_s\) must be
+paid.  For example sending \(m=10\) words in its entirety costs 
+\[t_s + t_w \times d \times 10\]
+Sending the same message broken into two 5-word chunks costs
+\[(t_s + t_w \times d \times 5) + (t_s + t_w \times d \times 5)\]
+if the sending does not overlap.
+</p>
+
+<blockquote>
+<p>
+Note: some of the math fonts used above may not display correctly. I
+have tested the display on Google chrome and seen it work when
+connected to the network. Notify me if it does not render properly.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-orgb0a7895" class="outline-2">
+<h2 id="orgb0a7895"><span class="section-number-2">2</span> (10pts) <b>Problem 2</b>: Shared vs. Distributed Memory Architectures (Grama 2.7, 2.8)</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Outline the major differences between a shared memory parallel
+computer and a distributed memory parallel computer.  Discuss the
+following in your answer.
+</p>
+
+<ol class="org-ol">
+<li>Overview the differences in the basic architecture of these two
+types of machines with respect to memory access.</li>
+<li>Describe how the programming models are different between these two paradigms
+due to the differences in memory access.</li>
+<li>Report the relative abundance of one architecture versus the other
+and where they typically appear "in the wild".</li>
+<li>Which architectures scales better as more processors are
+incorporated. For example, discuss the feasibility of building a
+1024 processor computer with 1024 GB of RAM as a distributed memory
+machine versus as a shared memory machine.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgd11f0a9" class="outline-2">
+<h2 id="orgd11f0a9"><span class="section-number-2">3</span> (10pts) <b>Problem 3</b>: Task-dependence Graphs (Grama 3.2)</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+For the task graphs given in Figure 3.42 (below), determine the following:
+</p>
+
+<ol class="org-ol">
+<li>Maximum degree of concurrency.</li>
+<li>Critical path length.</li>
+<li>Maximum achievable speedup over one process assuming that an arbitrarily large number of processes is available.</li>
+<li>The minimum number of processes needed to obtain the maximum possible speedup.</li>
+<li>The maximum achievable speedup if the number of processes is limited to 2, 4, and 8.</li>
+</ol>
+
+<p>
+Assume that each task node takes an equal amount of time to execute.
+</p>
+
+<div class="org-center">
+<p>
+<b>Figure 3.42. Task-dependency graphs for Problem 3.2.</b>
+</p>
+
+
+<div id="org0a1a038" class="figure">
+<p><img src="03fig41.png" alt="03fig41.png" style="max-width: 100%;" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5ddae32" class="outline-2">
+<h2 id="org5ddae32"><span class="section-number-2">4</span> (20pts) <b>Problem 4</b>: Parallel Bucket Sort (Grama 3.19, 3.20)</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Consider parallelizing the bucket-sort algorithm on a distributed
+memory computer.
+</p>
+
+<ul class="org-ul">
+<li>Input consists of an array <code>A</code> of <code>n</code> random integers in the range
+<code>[1...r]</code>.</li>
+<li>All <code>p</code> processors on the parallel computer are assumed to have
+access to the entire array <code>A</code> in memory.</li>
+<li>The algorithm should compute the array of integers <code>B</code> where element
+<code>B[i]</code> contains the total number of times integer <code>i</code> appeared in
+input array <code>A</code>.</li>
+<li>At the end of the algorithm execution, at least one processor must
+contain the entire array <code>B</code> which may involve some communication.</li>
+</ul>
+
+<p>
+Describe two ways to decompose this problem into a parallel
+program. Compare these two.
+</p>
+
+<ol class="org-ol">
+<li>Describe a decomposition based on <b>partitioning the input data</b>
+(i.e., the array <code>A</code>) and an appropriate mapping onto p
+processes. Describe briefly how the resulting parallel algorithm
+would work.</li>
+<li>Describe a decomposition based on <b>partitioning the output data</b>
+(i.e., the array <code>B</code>) and an appropriate mapping onto p
+processes. Describe briefly how the resulting parallel algorithm
+would work.</li>
+<li>Discuss the advantages and disadvantages of these two parallel
+formulations.  Describe circumstances under which each is
+preferred. Such circumstances should consider
+<ul class="org-ul">
+<li><code>p</code> the number of processors</li>
+<li><code>r</code> the number of different data possibilities (size of <code>B</code>)</li>
+<li><code>A</code> the input array and <code>n</code> its size</li>
+<li>Potentially also the cost to communicate between the processors</li>
+</ul></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgcd0716e" class="outline-2">
+<h2 id="orgcd0716e"><span class="section-number-2">5</span> (20pts) <b>Problem 5</b>: Parallel One-to-All Broadcast in 2D Torus</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Assume processor 0 has a message that must be sent to all other
+processors in a distributed memory parallel computer.  Describe an
+efficient algorithm to do this in a 2D Torus (wrap-around mesh) with
+<code>[RC]</code> rows and <code>[RC]</code> columns.
+</p>
+
+<p>
+Account for the following in your answers.
+</p>
+<ul class="org-ul">
+<li>A processor can send a message to any other processor.  Any
+processor between the source and destination does not receive the
+message, only forwards it along the path. However, once a processor
+has actually received the message, it can subsequently be a source
+and send it to other processors.</li>
+<li>Processors can be indexed with 2D coordinates as in processor (0,2)
+sends a message to processor (5,4)</li>
+<li>Give rough pseudocode for how this algorithm will look</li>
+<li>Give a cost estimate of this communication in terms of the number or
+rows <code>[RC]</code> and columns <code>[RC]</code> in the network.  The cost of a single
+communication between nodes that are \(d\) hops away is \[t_{single} =
+  t_s + t_w \times m \times d\] You may assume that <code>[RC]</code> and <code>[RC]</code> are
+powers of two in your analysis to simplify the expression for the
+total communication time \(t_{comm}\).</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgcbdd369" class="outline-2">
+<h2 id="orgcbdd369"><span class="section-number-2">6</span> (20pts) <b>Problem 6</b>: Bring the Heat</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Consider a simple physical simulation of heat transfer.  A rod of
+material is insulated except at its ends to which are attached two
+constant sources of heat/cold.  
+</p>
+
+<div class="org-center">
+
+<div id="org4946534" class="figure">
+<p><img src="heat-model.png" alt="heat-model.png" style="max-width: 100%;" />
+</p>
+</div>
+</div>
+
+<p>
+The rod is broken into discrete chunks, sometimes referred to as
+finite elements, and it is assumed that throughout each element the
+temperature is uniform.  The reservoir elements of heat/cold at the
+left and right remain at a constant temperature.  For the other
+elements, the temperature is updated at each time step by examining
+the temperature of its neighbors compared to itself.  This dependence
+is indicated in the lower part of the diagram and the exact update for
+an element is given in the code below.
+</p>
+
+<p>
+The following C code implements a simple version of this simulation.
+A row of the matrix <code>H</code> contains the temperature of all elements in
+the rod at a time step with the leftmost and rightmost elements
+remaining constant. Ultimately, the program computes the entire matrix
+<code>H</code> which contains temperatures of all elements at all time steps.
+Examine this code carefully.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+//  HEAT TRANSFER SIMULATION
+//  
+//  Simple physical simulation of a rod connected at the left and right
+//  ends to constant temperature heat/cold sources.  All positions on
+//  the rod are set to an initial temperature.  Each time step, that
+//  temperature is altered by computing the difference between a cells
+//  temperature and its left and right neighbors.  A constant k
+//  (thermal conductivity) adjusts these differences before altering
+//  the heat at a cell.  Use the following model to compute the heat
+//  for a position on the rod according to the finite difference
+//  method.
+// 
+//     left_diff  = H[t][p] - H[t][p-1];
+//     right_diff = H[t][p] - H[t][p+1];
+//     delta = -k*( left_diff + right_diff )
+//     H[t+1][p] = H[t][p] + delta
+//  
+//  Substituting the above, one can get the following
+// 
+//    H[t+1][p] = H[t][p] + k*H[t][p-1] - 2*k*H[t][p] + k*H[t][p+1]
+// 
+//  The matrix H is computed for all time steps and all positions on
+//  the rod and displayed after running the simulation.  The simulation
+//  is run for a fixed number of time steps rather than until
+//  temperatures reach steady state.
+
+int main(int argc, char **argv){
+  int max_time = 50;            // Number of time steps to simulate 
+  int width = 20;               // Number of cells in the rod 
+  double initial_temp = 50.0;   // Initial temp of internal cells  
+  double L_bound_temp = 20.0;   // Constant temp at Left end of rod 
+  double R_bound_temp = 10.0;   // Constant temp at Right end of rod 
+  double k = 0.5;               // thermal conductivity constant 
+  double **H;                   // 2D array of temps at times/locations  
+
+  // Allocate memory  
+  H = malloc(sizeof(double*)*max_time); 
+  int t,p;
+  for(t=0;t&lt;max_time;t++){
+    H[t] = malloc(sizeof(double*)*width);
+  }
+
+  // Initialize constant left/right boundary temperatures 
+  for(t=0; t&lt;max_time; t++){
+    H[t][0] = L_bound_temp;
+    H[t][width-1] = R_bound_temp;
+  }
+
+  // Initialize temperatures at time 0 
+  t = 0;
+  for(p=1; p&lt;width-1; p++){
+    H[t][p] = initial_temp;
+  }
+
+  // Simulate the temperature changes for internal cells
+  for(t=0; t&lt;max_time-1; t++){
+    for(p=1; p&lt;width-1; p++){
+      double left_diff  = H[t][p] - H[t][p-1];
+      double right_diff = H[t][p] - H[t][p+1];
+      double delta = -k*( left_diff + right_diff );
+      H[t+1][p] = H[t][p] + delta;
+    }
+  }
+
+  // Print results 
+  printf("Temperature results for 1D rod\n");
+  printf("Time step increases going down rows\n");
+  printf("Position on rod changes going accross columns\n");
+
+  // Column headers 
+  printf("%3s| ","");
+  for(p=0; p&lt;width; p++){
+    printf("%5d ",p);
+  }
+  printf("\n");
+  printf("%3s+-","---");
+  for(p=0; p&lt;width; p++){
+    printf("------");
+  }
+  printf("\n");
+  // Row headers and data 
+  for(t=0; t&lt;max_time; t++){
+    printf("%3d| ",t);
+    for(p=0; p&lt;width; p++){
+      printf("%5.1f ",H[t][p]);
+    }
+    printf("\n");
+  }
+
+  return 0;
+}
+</pre>
+</div>
+
+<p>
+Answer the following questions about how to parallelize this code.
+</p>
+
+<ol class="org-ol">
+<li>A typical approach to parallelizing programs is to select a loop
+and split iterations of work between available processors.
+Describe how one might do this for the heat program.  Make sure to
+indicate any loops for which this approach is not feasible and any
+which seem more viable to you.</li>
+<li>Describe how you would divide the data for the heat transfer
+problem among many processors in a distributed memory
+implementation to facilitate efficient communication and
+processing.  Describe a network architecture that seems to fit this
+problem well and balances the cost of the network well.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org5e4da6d" class="outline-2">
+<h2 id="org5e4da6d"><span class="section-number-2">7</span> Submission Instructions</h2>
+<div class="outline-text-2" id="text-7">
+<ul class="org-ul">
+<li>Complete the problems in each section labelled <b>Problem</b></li>
+<li>This is a <b>pair assignment:</b> you may select one partner to work with
+on this assignment as a group of 2. You may also opt to work alone
+as a group of 1.</li>
+<li><b>Only 1 member of your group should submit the HW Writeup on
+Gradescope.</b> If you are working in a partnership, <b>add your partner
+after submitting</b> as described below.</li>
+<li><p>
+Make sure the HW Writeup has all group member's information in it:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">  CS 5451 HW 1
+  Group of 2
+  Turanga Leela tleela4@umn.edu 
+  Philip J Fry pfry99@umn.edu
+</pre>
+</div></li>
+<li><b>Submit a PDF (portable document format, .pdf)</b> of your
+work. Whatever program you write your answers in (Microsoft Word,
+Apple Words, Google Docs, Latex, etc.) make sure you can
+export or "save as" a PDF.</li>
+<li><b>Submit</b> your work to Gradescope under Assignment 1
+<ul class="org-ul">
+<li>Log into Gradescope</li>
+<li>Assignment 1</li>
+<li>Select your PDF for upload</li>
+<li>Use the Gradescope system to indicate which of your answers are on
+which page of your PDF submission - this will make things easier
+on your grader (you want a happy grader).</li>
+<li>After uploading, <b>add your partner as a group member</b> if you had
+one.</li>
+</ul></li>
+</ul>
+</div>
+
+<div id="outline-container-orga5ef273" class="outline-3">
+<h3 id="orga5ef273"><span class="section-number-3">7.1</span> Picture Sequence of Uploading an Assignment</h3>
+<div class="outline-text-3" id="text-7-1">
+<div class="org-center">
+<p>
+<b>Selecting a PDF to upload</b>
+</p>
+
+<div id="org4920d20" class="figure">
+<p><img src="gradescope-submit-1.png" alt="gradescope-submit-1.png" style="max-width:100%;" />
+</p>
+</div>
+
+
+<div id="orgc363cc7" class="figure">
+<p><img src="gradescope-submit-2.png" alt="gradescope-submit-2.png" style="max-width:100%;" />
+</p>
+</div>
+
+
+<div id="org3eddc3c" class="figure">
+<p><img src="gradescope-submit-3.png" alt="gradescope-submit-3.png" style="max-width:100%;" />
+</p>
+</div>
+
+<p>
+<b>Indicate problem answers on each page</b>
+</p>
+
+<div id="org8c0c3e6" class="figure">
+<p><img src="gradescope-submit-4.png" alt="gradescope-submit-4.png" style="max-width:100%;" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org70d75be" class="outline-3">
+<h3 id="org70d75be"><span class="section-number-3">7.2</span> Adding a Group Member on Gradescope</h3>
+<div class="outline-text-3" id="text-7-2">
+<div class="org-center">
+<p>
+<b>Submitter should edit the group associated with the submission</b>
+</p>
+
+<div id="org8895037" class="figure">
+<p><img src="gradescope-submit-5.png" alt="gradescope-submit-5.png" style="max-width:100%;" />
+</p>
+</div>
+
+<p>
+<b>Find your partner in the search box</b>
+</p>
+
+<div id="orgbbdf964" class="figure">
+<p><img src="gradescope-submit-6.png" alt="gradescope-submit-6.png" style="max-width:100%;" />
+</p>
+</div>
+
+<p>
+<b>Ensure your partner is listed</b>
+</p>
+
+<div id="org087251a" class="figure">
+<p><img src="gradescope-submit-7.png" alt="gradescope-submit-7.png" style="max-width:100%;" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org5f2ea72" class="outline-3">
+<h3 id="org5f2ea72"><span class="section-number-3">7.3</span> Late Submission</h3>
+<div class="outline-text-3" id="text-7-3">
+<p>
+As described in the <a href="syllabus.html">Course Syllabus</a>, late submissions are penalized as
+follows.
+</p>
+<ul class="org-ul">
+<li>On-time submissions receive no penalties</li>
+<li>Submitting 1-24 hours will result in the loss of 10% absolute credit</li>
+<li>Submitting 25-48 hours late will result in the loss 20% absolute
+credit</li>
+<li><b>No submissions will be accepted more than 48 hours after a deadline.</b></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@cs.gmu.edu">kauffman@cs.gmu.edu</a>) <br/> Date: 2021-09-02 Thu 11:30 <br/> </i>
+</div>
+</body>
+</html>
