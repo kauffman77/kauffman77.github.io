@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-02-02 Tue 11:26 -->
+<!-- 2021-09-21 Tue 16:39 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CSCI 2021 HW03: Binary Integers</title>
+<title>CSCI 2021 HW03: Basic I/O + Binary Integers</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
 <style type="text/css">
@@ -40,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -52,7 +52,7 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
@@ -254,6 +254,7 @@ background-color: inherit; font-family: inherit;
 padding: inherit; font-size: 80%; font-weight: inherit;
 text-transform: uppercase;
 }
+
 .figure p { text-align: inherit; }
 figure-number { font-style: italic; }
 #table-of-contents {
@@ -329,6 +330,7 @@ margin-left: 0.5em;
 }
 .linenr { font-size: xx-small; }
 }
+
 @media print {
 html {
 font-family: serif;
@@ -339,69 +341,45 @@ text-align: justify;
 }
 </style>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-02-02 Tue 11:26</i>
+<i>Last Updated: 2021-09-21 Tue 16:39</i>
 </div>
 <div id="content">
-<h1 class="title">CSCI 2021 HW03: Binary Integers</h1>
+<h1 class="title">CSCI 2021 HW03: Basic I/O + Binary Integers</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 2/09/2021</b></li>
+<li><b>Due: 11:59pm Tue 9/28/2021</b></li>
 <li><i>Approximately 0.83% of total grade</i></li>
 <li>Homework and Quizzes are open resource/open collaboration. You must
 submit your own work but you may freely discuss HW topics with other
 members of the class.</li>
 </ul>
 
-<div id="outline-container-orgd37a7df" class="outline-4">
-<h4 id="orgd37a7df">CODE DISTRIBUTION: <a href="hw03-code.zip">hw03-code.zip</a></h4>
-<div class="outline-text-4" id="text-orgd37a7df">
+<div id="outline-container-org135d343" class="outline-4">
+<h4 id="org135d343">CODE DISTRIBUTION: <a href="hw03-code.zip">hw03-code.zip</a></h4>
+<div class="outline-text-4" id="text-org135d343">
 <ul class="org-ul">
 <li>Download the code distribution</li>
 <li>See further setup instructions below</li>
@@ -409,32 +387,32 @@ members of the class.</li>
 </div>
 </div>
 
-<div id="outline-container-org377585c" class="outline-4">
-<h4 id="org377585c">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org377585c">
+<div id="outline-container-org66414c6" class="outline-4">
+<h4 id="org66414c6">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org66414c6">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org3df330e">1. Rationale</a>
+<li><a href="#orga1f063f">1. Rationale</a>
 <ul>
-<li><a href="#org8331bd0">Associated Reading / Preparation</a></li>
-<li><a href="#orgf322f7e">Grading Policy</a></li>
+<li><a href="#org2c04af5">Associated Reading / Preparation</a></li>
+<li><a href="#org322a3c3">Grading Policy</a></li>
 </ul>
 </li>
-<li><a href="#org1873973">2. Codepack</a></li>
-<li><a href="#org3260e6d">3. Two's Complement Arithmetic</a></li>
-<li><a href="#org222d215">4. Octal and Hexadecimal Representation of Numbers</a></li>
-<li><a href="#org314c0bf">5. What to Understand</a></li>
-<li><a href="#org374a298">6. Questions</a></li>
+<li><a href="#org8db44c7">2. Codepack</a></li>
+<li><a href="#org1d64537">3. Two's Complement Arithmetic</a></li>
+<li><a href="#orgfbc22fd">4. Octal and Hexadecimal Representation of Numbers</a></li>
+<li><a href="#orga0c1176">5. What to Understand</a></li>
+<li><a href="#org5b62b75">6. Questions</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org3df330e" class="outline-2">
-<h2 id="org3df330e"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orga1f063f" class="outline-2">
+<h2 id="orga1f063f"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Reading data from files is an essential skill in any programming
@@ -455,9 +433,9 @@ also discussed.
 </p>
 </div>
 
-<div id="outline-container-org8331bd0" class="outline-3">
-<h3 id="org8331bd0">Associated Reading / Preparation</h3>
-<div class="outline-text-3" id="text-org8331bd0">
+<div id="outline-container-org2c04af5" class="outline-3">
+<h3 id="org2c04af5">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-org2c04af5">
 <p>
 Most C references will contain information on C's standard I/O
 libraries which discuss functions like <code>fopen(), fscanf(), rewind()</code>
@@ -467,14 +445,14 @@ and <code>fclose()</code>.
 <p>
 Bryant and O'Hallaron: Ch 2.1-2.3 on binary representations of
 integers in unsigned and two's complement signed format. This page
-also includes a <a href="#org191d058">summary of the Two's Complement system</a>.
+also includes a <a href="#org013a3d9">summary of the Two's Complement system</a>.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgf322f7e" class="outline-3">
-<h3 id="orgf322f7e">Grading Policy</h3>
-<div class="outline-text-3" id="text-orgf322f7e">
+<div id="outline-container-org322a3c3" class="outline-3">
+<h3 id="org322a3c3">Grading Policy</h3>
+<div class="outline-text-3" id="text-org322a3c3">
 <p>
 Credit for this HW is earned by taking the associated HW Quiz which is
 linked under <code>Gradescope</code>.  The quiz will ask similar questions as
@@ -496,8 +474,8 @@ See the <a href="../2021/syllabus.html">full policies in the course syllabus</a>
 </div>
 </div>
 
-<div id="outline-container-org1873973" class="outline-2">
-<h2 id="org1873973"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org8db44c7" class="outline-2">
+<h2 id="org8db44c7"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -547,8 +525,8 @@ The codepack for the HW contains the following files:
 </div>
 </div>
 
-<div id="outline-container-org3260e6d" class="outline-2">
-<h2 id="org3260e6d"><span class="section-number-2">3</span> <a id="org191d058"></a> Two's Complement Arithmetic</h2>
+<div id="outline-container-org1d64537" class="outline-2">
+<h2 id="org1d64537"><span class="section-number-2">3</span> <a id="org013a3d9"></a> Two's Complement Arithmetic</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Understanding two's complement is necessary to complete a problem
@@ -692,8 +670,8 @@ in the following
 </div>
 </div>
 
-<div id="outline-container-org222d215" class="outline-2">
-<h2 id="org222d215"><span class="section-number-2">4</span> Octal and Hexadecimal Representation of Numbers</h2>
+<div id="outline-container-orgfbc22fd" class="outline-2">
+<h2 id="orgfbc22fd"><span class="section-number-2">4</span> Octal and Hexadecimal Representation of Numbers</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 The base-10 numbering system is taught rigorously from an early age
@@ -740,8 +718,8 @@ bits by 4: each 4 bits corresponds to one hexadecimal digit</li>
 </div>
 </div>
 
-<div id="outline-container-org314c0bf" class="outline-2">
-<h2 id="org314c0bf"><span class="section-number-2">5</span> What to Understand</h2>
+<div id="outline-container-orga0c1176" class="outline-2">
+<h2 id="orga0c1176"><span class="section-number-2">5</span> What to Understand</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Ensure that you understand
@@ -756,8 +734,8 @@ Ensure that you understand
 </div>
 
 
-<div id="outline-container-org374a298" class="outline-2">
-<h2 id="org374a298"><span class="section-number-2">6</span> Questions</h2>
+<div id="outline-container-org5b62b75" class="outline-2">
+<h2 id="org5b62b75"><span class="section-number-2">6</span> Questions</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Analyze the files in the provided codepack and answer the questions
@@ -1000,7 +978,7 @@ PROBLEM 4: Converting Strings to Numbers
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-02-02 Tue 11:26 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-09-21 Tue 16:39 <br/> </i>
 </div>
 </body>
 </html>
