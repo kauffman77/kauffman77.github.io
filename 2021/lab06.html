@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-02-23 Tue 13:58 -->
+<!-- 2021-10-12 Tue 09:39 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Lab06: GDB Basics</title>
@@ -40,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -52,7 +52,7 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
@@ -254,6 +254,7 @@ background-color: inherit; font-family: inherit;
 padding: inherit; font-size: 80%; font-weight: inherit;
 text-transform: uppercase;
 }
+
 .figure p { text-align: inherit; }
 figure-number { font-style: italic; }
 #table-of-contents {
@@ -329,6 +330,7 @@ margin-left: 0.5em;
 }
 .linenr { font-size: xx-small; }
 }
+
 @media print {
 html {
 font-family: serif;
@@ -339,90 +341,66 @@ text-align: justify;
 }
 </style>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-02-23 Tue 13:58</i>
+<i>Last Updated: 2021-10-12 Tue 09:39</i>
 </div>
 <div id="content">
 <h1 class="title">CSCI 2021 Lab06: GDB Basics</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 3/02/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm Tue 10/19/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-org0bf7fa0" class="outline-4">
-<h4 id="org0bf7fa0">CODE DISTRIBUTION: <a href="lab06-code.zip">lab06-code.zip</a></h4>
+<div id="outline-container-org84e052b" class="outline-4">
+<h4 id="org84e052b">CODE DISTRIBUTION: <a href="lab06-code.zip">lab06-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org802125f" class="outline-4">
-<h4 id="org802125f">CHANGELOG: Empty</h4>
+<div id="outline-container-orga8809e9" class="outline-4">
+<h4 id="orga8809e9">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-org96a704f" class="outline-4">
-<h4 id="org96a704f"></h4>
-<div class="outline-text-4" id="text-org96a704f">
+<div id="outline-container-org8bb5a59" class="outline-4">
+<h4 id="org8bb5a59"></h4>
+<div class="outline-text-4" id="text-org8bb5a59">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org0fe49c2">1. Rationale</a></li>
-<li><a href="#orgd4ad802">2. Codepack</a></li>
-<li><a href="#org0b92a26">3. QUESTIONS.txt File Contents</a></li>
-<li><a href="#orgbeea5c8">4. Submission</a></li>
+<li><a href="#org3fc0c7f">1. Rationale</a></li>
+<li><a href="#orgb2cb8c7">2. Codepack</a></li>
+<li><a href="#org3e8417e">3. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org1b00832">4. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org0fe49c2" class="outline-2">
-<h2 id="org0fe49c2"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org3fc0c7f" class="outline-2">
+<h2 id="org3fc0c7f"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Debuggers are an essential tool for any serious coder. They provide
@@ -435,9 +413,9 @@ is made immensely easier through the use of the debugger.
 </p>
 </div>
 
-<div id="outline-container-org0e5986d" class="outline-4">
-<h4 id="org0e5986d">Associated Reading</h4>
-<div class="outline-text-4" id="text-org0e5986d">
+<div id="outline-container-org5140e1f" class="outline-4">
+<h4 id="org5140e1f">Associated Reading</h4>
+<div class="outline-text-4" id="text-org5140e1f">
 <p>
 <a href="http://www-users.cs.umn.edu/~kauffman/2021/gdb.html">CSCI 2021 Quick Guide to gdb: The GNU Debugger</a>: Page describing how to
 start the debugger, a sample session using <code>puzzlebox</code>, an overview of
@@ -446,9 +424,9 @@ the most common commands.
 </div>
 </div>
 
-<div id="outline-container-org5d0d608" class="outline-4">
-<h4 id="org5d0d608">Grading Policy</h4>
-<div class="outline-text-4" id="text-org5d0d608">
+<div id="outline-container-org20f5ea4" class="outline-4">
+<h4 id="org20f5ea4">Grading Policy</h4>
+<div class="outline-text-4" id="text-org20f5ea4">
 <p>
 Credit for this Lab is earned by completing the exercises here and
 submitting a Zip of the work to Gradescope. Students are responsible
@@ -471,8 +449,8 @@ See the <a href="../syllabus.html">full policies in the course syllabus</a>.
 </div>
 </div>
 
-<div id="outline-container-orgd4ad802" class="outline-2">
-<h2 id="orgd4ad802"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orgb2cb8c7" class="outline-2">
+<h2 id="orgb2cb8c7"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for this lab is linked at the top of this
@@ -558,8 +536,8 @@ the following files which are briefly described.
 </div>
 
 
-<div id="outline-container-org0b92a26" class="outline-2">
-<h2 id="org0b92a26"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org3e8417e" class="outline-2">
+<h2 id="org3e8417e"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -663,7 +641,7 @@ next command in gdb
   | 
   `----
 
-  When the `next' command is executed by GDB, then the debugger execute
+  When the `next' command is executed by GDB, then the debugger executes
   some code and leaves the state of the running program in one of the
   following positions:
 
@@ -774,8 +752,8 @@ CODE input.txt for phase03
 </div>
 </div>
 
-<div id="outline-container-orgbeea5c8" class="outline-2">
-<h2 id="orgbeea5c8"><span class="section-number-2">4</span> Submission</h2>
+<div id="outline-container-org1b00832" class="outline-2">
+<h2 id="org1b00832"><span class="section-number-2">4</span> Submission</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -785,7 +763,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-02-23 Tue 13:58 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-10-12 Tue 09:39 <br/> </i>
 </div>
 </body>
 </html>
