@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-03-02 Tue 13:18 -->
+<!-- 2021-10-18 Mon 14:12 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Lab07: Assembly Coding</title>
@@ -40,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -52,7 +52,7 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
@@ -254,6 +254,7 @@ background-color: inherit; font-family: inherit;
 padding: inherit; font-size: 80%; font-weight: inherit;
 text-transform: uppercase;
 }
+
 .figure p { text-align: inherit; }
 figure-number { font-style: italic; }
 #table-of-contents {
@@ -329,6 +330,7 @@ margin-left: 0.5em;
 }
 .linenr { font-size: xx-small; }
 }
+
 @media print {
 html {
 font-family: serif;
@@ -339,95 +341,71 @@ text-align: justify;
 }
 </style>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-03-02 Tue 13:18</i>
+<i>Last Updated: 2021-10-18 Mon 14:12</i>
 </div>
 <div id="content">
 <h1 class="title">CSCI 2021 Lab07: Assembly Coding</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 3/09/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm Tue 10/26/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-org45fd286" class="outline-4">
-<h4 id="org45fd286">CODE DISTRIBUTION: <a href="lab07-code.zip">lab07-code.zip</a></h4>
+<div id="outline-container-org09ebaa8" class="outline-4">
+<h4 id="org09ebaa8">CODE DISTRIBUTION: <a href="lab07-code.zip">lab07-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org981f914" class="outline-4">
-<h4 id="org981f914">CHANGELOG: Empty</h4>
+<div id="outline-container-orgfd17bca" class="outline-4">
+<h4 id="orgfd17bca">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-org8136a4f" class="outline-4">
-<h4 id="org8136a4f"></h4>
-<div class="outline-text-4" id="text-org8136a4f">
+<div id="outline-container-org3a74045" class="outline-4">
+<h4 id="org3a74045"></h4>
+<div class="outline-text-4" id="text-org3a74045">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orge2df1e3">1. Rationale</a></li>
-<li><a href="#org3fa02e2">2. Codepack</a></li>
-<li><a href="#org9b92f11">3. Two Assembly Functions</a></li>
-<li><a href="#orgcd89ee6">4. Incremental Development</a></li>
-<li><a href="#orgfac4f56">5. <code>set_coins</code> Assembly Function</a></li>
-<li><a href="#org6f80c4d">6. <code>total_coins</code> Assembly Function</a></li>
-<li><a href="#org4d402f8">7. Debug Assembly Functions via <code>gdb</code></a></li>
-<li><a href="#orgdd6d96a">8. QUESTIONS.txt File Contents</a></li>
-<li><a href="#orgadec40e">9. Submission</a></li>
+<li><a href="#orga83029f">1. Rationale</a></li>
+<li><a href="#orga89b860">2. Codepack</a></li>
+<li><a href="#orge72b642">3. Two Assembly Functions</a></li>
+<li><a href="#org741a426">4. Incremental Development</a></li>
+<li><a href="#orgdfe4b38">5. <code>set_coins</code> Assembly Function</a></li>
+<li><a href="#org2ec00d9">6. <code>total_coins</code> Assembly Function</a></li>
+<li><a href="#org0d5dca8">7. Debug Assembly Functions via <code>gdb</code></a></li>
+<li><a href="#orgf77d37b">8. QUESTIONS.txt File Contents</a></li>
+<li><a href="#orga9a1ee9">9. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orge2df1e3" class="outline-2">
-<h2 id="orge2df1e3"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orga83029f" class="outline-2">
+<h2 id="orga83029f"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Assembly coding requires careful attention to detail and can feel
@@ -446,9 +424,9 @@ function at a time can be tested to ensure each is correct.
 </p>
 </div>
 
-<div id="outline-container-org2dd6d5c" class="outline-4">
-<h4 id="org2dd6d5c">Associated Reading / Preparation</h4>
-<div class="outline-text-4" id="text-org2dd6d5c">
+<div id="outline-container-org0de8567" class="outline-4">
+<h4 id="org0de8567">Associated Reading / Preparation</h4>
+<div class="outline-text-4" id="text-org0de8567">
 <ul class="org-ul">
 <li>Bryant and O'Hallaron: Ch 3.1-3.7 on assembly code instructions in
 x86-64.</li>
@@ -474,9 +452,9 @@ Assembler dialect and shows how to block comment/uncomment code.
 </div>
 </div>
 
-<div id="outline-container-org14ec356" class="outline-4">
-<h4 id="org14ec356">Grading Policy</h4>
-<div class="outline-text-4" id="text-org14ec356">
+<div id="outline-container-org69b4cca" class="outline-4">
+<h4 id="org69b4cca">Grading Policy</h4>
+<div class="outline-text-4" id="text-org69b4cca">
 <p>
 Credit for this Lab is earned by completing the exercises here and
 submitting a Zip of the work to Gradescope. Students are responsible
@@ -499,10 +477,8 @@ See the <a href="../syllabus.html">full policies in the course syllabus</a>.
 </div>
 </div>
 
-
-
-<div id="outline-container-org3fa02e2" class="outline-2">
-<h2 id="org3fa02e2"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orga89b860" class="outline-2">
+<h2 id="orga89b860"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -603,8 +579,8 @@ The codepack for the HW contains the following files:
 </div>
 </div>
 
-<div id="outline-container-org9b92f11" class="outline-2">
-<h2 id="org9b92f11"><span class="section-number-2">3</span> Two Assembly Functions</h2>
+<div id="outline-container-orge72b642" class="outline-2">
+<h2 id="orge72b642"><span class="section-number-2">3</span> Two Assembly Functions</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 The goal of the lab is to complete working assembly code for two
@@ -722,8 +698,8 @@ RESULTS: 1 / 1 tests passed
 </div>
 
 
-<div id="outline-container-orgcd89ee6" class="outline-2">
-<h2 id="orgcd89ee6"><span class="section-number-2">4</span> Incremental Development</h2>
+<div id="outline-container-org741a426" class="outline-2">
+<h2 id="org741a426"><span class="section-number-2">4</span> Incremental Development</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 To ensure that you understand the algorithm to be implemented for
@@ -851,13 +827,13 @@ WARNING: These are the hybrid tests used for incremental development.
 </div>
 
 
-<div id="outline-container-orgfac4f56" class="outline-2">
-<h2 id="orgfac4f56"><span class="section-number-2">5</span> <code>set_coins</code> Assembly Function</h2>
+<div id="outline-container-orgdfe4b38" class="outline-2">
+<h2 id="orgdfe4b38"><span class="section-number-2">5</span> <code>set_coins</code> Assembly Function</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org4593a19" class="outline-4">
-<h4 id="org4593a19">Use of the Division Instruction</h4>
-<div class="outline-text-4" id="text-org4593a19">
+<div id="outline-container-org85388df" class="outline-4">
+<h4 id="org85388df">Use of the Division Instruction</h4>
+<div class="outline-text-4" id="text-org85388df">
 <p>
 The main purpose of <code>set_coins</code> is to repeatedly divide the "cents" by
 different coin values to determine how many quarters, dimes, nickels,
@@ -886,9 +862,9 @@ by moving the remaining cents into <code>%eax</code> again for another division.
 </div>
 </div>
 
-<div id="outline-container-orgbbc3739" class="outline-4">
-<h4 id="orgbbc3739">Setting Struct Fields in Memory</h4>
-<div class="outline-text-4" id="text-orgbbc3739">
+<div id="outline-container-org56bea40" class="outline-4">
+<h4 id="org56bea40">Setting Struct Fields in Memory</h4>
+<div class="outline-text-4" id="text-org56bea40">
 <p>
 Note the use of <code>movb</code> to move a single byte from the A-family
 register into main memory.  
@@ -915,13 +891,13 @@ offsets such as <code>2(%rsi)</code>.
 </div>
 </div>
 
-<div id="outline-container-org6f80c4d" class="outline-2">
-<h2 id="org6f80c4d"><span class="section-number-2">6</span> <code>total_coins</code> Assembly Function</h2>
+<div id="outline-container-org2ec00d9" class="outline-2">
+<h2 id="org2ec00d9"><span class="section-number-2">6</span> <code>total_coins</code> Assembly Function</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-org5fd8693" class="outline-4">
-<h4 id="org5fd8693">Packed Struct Arguments</h4>
-<div class="outline-text-4" id="text-org5fd8693">
+<div id="outline-container-org6277413" class="outline-4">
+<h4 id="org6277413">Packed Struct Arguments</h4>
+<div class="outline-text-4" id="text-org6277413">
 <p>
 Consider the C prototype and assembly documentation given for the function:
 </p>
@@ -965,8 +941,8 @@ remainder of the function.
 </div>
 </div>
 
-<div id="outline-container-org4d402f8" class="outline-2">
-<h2 id="org4d402f8"><span class="section-number-2">7</span> Debug Assembly Functions via <code>gdb</code></h2>
+<div id="outline-container-org0d5dca8" class="outline-2">
+<h2 id="org0d5dca8"><span class="section-number-2">7</span> Debug Assembly Functions via <code>gdb</code></h2>
 <div class="outline-text-2" id="text-7">
 <p>
 Debugging assembly code is difficult as there are so many details to
@@ -1016,8 +992,8 @@ gdb&gt; run                        # run to breakpoint
 </div>
 
 
-<div id="outline-container-orgdd6d96a" class="outline-2">
-<h2 id="orgdd6d96a"><span class="section-number-2">8</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-orgf77d37b" class="outline-2">
+<h2 id="orgf77d37b"><span class="section-number-2">8</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-8">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -1127,8 +1103,8 @@ CODE coins_funcs_asm.s
 </div>
 
 
-<div id="outline-container-orgadec40e" class="outline-2">
-<h2 id="orgadec40e"><span class="section-number-2">9</span> Submission</h2>
+<div id="outline-container-orga9a1ee9" class="outline-2">
+<h2 id="orga9a1ee9"><span class="section-number-2">9</span> Submission</h2>
 <div class="outline-text-2" id="text-9">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -1138,7 +1114,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-03-02 Tue 13:18 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-10-18 Mon 14:12 <br/> </i>
 </div>
 </body>
 </html>
