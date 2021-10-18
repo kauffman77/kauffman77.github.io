@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-03-05 Fri 16:08 -->
+<!-- 2021-10-18 Mon 13:47 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 HW07: Assembly Debugging and Data</title>
@@ -40,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -52,7 +52,7 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
@@ -254,6 +254,7 @@ background-color: inherit; font-family: inherit;
 padding: inherit; font-size: 80%; font-weight: inherit;
 text-transform: uppercase;
 }
+
 .figure p { text-align: inherit; }
 figure-number { font-style: italic; }
 #table-of-contents {
@@ -329,6 +330,7 @@ margin-left: 0.5em;
 }
 .linenr { font-size: xx-small; }
 }
+
 @media print {
 html {
 font-family: serif;
@@ -339,66 +341,42 @@ text-align: justify;
 }
 </style>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-03-05 Fri 16:08</i>
+<i>Last Updated: 2021-10-18 Mon 13:47</i>
 </div>
 <div id="content">
 <h1 class="title">CSCI 2021 HW07: Assembly Debugging and Data</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 3/09/2020</b></li>
+<li><b>Due: 11:59pm Tue 10/26/2021</b></li>
 <li><i>Approximately 0.83% of total grade</i></li>
 </ul>
 
-<div id="outline-container-org52af16a" class="outline-4">
-<h4 id="org52af16a">CODE DISTRIBUTION: <a href="hw07-code.zip">hw07-code.zip</a></h4>
-<div class="outline-text-4" id="text-org52af16a">
+<div id="outline-container-org00ca333" class="outline-4">
+<h4 id="org00ca333">CODE DISTRIBUTION: <a href="hw07-code.zip">hw07-code.zip</a></h4>
+<div class="outline-text-4" id="text-org00ca333">
 <ul class="org-ul">
 <li>Download the code distribution</li>
 <li>See further setup instructions below</li>
@@ -406,44 +384,34 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-orgf34dab2" class="outline-4">
-<h4 id="orgf34dab2">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-orgf34dab2">
-<dl class="org-dl">
-<dt>Fri Mar  5 02:46:06 PM CST 2021</dt><dd>A minor bug was present in the
-<code>dodiv_badtypes.s</code> and <code>dodiv_segault.s</code> codes where the numerator
-rather than the denominator was checked for a 0. This has been
-corrected in the code pack but does affect the severe bugs that are
-studied in the exercises so downloading the updated versions is
-optional</dd>
-</dl>
-</div>
+<div id="outline-container-org12d2ffa" class="outline-4">
+<h4 id="org12d2ffa">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-orgf170f4d" class="outline-4">
-<h4 id="orgf170f4d"></h4>
-<div class="outline-text-4" id="text-orgf170f4d">
+<div id="outline-container-orga3d54e9" class="outline-4">
+<h4 id="orga3d54e9"></h4>
+<div class="outline-text-4" id="text-orga3d54e9">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgea1b07b">1. Rationale</a>
+<li><a href="#org475fe78">1. Rationale</a>
 <ul>
-<li><a href="#orgcd85877">Associated Reading / Preparation</a></li>
-<li><a href="#org4a37312">Grading Policy</a></li>
+<li><a href="#org2e2a8f0">Associated Reading / Preparation</a></li>
+<li><a href="#org11f2a7f">Grading Policy</a></li>
 </ul>
 </li>
-<li><a href="#org6865191">2. Codepack</a></li>
-<li><a href="#org165e362">3. What to Understand</a></li>
-<li><a href="#org11dcbe0">4. Questions</a></li>
+<li><a href="#orgdf481a3">2. Codepack</a></li>
+<li><a href="#org29dea03">3. What to Understand</a></li>
+<li><a href="#orgd8f9941">4. Questions</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgea1b07b" class="outline-2">
-<h2 id="orgea1b07b"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org475fe78" class="outline-2">
+<h2 id="org475fe78"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This HW covers additional details of assembly programming
@@ -453,9 +421,9 @@ execution to "debug" an existing assembly code.
 </p>
 </div>
 
-<div id="outline-container-orgcd85877" class="outline-3">
-<h3 id="orgcd85877">Associated Reading / Preparation</h3>
-<div class="outline-text-3" id="text-orgcd85877">
+<div id="outline-container-org2e2a8f0" class="outline-3">
+<h3 id="org2e2a8f0">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-org2e2a8f0">
 <ul class="org-ul">
 <li>Bryant and O'Hallaron: Ch 3.1-3.7 on assembly code instructions in
 x86-64.</li>
@@ -470,9 +438,9 @@ code is available.</li>
 </div>
 </div>
 
-<div id="outline-container-org4a37312" class="outline-3">
-<h3 id="org4a37312">Grading Policy</h3>
-<div class="outline-text-3" id="text-org4a37312">
+<div id="outline-container-org11f2a7f" class="outline-3">
+<h3 id="org11f2a7f">Grading Policy</h3>
+<div class="outline-text-3" id="text-org11f2a7f">
 <p>
 Credit for this HW is earned by taking the associated HW Quiz which is
 linked under <code>Gradescope</code>.  The quiz will ask similar questions as
@@ -494,8 +462,8 @@ See the <a href="../2021/syllabus.html">full policies in the course syllabus</a>
 </div>
 </div>
 
-<div id="outline-container-org6865191" class="outline-2">
-<h2 id="org6865191"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orgdf481a3" class="outline-2">
+<h2 id="orgdf481a3"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -557,8 +525,8 @@ The codepack for the HW contains the following files:
 </div>
 </div>
 
-<div id="outline-container-org165e362" class="outline-2">
-<h2 id="org165e362"><span class="section-number-2">3</span> What to Understand</h2>
+<div id="outline-container-org29dea03" class="outline-2">
+<h2 id="org29dea03"><span class="section-number-2">3</span> What to Understand</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Ensure that you understand
@@ -573,8 +541,8 @@ specified absolutely and in registers.</li>
 </div>
 </div>
 
-<div id="outline-container-org11dcbe0" class="outline-2">
-<h2 id="org11dcbe0"><span class="section-number-2">4</span> Questions</h2>
+<div id="outline-container-orgd8f9941" class="outline-2">
+<h2 id="orgd8f9941"><span class="section-number-2">4</span> Questions</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Analyze the files in the provided codepack and answer the questions
@@ -795,7 +763,7 @@ C: GDB with Assembly
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-03-05 Fri 16:08 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-10-18 Mon 13:47 <br/> </i>
 </div>
 </body>
 </html>
