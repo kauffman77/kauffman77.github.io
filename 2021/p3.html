@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-03-17 Wed 15:08 -->
+<!-- 2021-10-22 Fri 13:08 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Project 3: Assembly Coding and Debugging</title>
@@ -40,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -52,7 +52,7 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
@@ -254,6 +254,7 @@ background-color: inherit; font-family: inherit;
 padding: inherit; font-size: 80%; font-weight: inherit;
 text-transform: uppercase;
 }
+
 .figure p { text-align: inherit; }
 figure-number { font-style: italic; }
 #table-of-contents {
@@ -329,6 +330,7 @@ margin-left: 0.5em;
 }
 .linenr { font-size: xx-small; }
 }
+
 @media print {
 html {
 font-family: serif;
@@ -339,55 +341,31 @@ text-align: justify;
 }
 </style>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-03-17 Wed 15:08</i>
+<i>Last Updated: 2021-10-22 Fri 13:08</i>
 </div>
 <div id="content">
 <h1 class="title">CSCI 2021 Project 3: Assembly Coding and Debugging</h1>
@@ -398,71 +376,45 @@ for the JavaScript code in this tag.
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-org5028932" class="outline-4">
-<h4 id="org5028932">CODE/TEST DISTRIBUTION: <a href="p3-code.zip">p3-code.zip</a></h4>
+<div id="outline-container-org527d066" class="outline-4">
+<h4 id="org527d066">CODE/TEST DISTRIBUTION: <a href="p3-code.zip">p3-code.zip</a></h4>
 </div>
-<div id="outline-container-org7704ff9" class="outline-4">
-<h4 id="org7704ff9">VIDEO OVERVIEW: <a href="https://youtu.be/uajI6YXQVy8">https://youtu.be/uajI6YXQVy8</a></h4>
-</div>
-<div id="outline-container-org3fdf0bc" class="outline-4">
-<h4 id="org3fdf0bc">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org3fdf0bc">
-<dl class="org-dl">
-<dt>Wed Mar 17 03:04:49 PM CDT 2021</dt><dd>Earlier a fix was issued for Test
-#26 <code>set_display_from_batt() error mode=0</code> which corrected
-expectations in <code>test_prob1.org</code> file but the hybrid tests were not
-updated so there was some confusion around the expectation.  Linked
-below is a fresh copy of <code>test_hybrid.org</code> which will also correct
-for this. If <code>set_display_from_batt()</code> is called with a struct where
-<code>mode</code> is not 1 or 2, it should immediately return with value 1.
-<ul class="org-ul">
-<li><a href="test_hybrid.org">test_hybrid.org</a></li>
-<li><a href="test_prob1.org">test_prob1.org</a></li>
-</ul></dd>
-
-<dt>Wed Mar 10 03:54:06 PM CST 2021</dt><dd>The submission link for P3 on
-Gradescope will become available this evening.</dd>
-
-<dt>Sun Mar  7 04:20:39 PM CST 2021</dt><dd>A minor bug was identified in
-<a href="https://piazza.com/class/kjx0d5e4nhg9z?cid=478">Post 478</a> which concerns Problem Test #26 <code>set_display_from_batt()
-  error mode=0</code>: should expect a return value of 1 from
-<code>set_display_from_batt()</code> when it did not originally. This has been
-fixed in the current codepack and you can update the only test file
-required to fix this which is <a href="test_prob1.org"><code>test_prob1.org</code></a>.</dd>
-</dl>
+<div id="outline-container-org790a057" class="outline-4">
+<h4 id="org790a057">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org790a057">
 </div>
 </div>
 
-<div id="outline-container-org051301a" class="outline-4">
-<h4 id="org051301a"></h4>
-<div class="outline-text-4" id="text-org051301a">
+<div id="outline-container-org00568e9" class="outline-4">
+<h4 id="org00568e9"></h4>
+<div class="outline-text-4" id="text-org00568e9">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org63f640f">1. Introduction</a></li>
-<li><a href="#org98fbfe4">2. Download Code and Setup</a></li>
-<li><a href="#orgcffc8d6">3. <b>Problem 1</b>: Battery Meter Assembly Functions</a>
+<li><a href="#org6193956">1. Introduction</a></li>
+<li><a href="#orga403c45">2. Download Code and Setup</a></li>
+<li><a href="#orgb6217f3">3. <b>Problem 1</b>: Clock Display Assembly Functions</a>
 <ul>
-<li><a href="#org20a61ab">3.1. Hand-Code Your Assembly</a></li>
-<li><a href="#org8dc28eb">3.2. General Cautions when coding Assembly</a></li>
-<li><a href="#orgc4afea5">3.3. Iterative Development Strategy</a></li>
-<li><a href="#org3e5a5e5">3.4. Structure of <code>batt_update_asm.s</code></a></li>
-<li><a href="#org65ad9c8">3.5. <code>set_batt_from_ports()</code></a></li>
-<li><a href="#org582ec14">3.6. <code>set_display_from_batt()</code></a></li>
-<li><a href="#org9511a0b">3.7. <code>batt_update()</code></a></li>
-<li><a href="#org5614760">3.8. Grading Criteria for Problem 1</a></li>
+<li><a href="#org08ef347">3.1. Hand-Code Your Assembly</a></li>
+<li><a href="#org1090984">3.2. General Cautions when coding Assembly</a></li>
+<li><a href="#org76c9b02">3.3. Iterative Development Strategy</a></li>
+<li><a href="#org7956f77">3.4. Structure of <code>clock_update_asm.s</code></a></li>
+<li><a href="#org2f07aad">3.5. <code>set_tod_from_secs()</code></a></li>
+<li><a href="#orgbbfbf6d">3.6. <code>set_display_from_tod</code></a></li>
+<li><a href="#orgb695e42">3.7. <code>clock_update</code></a></li>
+<li><a href="#orgd72975a">3.8. Grading Criteria for Problem 1</a></li>
 </ul>
 </li>
-<li><a href="#orga59dd9a">4. <b>Problem 2</b>: The Binary Bomb</a>
+<li><a href="#org005830f">4. <b>Problem 2</b>: The Binary Bomb</a>
 <ul>
-<li><a href="#org3649c29">4.1. Quick Links</a></li>
-<li><a href="#org0013e5e">4.2. Overview</a></li>
-<li><a href="#org60f7469">4.3. Machines on which bombs run</a></li>
-<li><a href="#org0dd58bb">4.4. Bomb Download and Setup</a></li>
-<li><a href="#orgb5c2045">4.5. Scoring and Scoreboard (50%)</a></li>
-<li><a href="#orgaf509c8">4.6. WARNING on Downloading Multiple Bombs</a></li>
-<li><a href="#org5eb5189">4.7. Advice</a></li>
+<li><a href="#orgc0a7e45">4.1. Quick Links</a></li>
+<li><a href="#orgea3f884">4.2. Overview</a></li>
+<li><a href="#org8b32125">4.3. Machines on which bombs run</a></li>
+<li><a href="#org55c1b3c">4.4. Bomb Download and Setup</a></li>
+<li><a href="#org9362a1e">4.5. Scoring and Scoreboard (50%)</a></li>
+<li><a href="#orgb8b878a">4.6. WARNING on Downloading Multiple Bombs</a></li>
+<li><a href="#org2c31679">4.7. Advice</a></li>
 </ul>
 </li>
 </ul>
@@ -471,8 +423,8 @@ required to fix this which is <a href="test_prob1.org"><code>test_prob1.org</cod
 </div>
 </div>
 
-<div id="outline-container-org63f640f" class="outline-2">
-<h2 id="org63f640f"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-org6193956" class="outline-2">
+<h2 id="org6193956"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This project will feel somewhat familiar in that it is nearly
@@ -481,10 +433,11 @@ puzzle-solving problem.  The major change is that everything is at the
 assembly level:
 </p>
 <ul class="org-ul">
-<li>Problem 1 re-works the Battery functions in x86-64 Assembly
-rather than C</li>
+<li>Problem 1 re-works the Clock functions from the previous project in
+x86-64 Assembly rather than C</li>
 <li>Problem 2 involves analyzing a binary executable to provide it with
-the correct input to "defuse" the executable</li>
+the correct input to "defuse" the executable much like the previous
+project's Puzzlebox problem</li>
 </ul>
 
 <p>
@@ -495,8 +448,8 @@ appreciation for "high-level" languages (like C).
 </div>
 </div>
 
-<div id="outline-container-org98fbfe4" class="outline-2">
-<h2 id="org98fbfe4"><span class="section-number-2">2</span> <a id="org00dd69e"></a> Download Code and Setup</h2>
+<div id="outline-container-orga403c45" class="outline-2">
+<h2 id="orga403c45"><span class="section-number-2">2</span> <a id="org68420ef"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -529,31 +482,31 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tr>
 
 <tr>
-<td class="org-left"><code>batt.h</code></td>
+<td class="org-left"><code>clock.h</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Problem 1 header file</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>batt_main.c</code></td>
+<td class="org-left"><code>clock_main.c</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Problem 1 main() function</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>batt_sim.c</code></td>
+<td class="org-left"><code>clock_sim.c</code></td>
 <td class="org-left">Provided</td>
-<td class="org-left">Problem 1 battery simulator functions</td>
+<td class="org-left">Problem 1 simulator functions</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>batt_update_asm.s</code></td>
+<td class="org-left"><code>clock_update_asm.s</code></td>
 <td class="org-left">CREATE</td>
 <td class="org-left">Problem 1 Assembly functions, re-code C in x86-64, <b>main file to edit for problem 1</b></td>
 </tr>
 
 <tr>
-<td class="org-left"><code>batt_update.c</code></td>
+<td class="org-left"><code>clock_update.c</code></td>
 <td class="org-left">CREATE</td>
 <td class="org-left">Problem 1 C functions, COPY from Project 2 or see a staff member to discuss</td>
 </tr>
@@ -565,9 +518,9 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tr>
 
 <tr>
-<td class="org-left"><code>test_batt_update.c</code></td>
+<td class="org-left"><code>test_clock_update.c</code></td>
 <td class="org-left">Testing</td>
-<td class="org-left">Problem 1 testing program for <code>batt_update_asm.c</code></td>
+<td class="org-left">Problem 1 testing program for update functions</td>
 </tr>
 
 <tr>
@@ -592,7 +545,7 @@ folder. Ultimately you will re-zip this folder to submit it.
 <tr>
 <td class="org-left"><code>bombNN.zip</code></td>
 <td class="org-left">Download</td>
-<td class="org-left">Problem 2 Debugging problem, <a href="#orga216f6b">download from server</a></td>
+<td class="org-left">Problem 2 Debugging problem, <a href="#orgeeef2f5">download from server</a></td>
 </tr>
 
 <tr>
@@ -629,43 +582,45 @@ folder. Ultimately you will re-zip this folder to submit it.
 </div>
 </div>
 
-<div id="outline-container-orgcffc8d6" class="outline-2">
-<h2 id="orgcffc8d6"><span class="section-number-2">3</span> <b>Problem 1</b>: Battery Meter Assembly Functions</h2>
+<div id="outline-container-orgb6217f3" class="outline-2">
+<h2 id="orgb6217f3"><span class="section-number-2">3</span> <b>Problem 1</b>: Clock Display Assembly Functions</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 The functions in this problem are identical to a previous project
-in which code to support a battery meter was written. These
+in which code to support an LCD clock display was written. These
 functions are:
 </p>
 <dl class="org-dl">
-<dt><code>int set_batt_from_ports(batt_t *batt)</code></dt><dd>Read global variables corresponding to sensor and mode
-information and set the fields of a <code>batt_t</code> structure
-accordingly.</dd>
-<dt><code>int set_display_from_batt(batt_t batt, int *display)</code></dt><dd>Given a <code>batt_t</code> struct, reset and alter the bits pointed to by
-<code>display</code> to cause a proper batterature display.</dd>
-<dt><code>int batt_update()</code></dt><dd>Update global <code>BATT_DISPLAY_PORT</code> using the above functions.</dd>
+<dt><code>int set_tod_from_secs(int time_of_day_sec, tod_t *tod)</code></dt><dd>Given the number of seconds from the start of the day, set the
+fields of the struct pointed to by <code>tod</code> to have the correct
+hours, minutes, seconds, and pm indication.</dd>
+<dt><code>int set_display_from_tod(tod_t tod, int *display)</code></dt><dd>Given a <code>tod_t</code> struct, reset and alter the bits pointed to by
+<code>display</code> to cause a proper clock display.</dd>
+<dt><code>int clock_update()</code></dt><dd>Update global <code>CLOCK_DISPLAY_PORT</code> using the
+<code>TIME_OF_DAY_SECS</code>. Call the previous two functions.</dd>
 </dl>
 
 <p>
 The big change in this iteration will be that <b>the functions must be
 written in x86-64 assembly code</b>. As C functions each of these is
-short, typically 40-65. The assembly versions will be longer as each C
-line typically needs 1-4 lines of assembly code to implement
-fully. Coding these functions in assembly gives real experience
-writing instruction-level code code and working with it in combination
-with C.
+short, up to 85 lines maximum. The assembly versions will be somewhat
+longer as each C line typically needs 1-4 lines of assembly code to
+implement fully. Coding these functions in assembly give you real
+experience writing working assembly code and working with it in
+combination with C.
 </p>
 
 <p>
 <b>The code setup and tests are mostly identical</b> for this problem as
-for the previous C version of the problem.  <a href="https://www-users.cs.umn.edu/~kauffman/2021/p2.html">Refer to original Battery
-Meter Problem description</a> for a broad overview of the battery meter
-simulator and files associated with it.
+for the previous C version of the problem.  <a href="https://www-users.cs.umn.edu/~kauffman/2021/p2.html">Refer to original Clock
+LCD Display Problem description</a> for a broad overview of the simulator
+and files associated with it.
 </p>
 </div>
 
-<div id="outline-container-org20a61ab" class="outline-3">
-<h3 id="org20a61ab"><span class="section-number-3">3.1</span> Hand-Code Your Assembly</h3>
+
+<div id="outline-container-org08ef347" class="outline-3">
+<h3 id="org08ef347"><span class="section-number-3">3.1</span> Hand-Code Your Assembly</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 As discussed in class, one can generate assembly code from C code with
@@ -686,15 +641,15 @@ criteria.
 </p>
 </div>
 
-<div id="outline-container-org220cb94" class="outline-4">
-<h4 id="org220cb94">Base your Assembly code on your C code</h4>
-<div class="outline-text-4" id="text-org220cb94">
+<div id="outline-container-orgb661ef1" class="outline-4">
+<h4 id="orgb661ef1">Base your Assembly code on your C code</h4>
+<div class="outline-text-4" id="text-orgb661ef1">
 <p>
 The files to be submitted for this problem include
 </p>
 <ul class="org-ul">
-<li><code>batt_update.c</code>: C version of the functions</li>
-<li><code>batt_update_asm.s</code>: Assembly version of the functions</li>
+<li><code>clock_update.c</code>: C version of the functions</li>
+<li><code>clock_update_asm.s</code>: Assembly version of the functions</li>
 </ul>
 <p>
 Graders may examine these for a correspondence between to the
@@ -712,9 +667,9 @@ who will help you get them up and running quickly.</b>
 </div>
 </div>
 
-<div id="outline-container-orgc0c23da" class="outline-4">
-<h4 id="orgc0c23da">Annotate your Assembly Thoroughly</h4>
-<div class="outline-text-4" id="text-orgc0c23da">
+<div id="outline-container-org2cb522e" class="outline-4">
+<h4 id="org2cb522e">Annotate your Assembly Thoroughly</h4>
+<div class="outline-text-4" id="text-org2cb522e">
 <p>
 Comment your assembly code A LOT. While good C code can be quite
 self-explanatory with descriptive variable names and clear control
@@ -737,9 +692,9 @@ accomplishing.</li>
 </div>
 </div>
 
-<div id="outline-container-org1856e9b" class="outline-4">
-<h4 id="org1856e9b">Use Division</h4>
-<div class="outline-text-4" id="text-org1856e9b">
+<div id="outline-container-org7e03ec7" class="outline-4">
+<h4 id="org7e03ec7">Use Division</h4>
+<div class="outline-text-4" id="text-org7e03ec7">
 <p>
 While it is a slow instruction that is cumbersome to set up, using
 <code>idivX</code> division instruction is the most human-readable means to
@@ -754,8 +709,8 @@ effort has been put into the assembly code.
 
 
 
-<div id="outline-container-org8dc28eb" class="outline-3">
-<h3 id="org8dc28eb"><span class="section-number-3">3.2</span> General Cautions when coding Assembly</h3>
+<div id="outline-container-org1090984" class="outline-3">
+<h3 id="org1090984"><span class="section-number-3">3.2</span> General Cautions when coding Assembly</h3>
 <div class="outline-text-3" id="text-3-2">
 <ol class="org-ol">
 <li>Get your editor set up to make coding assembly easier. If you are
@@ -842,7 +797,7 @@ x86-64.
 
 <div class="org-center">
 
-<div class="figure">
+<div id="org33e97ec" class="figure">
 <p><img src="registers.png" alt="registers.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Summary of general purpose register usages in x86-64.</p>
@@ -851,10 +806,8 @@ x86-64.
 </div>
 </div>
 
-
-
-<div id="outline-container-orgc4afea5" class="outline-3">
-<h3 id="orgc4afea5"><span class="section-number-3">3.3</span> <a id="org626dbad"></a> Iterative Development Strategy</h3>
+<div id="outline-container-org76c9b02" class="outline-3">
+<h3 id="org76c9b02"><span class="section-number-3">3.3</span> <a id="org6d9a4d2"></a> Iterative Development Strategy</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 With working C versions of the three required functions, you should be
@@ -865,18 +818,18 @@ specifically set up for this and details iterative development are as
 follows.
 </p>
 <ol class="org-ol">
-<li>In <code>batt_update_asm.s</code>, comment all code/declarations of global
-symbols except for <code>set_batt_from_ports</code>.</li>
-<li>In <code>batt_update.c</code>, comment out the definition of the
-<code>set_batt_from_ports()</code> function. This leaves working C versions of
+<li>In <code>clock_update_asm.s</code>, comment all code/declarations of global
+symbols except for <code>set_tod_from_sec</code>.</li>
+<li>In <code>clock_update.c</code>, comment out the definition of the
+<code>set_tod_from_sec()</code> function. This leaves working C versions of
 the other two functions.</li>
 <li><p>
-Write some assembly code for <code>set_batt_from_ports</code>. Attempt to
+Write some assembly code for <code>set_tod_from_sec</code>. Attempt to
 compile it on its own with
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">   &gt; make batt_update_asm.o 
-   gcc -Wall -g -c batt_update_asm.s
+<pre class="src src-sh">   &gt; make clock_update_asm.o 
+   gcc -Wall -Werror -g -c clock_update_asm.s
 </pre>
 </div>
 <p>
@@ -887,12 +840,12 @@ When there appear to be no assembler errors, create a <b>hybrid</b> main
 program which will combine the uncommented assembly and C functions
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">   &gt; make hybrid_main
-   gcc -Wall -g -c batt_main.c
-   gcc -Wall -g -c batt_sim.c
-   gcc -Wall -g -c batt_update_asm.s   # compiles assembly ..
-   gcc -Wall -g -c batt_update.c       # and C version to produce executable
-   gcc -Wall -g -o hybrid_main batt_main.o batt_sim.o batt_update_asm.o batt_update.o
+<pre class="src src-sh">&gt;&gt; make hybrid_main
+gcc -Wall -Wno-comment -Werror -g  -c clock_main.c
+gcc -Wall -Wno-comment -Werror -g  -c clock_sim.c
+gcc -Wall -Wno-comment -Werror -g  -c clock_update_asm.s
+gcc -Wall -Wno-comment -Werror -g  -c clock_update.c
+gcc -Wall -Wno-comment -Werror -g  -o hybrid_main clock_main.o clock_sim.o clock_update_asm.o clock_update.o
 </pre>
 </div></li>
 <li><p>
@@ -900,14 +853,16 @@ One can then experiment with the <code>hybrid_main</code> to see if the
 written assembly function is working correctly.
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">&gt; ./hybrid_main 7578 V
-BATT_VOLTAGE_PORT set to: 7578
-set_batt_from_ports(&amp;batt );
-batt is {
-  .mlvolts = 3789
-  .percent = -27
-  .mode    = 0
-}
+<pre class="src src-sh">&gt;&gt; ./hybrid_main 3812
+TIME_OF_DAY_SEC set to: 3812
+result = set_tod_from_secs(  3812, &amp;tod );
+result: 0
+tod = {        
+  .hours   = -15
+  .minutes = 0
+  .seconds = 1206
+  .ampm    = 17
+}              
 ...
 </pre>
 </div>
@@ -920,25 +875,18 @@ When ready, run the "hybrid tests" which will do automated testing
 on the hybrid codes.
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">&gt; make test-hybrid
-gcc -Wall -Wno-comment -Werror -g  -c batt_main.c
-gcc -Wall -Wno-comment -Werror -g  -c batt_sim.c
-gcc -Wall -Wno-comment -Werror -g  -c batt_update_asm.s
-gcc -Wall -Wno-comment -Werror -g  -c batt_update.c
-gcc -Wall -Wno-comment -Werror -g  -o hybrid_main batt_main.o batt_sim.o batt_update_asm.o batt_update.o
-gcc -Wall -Wno-comment -Werror -g  -c test_batt_update.c
-gcc -Wall -Wno-comment -Werror -g  -o test_hybrid_batt_update test_batt_update.o batt_sim.o batt_update_asm.o batt_update.o
+<pre class="src src-sh">&gt;&gt; make test-hybrid
+gcc -Wall -Wno-comment -Werror -g  -o test_hybrid_update test_clock_update.o clock_sim.o clock_update_asm.o clock_update.o
+...
 ./testy test_hybrid.org 
 ============================================================
-== test_hybrid.org : Problem 1 test_hybrid_batt_update_asm and hybrid_main tests
+== test_hybrid.org : Problem 1 test_hybrid_update and hybrid_main tests
 == Running 35 / 35 tests
-1)  set_batt_from_ports() 0 V                 : ok
-2)  set_batt_from_ports() 0 P                 : ok
-3)  set_batt_from_ports() 7400 V              : ok
-4)  set_batt_from_ports() 7400 P              : ok
-5)  set_batt_from_ports() STATUS=0b10011001 V : ok
-6)  set_batt_from_ports() STATUS=0b01110110 P : ok
-7)  set_batt_from_ports() 7845 P is 100%      : ok
+1)  test_hybrid_update tod-midnight           : ok
+2)  test_hybrid_update tod-after-midnight     : ok
+3)  test_hybrid_update tod-after-1am          : ok
+4)  test_hybrid_update tod-nearly-noon        : ok
+5)  test_hybrid_update tod-is-noon            : ok
 ...
 </pre>
 </div></li>
@@ -949,55 +897,48 @@ corresponding assembly, write some code and repeat.</li>
 </div>
 </div>
 
-<div id="outline-container-org3e5a5e5" class="outline-3">
-<h3 id="org3e5a5e5"><span class="section-number-3">3.4</span> Structure of <code>batt_update_asm.s</code></h3>
+<div id="outline-container-org7956f77" class="outline-3">
+<h3 id="org7956f77"><span class="section-number-3">3.4</span> Structure of <code>clock_update_asm.s</code></h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
-Below is a rough outline of the structure of <code>batt_updat_asm.s</code>.
+Below is a rough outline of the structure of required assmebly file.
 Consider copying this file as you get started and commenting parts of
 it out as needed.
 </p>
 
 <div class="org-src-container">
 <pre class="src src-asm">.text
-.global  set_batt_from_ports
+.global  set_tod_from_secs
         
 ## ENTRY POINT FOR REQUIRED FUNCTION
-set_batt_from_ports:
+set_tod_from_secs:
         ## assembly instructions here
 
         ## a useful technique for this problem
-        movX    SOME_GLOBAL_VAR(%rip), %reg
-        # load global variable into register
-        # Check the C type of the variable
-        #    char / short / int / long
-        # and use one of
-        #    movb / movw / movl / movq 
-        # and appropriately sized destination register                                            
+        movX    SOME_GLOBAL_VAR(%rip), %reg  # load global variable into register
+                                             # use movl / movq / movw / movb
+                                             # and appropriately sized destination register
 
-### Change to definint semi-global variables used with the next function 
-### via the '.data' directive
+### Data area associated with the next function
 .data
 	
-my_int:                         # declare location an single integer named 'my_int'
+my_int:                         # declare location an single int
         .int 1234               # value 1234
 
-other_int:                      # declare another int accessible via name 'other_int'
-        .int 0b0101             # binary value as per C
+other_int:                      # declare another accessible via name 'other_int'
+        .int 0b0101             # binary value as per C '0b' convention
 
-my_array:                       # declare multiple ints sequentially starting at location
-        .int 10                 # 'my_array' for an array. Each are spaced 4 bytes from the
-        .int 0x00014            # next and can be given values using the same prefixes as 
-        .int 0b11110            # are understood by gcc.
+my_array:                       # declare multiple ints in a row 
+        .int 10                 # for an array. Each are spaced
+        .int 20                 # 4 bytes from each other
+        .int 30
 
 
-## WARNING: Don't forget to switch back to .text as below
-## Otherwise you may get weird permission errors when executing 
 .text
-.global  set_display_from_batt
+.global  set_display_from_tod
 
 ## ENTRY POINT FOR REQUIRED FUNCTION
-set_display_from_batt:  
+set_display_bits_from_tod:
         ## assembly instructions here
 
 	## two useful techniques for this problem
@@ -1006,93 +947,75 @@ set_display_from_batt:
 
 
 .text
-.global batt_update
+.global clock_update
         
 ## ENTRY POINT FOR REQUIRED FUNCTION
-batt_update:
+clock_update:
 	## assembly instructions here
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org65ad9c8" class="outline-3">
-<h3 id="org65ad9c8"><span class="section-number-3">3.5</span> <code>set_batt_from_ports()</code></h3>
+<div id="outline-container-org2f07aad" class="outline-3">
+<h3 id="org2f07aad"><span class="section-number-3">3.5</span> <code>set_tod_from_secs()</code></h3>
 <div class="outline-text-3" id="text-3-5">
 <div class="org-src-container">
-<pre class="src src-c">int set_batt_from_ports(batt_t *batt);
-// Uses the two global variables (ports) BATT_VOLTAGE_PORT and
-// BATT_STATUS_PORT to set the fields of the parameter 'batt'.  If
-// BATT_VOLTAGE_PORT is negative, then battery has been wired wrong;
-// no fields of 'batt' are changed and 1 is returned to indicate an
-// error.  Otherwise, sets fields of batt based on reading the voltage
-// value and converting to percent using the provided formula. Returns
-// 0 on a successful execution with no errors. This function DOES NOT
-// modify any global variables but may access global variables.
+<pre class="src src-c">int set_tod_from_secs(int time_of_day_sec, tod_t *tod);
+// Accepts time of day in seconds as an argument and modifies the
+// struct pointed at by tod to fill in its hours, minutes,
+// etc. fields.  If time_of_day_sec is invalid (negative or larger
+// than the number of seconds in a day) does nothing to tod and
+// returns 1 to indicate an error. Otherwise returns 0 to indicate
+// success. This function DOES NOT modify any global variables
 //
 // CONSTRAINT: Uses only integer operations. No floating point
 // operations are used as the target machine does not have a FPU.
-// 
-// CONSTRAINT: Limit the complexity of code as much as possible. Do
-// not use deeply nested conditional structures. Seek to make the code
-// as short, and simple as possible. Code longer than 40 lines may be
-// penalized for complexity.
-// 
-// ASSEMBLY CONSTRAINTS: Use shifts when dividing by powers of 2. This
-// should avoid the need to use the idivX instruction in this function.
 </pre>
 </div>
 
 <p>
-Note that this function uses a <code>batt_t</code> struct which is in <code>batt.h</code>
+Note that this function uses a <code>tod_t</code> struct which is in <code>clock.h</code>
 described here:
 </p>
 <div class="org-src-container">
-<pre class="src src-c">// Breaks battery stats down into constituent parts
+<pre class="src src-c">// Breaks time down into 12-hour format
 typedef struct{
-  short mlvolts;        // voltage read from port, units of 0.001 Volts
-  char  percent;        // percent full converted from voltage
-  char  mode;           // 1 for volts, 2 for percent, leaving as 0 will generate errors
-} batt_t;
+  short hours;
+  short minutes;
+  short seconds;
+  char ampm;
+} tod_t;
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org6293976" class="outline-4">
-<h4 id="org6293976">Assembly Implementation Notes for <code>set_batt_from_ports()</code></h4>
-<div class="outline-text-4" id="text-org6293976">
+<div id="outline-container-org3db6fe3" class="outline-4">
+<h4 id="org3db6fe3">Assembly Implementation Notes <code>set_tod_from_secs</code></h4>
+<div class="outline-text-4" id="text-org3db6fe3">
 <ol class="org-ol">
-<li>The function takes a single argument, a pointer in <code>rdi</code>.</li>
+<li><p>
+The function takes two arguments
+</p>
+<ul class="org-ul">
+<li>an <code>int</code> which will be in register <code>edi</code></li>
+<li>a pointer which will be in <code>rsi</code>.</li>
+</ul>
+<p>
+Note the 32-bit versus 64-bit registers.
+</p></li>
 <li>Return values or functions are to be placed <code>eax</code> for 32 bit
 quantities as is the case here (<code>int</code>).</li>
-<li><p>
-To access global symbols/variables which are not defined in the
-assembly file, use the relative position from the instruction
-pointer register which allows the linker to handle the
-task. Specifically relevant examples are
-</p>
-<div class="org-src-container">
-<pre class="src src-asm">   movw  BATT_VOLTAGE_PORT(%rip), %dx   # copy global var to reg dx  (16-bit word)
-   movb  BATT_STATUS_PORT(%rip), %cl    # copy global var to reg cl  (8-bit byte)
-   movl  %r8d, BATT_DISPLAY_PORT(%rip)  # copy reg r8d to global var (32-bit long-word)
-</pre>
-</div></li>
 <li>Use comparisons and jump to a separate section of code that is
-clearly marked as "error" if you detect a bad arguments. Be careful
-to use appropriate assembly instructions for the type of data being
-compared.
-<ul class="org-ul">
-<li><code>cmpX</code> performs comparison based on subtraction; pick <code>cmpq /
-     cmpl / cmpw / cmpb</code> according to the size of data being compared.</li>
-<li>Jump instructions such as <code>jg</code> assume prior comparison was
-done on <b>signed quantities</b>.</li>
-<li>Jump instructions like <code>ja</code> assume prior comparison was done on
-<b>unsigned quantities</b>.</li>
-</ul></li>
-<li>When doing the conversion of Voltage to Percentage, one may need to
-divide by 8. Avoid the division and <b>use a shift instruction instead</b>.</li>
+clearly marked as "error" if you detect a bad arguments.</li>
+<li>Make use of division to "break down" the argument
+<code>time_of_day_secs</code>. Keep in mind that the <code>idivl</code> instruction must
+have <code>eax</code> as the dividend, <code>edx</code> zeroed out. Any 32-bit register
+can contain the <code>divisor</code>.  After the instruction, <code>eax</code> will hold
+the <code>quotient</code> and <code>edx</code> the remainder.  With cleverness, you'll
+only need to do a couple divisions.</li>
 <li><p>
-A pointer to a <code>batt_t</code> struct can access its fields using the
+A pointer to a <code>tod_t</code> struct can access its fields using the
 following offset table which assume that <code>%reg</code> holds a pointer to
 the struct (substitute an actual register name).
 </p>
@@ -1120,29 +1043,36 @@ the struct (substitute an actual register name).
 <th scope="col" class="org-left">C Field Access</th>
 <th scope="col" class="org-left">Offset</th>
 <th scope="col" class="org-left">Size</th>
-<th scope="col" class="org-left">Assign '5' to field</th>
+<th scope="col" class="org-left">Assign 5 to field</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="org-left"><code>batt-&gt;mlvolts</code></td>
+<td class="org-left"><code>tod-&gt;hours</code></td>
 <td class="org-left">0 bytes</td>
 <td class="org-left">2 bytes</td>
 <td class="org-left"><code>movw $5,0(%reg)</code></td>
 </tr>
 
 <tr>
-<td class="org-left"><code>batt-&gt;percent</code></td>
+<td class="org-left"><code>tod-&gt;minutes</code></td>
 <td class="org-left">2 bytes</td>
-<td class="org-left">1 byte</td>
-<td class="org-left"><code>movb $5,2(%reg)</code></td>
+<td class="org-left">2 bytes</td>
+<td class="org-left"><code>movw $5,2(%reg)</code></td>
 </tr>
 
 <tr>
-<td class="org-left"><code>batt-&gt;mode</code></td>
-<td class="org-left">3 bytes</td>
+<td class="org-left"><code>tod-&gt;seconds</code></td>
+<td class="org-left">4 bytes</td>
+<td class="org-left">2 bytes</td>
+<td class="org-left"><code>movw $5,4(%reg)</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>tod-&gt;ampm</code></td>
+<td class="org-left">6 bytes</td>
 <td class="org-left">1 byte</td>
-<td class="org-left"><code>movb $5,3(%reg)</code></td>
+<td class="org-left"><code>movb $5,6(%reg)</code></td>
 </tr>
 </tbody>
 </table>
@@ -1150,54 +1080,40 @@ the struct (substitute an actual register name).
 You will need to use these offsets to set the fields of the struct
 near the end of the routine.
 </p></li>
-<li>There are several spots where division is required but it is always
-by powers of 2; e.g. divide the sensor value by 2 to get the
-voltage and divide by 8 during conversion of volts to percent.
-<b>Use shift operations</b> when dividing by powers of 2 to avoid the
-<code>idivX</code> instruction (though <code>idivX</code> will be used later).</li>
 </ol>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org582ec14" class="outline-3">
-<h3 id="org582ec14"><span class="section-number-3">3.6</span> <code>set_display_from_batt()</code></h3>
+<div id="outline-container-orgbbfbf6d" class="outline-3">
+<h3 id="orgbbfbf6d"><span class="section-number-3">3.6</span> <code>set_display_from_tod</code></h3>
 <div class="outline-text-3" id="text-3-6">
 <div class="org-src-container">
-<pre class="src src-c">
-int set_display_from_batt(batt_t batt, int *display);
-// Alters the bits of integer pointed to by 'display' to reflect the
-// data in struct param 'batt'.  Does not assume any specific bit
-// pattern stored at 'display' and completely resets all bits in it on
-// successfully completing.  Selects either to show Volts (mode=1) or
-// Percent (mode=2). If Volts are displayed, only displays 3 digits
-// rounding the lowest digit up or down appropriate to the last digit.
-// Calculates each digit to display changes bits at 'display' to show
-// the volts/percent according to the pattern for each digit. Modifies
-// additional bits to show a decimal place for volts and a 'V' or '%'
-// indicator appropriate to the mode. In both modes, places bars in
-// the level display as indicated by percentage cutoffs in provided
-// diagrams. This function DOES NOT modify any global variables but
-// may access global variables. 
-// 
-// ASSEMBLY NOTE: If batt.mode is not 1 or 2, then make no change to
-// 'display' and return 1 to indicate an error. This is a slight
-// change from the original C implementation.
+<pre class="src src-c">int set_display_from_tod(tod_t tod, int *display);
+// Accepts a tod and alters the bits in the int pointed at by display
+// to reflect how the LCD clock should appear. If any fields of tod
+// are negative or too large (e.g. bigger than 12 for hours, bigger
+// than 59 for min/sec), no change is made to display and 1 is
+// returned to indicate an error. Otherwise returns 0 to indicate
+// success. This function DOES NOT modify any global variables
+//
+// May make use of an array of bit masks corresponding to the pattern
+// for each digit of the clock to make the task easier.
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgf778329" class="outline-4">
-<h4 id="orgf778329">Assembly Implementation Notes <code>set_display_from_batt()</code></h4>
-<div class="outline-text-4" id="text-orgf778329">
+<div id="outline-container-orgf0d1963" class="outline-4">
+<h4 id="orgf0d1963">Assembly Implementation Notes <code>set_display_from_tod</code></h4>
+<div class="outline-text-4" id="text-orgf0d1963">
 <ol class="org-ol">
 <li>Arguments will be
 <ul class="org-ul">
-<li>a packed <code>batt_t</code> struct in <code>rdi</code></li>
+<li>a packed <code>tod_t</code> struct in <code>%rdi</code></li>
 <li>an integer pointer in <code>rsi</code></li>
 </ul></li>
 <li><p>
-The packed <code>batt_t</code> struct is entirely in the 64-bit <code>rdi</code> register
+The packed <code>tod_t</code> struct is entirely in the 64-bit <code>%rdi</code> register
 which has the following layout.
 </p>
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -1222,30 +1138,37 @@ which has the following layout.
 
 <tr>
 <th scope="col" class="org-left">C Field Access</th>
-<th scope="col" class="org-right">in <code>rdi</code></th>
+<th scope="col" class="org-right">in <code>%rdi</code></th>
 <th scope="col" class="org-left">Required</th>
 <th scope="col" class="org-left">Size</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="org-left"><code>batt.mlvolts</code></td>
+<td class="org-left"><code>tod.hours</code></td>
 <td class="org-right">00-15</td>
 <td class="org-left">None</td>
 <td class="org-left">2 bytes</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>batt.percent</code></td>
-<td class="org-right">16-23</td>
+<td class="org-left"><code>tod.minutes</code></td>
+<td class="org-right">16-31</td>
 <td class="org-left">Right by 16</td>
-<td class="org-left">1 byte</td>
+<td class="org-left">2 bytes</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>batt.mode</code></td>
-<td class="org-right">24-31</td>
-<td class="org-left">Right by 24</td>
+<td class="org-left"><code>tod.seconds</code></td>
+<td class="org-right">32-47</td>
+<td class="org-left">Right by 32</td>
+<td class="org-left">2 bytes</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>tod.ampm</code></td>
+<td class="org-right">48-57</td>
+<td class="org-left">Right by 48</td>
 <td class="org-left">1 byte</td>
 </tr>
 </tbody>
@@ -1254,10 +1177,13 @@ which has the following layout.
 To access individual fields of the struct, you will need to do
 shifting and masking to extract the values from the <code>rdi</code> register.
 </p></li>
+<li>Use comparisons and jump to a separate section of code that is
+clearly marked as "error" if you detect bad fields in the <code>tod</code>
+struct argument.</li>
 <li><p>
 As was the case in the C version of the problem, it is useful to
 create a table of bit masks corresponding to the bits that should be
-set for each display digit (e.g. digit "1" has bit pattern
+set for each clock digit (e.g. digit "1" has bit patter
 <code>0b0000110</code>). In assembly this is easiest to do by using a data
 section with successive integers. An example of how this can be done
 is below.
@@ -1265,9 +1191,9 @@ is below.
 <div class="org-src-container">
 <pre class="src src-asm">   .section .data
    array:                          # an array of 3 ints
-           .int 0b101              # array[0] = 0b101
-           .int 0b010              # array[1] = 0b010
-           .int 0b111              # array[2] = 0b111
+           .int 200                # array[0] = 200
+           .int 300                # array[1] = 300
+           .int 400                # array[3] = 400
    const:
            .int 17                 # special constant
     
@@ -1285,51 +1211,31 @@ Adapt this example to create a table of useful bit masks for
 digits. The GCC assembler understands binary constants specified
 with the <code>0b0011011</code> style syntax.
 </p></li>
-<li>Early on in the function <b>check the batt.mode field</b>: it should be
-either 1 or 2 and if not, return from the function immediately with
-return value 1.</li>
-<li><p>
-Make use of division instructions to compute "digits" for the left,
-middle, and right digits of the battery meter. With cleverness, you
-should only need 2-3 divisions. Use these digits to reference into
-the table of digit bit masks you create to progressively build up
-the correct bit pattern for the display.
-</p>
-
-<p>
-Keep in mind that the <code>idivX</code> instruction must have <code>rax</code> as the
-dividend and <code>rdx</code> sign-extended from it. This may involve use of
-the following sequence of instructions:
-</p>
-<div class="org-src-container">
-<pre class="src src-asm">   cwtl           # sign extend ax to long word
-   cltq           # sign extend eax to quad word
-   cqto           # sign extend ax to dx
-</pre>
-</div>
-<p>
-Any register can contain the divisor.  After the instruction, <code>rax
-   / eax / ax</code> will hold the <code>quotient</code> and <code>rdx / edx / dx</code> the
-remainder.  In this function, a single division will be sufficient.
-</p></li>
-
-<li>Use shifts with bitwise-or operations to combine the digit bit
-patterns to create the final display bit pattern.</li>
+<li>Make use of division again to compute "digits" for the ones and tens
+place of the hours and minutes for the clock. Use these digits to
+reference into the table of digit bit masks you create to
+progressively build up the correct bit pattern for the clock
+display.</li>
+<li>Use shifts and ORs to combine the digit bit patterns to create the
+final clock display bit pattern.</li>
 </ol>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org9511a0b" class="outline-3">
-<h3 id="org9511a0b"><span class="section-number-3">3.7</span> <code>batt_update()</code></h3>
+<div id="outline-container-orgb695e42" class="outline-3">
+<h3 id="orgb695e42"><span class="section-number-3">3.7</span> <code>clock_update</code></h3>
 <div class="outline-text-3" id="text-3-7">
 <div class="org-src-container">
-<pre class="src src-c">int batt_update();
-// Called to update the battery meter display.  Makes use of
-// set_batt_from_ports() and set_display_from_batt() to access battery
-// voltage sensor then set the display. Checks these functions and if
-// they indicate an error, does NOT change the display.  If functions
-// succeed, modifies BATT_DISPLAY_PORT to show current battery level.
+<pre class="src src-c">int clock_update();
+// Examines the TIME_OF_DAY_SEC global variable to determine hour,
+// minute, and am/pm.  Sets the global variable CLOCK_DISPLAY_PORT bits
+// to show the proper time.  If TIME_OF_DAY_SEC appears to be in error
+// (to large/small) makes no change to CLOCK_DISPLAY_PORT and returns 1
+// to indicate an error. Otherwise returns 0 to indicate success.
+//
+// Makes use of the set_tod_from_secs() and
+// set_display_bits_from_tod() functions.
 // 
 // CONSTRAINT: Does not allocate any heap memory as malloc() is NOT
 // available on the target microcontroller.  Uses stack and global
@@ -1337,38 +1243,43 @@ patterns to create the final display bit pattern.</li>
 </pre>
 </div>
 </div>
-
-<div id="outline-container-org5b74cbe" class="outline-4">
-<h4 id="org5b74cbe">Assembly Implementation Notes for <code>batt_update()</code></h4>
-<div class="outline-text-4" id="text-org5b74cbe">
+<div id="outline-container-org18d1314" class="outline-4">
+<h4 id="org18d1314">Assembly Implementation Notes for <code>clock_update</code></h4>
+<div class="outline-text-4" id="text-org18d1314">
 <ol class="org-ol">
 <li>No arguments come into the function.</li>
-<li>Use the syntax described earlier to access global symbols/variables
-such as <code>BATT_VOLTAGE_PORT</code>.</li>
+<li><p>
+To access global symbols/variables which are not defined in the
+assembly file, use the relative position from the instruction
+pointer register which allows the linker to handle the
+task. Specifically relevant examples are
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">   movl  TIME_OF_DAY_SEC(%rip), %edx    # copy global var to reg edx
+   movl  %r8d,CLOCK_DISPLAY_PORT(%rip)  # copy reg r8d to global var
+</pre>
+</div></li>
 <li><p>
 Call the two previous functions to create the struct and manipulate
 the bits of an the display.  Calling a function requires that the
 stack be aligned to 16-bytes; there is always an 8-byte quantity on
 the stack (previous value of the <code>rsp</code> stack pointer).  This means
-the stack must be extended with a <code>pushq</code> or <code>subq</code> instruction before any
-calls (but don't use both). A typical sequence is:
+the stack must be extended with a <code>pushq</code> instruction before any
+calls. A typical sequence is
 </p>
 <div class="org-src-container">
-<pre class="src src-asm">   subq    $8,%rsp     # extend the stack 8 bytes
-   ...
+<pre class="src src-asm">   pushq   %rdx        # push any 64-bit register onto the stack
    call    some_func   # stack aligned, call function
    ## return val from func in rax or eax
-   ...
-   addq    $8,%rsp     # shrink the stack to restore it to its original position
+   popq    %rdx        # restore the stack
 </pre>
 </div></li>
 <li><p>
-If several function calls will be made, a single extension of the
-stack is all that is needed as in the below
+If several function calls will be made, a single push is all that is
+needed as in the below
 </p>
 <div class="org-src-container">
-<pre class="src src-asm">   subq    $8,%rsp     # extend the stack 8 bytes
-   ...
+<pre class="src src-asm">   pushq   %rdx        # push any 64-bit register onto the stack
    call    some_func1  # stack aligned, call function
    ## return val from func in rax or eax
 
@@ -1376,21 +1287,21 @@ stack is all that is needed as in the below
 
    call    some_func2   # stack aligned, call function
    ## return val from func in rax or eax
-   ...
-   addq    $8,%rsp     # shrink the stack to restore it to its original position
+
+   popq    %rdx        # restore the stack
 </pre>
 </div></li>
-<li>In order to call the <code>set_batt_from_ports()</code> function, this
-function will need to allocate space on the stack for a <code>batt_t</code>.
-As described previously, this struct can be packed to fit in 8
-bytes so a <code>pushq $0</code> will put a "zero" <code>batt_t</code> struct on the
-stack and <code>%rsp</code> is then a pointer to it which can be copied to
-other registers.</li>
-<li>Similarly, to call the <code>set_display_from_batt()</code> function, one will
-need a packed <code>batt_t</code> in a register. If the preceding
-<code>set_batt_from_ports()</code> call succeeded, this packed struct can be
-read from memory into a register with a <code>movq</code> instruction. That
-stack space can be re-used if needed.</li>
+<li>In order to call the <code>set_tod_from_secs()</code> function, this function
+will need to allocate space on the stack for a <code>tod_t</code>.  As
+described previously, this struct can be packed to fit in 8 bytes so
+a <code>pushq $0</code> will put a "zero" <code>tod_t</code> struct on the stack and
+<code>%rsp</code> is then a pointer to it which can be copied to other
+registers.</li>
+<li>Similarly, to call the <code>set_display_bits_from_tod()</code> function, one
+will need a packed <code>tod_t</code> in a register. If the preceding
+<code>set_tod_from_secs()</code> call succeeded, this packed struct can be read
+from memory into a register with a <code>movq</code> instruction. That stack
+space can re-used if needed.</li>
 <li>Keep in mind that you will need to do error checking of the return
 values from the two functions: if they return non-zero values jump
 to a clearly marked "error" section and return a 1. If an error
@@ -1401,8 +1312,8 @@ pushed before returning.</b></li>
 </div>
 </div>
 
-<div id="outline-container-org5614760" class="outline-3 grading 50">
-<h3 id="org5614760"><span class="section-number-3">3.8</span> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div id="outline-container-orgd72975a" class="outline-3 grading 50">
+<h3 id="orgd72975a"><span class="section-number-3">3.8</span> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
 <div class="outline-text-3" id="text-3-8">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1425,18 +1336,13 @@ pushed before returning.</b></li>
 </tr>
 
 <tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
 <td class="org-right">35</td>
-<td class="org-left"><code>make test-prob1</code> which uses programs <code>test_batt_update</code> and <code>batt_main</code></td>
+<td class="org-left"><code>make test-prob1</code> which uses programs <code>test_clock_update</code> and <code>clock_main</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Provides 35 tests for functions in <code>batt_update_asm.s</code></td>
+<td class="org-left">Provides 35 tests for functions in <code>clock_update_asm.s</code></td>
 </tr>
 
 <tr>
@@ -1487,12 +1393,12 @@ pushed before returning.</b></li>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">There is a clear relation of the code to the C algorithm used in <code>batt_update.c</code></td>
+<td class="org-left">There is a clear relation of the code to the C algorithm used in <code>clock_update.c</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Use of good label names to indicate jump targets: <code>.NEG_VOLTS</code> is good, <code>.L32</code> is bad</td>
+<td class="org-left">Use of good label names to indicate jump targets: <code>.NEG_SECS</code> is good, <code>.L32</code> is bad</td>
 </tr>
 
 <tr>
@@ -1502,7 +1408,7 @@ pushed before returning.</b></li>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Error checking on the input values is done with a clear "error" section/label</td>
+<td class="org-left">Error checking on the input values is done with a clear "Error" section/label for each function</td>
 </tr>
 
 <tr>
@@ -1517,12 +1423,12 @@ pushed before returning.</b></li>
 
 <tr>
 <td class="org-right">5</td>
-<td class="org-left"><code>set_batt_from_ports()</code></td>
+<td class="org-left"><code>set_tod_from_ports()</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Divisions by powers of 2 are done using a bitwise shift instruction.</td>
+<td class="org-left">Clear use of the division instruction to compute the seconds, minutes, hours</td>
 </tr>
 
 <tr>
@@ -1542,12 +1448,12 @@ pushed before returning.</b></li>
 
 <tr>
 <td class="org-right">10</td>
-<td class="org-left"><code>set_display_from_batt()</code></td>
+<td class="org-left"><code>set_display_from_clock()</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">There is a clearly documented data section setting up useful tables of bitmasks</td>
+<td class="org-left">There is a clearly documented <code>.data</code> section in assembly setting up useful tables of bitmasks</td>
 </tr>
 
 <tr>
@@ -1572,7 +1478,7 @@ pushed before returning.</b></li>
 
 <tr>
 <td class="org-right">5</td>
-<td class="org-left"><code>batt_update()</code></td>
+<td class="org-left"><code>clock_update()</code></td>
 </tr>
 
 <tr>
@@ -1606,12 +1512,12 @@ past and future loss of credit on projects.
 </div>
 </div>
 
-<div id="outline-container-orga59dd9a" class="outline-2">
-<h2 id="orga59dd9a"><span class="section-number-2">4</span> <b>Problem 2</b>: The Binary Bomb</h2>
+<div id="outline-container-org005830f" class="outline-2">
+<h2 id="org005830f"><span class="section-number-2">4</span> <b>Problem 2</b>: The Binary Bomb</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org3649c29" class="outline-3">
-<h3 id="org3649c29"><span class="section-number-3">4.1</span> Quick Links</h3>
+<div id="outline-container-orgc0a7e45" class="outline-3">
+<h3 id="orgc0a7e45"><span class="section-number-3">4.1</span> Quick Links</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 <b>Available only on Lab Machines or Vole</b>
@@ -1648,8 +1554,8 @@ More details on these are described in subsequent sections.
 </div>
 </div>
 
-<div id="outline-container-org0013e5e" class="outline-3">
-<h3 id="org0013e5e"><span class="section-number-3">4.2</span> Overview</h3>
+<div id="outline-container-orgea3f884" class="outline-3">
+<h3 id="orgea3f884"><span class="section-number-3">4.2</span> Overview</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 The nature of this problem is similar to the previous project's
@@ -1696,8 +1602,8 @@ your bomb by hand.</dd>
 </div>
 </div>
 
-<div id="outline-container-org60f7469" class="outline-3">
-<h3 id="org60f7469"><span class="section-number-3">4.3</span> Machines on which bombs run</h3>
+<div id="outline-container-org8b32125" class="outline-3">
+<h3 id="org8b32125"><span class="section-number-3">4.3</span> Machines on which bombs run</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 The binary bomb makes frequent contact with a scoring server so you
@@ -1838,8 +1744,8 @@ Legal hosts are as follows:
 </div>
 </div>
 
-<div id="outline-container-org0dd58bb" class="outline-3">
-<h3 id="org0dd58bb"><span class="section-number-3">4.4</span> <a id="orga216f6b"></a> Bomb Download and Setup</h3>
+<div id="outline-container-org55c1b3c" class="outline-3">
+<h3 id="org55c1b3c"><span class="section-number-3">4.4</span> <a id="orgeeef2f5"></a> Bomb Download and Setup</h3>
 <div class="outline-text-3" id="text-4-4">
 <ul class="org-ul">
 <li>Download your bomb from the following web address
@@ -1847,9 +1753,10 @@ Legal hosts are as follows:
 <li><a href="http://atlas.cselabs.umn.edu:15213/">http://atlas.cselabs.umn.edu:15213/</a></li>
 </ul></li>
 <li><b>This site must be accessed from wired UMN machines or Vole</b> as it
-is behind the campus firewall. Using a browser on <a href="http://vole.cse.umn.edu/">Vole</a> is the
-easiest way get a bomb onto your CSELabs account (and will let you
-tell friends "I've used a browser inside a browser.").</li>
+is behind the campus firewall. Using a browser on <a href="http://vole.cse.umn.edu/">Vole</a> or a <a href="https://www-users.cse.umn.edu/~kauffman/tutorials/unix-environment.html#orge1638c2">FASTX
+connection</a> is the easiest way get a bomb onto your CSELabs account
+when you are working remotely (and will let you tell friends "I've
+used a browser inside a browser.").</li>
 <li>Enter your UMN X.500 information in the required fields: IDs that
 don't correspond to members of the class will be rejected. If you
 have problems getting a bomb, mail Prof Kauffman.</li>
@@ -1897,8 +1804,8 @@ ahead a little bit in the bomb after solving a phase.</li>
 </div>
 </div>
 
-<div id="outline-container-orgb5c2045" class="outline-3 grading 50">
-<h3 id="orgb5c2045"><span class="section-number-3">4.5</span> Scoring and Scoreboard (50%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div id="outline-container-org9362a1e" class="outline-3 grading 50">
+<h3 id="org9362a1e"><span class="section-number-3">4.5</span> Scoring and Scoreboard (50%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 Scoring is done according to the following table.
@@ -1960,7 +1867,7 @@ Scoring is done according to the following table.
 
 <tr>
 <td class="org-right">5</td>
-<td class="org-left">Buffer</td>
+<td class="org-left">Bonus</td>
 <td class="org-left">Reduced when Explosions occur</td>
 </tr>
 </tbody>
@@ -1979,7 +1886,7 @@ Scoring is done according to the following table.
 </p>
 
 <p>
-<a id="org756e42f"></a>
+<a id="org160e755"></a>
 On successfully defusing stages, the bomb will contact a server which
 tracks scores by number. The scoreboard is here:
 </p>
@@ -1994,9 +1901,9 @@ see the scores of others.
 </p>
 </div>
 
-<div id="outline-container-orgdb3e72b" class="outline-4">
-<h4 id="orgdb3e72b">Examples of Scoring</h4>
-<div class="outline-text-4" id="text-orgdb3e72b">
+<div id="outline-container-org60e63cf" class="outline-4">
+<h4 id="org60e63cf">Examples of Scoring</h4>
+<div class="outline-text-4" id="text-org60e63cf">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -2105,11 +2012,11 @@ see the scores of others.
 </div>
 </div>
 
-<div id="outline-container-org2a7c8dc" class="outline-4">
-<h4 id="org2a7c8dc">Getting Credit for the Problem</h4>
-<div class="outline-text-4" id="text-org2a7c8dc">
+<div id="outline-container-org4d50d01" class="outline-4">
+<h4 id="org4d50d01">Getting Credit for the Problem</h4>
+<div class="outline-text-4" id="text-org4d50d01">
 <ul class="org-ul">
-<li>Ensure that the score listed on the <a href="#org756e42f">Scoreboard site</a> reflects your
+<li>Ensure that the score listed on the <a href="#org160e755">Scoreboard site</a> reflects your
 progress.</li>
 <li>Ensure your <code>input.txt</code> along with your <code>bombNN/</code> directory are in
 your project directory with the rest of your code.</li>
@@ -2118,8 +2025,8 @@ your project directory with the rest of your code.</li>
 </div>
 </div>
 
-<div id="outline-container-orgaf509c8" class="outline-3">
-<h3 id="orgaf509c8"><span class="section-number-3">4.6</span> WARNING on Downloading Multiple Bombs</h3>
+<div id="outline-container-orgb8b878a" class="outline-3">
+<h3 id="orgb8b878a"><span class="section-number-3">4.6</span> WARNING on Downloading Multiple Bombs</h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
 It is possible to download multiple bombs but this will NOT reset your
@@ -2138,8 +2045,8 @@ advised to download a single bomb and work with it.
 </div>
 </div>
 
-<div id="outline-container-org5eb5189" class="outline-3">
-<h3 id="org5eb5189"><span class="section-number-3">4.7</span> Advice</h3>
+<div id="outline-container-org2c31679" class="outline-3">
+<h3 id="org2c31679"><span class="section-number-3">4.7</span> Advice</h3>
 <div class="outline-text-3" id="text-4-7">
 <ul class="org-ul">
 <li><p>
@@ -2191,7 +2098,7 @@ differ but the techniques to defuse it may be similar to others.</li>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-03-17 Wed 15:08 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-10-22 Fri 13:08 <br/> </i>
 </div>
 </body>
 </html>
