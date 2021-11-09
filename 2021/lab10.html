@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-03-24 Wed 11:11 -->
+<!-- 2021-11-09 Tue 13:26 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Lab10: Timing Code and Machine Speed</title>
@@ -40,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -52,7 +52,7 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
@@ -254,6 +254,7 @@ background-color: inherit; font-family: inherit;
 padding: inherit; font-size: 80%; font-weight: inherit;
 text-transform: uppercase;
 }
+
 .figure p { text-align: inherit; }
 figure-number { font-style: italic; }
 #table-of-contents {
@@ -329,6 +330,7 @@ margin-left: 0.5em;
 }
 .linenr { font-size: xx-small; }
 }
+
 @media print {
 html {
 font-family: serif;
@@ -339,99 +341,68 @@ text-align: justify;
 }
 </style>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-03-24 Wed 11:11</i>
+<i>Last Updated: 2021-11-09 Tue 13:26</i>
 </div>
 <div id="content">
 <h1 class="title">CSCI 2021 Lab10: Timing Code and Machine Speed</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 3/30/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm Tue 11/16/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-orga9234b0" class="outline-4">
-<h4 id="orga9234b0">CODE DISTRIBUTION: <a href="lab10-code.zip">lab10-code.zip</a></h4>
+<div id="outline-container-org1591351" class="outline-4">
+<h4 id="org1591351">CODE DISTRIBUTION: <a href="lab10-code.zip">lab10-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org0f73047" class="outline-4">
-<h4 id="org0f73047">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org0f73047">
-<dl class="org-dl">
-<dt>Wed Mar 24 11:11:29 AM CDT 2021</dt><dd>Some bugs in the <code>Makefile</code>
-associated with testing have been fixed. If you are still failing
-tests, try resubmitting.</dd>
-</dl>
-</div>
+<div id="outline-container-org4a43cb1" class="outline-4">
+<h4 id="org4a43cb1">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-org0827643" class="outline-4">
-<h4 id="org0827643"></h4>
-<div class="outline-text-4" id="text-org0827643">
+<div id="outline-container-orgf36d0f9" class="outline-4">
+<h4 id="orgf36d0f9"></h4>
+<div class="outline-text-4" id="text-orgf36d0f9">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgd0bb765">1. Rationale</a></li>
-<li><a href="#orgc413474">2. Codepack</a></li>
-<li><a href="#org02cb957">3. Timing on Two Machines</a></li>
-<li><a href="#org25ef978">4. Using the time and lscpu Utilities</a></li>
-<li><a href="#orgde578a6">5. QUESTIONS.txt File Contents</a></li>
-<li><a href="#orgcfe4e6a">6. Submission</a></li>
+<li><a href="#orge493b16">1. Rationale</a></li>
+<li><a href="#orge49b149">2. Codepack</a></li>
+<li><a href="#org7b0f975">3. Timing on Two Machines</a></li>
+<li><a href="#org5b48250">4. Using the time and lscpu Utilities</a></li>
+<li><a href="#orgf527b1b">5. QUESTIONS.txt File Contents</a></li>
+<li><a href="#orgcad8704">6. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgd0bb765" class="outline-2">
-<h2 id="orgd0bb765"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orge493b16" class="outline-2">
+<h2 id="orge493b16"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Differences and oddities in CPU architecture are often revealed
@@ -445,9 +416,9 @@ differences that constitute low-level CPU implementation.
 </p>
 </div>
 
-<div id="outline-container-orgc9cc0ed" class="outline-4">
-<h4 id="orgc9cc0ed">Grading Policy</h4>
-<div class="outline-text-4" id="text-orgc9cc0ed">
+<div id="outline-container-orgd9ca184" class="outline-4">
+<h4 id="orgd9ca184">Grading Policy</h4>
+<div class="outline-text-4" id="text-orgd9ca184">
 <p>
 Credit for this Lab is earned by completing the exercises here and
 submitting a Zip of the work to Gradescope. Students are responsible
@@ -470,8 +441,8 @@ See the <a href="../syllabus.html">full policies in the course syllabus</a>.
 </div>
 </div>
 
-<div id="outline-container-orgc413474" class="outline-2">
-<h2 id="orgc413474"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orge49b149" class="outline-2">
+<h2 id="orge49b149"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -504,11 +475,10 @@ The codepack for the HW contains the following files:
 <tbody>
 <tr>
 <td class="org-left"><code>superscalar_main</code></td>
-<td class="org-left">HW10</td>
-<td class="org-left">C code in HW10 code pack that is used to observe CPU timing differences</td>
+<td class="org-left">Provided</td>
+<td class="org-left">C code also in HW10  that is used to observe CPU timing differences</td>
 </tr>
-</tbody>
-<tbody>
+
 <tr>
 <td class="org-left"><code>Makefile</code></td>
 <td class="org-left">Build</td>
@@ -555,8 +525,8 @@ The codepack for the HW contains the following files:
 </div>
 </div>
 
-<div id="outline-container-org02cb957" class="outline-2">
-<h2 id="org02cb957"><span class="section-number-2">3</span> Timing on Two Machines</h2>
+<div id="outline-container-org7b0f975" class="outline-2">
+<h2 id="org7b0f975"><span class="section-number-2">3</span> Timing on Two Machines</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 HW10 has students timing the execution speed of the several different
@@ -604,8 +574,8 @@ in <code>csel-kh1250-NN</code> machines.
 </div>
 </div>
 
-<div id="outline-container-org25ef978" class="outline-2">
-<h2 id="org25ef978"><span class="section-number-2">4</span> Using the time and lscpu Utilities</h2>
+<div id="outline-container-org5b48250" class="outline-2">
+<h2 id="org5b48250"><span class="section-number-2">4</span> Using the time and lscpu Utilities</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Staff will briefly discuss the <code>time</code> utility and cover the 3 types of
@@ -669,8 +639,8 @@ clock speed.
 </div>
 </div>
 
-<div id="outline-container-orgde578a6" class="outline-2">
-<h2 id="orgde578a6"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-orgf527b1b" class="outline-2">
+<h2 id="orgf527b1b"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -818,8 +788,8 @@ CODE None
 </div>
 
 
-<div id="outline-container-orgcfe4e6a" class="outline-2">
-<h2 id="orgcfe4e6a"><span class="section-number-2">6</span> Submission</h2>
+<div id="outline-container-orgcad8704" class="outline-2">
+<h2 id="orgcad8704"><span class="section-number-2">6</span> Submission</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -829,7 +799,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-03-24 Wed 11:11 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-11-09 Tue 13:26 <br/> </i>
 </div>
 </body>
 </html>
