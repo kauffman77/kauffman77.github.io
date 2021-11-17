@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-03-31 Wed 11:57 -->
+<!-- 2021-11-16 Tue 21:15 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 HW11: Matrices and Memory Optimization</title>
@@ -40,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -52,7 +52,7 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
@@ -254,6 +254,7 @@ background-color: inherit; font-family: inherit;
 padding: inherit; font-size: 80%; font-weight: inherit;
 text-transform: uppercase;
 }
+
 .figure p { text-align: inherit; }
 figure-number { font-style: italic; }
 #table-of-contents {
@@ -329,6 +330,7 @@ margin-left: 0.5em;
 }
 .linenr { font-size: xx-small; }
 }
+
 @media print {
 html {
 font-family: serif;
@@ -339,69 +341,45 @@ text-align: justify;
 }
 </style>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-03-31 Wed 11:57</i>
+<i>Last Updated: 2021-11-16 Tue 21:15</i>
 </div>
 <div id="content">
 <h1 class="title">CSCI 2021 HW11: Matrices and Memory Optimization</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 4/13/2020</b></li>
+<li><b>Due: 11:59pm Tue 11/23/2021</b></li>
 <li><i>Approximately 0.83% of total grade</i></li>
 <li>Homework and Quizzes are open resource/open collaboration. You must
 submit your own work but you may freely discuss HW topics with other
 members of the class.</li>
 </ul>
 
-<div id="outline-container-orgdf85483" class="outline-4">
-<h4 id="orgdf85483">CODE DISTRIBUTION: <a href="hw11-code.zip">hw11-code.zip</a></h4>
-<div class="outline-text-4" id="text-orgdf85483">
+<div id="outline-container-org57aaf40" class="outline-4">
+<h4 id="org57aaf40">CODE DISTRIBUTION: <a href="hw11-code.zip">hw11-code.zip</a></h4>
+<div class="outline-text-4" id="text-org57aaf40">
 <ul class="org-ul">
 <li>Download the code distribution</li>
 <li>See further setup instructions below</li>
@@ -409,31 +387,31 @@ members of the class.</li>
 </div>
 </div>
 
-<div id="outline-container-orgde07dcd" class="outline-4">
-<h4 id="orgde07dcd">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-orgde07dcd">
+<div id="outline-container-org48eef36" class="outline-4">
+<h4 id="org48eef36">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org48eef36">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org2489fc9">1. Rationale</a>
+<li><a href="#org01e4f0a">1. Rationale</a>
 <ul>
-<li><a href="#orgb6eb340">Associated Reading / Preparation</a></li>
-<li><a href="#org68d7a0b">Grading Policy</a></li>
+<li><a href="#orgc3d81bf">Associated Reading / Preparation</a></li>
+<li><a href="#org0939215">Grading Policy</a></li>
 </ul>
 </li>
-<li><a href="#org8f23d89">2. Codepack</a></li>
-<li><a href="#org05d10c8">3. Overview and Background</a></li>
-<li><a href="#orgd1d9634">4. What to Understand</a></li>
-<li><a href="#org9691329">5. Questions</a></li>
+<li><a href="#orga3dfdf1">2. Codepack</a></li>
+<li><a href="#org015f111">3. Overview and Background</a></li>
+<li><a href="#orgf76ea9e">4. What to Understand</a></li>
+<li><a href="#org59723a8">5. Questions</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org2489fc9" class="outline-2">
-<h2 id="org2489fc9"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org01e4f0a" class="outline-2">
+<h2 id="org01e4f0a"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Basic understanding of how the memory system works to fulfill
@@ -452,9 +430,9 @@ performance.
 </p>
 </div>
 
-<div id="outline-container-orgb6eb340" class="outline-3">
-<h3 id="orgb6eb340">Associated Reading / Preparation</h3>
-<div class="outline-text-3" id="text-orgb6eb340">
+<div id="outline-container-orgc3d81bf" class="outline-3">
+<h3 id="orgc3d81bf">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-orgc3d81bf">
 <p>
 Bryant and O'Hallaron: Ch 6 on The Memory Hierarchy. Ch 6.5 and 6.6
 may be particularly helpful
@@ -462,9 +440,9 @@ may be particularly helpful
 </div>
 </div>
 
-<div id="outline-container-org68d7a0b" class="outline-3">
-<h3 id="org68d7a0b">Grading Policy</h3>
-<div class="outline-text-3" id="text-org68d7a0b">
+<div id="outline-container-org0939215" class="outline-3">
+<h3 id="org0939215">Grading Policy</h3>
+<div class="outline-text-3" id="text-org0939215">
 <p>
 Credit for this HW is earned by taking the associated HW Quiz which is
 linked under <code>Gradescope</code>.  The quiz will ask similar questions as
@@ -486,8 +464,8 @@ See the <a href="../2021/syllabus.html">full policies in the course syllabus</a>
 </div>
 </div>
 
-<div id="outline-container-org8f23d89" class="outline-2">
-<h2 id="org8f23d89"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orga3dfdf1" class="outline-2">
+<h2 id="orga3dfdf1"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -551,8 +529,8 @@ The codepack for the HW contains the following files:
 </div>
 </div>
 
-<div id="outline-container-org05d10c8" class="outline-2">
-<h2 id="org05d10c8"><span class="section-number-2">3</span> Overview and Background</h2>
+<div id="outline-container-org015f111" class="outline-2">
+<h2 id="org015f111"><span class="section-number-2">3</span> Overview and Background</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 This HW deals with matrices and vectors. In C these are typically 2D
@@ -579,8 +557,8 @@ hierarchy.
 </div>
 </div>
 
-<div id="outline-container-orgd1d9634" class="outline-2">
-<h2 id="orgd1d9634"><span class="section-number-2">4</span> What to Understand</h2>
+<div id="outline-container-orgf76ea9e" class="outline-2">
+<h2 id="orgf76ea9e"><span class="section-number-2">4</span> What to Understand</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Ensure that you understand
@@ -594,8 +572,8 @@ pattern can dramatically improve performance</li>
 </div>
 </div>
 
-<div id="outline-container-org9691329" class="outline-2">
-<h2 id="org9691329"><span class="section-number-2">5</span> Questions</h2>
+<div id="outline-container-org59723a8" class="outline-2">
+<h2 id="org59723a8"><span class="section-number-2">5</span> Questions</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Analyze the files in the provided codepack and answer the questions
@@ -701,7 +679,7 @@ PROBLEM 3: opt_col_sums()
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-03-31 Wed 11:57 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-11-16 Tue 21:15 <br/> </i>
 </div>
 </body>
 </html>
