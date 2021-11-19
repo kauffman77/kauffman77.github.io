@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-04-16 Fri 12:11 -->
+<!-- 2021-11-19 Fri 15:32 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Project 4: Performance Optimization and Timing</title>
@@ -365,86 +365,68 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-04-16 Fri 12:11</i>
+<i>Last Updated: 2021-11-19 Fri 15:32</i>
 </div>
 <div id="content">
 <h1 class="title">CSCI 2021 Project 4: Performance Optimization and Timing</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Mon 4/19/2021</b></li>
+<li><b>Due: 11:59pm Wed 12/01/2021</b></li>
 <li><i>Approximately 3.0-4.0% of total grade</i></li>
 <li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a> (submission now REALLY open)</li>
 <li>Projects are <b>individual work</b>: no collaboration with other students
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-orgb3fed64" class="outline-4">
-<h4 id="orgb3fed64">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
+<div id="outline-container-org081a8d4" class="outline-4">
+<h4 id="org081a8d4">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org6b7d8f6" class="outline-4">
-<h4 id="org6b7d8f6">VIDEO OVERVIEW: <a href="https://youtu.be/jfrYPZ5UlOM">https://youtu.be/jfrYPZ5UlOM</a></h4>
-</div>
-
-<div id="outline-container-org2f98b5d" class="outline-4">
-<h4 id="org2f98b5d">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org2f98b5d">
-<dl class="org-dl">
-<dt>Fri Apr 16 12:09:58 PM CDT 2021</dt><dd>Submission of Project 4 to
-Gradescope is now available. Keep in mind that only a few
-correctness tests are run there while performance for programs like
-<code>sumdiag_benchmark</code> will be evaluated manually during grading.</dd>
-
-<dt>Wed Apr 14 11:09:04 AM CDT 2021</dt><dd><a href="https://piazza.com/class/kjx0d5e4nhg9z?cid=758">Post 758</a> reported that the
-codepack is missing <code>data.c</code> for problem 1. This has been added
-<code>p4-code.zip</code> and is available for separate download here:
-<a href="data.c">data.c</a></dd>
-
-<dt>Mon Apr 12 11:37:13 AM CDT 2021</dt><dd>Added in the missing <code>00_ID.txt</code>
-file to <code>p4-code.zip</code> according to the report on <a href="https://piazza.com/class/kjx0d5e4nhg9z?cid=754">Post 754</a>.</dd>
-</dl>
+<div id="outline-container-org23fabd6" class="outline-4">
+<h4 id="org23fabd6">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org23fabd6">
 </div>
 </div>
 
-<div id="outline-container-orgee73c8b" class="outline-4">
-<h4 id="orgee73c8b"></h4>
-<div class="outline-text-4" id="text-orgee73c8b">
+<div id="outline-container-orgba74171" class="outline-4">
+<h4 id="orgba74171"></h4>
+<div class="outline-text-4" id="text-orgba74171">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org4960592">1. Introduction</a></li>
-<li><a href="#org7900fd5">2. Download Code and Setup</a></li>
-<li><a href="#orgb34c9d6">3. <b>Problem 1</b>: Matrix Diagonal Sums</a>
+<li><a href="#org725af64">1. Introduction</a></li>
+<li><a href="#orgb3b0eac">2. Download Code and Setup</a></li>
+<li><a href="#org27ca146">3. <b>Problem 1</b>: Squaring a Matrix</a>
 <ul>
-<li><a href="#orgf8c3bb7">3.1. Overview</a></li>
-<li><a href="#orgc665ed2">3.2. Optimize Diagonal Sums</a></li>
-<li><a href="#org587d67e">3.3. Evaluation on <code>csel-kh125-NN</code></a></li>
-<li><a href="#orga50d0b7">3.4. <code>sumdiag_print.c</code> Testing Program</a></li>
-<li><a href="#orgefa1a21">3.5. Optimization Suggestions and Documentation</a></li>
-<li><a href="#org7f65d59">3.6. Grading Criteria for Problem 1 (50%)</a></li>
+<li><a href="#org781e09f">3.1. Overview</a></li>
+<li><a href="#org6660de6">3.2. Optimize Matrix Squaring</a></li>
+<li><a href="#orgec8d88c">3.3. Evaluation on <code>csel-kh1250-NN</code></a></li>
+<li><a href="#org7abf5b7">3.4. <code>matsquare_print.c</code> Testing Program</a></li>
+<li><a href="#org737e3b3">3.5. Optimization Suggestions and Documentation</a></li>
+<li><a href="#orgc499025">3.6. Grading Criteria for Problem 1 (55%)</a></li>
 </ul>
 </li>
-<li><a href="#org8a3e42d">4. <b>Problem 2</b>: Timing Search Algorithms</a>
+<li><a href="#org8f1c2fe">4. <b>Problem 2</b>: Timing Search Algorithms</a>
 <ul>
-<li><a href="#org9891761">4.1. Overview</a></li>
-<li><a href="#orgdfc8d5e">4.2. <code>main()</code> in <code>search_benchmark.c</code></a></li>
-<li><a href="#orgf179ab1">4.3. Running Algorithms based on Command Line Arguments</a></li>
-<li><a href="#orgddf8c74">4.4. Sample <code>main()</code> Runs</a></li>
-<li><a href="#org825225f">4.5. Proper Setup and Cleanup for Searches</a></li>
-<li><a href="#org0c336e6">4.6. What to Measure</a></li>
-<li><a href="#org619db58">4.7. MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></a></li>
-<li><a href="#org08db976">4.8. Grading Criteria for Problem 2 (50%)</a></li>
+<li><a href="#orge9a08e4">4.1. Overview</a></li>
+<li><a href="#orgb22bfdb">4.2. <code>main()</code> in <code>search_benchmark.c</code></a></li>
+<li><a href="#org952ade6">4.3. Running Algorithms based on Command Line Arguments</a></li>
+<li><a href="#orgda7af4b">4.4. Sample <code>main()</code> Runs</a></li>
+<li><a href="#orgb9d1379">4.5. Proper Setup and Cleanup for Searches</a></li>
+<li><a href="#org69bde59">4.6. What to Measure</a></li>
+<li><a href="#org6dcad90">4.7. MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></a></li>
+<li><a href="#orgf6e3594">4.8. Grading Criteria for Problem 2 (45%)</a></li>
 </ul>
 </li>
-<li><a href="#org87811cb">5. Writeup</a></li>
+<li><a href="#org58b4b37">5. Writeup</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org4960592" class="outline-2">
-<h2 id="org4960592"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-org725af64" class="outline-2">
+<h2 id="org725af64"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This assignment focuses on aspects of optimizing and measuring
@@ -462,8 +444,8 @@ benchmark the performance of those functions.</li>
 </div>
 </div>
 
-<div id="outline-container-org7900fd5" class="outline-2">
-<h2 id="org7900fd5"><span class="section-number-2">2</span> <a id="orgd1928fb"></a> Download Code and Setup</h2>
+<div id="outline-container-orgb3b0eac" class="outline-2">
+<h2 id="orgb3b0eac"><span class="section-number-2">2</span> <a id="orgd55c4bc"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -497,33 +479,21 @@ folder. Ultimately you will re-zip this folder to submit it.
 
 <tr>
 <td class="org-left"><code>P4-WRITEUP.txt</code></td>
-<td class="org-left">EDIT</td>
+<td class="org-left">Edit</td>
 <td class="org-left">Fill in answers to assignment questions</td>
 </tr>
 </tbody>
 <tbody>
 <tr>
-<td class="org-left"><code>sumdiag_optm.c</code></td>
-<td class="org-left">EDIT</td>
-<td class="org-left">Problem 1 create and fill in optimized function definition</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>sumdiag_benchmark.c</code></td>
+<td class="org-left"><code>matsquare_benchmark.c</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Problem 1 main benchmark</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>sumdiag_print.c</code></td>
+<td class="org-left"><code>matsquare_print.c</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Problem 1 testing program</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>sumdiag_base.c</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Problem 1 baseline function to beat</td>
 </tr>
 
 <tr>
@@ -539,9 +509,15 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tr>
 
 <tr>
-<td class="org-left"><code>test_sumdiag.org</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">Tests to check for memory issues in problem 1</td>
+<td class="org-left"><code>matsquare_base.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 baseline function to beat</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>matsquare_optm.c</code></td>
+<td class="org-left">EDIT/COMPLETE</td>
+<td class="org-left">Problem 1 create and fill in optimized function definition</td>
 </tr>
 </tbody>
 <tbody>
@@ -562,18 +538,24 @@ folder. Ultimately you will re-zip this folder to submit it.
 <td class="org-left">EDIT/COMPLETE</td>
 <td class="org-left">Problem 2 timing <code>main()</code> to create</td>
 </tr>
-
-<tr>
-<td class="org-left"><code>test_search_benchmark.org</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">Tests to check for memory issues in problem 2</td>
-</tr>
 </tbody>
 <tbody>
 <tr>
 <td class="org-left"><code>testy</code></td>
-<td class="org-left">Testing</td>
+<td class="org-left">Provided</td>
 <td class="org-left">Testing script</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_matsquare.org</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Tests to check for memory issues in problem 1</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_search_benchmark.org</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Tests to check for memory issues in problem 2</td>
 </tr>
 </tbody>
 </table>
@@ -581,94 +563,119 @@ folder. Ultimately you will re-zip this folder to submit it.
 </div>
 
 
-<div id="outline-container-orgb34c9d6" class="outline-2">
-<h2 id="orgb34c9d6"><span class="section-number-2">3</span> <b>Problem 1</b>: Matrix Diagonal Sums</h2>
+<div id="outline-container-org27ca146" class="outline-2">
+<h2 id="org27ca146"><span class="section-number-2">3</span> <b>Problem 1</b>: Squaring a Matrix</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgf8c3bb7" class="outline-3">
-<h3 id="orgf8c3bb7"><span class="section-number-3">3.1</span> Overview</h3>
+<div id="outline-container-org781e09f" class="outline-3">
+<h3 id="org781e09f"><span class="section-number-3">3.1</span> Overview</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 A problem that occasionally arises in numerical computing when working
-with Matrices (2D Arrays) is to compute the sums of the <b>Diagonals</b> of
-a matrix.  The main diagonal of a matrix is comprised of all elements
-at indices (0,0), (1,1), (2,2), and so forth.  There are several
-numbering schemes for diagonals but we will use the one represented in
-the following diagram which also shows the sums of the diagonals.
+with Matrices (2D Arrays) is to compute the <b>Square</b> of a matrix. This
+is a special case of general <a href="https://en.wikipedia.org/wiki/Matrix_multiplication">matrix multiplication</a> and students
+unfamiliar with this operation should study it to get some context for
+the present work.  
+</p>
+
+<p>
+Terminology can get a little confusing so keep the following in mind.
+</p>
+<ul class="org-ul">
+<li>A <b>Square Matrix</b> has equal numbers of rows and columns and can be
+multiplied by itself.</li>
+<li><b>Squaring</b> a matrix, sometimes notated <code>M*M = M^2</code> is multiplying a
+matrix by itself which can only be done if it is a square matrix
+(equal rows/columns).</li>
+</ul>
+
+<p>
+The diagram below illustrates the result of squaring a matrix by
+multiplying it by itself.  
 </p>
 
 <div class="org-center">
 
-<div id="orgaf2fbe1" class="figure">
-<p><img src="sumdiag.png" alt="sumdiag.png" style="max-width:100%;" />
+<div id="org77de831" class="figure">
+<p><img src="matsquare.png" alt="matsquare.png" style="max-width:100%;" />
 </p>
-<p><span class="figure-number">Figure 1: </span>5 by 5 matrix with diagonals colored. The diagram shows our numbering scheme for diagonals and the corresponding diagonal sums. Diagonal numbers start at 0 and progress counter-clockwise around the bottom and right of the matrix. For square matrices, the main diagonal is always numbered as the #rows-1 or #cols-1 which are equal.</p>
+<p><span class="figure-number">Figure 1: </span>3 by 3 matrix <code>M</code> with colored elements along with result of squaring the matrix as <code>M*M</code>.</p>
 </div>
 </div>
 
 <p>
-A code is provided in the file <code>sumdiag_base.c</code> which computes the
-sums of diagonals and stores them in a vector. The algorithm does so
-using the most "natural" approach of walking down each diagonal and
-totaling its elements then storing the result in the associated vector
-element.  As you survey the code, note the use of various convenience
-macros such as <code>MGET(mat,i,j)</code> and <code>VSET(vec,i,x)</code> to interact with
-the matrix and vector types used.
+Note that that for each of the elements of the squared matrix, the
+elements are the result of a row multiplied by a column from the
+original matrix:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">MatSq[i][j] = 0;
+for(k = 0 to Mat.rows){
+  MatSq[i][j] += Mat[i][k] * Mat[k][j];
+}
+</pre>
+</div>
+<p>
+The file <code>matsquare_base.c</code> provides a baseline function that performs
+this computation in a direct fashion as the above definition indicates
+The algorithm uses the most "natural" approach of multiplying each row
+by each column to produce the result in the for each part of the
+squared result.  As you survey the code, note the use of various
+convenience macros such as <code>MGET(mat,i,j)</code> interact with the matrix
+type used.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-c">int sumdiag_BASE(matrix_t mat, vector_t vec) {
-  if(vec.len != (mat.rows + mat.cols -1)){
-    printf("sumdiag_base: bad sizes\n");
+<pre class="src src-c">// Baseline version
+int matsquare_BASE(matrix_t mat, matrix_t matsq) {
+  if(mat.rows != mat.cols ||                       // must be a square matrix to square it
+     mat.rows != matsq.rows || mat.cols != matsq.cols)
+  {
+    printf("matsquare_BASE: dimension mismatch\n");
     return 1;
   }
-  for(int i=0; i&lt;vec.len; i++){                   // initialize vector of diagonal sums
-    VSET(vec,i,0);                                // to all 0s
-  }
 
-  for(int d=0; d &lt; mat.rows; d++){                // iterate over lower diagonals
-    int c = 0;                                    // col always starts at 0 in lower diags
-    for(int r=mat.rows-d-1; r&lt;mat.rows; r++,c++){ // work down rows, right cols for same diag
-      int el_rc = MGET(mat, r, c);                // get matrix element on diagonal
-      int vec_d = VGET(vec, d);                   // retrieve current sum for diag
-      VSET(vec, d, el_rc+vec_d);                  // add on back to the diagonal sum
+  for(int i=0; i&lt;mat.rows; i++){
+    for(int j=0; j&lt;mat.cols; j++){
+      MSET(matsq,i,j,0);                          // initialize to 0s
+      for(int k=0; k&lt;mat.rows; k++){
+        int mik = MGET(mat, i, k);
+        int mkj = MGET(mat, k, j);
+        int cur = MGET(matsq, i, j);
+        int new = cur + mik*mkj;
+        MSET(matsq, i, j, new);
+      }
     }
   }
 
-  int maxdiag = (mat.rows+mat.cols)-1;            // calculate last diagonal
-  for(int d=mat.rows; d &lt; maxdiag ; d++){         // iterate starting at first upper diag
-    int r = 0;                                    // row always starts at 0 in upper diags
-    for(int c=d-mat.cols+1; c&lt;mat.cols; r++,c++){ // work down rows, right cols for same diag
-      int el_rc = MGET(mat, r, c);                // matrix element
-      int vec_d = VGET(vec, d);                   // diagonal sum from vector
-      VSET(vec, d, el_rc+vec_d);                  // add on to sum
-    }
-  }
   return 0;                                       // return success
 }
 </pre>
 </div>
+<p>
+Note that the original matrix comes in as the parameter <code>mat</code> and the
+result of squaring the matrix is stored in the parameter <code>matsq</code>.
+</p>
 
 <p>
 While this algorithm is a direct translation of how humans would
-visually calculate the sums of diagonals for small matrices, it is
-unfortunately fairly slow when executing on most modern computing
-systems.
+visually calculate the square of small matrices, it is unfortunately
+fairly slow when executing on most modern computing systems.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgc665ed2" class="outline-3">
-<h3 id="orgc665ed2"><span class="section-number-3">3.2</span> Optimize Diagonal Sums</h3>
+<div id="outline-container-org6660de6" class="outline-3">
+<h3 id="org6660de6"><span class="section-number-3">3.2</span> Optimize Matrix Squaring</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
-The purpose of this problem is to write <code>sumdiag_OPTM()</code> which is a
-faster version of the provided <code>sumdiag_BASE()</code> to calculate the sums
-of diagonals.
+The purpose of this problem is to write <code>matsquare_OPTM()</code> which is a
+faster version of the provided <code>matsquare_BASE()</code> to calculate the
+results.
 </p>
 
 <p>
-Write your code in the file <code>sumdiag_optm.c</code>.
+Write your code in the file <code>matsquare_optm.c</code>.
 </p>
 
 <p>
@@ -679,8 +686,8 @@ Keep the following things in mind.
 related to matrices and vectors provided in the <code>matvec.h</code> and
 demonstrated in the baseline function. Understanding the layout of
 the matrix in memory is essential to unlocking performance.</li>
-<li>The goal of <code>sumdiag_OPTM()</code> is to exceed the performance of
-<code>sumdiag_BASE()</code> by as much as possible.</li>
+<li>The goal of <code>matsquare_OPTM()</code> is to exceed the performance of
+<code>matsquare_BASE()</code> by as much as possible.</li>
 <li>To achieve this goal, several optimizations must be implemented and
 suggestions are given in a later section.</li>
 <li>You will need to document your optimizations in the file
@@ -688,7 +695,7 @@ suggestions are given in a later section.</li>
 optimized version.</li>
 <li>Part of your grade will be based on the speed of the optimized code
 on the machine <code>csel-kh1250-NN.cselabs.umn.edu</code>. The main routine
-<code>sumdiag_benchmark.c</code> will be used for this.</li>
+<code>matsquare_benchmark.c</code> will be used for this.</li>
 </ol>
 
 <p>
@@ -698,107 +705,121 @@ Some details are provided in subsequent sections.
 </div>
 
 
-<div id="outline-container-org587d67e" class="outline-3">
-<h3 id="org587d67e"><span class="section-number-3">3.3</span> Evaluation on <code>csel-kh125-NN</code></h3>
+<div id="outline-container-orgec8d88c" class="outline-3">
+<h3 id="orgec8d88c"><span class="section-number-3">3.3</span> Evaluation on <code>csel-kh1250-NN</code></h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
-The provided file <code>sumdiag_benchmark.c</code> provides a benchmark for the
-speed of diagonal summing. It will be used by graders to evaluate the
+The provided file <code>matsquare_benchmark.c</code> provides a benchmark for the
+speed of squaring a matrix. It will be used by graders to evaluate the
 submitted code and should be used during development to gauge
 performance improvements.
 </p>
 
 <p>
-The machines <code>csel-kh1250-NN.cselabs.umn.edu</code> (where <code>NN</code> is <code>01, 02,
-03, ... 37</code>) will be used for evaluation. The scoring present in
-<code>sumdiag_benchmark.c</code> is "tuned" to these machines and will likely
-report incorrect results on other machines.  That means that codes
-should be <b>tested on csel-kh1250 machines</b> so that no unexpected
-results occur after submission. Results reported should be from one of
-<code>csel-kh1250-NN</code>.
+The machines <code>csel-kh1250-NN.cselabs.umn.edu</code> where <code>NN</code> is <code>01</code> to
+<code>37</code> will be used for evaluation and the scoring present in
+<code>matsquare_benchmark.c</code> is "tuned" to the CPU/Memory on these
+machines.  That means that codes should be <b>tested on csel-kh1250-NN</b>
+so that no unexpected results occur after submission. Results reported
+should be from <code>csel-kh1250-NN</code>.
 </p>
 
 <p>
-The output of the <code>sumdiag_benchmark</code> is shown below.
+The output of the <code>matsquare_benchmark</code> is shown below.
 </p>
 <ul class="org-ul">
 <li>SIZE: the size of the matrix being used. The benchmark always
 uses square matrices</li>
 <li>Runtimes for the 2 functions
 <ul class="org-ul">
-<li><code>BASE</code>: the time it takes for <code>sumdiag_BASE()</code> to complete.</li>
-<li><code>OPTM</code>: the time it takes for <code>sumdiag_OPTM()</code> to complete.</li>
+<li>BASE: the time it takes for <code>matsquare_BASE()</code> to complete.</li>
+<li>OPTM: the time it takes for <code>matsquare_OPTM()</code> to complete.</li>
 </ul></li>
-<li>SPDUP: the speedup of <code>sumdiag_OPTM()</code> over <code>sumdiag_BASE()</code> which
+<li>SPDUP: the speedup of <code>matsquare_OPTM()</code> over <code>matsquare_BASE()</code> which
 is <code>BASE / OPTM</code>.</li>
 <li><p>
 POINTS: which are earned according to the following code:
 </p>
 <div class="org-src-container">
-<pre class="src src-c">    double points = speedup_OPTM - 1.0;     // speedup of 1.0 is no speedup at all
-    points = points &gt; 0.0 ? points : 0.0;   // no negative point values: min 0.0
+<pre class="src src-c">    double factor =                               // scale based on size: speedup on 
+      (( ((double) size) / ((double) sizes[0]))); // larger matrix worth more points
+
+    double log2spdup = log2(speedup_OPTM);        // log_2 so equal speed is 0 points, 2X is 1pt, etc
+    if(log2spdup &lt; 0){                            // no negative scores
+      log2spdup = 0.0;
+    }
+    double points = log2spdup * factor;           // scale speedup by size factor
 </pre>
 </div>
 <p>
-This scheme means that unless actual optimizations are implemented,
-0 points will be scored.
+This scheme, while a little involved, means that unless actual
+optimizations are implemented, 0 points will be scored. It is also
+weighted towards earning more points on for larger size matrices.
 </p></li>
 </ul>
 
 <p>
-Below are several demonstration runs of <code>sumdiag_benchmark</code>.
+Below are several demonstration runs of <code>matsquare_benchmark</code>.
 </p>
 <div class="org-src-container">
-<pre class="src src-sh"># RUN ON NON-CSEL-KH1250 MACHINE: NOTE WARNINGS
-homeputer&gt; ./sumdiag_benchmark 
+<pre class="src src-sh"># BUILD/RUN ON NON-CSEL-KH1250-NN MACHINE: NOTE WARNINGS
+homeputer&gt; make
+gcc -Wall -Werror -g -Og -c matsquare_print.c
+gcc -Wall -Werror -g -Og -c matvec_util.c
+gcc -Wall -Werror -g -Og -c matsquare_base.c
+gcc -Wall -Werror -g -Og -c matsquare_optm.c
+gcc -Wall -Werror -g -Og -o matsquare_print matsquare_print.o matvec_util.o matsquare_base.o matsquare_optm.o
+gcc -Wall -Werror -g -Og -c matsquare_benchmark.c
+gcc -Wall -Werror -g -Og -o matsquare_benchmark matsquare_benchmark.o matvec_util.o matsquare_base.o matsquare_optm.o -lm
+...
+
+homeputer&gt; ./matsquare_benchmark 
 WARNING: expected host 'csel-kh1250-NN' but got host 'homeputer'
 WARNING: timing results / scoring will not reflect actual scoring
 WARNING: run on host 'csel-kh1250-NN' for accurate results
-==== Matrix Diagonal Sum Benchmark Version 2 ====
------- Tuned for csel-kh1250-NN machines --------
-  SIZE       BASE       OPTM  SPDUP POINTS 
-   512 2.3240e-03 1.1180e-03   2.08   1.08 
-  1024 1.3354e-02 5.4160e-03   2.47   1.47 
-  1101 1.2935e-02 1.0266e-02   1.26   0.26 
-  2048 6.9519e-02 2.3286e-02   2.99   1.99 
-  4099 2.9959e-01 7.1339e-02   4.20   3.20 
-  6001 8.3091e-01 1.4950e-01   5.56   4.56 
-  8191 2.7868e+00 2.8367e-01   9.82   8.82 
-RAW POINTS: 21.37
-TOTAL POINTS: 21 / 35
+==== Matrix Square Benchmark Version 1 ====
+  SIZE       BASE       OPTM  SPDUP   LOG2 FACTOR POINTS 
+   273 6.3082e-02 3.2783e-02   1.92   0.94   1.00   0.94 
+   512 3.3868e-01 1.6586e-01   2.04   1.03   1.88   1.93 
+   722 8.9180e-01 4.7556e-01   1.88   0.91   2.64   2.40 
+   801 1.2462e+00 6.6762e-01   1.87   0.90   2.93   2.64 
+  1024 7.8568e+00 1.3765e+00   5.71   2.51   3.75   9.43 
+  1101 5.1476e+00 1.7365e+00   2.96   1.57   4.03   6.32 
+  1309 1.0345e+01 2.9614e+00   3.49   1.80   4.79   8.65 
+RAW POINTS: 32.32
+TOTAL POINTS: 32 / 35
 WARNING: expected host 'csel-kh1250-NN' but got host 'homeputer'
 WARNING: timing results / scoring will not reflect actual scoring
 WARNING: run on host 'csel-kh1250-NN' for accurate results
 
 # PARTIAL CREDIT RUN
-csel-kh1250-07&gt; ./sumdiag_benchmark
-==== Matrix Diagonal Sum Benchmark Version 2 ====
------- Tuned for csel-kh1250-NN machines --------
-  SIZE       BASE       OPTM  SPDUP POINTS 
-   512 2.9110e-03 1.8990e-03   1.53   0.53 
-  1024 6.5820e-03 3.8090e-03   1.73   0.73 
-  1101 7.3950e-03 4.3150e-03   1.71   0.71 
-  2048 8.8279e-02 1.5028e-02   5.87   4.87 
-  4099 3.6446e-01 5.7960e-02   6.29   5.29 
-  6001 9.2396e-01 1.2452e-01   7.42   6.42 
-  8191 2.4125e+00 2.3274e-01  10.37   9.37 
-RAW POINTS: 27.92
-TOTAL POINTS: 28 / 35
+csel-kh1250-05&gt; ./matsquare_benchmark 
+==== Matrix Square Benchmark Version 1 ====
+  SIZE       BASE       OPTM  SPDUP   LOG2 FACTOR POINTS 
+   273 5.7477e-02 3.0015e-02   1.91   0.94   1.00   0.94 
+   512 3.4969e-01 3.1837e-01   1.10   0.14   1.88   0.25 
+   722 8.7826e-01 6.8763e-01   1.28   0.35   2.64   0.93 
+   801 1.2606e+00 1.0596e+00   1.19   0.25   2.93   0.74 
+  1024 6.5164e+00 6.1829e+00   1.05   0.08   3.75   0.28 
+  1101 4.9575e+00 4.5922e+00   1.08   0.11   4.03   0.45 
+  1309 1.0595e+01 9.1156e+00   1.16   0.22   4.79   1.04 
+RAW POINTS: 4.63
+TOTAL POINTS: 5 / 35
 
 # FULL CREDIT RUN
-csel-kh1250-07&gt; ./sumdiag_benchmark
-==== Matrix Diagonal Sum Benchmark Version 2 ====
------- Tuned for csel-kh1250-NN machines --------
-  SIZE       BASE       OPTM  SPDUP POINTS 
-   512 4.2340e-03 1.5620e-03   2.71   1.71 
-  1024 7.2050e-03 3.2370e-03   2.23   1.23 
-  1101 7.6120e-03 3.2760e-03   2.32   1.32 
-  2048 8.9477e-02 1.1366e-02   7.87   6.87 
-  4099 3.7041e-01 4.5491e-02   8.14   7.14 
-  6001 9.5016e-01 9.6499e-02   9.85   8.85 
-  8191 2.4793e+00 2.0149e-01  12.31  11.31 
-RAW POINTS: 38.43
+csel-kh1250-05&gt; ./matsquare_benchmark 
+==== Matrix Square Benchmark Version 1 ====
+  SIZE       BASE       OPTM  SPDUP   LOG2 FACTOR POINTS 
+   273 6.3368e-02 1.8595e-02   3.41   1.77   1.00   1.77 
+   512 3.3387e-01 1.2201e-01   2.74   1.45   1.88   2.72 
+   722 7.7923e-01 3.3930e-01   2.30   1.20   2.64   3.17 
+   801 1.2133e+00 4.5901e-01   2.64   1.40   2.93   4.11 
+  1024 7.0291e+00 1.0000e+00   7.03   2.81   3.75  10.55 
+  1101 5.1465e+00 1.2481e+00   4.12   2.04   4.03   8.24 
+  1309 1.0387e+01 2.1238e+00   4.89   2.29   4.79  10.98 
+RAW POINTS: 41.55
 TOTAL POINTS: 35 / 35
+
 </pre>
 </div>
 
@@ -806,45 +827,57 @@ TOTAL POINTS: 35 / 35
 Note that it is possible to exceed the score associated with maximal
 performance (as seen in the RAW POINTS reported) but no more than the
 final reported points will be given for the performance portion of the
-problem.
+problem. <i>There may be Makeup Credit associate with sufficient
+speedups;</i> <i>if this occurs, output for the program will make this
+obvious.</i>
 </p>
 </div>
 </div>
 
-<div id="outline-container-orga50d0b7" class="outline-3">
-<h3 id="orga50d0b7"><span class="section-number-3">3.4</span> <code>sumdiag_print.c</code> Testing Program</h3>
+<div id="outline-container-org7abf5b7" class="outline-3">
+<h3 id="org7abf5b7"><span class="section-number-3">3.4</span> <code>matsquare_print.c</code> Testing Program</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
-As one works on implementing optimizations in <code>sumdiag_OPTM()</code>, bugs
+As one works on implementing optimizations in <code>matsquare_OPTM()</code>, bugs
 which compute incorrect results are often introduced.  To aid in
-testing, the <code>sumdiag_print()</code> program runs both the BASE and OPTM
+testing, the <code>matsquare_print()</code> program runs both the BASE and OPTM
 versions on the same matrix and shows all results. The matrix size is
 determined from the command line and is printed on the screen to
 enable hand verification. Examples are below.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">&gt; ./sumdiag_print 5                    # run on a size 5 by 5 matrix; 
-==== Matrix Diagonal Sum Print ====
-Matrix:
-5 x 5 matrix                           # shows the matrix
-   0:    0    1    2    3    4 
-   1:    5    6    7    8    9 
-   2:   10   11   12   13   14 
-   3:   15   16   17   18   19 
-   4:   20   21   22   23   24 
+<pre class="src src-sh">./matsquare_print 3             # run on 3 by 3 matrix
+==== Matrix Square Print ====
+Original Matrix:                # original test matrix
+3 x 3 matrix
+   0:      0      1      2 
+   1:      3      4      5 
+   2:      6      7      8 
 
-Diagnonal Sums:                        # prints diag sums for BASE/OPTM
-[ i]: BASE OPTM
-[ 0]:   20   20                        # matching
-[ 1]:   36   36 
-[ 2]:   48   48 
-[ 3]:   56   56 
-[ 4]:   60   36 ***                    # not matching: OPTM is buggy
-[ 5]:   40   21 ***
-[ 6]:   24   10 ***
-[ 7]:   12    3 ***
-[ 8]:    4    0 ***
+BASE Matrix Squared :           # results for matsquare_BASE()
+3 x 3 matrix
+   0:     15     18     21 
+   1:     42     54     66 
+   2:     69     90    111 
+
+OPTM Matrix Squared :           # results for matsquare_OPTM()
+3 x 3 matrix
+   0:     15     18     21 
+   1:     42     59     66 
+   2:     69    103    111 
+
+BASE/OPTM Element Comparison:
+[  i][  j]:   BASE   OPTM       # elemnent by element comparison
+[  0][  0]:     15     15       # to help spot errors in results
+[  0][  1]:     18     18       # for matsquare_OPTM()
+[  0][  2]:     21     21 
+[  1][  0]:     42     42 
+[  1][  1]:     54     59 ***   # NON-matching
+[  1][  2]:     66     66 
+[  2][  0]:     69     69 
+[  2][  1]:     90    103 ***   # NON-matching
+[  2][  2]:    111    111 
 
 </pre>
 </div>
@@ -852,12 +885,12 @@ Diagnonal Sums:                        # prints diag sums for BASE/OPTM
 </div>
 
 
-<div id="outline-container-orgefa1a21" class="outline-3">
-<h3 id="orgefa1a21"><span class="section-number-3">3.5</span> <a id="org18f095c"></a> Optimization Suggestions and Documentation</h3>
+<div id="outline-container-org737e3b3" class="outline-3">
+<h3 id="org737e3b3"><span class="section-number-3">3.5</span> <a id="org9bacc52"></a> Optimization Suggestions and Documentation</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 Labs and lectures have covered several kinds of optimizations which
-are useful to improve the speed of <code>sumdiag_OPTM()</code>.  These techniques
+are useful to improve the speed of <code>matsquare_OPTM()</code>.  These techniques
 include:
 </p>
 <ul class="org-ul">
@@ -874,26 +907,39 @@ explore additional optimizations.
 </p>
 
 <p>
-One handy realization most folks will reach is that it is useful to be
-able to compute the Diagonal an individual matrix element belongs to
-based on its row/col indices.  The following formula is useful for
-that:
+One handy realization most folks will reach is that it is useful to
+recognize a way to re-order the memory access pattern to favor
+cache. Recall that the most favorable access pattern for most matrix
+computations in a row-major programming environment like C is to work
+across rows.  Below is a diagram which suggests one possible way to do
+this in the context of squaring a matrix.  It favors repeated walking
+across a matrix in a row-wise fashion to avoid the stride required for
+column-wise access.  Study this diagram carefully and consider
+implementing the approach illustrated as your first optimization. As
+discussed in lecture, if data is not getting to the processor, other
+optimizations that favor pipelining/superscalar execution will have no
+effect so focusing first on the memory access pattern is crucial.
 </p>
-<div class="org-src-container">
-<pre class="src src-c">mat_elem = MGET(mat, col_num, row_num);         // retrive an element based on row/col
-diag_num = col_num - row_num + mat.cols - 1;    // calculate the diagonal number for it
-</pre>
+
+<div class="org-center">
+
+<div id="orgfefd076" class="figure">
+<p><img src="matsquare-order.png" alt="matsquare-order.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Illustration of how to favor row-wise access to compute squared matrix. Computation of first row results are shown with the beginnings of the second row.</p>
+</div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org7f65d59" class="outline-3 grading 50">
-<h3 id="org7f65d59"><span class="section-number-3">3.6</span> Grading Criteria for Problem 1 (50%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+
+<div id="outline-container-orgc499025" class="outline-3 grading 55">
+<h3 id="orgc499025"><span class="section-number-3">3.6</span> Grading Criteria for Problem 1 (55%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="55">55</span></span></h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 The file <code>P4-WRITEUP.txt</code> has several questions that should be
 answered in a similar fashion to lab write-ups. These document the
-optimizations used in <code>sumdiag_OPTM()</code> require a justification for
+optimizations used in <code>matsquare_OPTM()</code> require a justification for
 their use.
 </p>
 
@@ -919,7 +965,7 @@ their use.
 
 <tr>
 <td class="org-right">5</td>
-<td class="org-left">No memory errors reported by Valgrind via <code>make prob1-valgrind</code></td>
+<td class="org-left">No memory errors reported by Valgrind via <code>make test-prob1</code></td>
 </tr>
 
 <tr>
@@ -929,17 +975,22 @@ their use.
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">MANUAL INSPECTION of <code>sumdiag_optm.c</code></td>
+<td class="org-left">MANUAL INSPECTION of <code>matsquare_optm.c</code></td>
 </tr>
 
 <tr>
 <td class="org-right">35</td>
-<td class="org-left">Performance of <code>sumdiag_OPTM()</code> on <code>csel-kh1250.cselabs.umn.edu</code></td>
+<td class="org-left">Performance of <code>matsquare_OPTM()</code> on <code>csel-kh1250-NN.cselabs.umn.edu</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">As measured by the provided <code>sumdiag_benchmark</code></td>
+<td class="org-left">As measured by the provided <code>matsquare_benchmark</code></td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Clean and well-documented code for <code>matsquare_OPTM()</code></td>
 </tr>
 </tbody>
 <tbody>
@@ -968,12 +1019,12 @@ their use.
 </div>
 </div>
 
-<div id="outline-container-org8a3e42d" class="outline-2">
-<h2 id="org8a3e42d"><span class="section-number-2">4</span> <b>Problem 2</b>: Timing Search Algorithms</h2>
+<div id="outline-container-org8f1c2fe" class="outline-2">
+<h2 id="org8f1c2fe"><span class="section-number-2">4</span> <b>Problem 2</b>: Timing Search Algorithms</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org9891761" class="outline-3">
-<h3 id="org9891761"><span class="section-number-3">4.1</span> Overview</h3>
+<div id="outline-container-orge9a08e4" class="outline-3">
+<h3 id="orge9a08e4"><span class="section-number-3">4.1</span> Overview</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 This problem centers on timing several algorithms to measure their
@@ -1016,8 +1067,8 @@ any platform but the analysis should be conducted on
 </div>
 
 
-<div id="outline-container-orgdfc8d5e" class="outline-3">
-<h3 id="orgdfc8d5e"><span class="section-number-3">4.2</span> <code>main()</code> in <code>search_benchmark.c</code></h3>
+<div id="outline-container-orgb22bfdb" class="outline-3">
+<h3 id="orgb22bfdb"><span class="section-number-3">4.2</span> <code>main()</code> in <code>search_benchmark.c</code></h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 The requirements from this problem is that you provide a <code>main()</code>
@@ -1116,8 +1167,8 @@ and cleanup for the searches.</li>
 </div>
 </div>
 
-<div id="outline-container-orgf179ab1" class="outline-3">
-<h3 id="orgf179ab1"><span class="section-number-3">4.3</span> Running Algorithms based on Command Line Arguments</h3>
+<div id="outline-container-org952ade6" class="outline-3">
+<h3 id="org952ade6"><span class="section-number-3">4.3</span> Running Algorithms based on Command Line Arguments</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 Many folks who have not had to handle command line arguments struggle
@@ -1127,9 +1178,9 @@ additional guidance on handling this aspect of the program.
 </div>
 
 
-<div id="outline-container-org5f53e65" class="outline-4">
-<h4 id="org5f53e65">Run the algorithms in a fixed order</h4>
-<div class="outline-text-4" id="text-org5f53e65">
+<div id="outline-container-org3153a1d" class="outline-4">
+<h4 id="org3153a1d">Run the algorithms in a fixed order</h4>
+<div class="outline-text-4" id="text-org3153a1d">
 <p>
 An invocation like
 </p>
@@ -1186,9 +1237,9 @@ trust.
 </div>
 </div>
 
-<div id="outline-container-org4d43b09" class="outline-4">
-<h4 id="org4d43b09">Use Boolean-like variables to track which algorithms to run</h4>
-<div class="outline-text-4" id="text-org4d43b09">
+<div id="outline-container-orgb24c39b" class="outline-4">
+<h4 id="orgb24c39b">Use Boolean-like variables to track which algorithms to run</h4>
+<div class="outline-text-4" id="text-orgb24c39b">
 <p>
 If following the advice of the previous section, to run the 4
 algorithms in a fixed order, one can simple assign variables in
@@ -1238,9 +1289,9 @@ and compared which is all that is needed to complete the timing.
 </div>
 </div>
 
-<div id="outline-container-orgaac4de3" class="outline-4">
-<h4 id="orgaac4de3">Free and Re-allocate Memory for Different Sizes</h4>
-<div class="outline-text-4" id="text-orgaac4de3">
+<div id="outline-container-org0cd7acd" class="outline-4">
+<h4 id="org0cd7acd">Free and Re-allocate Memory for Different Sizes</h4>
+<div class="outline-text-4" id="text-org0cd7acd">
 <p>
 While the search functions for Linked Lists and Binary Search Trees
 both take size arguments, these are ignored in the searches.  Instead,
@@ -1258,8 +1309,8 @@ timings for the linked structures.
 </div>
 
 
-<div id="outline-container-orgddf8c74" class="outline-3">
-<h3 id="orgddf8c74"><span class="section-number-3">4.4</span> Sample <code>main()</code> Runs</h3>
+<div id="outline-container-orgda7af4b" class="outline-3">
+<h3 id="orgda7af4b"><span class="section-number-3">4.4</span> Sample <code>main()</code> Runs</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 Below are some sample runs of the <code>main()</code> function and output that is
@@ -1324,8 +1375,8 @@ usage: ./search_benchmark &lt;minpow&gt; &lt;maxpow&gt; &lt;repeats&gt; [which]
 </div>
 
 
-<div id="outline-container-org825225f" class="outline-3">
-<h3 id="org825225f"><span class="section-number-3">4.5</span> Proper Setup and Cleanup for Searches</h3>
+<div id="outline-container-orgb9d1379" class="outline-3">
+<h3 id="orgb9d1379"><span class="section-number-3">4.5</span> Proper Setup and Cleanup for Searches</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 Each search algorithm requires setup and cleanup which is described
@@ -1335,9 +1386,9 @@ bonus credit.
 </p>
 </div>
 
-<div id="outline-container-org05688a3" class="outline-4">
-<h4 id="org05688a3">Linear and Binary Array Search</h4>
-<div class="outline-text-4" id="text-org05688a3">
+<div id="outline-container-orgbc4533a" class="outline-4">
+<h4 id="orgbc4533a">Linear and Binary Array Search</h4>
+<div class="outline-text-4" id="text-orgbc4533a">
 <p>
 Use the function <code>make_evens_array()</code> to create an appropriately
 sized <code>int</code> array for these functions.  Call <code>free()</code> on this array
@@ -1346,9 +1397,9 @@ when finished with it.
 </div>
 </div>
 
-<div id="outline-container-org6d2dfd0" class="outline-4">
-<h4 id="org6d2dfd0">Linked List Search</h4>
-<div class="outline-text-4" id="text-org6d2dfd0">
+<div id="outline-container-org77f6eb1" class="outline-4">
+<h4 id="org77f6eb1">Linked List Search</h4>
+<div class="outline-text-4" id="text-org77f6eb1">
 <p>
 Use the function <code>make_evens_list()</code> to create an appropriately
 sized <code>list_t</code>.  Call <code>list_free()</code> on this list when finished with
@@ -1357,9 +1408,9 @@ it.
 </div>
 </div>
 
-<div id="outline-container-orgd71fe33" class="outline-4">
-<h4 id="orgd71fe33">Binary Tree Search</h4>
-<div class="outline-text-4" id="text-orgd71fe33">
+<div id="outline-container-org2f57f65" class="outline-4">
+<h4 id="org2f57f65">Binary Tree Search</h4>
+<div class="outline-text-4" id="text-org2f57f65">
 <p>
 Use the function <code>make_evens_tree()</code> to create an appropriately
 sized <code>bst_t</code>.  Call <code>bst_free()</code> on this list when finished with
@@ -1369,8 +1420,8 @@ it.
 </div>
 </div>
 
-<div id="outline-container-org0c336e6" class="outline-3">
-<h3 id="org0c336e6"><span class="section-number-3">4.6</span> What to Measure</h3>
+<div id="outline-container-org69bde59" class="outline-3">
+<h3 id="org69bde59"><span class="section-number-3">4.6</span> What to Measure</h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
 The reason for the requirements mentioned above is to study the
@@ -1392,8 +1443,8 @@ provided.
 </div>
 </div>
 
-<div id="outline-container-org619db58" class="outline-3">
-<h3 id="org619db58"><span class="section-number-3">4.7</span> MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></h3>
+<div id="outline-container-org6dcad90" class="outline-3">
+<h3 id="org6dcad90"><span class="section-number-3">4.7</span> MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></h3>
 <div class="outline-text-3" id="text-4-7">
 <p>
 "Makeup" credit will allow the score on this assignment to exceed 100%
@@ -1406,8 +1457,8 @@ to help "make up" for lost credit on previous assignments.
 Makeup credit is available in this assignment for implementing the
 selection of which search functions to run in an "elegant" fashion.
 Likely the best method for this is to use a table of function
-pointers. This style is demonstrated in lab09 but must be expanded
-upon in this lab to reach its full potential.
+pointers. This style is demonstrated in Lab09 and Lab11 but must be
+expanded upon in this lab to reach its full potential.
 </p>
 
 <p>
@@ -1488,25 +1539,11 @@ To complete this part, document your code with comments and also
 describe you design using function pointers/structs in
 <code>P4-WRITEUP.txt</code>.
 </p>
-
-<p>
-For those interested in completing the MAKEUP credit, have a look at
-the <a href="https://www-users.cs.umn.edu/~kauffman/2021/function-pointers.html">Function Pointer in C</a> tutorial which is linked from the course
-schedule. 
-</p>
-
-<p>
-<b>WARNING:</b> Staff will not assist students with the MAKEUP portion
-unless they have already completed a "standard" implementation of the
-<code>search_benchmark</code> program.  Students should start with an <code>if/else</code>
-structure, produce timing results, complete the <code>P4-WRITEUP.txt</code>
-questions, <b>and then</b> move on to the MAKEUP credit.
-</p>
 </div>
 </div>
 
-<div id="outline-container-org08db976" class="outline-3 grading 50">
-<h3 id="org08db976"><span class="section-number-3">4.8</span> Grading Criteria for Problem 2 (50%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div id="outline-container-orgf6e3594" class="outline-3 grading 45">
+<h3 id="orgf6e3594"><span class="section-number-3">4.8</span> Grading Criteria for Problem 2 (45%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="45">45</span></span></h3>
 <div class="outline-text-3" id="text-4-8">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1590,12 +1627,12 @@ questions, <b>and then</b> move on to the MAKEUP credit.
 </tr>
 
 <tr>
-<td class="org-right">7</td>
+<td class="org-right">5</td>
 <td class="org-left">Answer 2B <code>P4-WRITEUP.txt</code> (list vs array)</td>
 </tr>
 
 <tr>
-<td class="org-right">8</td>
+<td class="org-right">5</td>
 <td class="org-left">Answer 2C <code>P4-WRITEUP.txt</code> (tree vs array))</td>
 </tr>
 
@@ -1626,8 +1663,8 @@ questions, <b>and then</b> move on to the MAKEUP credit.
 </div>
 
 
-<div id="outline-container-org87811cb" class="outline-2">
-<h2 id="org87811cb"><span class="section-number-2">5</span> Writeup</h2>
+<div id="outline-container-org58b4b37" class="outline-2">
+<h2 id="org58b4b37"><span class="section-number-2">5</span> Writeup</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 This assignment involves answering questions in the file
@@ -1649,8 +1686,8 @@ your answers directly in this text file and submit it along with your
 code.
 
 
-PROBLEM 1: sumdiag_OPTM()
-=========================
+PROBLEM 1: matsquare_OPTM()
+===========================
 
   Do your timing study on csel-keller1250-NN.cselabs.umn.edu
 
@@ -1658,7 +1695,7 @@ PROBLEM 1: sumdiag_OPTM()
 (A) Paste Source Code
 ~~~~~~~~~~~~~~~~~~~~~
 
-  Paste a copy of your source code for the function `sumdiag_OPTM()'
+  Paste a copy of your source code for the function `matsquare_OPTM()'
 
   ####################### YOUR ANSWER HERE #########################
 
@@ -1668,7 +1705,7 @@ PROBLEM 1: sumdiag_OPTM()
 (B) Timing on csel-kh1250-NN
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  Paste a copy of the results of running `sumdiag_benchmark' on
+  Paste a copy of the results of running `matsquare_benchmark' on
   csel-kh1250-NN.cselabs.umn.edu in the space below which shows how your
   performance optimizations improved on the baseline codes.
 
@@ -1787,7 +1824,7 @@ PROBLEM 2: Timing Search Algorithms
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-04-16 Fri 12:11 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-11-19 Fri 15:32 <br/> </i>
 </div>
 </body>
 </html>

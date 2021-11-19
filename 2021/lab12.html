@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-04-13 Tue 20:45 -->
+<!-- 2021-11-19 Fri 10:47 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Lab12: Functions and Macros</title>
@@ -365,65 +365,65 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-04-13 Tue 20:45</i>
+<i>Last Updated: 2021-11-19 Fri 10:47</i>
 </div>
 <div id="content">
 <h1 class="title">CSCI 2021 Lab12: Functions and Macros</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 4/20/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm Tue 11/30/2021</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-org25bdd83" class="outline-4">
-<h4 id="org25bdd83">CODE DISTRIBUTION: <a href="lab12-code.zip">lab12-code.zip</a></h4>
+<div id="outline-container-org2fc255c" class="outline-4">
+<h4 id="org2fc255c">CODE DISTRIBUTION: <a href="lab12-code.zip">lab12-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org58461e7" class="outline-4">
-<h4 id="org58461e7">CHANGELOG: Empty</h4>
+<div id="outline-container-org596878b" class="outline-4">
+<h4 id="org596878b">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-orgf73a153" class="outline-4">
-<h4 id="orgf73a153"></h4>
-<div class="outline-text-4" id="text-orgf73a153">
+<div id="outline-container-org3dae4cc" class="outline-4">
+<h4 id="org3dae4cc"></h4>
+<div class="outline-text-4" id="text-org3dae4cc">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org6b5e604">1. Rationale</a></li>
-<li><a href="#org318d1c2">2. Codepack</a></li>
-<li><a href="#org711a68d">3. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org98536b1">4. Submission</a></li>
+<li><a href="#orge41a201">1. Rationale</a></li>
+<li><a href="#orgb80ea5d">2. Codepack</a></li>
+<li><a href="#org1c74b0a">3. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org488af5e">4. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org6b5e604" class="outline-2">
-<h2 id="org6b5e604"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orge41a201" class="outline-2">
+<h2 id="orge41a201"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-C as a language provides limited form of "macros" usually introduced
-through the <code>#define</code> syntax and also supporting some special
-operations like <code>#include</code>. This facility is used to perform textural
-transformations on C source files such as inserting the contents of
-another source file (using header files via <code>#include</code>) or define a
-sort of global variable as in <code>#define MAX 123</code>.  The other common use
-is to define "parameterized" Macros which look like functions raising
-the question of what would motivate the use of Macros vs standard
-Functions. This lab analyzes what the Preprocessor phase of
-compilation does to a C source file to transform it according to the
-<code>#include</code> and <code>#define</code> directives.  It also shows that the use of
-function-like Parameterized Macros, in the absence of other compiler
-optimizations, may improve performance in tight computational loops by
-avoiding some of the optimization barriers created by standard
-Function Calls.
+C as a language provides a form of "macros" usually introduced through
+the <code>#define</code> syntax. This <b>preprocessing</b> facility is used to perform
+textural transformations on C source files such as inserting the
+contents of another source file (using header files via <code>#include</code>) or
+define a sort of global variable as in <code>#define MAX 123</code>.  The other
+common use is to define "parameterized" Macros which look like
+functions but are in fact just a programmatic form of the
+"replace-all" text operation. This raises the question of what would
+motivate the use of Macros vs standard Functions. This lab analyzes
+what the Preprocessor phase of compilation does to a C source file to
+transform it according to the <code>#include</code> and <code>#define</code> directives.  It
+also shows that the use of function-like Parameterized Macros, in the
+absence of other compiler optimizations, may improve performance in
+tight computational loops by avoiding some of the optimization
+barriers created by standard Function Calls.
 </p>
 </div>
 
-<div id="outline-container-org59c533b" class="outline-4">
-<h4 id="org59c533b">Grading Policy</h4>
-<div class="outline-text-4" id="text-org59c533b">
+<div id="outline-container-orge99f52a" class="outline-4">
+<h4 id="orge99f52a">Grading Policy</h4>
+<div class="outline-text-4" id="text-orge99f52a">
 <p>
 Credit for this Lab is earned by completing the exercises here and
 submitting a Zip of the work to Gradescope. Students are responsible
@@ -446,8 +446,8 @@ See the <a href="../syllabus.html">full policies in the course syllabus</a>.
 </div>
 </div>
 
-<div id="outline-container-org318d1c2" class="outline-2">
-<h2 id="org318d1c2"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orgb80ea5d" class="outline-2">
+<h2 id="orgb80ea5d"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -525,19 +525,13 @@ The codepack for the HW contains the following files:
 <td class="org-left">Testing</td>
 <td class="org-left">Test running scripts</td>
 </tr>
-
-<tr>
-<td class="org-left"><code>00_ID.txt</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">ID file</td>
-</tr>
 </tbody>
 </table>
 </div>
 </div>
 
-<div id="outline-container-org711a68d" class="outline-2">
-<h2 id="org711a68d"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org1c74b0a" class="outline-2">
+<h2 id="org1c74b0a"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -678,8 +672,8 @@ QUIZ: Analyzing `function_v_macro.c' Runs
     indices so it allows better speedup than the Direct variant.
   - ( ) The Direct variant uses a simpler iteration pattern through the
     data in the matrix / vector thus avoiding the need to do
-    multiply+add to while calculating positions in the array and running
-    faster.
+    multiply+add to index variables while calculating positions in the
+    array and running faster.
   - ( ) The Direct method utilizes a loop unrolling technique to improve
     processor pipelining thereby preforming faster than the Macro
     variant.
@@ -691,8 +685,8 @@ QUIZ: Analyzing `function_v_macro.c' Runs
 </div>
 </div>
 
-<div id="outline-container-org98536b1" class="outline-2">
-<h2 id="org98536b1"><span class="section-number-2">4</span> Submission</h2>
+<div id="outline-container-org488af5e" class="outline-2">
+<h2 id="org488af5e"><span class="section-number-2">4</span> Submission</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -702,7 +696,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-04-13 Tue 20:45 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-11-19 Fri 10:47 <br/> </i>
 </div>
 </body>
 </html>
