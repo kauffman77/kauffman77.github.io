@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-11-19 Fri 15:32 -->
+<!-- 2021-11-29 Mon 15:44 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Project 4: Performance Optimization and Timing</title>
@@ -365,68 +365,71 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-11-19 Fri 15:32</i>
+<i>Last Updated: 2021-11-29 Mon 15:44</i>
 </div>
 <div id="content">
 <h1 class="title">CSCI 2021 Project 4: Performance Optimization and Timing</h1>
 <ul class="org-ul">
 <li><b>Due: 11:59pm Wed 12/01/2021</b></li>
 <li><i>Approximately 3.0-4.0% of total grade</i></li>
-<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a> (submission now REALLY open)</li>
+<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a></li>
 <li>Projects are <b>individual work</b>: no collaboration with other students
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-org081a8d4" class="outline-4">
-<h4 id="org081a8d4">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
+<div id="outline-container-org6b9e6ac" class="outline-4">
+<h4 id="org6b9e6ac">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org23fabd6" class="outline-4">
-<h4 id="org23fabd6">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-org23fabd6">
+<div id="outline-container-org74ea618" class="outline-4">
+<h4 id="org74ea618">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org74ea618">
+<dl class="org-dl">
+<dt>Mon Nov 29 03:43:26 PM CST 2021</dt><dd><a href="https://www.gradescope.com/courses/304345/assignments/1689068/">Submission is now open on Gradescope</a>.</dd>
+</dl>
 </div>
 </div>
 
-<div id="outline-container-orgba74171" class="outline-4">
-<h4 id="orgba74171"></h4>
-<div class="outline-text-4" id="text-orgba74171">
+<div id="outline-container-org48ec76f" class="outline-4">
+<h4 id="org48ec76f"></h4>
+<div class="outline-text-4" id="text-org48ec76f">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org725af64">1. Introduction</a></li>
-<li><a href="#orgb3b0eac">2. Download Code and Setup</a></li>
-<li><a href="#org27ca146">3. <b>Problem 1</b>: Squaring a Matrix</a>
+<li><a href="#orgd63f665">1. Introduction</a></li>
+<li><a href="#org6cbdf6f">2. Download Code and Setup</a></li>
+<li><a href="#org56acd9f">3. <b>Problem 1</b>: Squaring a Matrix</a>
 <ul>
-<li><a href="#org781e09f">3.1. Overview</a></li>
-<li><a href="#org6660de6">3.2. Optimize Matrix Squaring</a></li>
-<li><a href="#orgec8d88c">3.3. Evaluation on <code>csel-kh1250-NN</code></a></li>
-<li><a href="#org7abf5b7">3.4. <code>matsquare_print.c</code> Testing Program</a></li>
-<li><a href="#org737e3b3">3.5. Optimization Suggestions and Documentation</a></li>
-<li><a href="#orgc499025">3.6. Grading Criteria for Problem 1 (55%)</a></li>
+<li><a href="#orgf78b198">3.1. Overview</a></li>
+<li><a href="#orgc7b4822">3.2. Optimize Matrix Squaring</a></li>
+<li><a href="#org86ca252">3.3. Evaluation on <code>csel-kh1250-NN</code></a></li>
+<li><a href="#org278b7f8">3.4. <code>matsquare_print.c</code> Testing Program</a></li>
+<li><a href="#org123a989">3.5. Optimization Suggestions and Documentation</a></li>
+<li><a href="#orgc17c6eb">3.6. Grading Criteria for Problem 1 (55%)</a></li>
 </ul>
 </li>
-<li><a href="#org8f1c2fe">4. <b>Problem 2</b>: Timing Search Algorithms</a>
+<li><a href="#org63b986e">4. <b>Problem 2</b>: Timing Search Algorithms</a>
 <ul>
-<li><a href="#orge9a08e4">4.1. Overview</a></li>
-<li><a href="#orgb22bfdb">4.2. <code>main()</code> in <code>search_benchmark.c</code></a></li>
-<li><a href="#org952ade6">4.3. Running Algorithms based on Command Line Arguments</a></li>
-<li><a href="#orgda7af4b">4.4. Sample <code>main()</code> Runs</a></li>
-<li><a href="#orgb9d1379">4.5. Proper Setup and Cleanup for Searches</a></li>
-<li><a href="#org69bde59">4.6. What to Measure</a></li>
-<li><a href="#org6dcad90">4.7. MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></a></li>
-<li><a href="#orgf6e3594">4.8. Grading Criteria for Problem 2 (45%)</a></li>
+<li><a href="#org436e9d1">4.1. Overview</a></li>
+<li><a href="#org9cc747f">4.2. <code>main()</code> in <code>search_benchmark.c</code></a></li>
+<li><a href="#orgea75a48">4.3. Running Algorithms based on Command Line Arguments</a></li>
+<li><a href="#orgf6f6507">4.4. Sample <code>main()</code> Runs</a></li>
+<li><a href="#org45fa557">4.5. Proper Setup and Cleanup for Searches</a></li>
+<li><a href="#org1dd4ddd">4.6. What to Measure</a></li>
+<li><a href="#orgce4f421">4.7. MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></a></li>
+<li><a href="#org49efab8">4.8. Grading Criteria for Problem 2 (45%)</a></li>
 </ul>
 </li>
-<li><a href="#org58b4b37">5. Writeup</a></li>
+<li><a href="#orgeba302a">5. Writeup</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org725af64" class="outline-2">
-<h2 id="org725af64"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orgd63f665" class="outline-2">
+<h2 id="orgd63f665"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This assignment focuses on aspects of optimizing and measuring
@@ -444,8 +447,8 @@ benchmark the performance of those functions.</li>
 </div>
 </div>
 
-<div id="outline-container-orgb3b0eac" class="outline-2">
-<h2 id="orgb3b0eac"><span class="section-number-2">2</span> <a id="orgd55c4bc"></a> Download Code and Setup</h2>
+<div id="outline-container-org6cbdf6f" class="outline-2">
+<h2 id="org6cbdf6f"><span class="section-number-2">2</span> <a id="org2e7db50"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -563,12 +566,12 @@ folder. Ultimately you will re-zip this folder to submit it.
 </div>
 
 
-<div id="outline-container-org27ca146" class="outline-2">
-<h2 id="org27ca146"><span class="section-number-2">3</span> <b>Problem 1</b>: Squaring a Matrix</h2>
+<div id="outline-container-org56acd9f" class="outline-2">
+<h2 id="org56acd9f"><span class="section-number-2">3</span> <b>Problem 1</b>: Squaring a Matrix</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org781e09f" class="outline-3">
-<h3 id="org781e09f"><span class="section-number-3">3.1</span> Overview</h3>
+<div id="outline-container-orgf78b198" class="outline-3">
+<h3 id="orgf78b198"><span class="section-number-3">3.1</span> Overview</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 A problem that occasionally arises in numerical computing when working
@@ -596,7 +599,7 @@ multiplying it by itself.
 
 <div class="org-center">
 
-<div id="org77de831" class="figure">
+<div id="org62bac4c" class="figure">
 <p><img src="matsquare.png" alt="matsquare.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>3 by 3 matrix <code>M</code> with colored elements along with result of squaring the matrix as <code>M*M</code>.</p>
@@ -665,8 +668,8 @@ fairly slow when executing on most modern computing systems.
 </div>
 </div>
 
-<div id="outline-container-org6660de6" class="outline-3">
-<h3 id="org6660de6"><span class="section-number-3">3.2</span> Optimize Matrix Squaring</h3>
+<div id="outline-container-orgc7b4822" class="outline-3">
+<h3 id="orgc7b4822"><span class="section-number-3">3.2</span> Optimize Matrix Squaring</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 The purpose of this problem is to write <code>matsquare_OPTM()</code> which is a
@@ -705,8 +708,8 @@ Some details are provided in subsequent sections.
 </div>
 
 
-<div id="outline-container-orgec8d88c" class="outline-3">
-<h3 id="orgec8d88c"><span class="section-number-3">3.3</span> Evaluation on <code>csel-kh1250-NN</code></h3>
+<div id="outline-container-org86ca252" class="outline-3">
+<h3 id="org86ca252"><span class="section-number-3">3.3</span> Evaluation on <code>csel-kh1250-NN</code></h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The provided file <code>matsquare_benchmark.c</code> provides a benchmark for the
@@ -834,8 +837,8 @@ obvious.</i>
 </div>
 </div>
 
-<div id="outline-container-org7abf5b7" class="outline-3">
-<h3 id="org7abf5b7"><span class="section-number-3">3.4</span> <code>matsquare_print.c</code> Testing Program</h3>
+<div id="outline-container-org278b7f8" class="outline-3">
+<h3 id="org278b7f8"><span class="section-number-3">3.4</span> <code>matsquare_print.c</code> Testing Program</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 As one works on implementing optimizations in <code>matsquare_OPTM()</code>, bugs
@@ -885,8 +888,8 @@ BASE/OPTM Element Comparison:
 </div>
 
 
-<div id="outline-container-org737e3b3" class="outline-3">
-<h3 id="org737e3b3"><span class="section-number-3">3.5</span> <a id="org9bacc52"></a> Optimization Suggestions and Documentation</h3>
+<div id="outline-container-org123a989" class="outline-3">
+<h3 id="org123a989"><span class="section-number-3">3.5</span> <a id="org9965bb5"></a> Optimization Suggestions and Documentation</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 Labs and lectures have covered several kinds of optimizations which
@@ -923,7 +926,7 @@ effect so focusing first on the memory access pattern is crucial.
 
 <div class="org-center">
 
-<div id="orgfefd076" class="figure">
+<div id="orgfff90cb" class="figure">
 <p><img src="matsquare-order.png" alt="matsquare-order.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Illustration of how to favor row-wise access to compute squared matrix. Computation of first row results are shown with the beginnings of the second row.</p>
@@ -933,8 +936,8 @@ effect so focusing first on the memory access pattern is crucial.
 </div>
 
 
-<div id="outline-container-orgc499025" class="outline-3 grading 55">
-<h3 id="orgc499025"><span class="section-number-3">3.6</span> Grading Criteria for Problem 1 (55%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="55">55</span></span></h3>
+<div id="outline-container-orgc17c6eb" class="outline-3 grading 55">
+<h3 id="orgc17c6eb"><span class="section-number-3">3.6</span> Grading Criteria for Problem 1 (55%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="55">55</span></span></h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 The file <code>P4-WRITEUP.txt</code> has several questions that should be
@@ -1019,12 +1022,12 @@ their use.
 </div>
 </div>
 
-<div id="outline-container-org8f1c2fe" class="outline-2">
-<h2 id="org8f1c2fe"><span class="section-number-2">4</span> <b>Problem 2</b>: Timing Search Algorithms</h2>
+<div id="outline-container-org63b986e" class="outline-2">
+<h2 id="org63b986e"><span class="section-number-2">4</span> <b>Problem 2</b>: Timing Search Algorithms</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orge9a08e4" class="outline-3">
-<h3 id="orge9a08e4"><span class="section-number-3">4.1</span> Overview</h3>
+<div id="outline-container-org436e9d1" class="outline-3">
+<h3 id="org436e9d1"><span class="section-number-3">4.1</span> Overview</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 This problem centers on timing several algorithms to measure their
@@ -1067,8 +1070,8 @@ any platform but the analysis should be conducted on
 </div>
 
 
-<div id="outline-container-orgb22bfdb" class="outline-3">
-<h3 id="orgb22bfdb"><span class="section-number-3">4.2</span> <code>main()</code> in <code>search_benchmark.c</code></h3>
+<div id="outline-container-org9cc747f" class="outline-3">
+<h3 id="org9cc747f"><span class="section-number-3">4.2</span> <code>main()</code> in <code>search_benchmark.c</code></h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 The requirements from this problem is that you provide a <code>main()</code>
@@ -1167,8 +1170,8 @@ and cleanup for the searches.</li>
 </div>
 </div>
 
-<div id="outline-container-org952ade6" class="outline-3">
-<h3 id="org952ade6"><span class="section-number-3">4.3</span> Running Algorithms based on Command Line Arguments</h3>
+<div id="outline-container-orgea75a48" class="outline-3">
+<h3 id="orgea75a48"><span class="section-number-3">4.3</span> Running Algorithms based on Command Line Arguments</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 Many folks who have not had to handle command line arguments struggle
@@ -1178,9 +1181,9 @@ additional guidance on handling this aspect of the program.
 </div>
 
 
-<div id="outline-container-org3153a1d" class="outline-4">
-<h4 id="org3153a1d">Run the algorithms in a fixed order</h4>
-<div class="outline-text-4" id="text-org3153a1d">
+<div id="outline-container-org0b72fe8" class="outline-4">
+<h4 id="org0b72fe8">Run the algorithms in a fixed order</h4>
+<div class="outline-text-4" id="text-org0b72fe8">
 <p>
 An invocation like
 </p>
@@ -1237,9 +1240,9 @@ trust.
 </div>
 </div>
 
-<div id="outline-container-orgb24c39b" class="outline-4">
-<h4 id="orgb24c39b">Use Boolean-like variables to track which algorithms to run</h4>
-<div class="outline-text-4" id="text-orgb24c39b">
+<div id="outline-container-org1ab885d" class="outline-4">
+<h4 id="org1ab885d">Use Boolean-like variables to track which algorithms to run</h4>
+<div class="outline-text-4" id="text-org1ab885d">
 <p>
 If following the advice of the previous section, to run the 4
 algorithms in a fixed order, one can simple assign variables in
@@ -1289,9 +1292,9 @@ and compared which is all that is needed to complete the timing.
 </div>
 </div>
 
-<div id="outline-container-org0cd7acd" class="outline-4">
-<h4 id="org0cd7acd">Free and Re-allocate Memory for Different Sizes</h4>
-<div class="outline-text-4" id="text-org0cd7acd">
+<div id="outline-container-orgd447f3d" class="outline-4">
+<h4 id="orgd447f3d">Free and Re-allocate Memory for Different Sizes</h4>
+<div class="outline-text-4" id="text-orgd447f3d">
 <p>
 While the search functions for Linked Lists and Binary Search Trees
 both take size arguments, these are ignored in the searches.  Instead,
@@ -1309,8 +1312,8 @@ timings for the linked structures.
 </div>
 
 
-<div id="outline-container-orgda7af4b" class="outline-3">
-<h3 id="orgda7af4b"><span class="section-number-3">4.4</span> Sample <code>main()</code> Runs</h3>
+<div id="outline-container-orgf6f6507" class="outline-3">
+<h3 id="orgf6f6507"><span class="section-number-3">4.4</span> Sample <code>main()</code> Runs</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 Below are some sample runs of the <code>main()</code> function and output that is
@@ -1375,8 +1378,8 @@ usage: ./search_benchmark &lt;minpow&gt; &lt;maxpow&gt; &lt;repeats&gt; [which]
 </div>
 
 
-<div id="outline-container-orgb9d1379" class="outline-3">
-<h3 id="orgb9d1379"><span class="section-number-3">4.5</span> Proper Setup and Cleanup for Searches</h3>
+<div id="outline-container-org45fa557" class="outline-3">
+<h3 id="org45fa557"><span class="section-number-3">4.5</span> Proper Setup and Cleanup for Searches</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 Each search algorithm requires setup and cleanup which is described
@@ -1386,9 +1389,9 @@ bonus credit.
 </p>
 </div>
 
-<div id="outline-container-orgbc4533a" class="outline-4">
-<h4 id="orgbc4533a">Linear and Binary Array Search</h4>
-<div class="outline-text-4" id="text-orgbc4533a">
+<div id="outline-container-orged71a74" class="outline-4">
+<h4 id="orged71a74">Linear and Binary Array Search</h4>
+<div class="outline-text-4" id="text-orged71a74">
 <p>
 Use the function <code>make_evens_array()</code> to create an appropriately
 sized <code>int</code> array for these functions.  Call <code>free()</code> on this array
@@ -1397,9 +1400,9 @@ when finished with it.
 </div>
 </div>
 
-<div id="outline-container-org77f6eb1" class="outline-4">
-<h4 id="org77f6eb1">Linked List Search</h4>
-<div class="outline-text-4" id="text-org77f6eb1">
+<div id="outline-container-org02d6dfe" class="outline-4">
+<h4 id="org02d6dfe">Linked List Search</h4>
+<div class="outline-text-4" id="text-org02d6dfe">
 <p>
 Use the function <code>make_evens_list()</code> to create an appropriately
 sized <code>list_t</code>.  Call <code>list_free()</code> on this list when finished with
@@ -1408,9 +1411,9 @@ it.
 </div>
 </div>
 
-<div id="outline-container-org2f57f65" class="outline-4">
-<h4 id="org2f57f65">Binary Tree Search</h4>
-<div class="outline-text-4" id="text-org2f57f65">
+<div id="outline-container-orgb909900" class="outline-4">
+<h4 id="orgb909900">Binary Tree Search</h4>
+<div class="outline-text-4" id="text-orgb909900">
 <p>
 Use the function <code>make_evens_tree()</code> to create an appropriately
 sized <code>bst_t</code>.  Call <code>bst_free()</code> on this list when finished with
@@ -1420,8 +1423,8 @@ it.
 </div>
 </div>
 
-<div id="outline-container-org69bde59" class="outline-3">
-<h3 id="org69bde59"><span class="section-number-3">4.6</span> What to Measure</h3>
+<div id="outline-container-org1dd4ddd" class="outline-3">
+<h3 id="org1dd4ddd"><span class="section-number-3">4.6</span> What to Measure</h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
 The reason for the requirements mentioned above is to study the
@@ -1443,8 +1446,8 @@ provided.
 </div>
 </div>
 
-<div id="outline-container-org6dcad90" class="outline-3">
-<h3 id="org6dcad90"><span class="section-number-3">4.7</span> MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></h3>
+<div id="outline-container-orgce4f421" class="outline-3">
+<h3 id="orgce4f421"><span class="section-number-3">4.7</span> MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></h3>
 <div class="outline-text-3" id="text-4-7">
 <p>
 "Makeup" credit will allow the score on this assignment to exceed 100%
@@ -1542,8 +1545,8 @@ describe you design using function pointers/structs in
 </div>
 </div>
 
-<div id="outline-container-orgf6e3594" class="outline-3 grading 45">
-<h3 id="orgf6e3594"><span class="section-number-3">4.8</span> Grading Criteria for Problem 2 (45%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="45">45</span></span></h3>
+<div id="outline-container-org49efab8" class="outline-3 grading 45">
+<h3 id="org49efab8"><span class="section-number-3">4.8</span> Grading Criteria for Problem 2 (45%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="45">45</span></span></h3>
 <div class="outline-text-3" id="text-4-8">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1567,7 +1570,7 @@ describe you design using function pointers/structs in
 
 <tr>
 <td class="org-right">5</td>
-<td class="org-left">No memory errors reported by <code>make test-prob2</code></td>
+<td class="org-left">Passed tests associated with <code>make test-prob2</code></td>
 </tr>
 
 <tr>
@@ -1609,6 +1612,11 @@ describe you design using function pointers/structs in
 <td class="org-right">5</td>
 <td class="org-left">Clean and well-documented code for <code>main()</code> that uses simple approaches to run algorithms requested</td>
 </tr>
+
+<tr>
+<td class="org-right">15</td>
+<td class="org-left">SUBTOTAL</td>
+</tr>
 </tbody>
 <tbody>
 <tr>
@@ -1640,6 +1648,11 @@ describe you design using function pointers/structs in
 <td class="org-right">10</td>
 <td class="org-left">Answer 2D <code>P4-WRITEUP.txt</code> (caching effects))</td>
 </tr>
+
+<tr>
+<td class="org-right">25</td>
+<td class="org-left">SUBTOTAL</td>
+</tr>
 </tbody>
 <tbody>
 <tr>
@@ -1663,8 +1676,8 @@ describe you design using function pointers/structs in
 </div>
 
 
-<div id="outline-container-org58b4b37" class="outline-2">
-<h2 id="org58b4b37"><span class="section-number-2">5</span> Writeup</h2>
+<div id="outline-container-orgeba302a" class="outline-2">
+<h2 id="orgeba302a"><span class="section-number-2">5</span> Writeup</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 This assignment involves answering questions in the file
@@ -1824,7 +1837,7 @@ PROBLEM 2: Timing Search Algorithms
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-11-19 Fri 15:32 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-11-29 Mon 15:44 <br/> </i>
 </div>
 </body>
 </html>
