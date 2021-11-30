@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-11-19 Fri 22:32 -->
+<!-- 2021-11-30 Tue 14:35 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 5451 Assignment 2: Distributed and Shared Memory Programming</title>
@@ -365,7 +365,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-11-19 Fri 22:32</i>
+<i>Last Updated: 2021-11-30 Tue 14:35</i>
 </div>
 <div id="content">
 <h1 class="title">CSCI 5451 Assignment 2: Distributed and Shared Memory Programming</h1>
@@ -376,65 +376,91 @@ text-align: justify;
 <li>You may work in groups of 2 and submit one assignment per group.</li>
 </ul>
 
-<div id="outline-container-org71b4879" class="outline-4">
-<h4 id="org71b4879">CODE DISTRIBUTION: <a href="a2-code.zip">a2-code.zip</a></h4>
+<div id="outline-container-org3509e09" class="outline-4">
+<h4 id="org3509e09">CODE DISTRIBUTION: <a href="a2-code.zip">a2-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org9b62630" class="outline-4">
-<h4 id="org9b62630">CHANGELOG: Empty</h4>
+<div id="outline-container-orgee1db20" class="outline-4">
+<h4 id="orgee1db20">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-orgee1db20">
+<dl class="org-dl">
+<dt>Tue Nov 30 02:31:43 PM CST 2021</dt><dd><p>
+A minor bug was reported in
+<code>heat_serial.c</code> and has been corrected. During initial memory
+allocation the wrong type was used in a <code>malloc()</code> but this has been
+corrected as shown below.
+</p>
+<div class="org-src-container">
+<pre class="src src-c"><span class="linenr">49: </span>    // Allocate memory 
+<span class="linenr">50: </span>    H = malloc(sizeof(double*)*max_time); 
+<span class="linenr">51: </span>    int t,p;
+<span class="linenr">52: </span>    for(t=0;t&lt;max_time;t++){
+<span class="linenr">53: </span>      H[t] = malloc(sizeof(double)*width); // was sizeof(double*), now fixed
+<span class="linenr">54: </span>    }
+</pre>
+</div>
+<p>
+Luckily this mistake had no impact as the size of <code>double</code> and
+<code>double*</code> on most 64-bit systems is the same, 8 bytes. You may wish
+to correct this in your <code>heat_mpi.c</code> version of the code if you used
+a similar allocation.
+</p></dd>
+</dl>
+</div>
 </div>
 
-<div id="outline-container-org1c30cda" class="outline-4">
-<h4 id="org1c30cda"></h4>
-<div class="outline-text-4" id="text-org1c30cda">
+
+<div id="outline-container-org27c1cfd" class="outline-4">
+<h4 id="org27c1cfd"></h4>
+<div class="outline-text-4" id="text-org27c1cfd">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgd407933">1. Overview</a></li>
-<li><a href="#org3fcb987">2. Download Code and Setup</a></li>
-<li><a href="#orga2909df">3. <code>A2-WRITEUP.txt</code> Writeup File</a></li>
-<li><a href="#orgd50873f">4. <code>mpi_hello.c</code>: A Sample MPI Program</a></li>
-<li><a href="#orgcc39e6d">5. <b>Problem 1</b>: Parallel Heat (25%)</a>
+<li><a href="#org1417c57">1. Overview</a></li>
+<li><a href="#org5745861">2. Download Code and Setup</a></li>
+<li><a href="#orgfc71e93">3. <code>A2-WRITEUP.txt</code> Writeup File</a></li>
+<li><a href="#org603ccdb">4. <code>mpi_hello.c</code>: A Sample MPI Program</a></li>
+<li><a href="#orgde08c29">5. <b>Problem 1</b>: Parallel Heat (25%)</a>
 <ul>
-<li><a href="#org617fcfd">5.1. The Heat Problem</a></li>
-<li><a href="#org2b6b490">5.2. MPI Heat</a></li>
-<li><a href="#orga9bfe19">5.3. Features of <code>heat_mpi</code></a></li>
-<li><a href="#orga41b11a">5.4. Written Summary of the <code>heat_mpi</code> Results</a></li>
-<li><a href="#org9169bc4">5.5. Automated Tests for <code>heat_mpi</code></a></li>
-<li><a href="#orgaaca7c8">5.6. Grading Criteria for Problem 1</a></li>
+<li><a href="#orgfdd22a2">5.1. The Heat Problem</a></li>
+<li><a href="#org0b8ef98">5.2. MPI Heat</a></li>
+<li><a href="#org2fa8eae">5.3. Features of <code>heat_mpi</code></a></li>
+<li><a href="#orgdec1647">5.4. Written Summary of the <code>heat_mpi</code> Results</a></li>
+<li><a href="#org8a37e5f">5.5. Automated Tests for <code>heat_mpi</code></a></li>
+<li><a href="#org3c082ac">5.6. Grading Criteria for Problem 1</a></li>
 </ul>
 </li>
-<li><a href="#org7e54dc0">6. Page Rank</a>
+<li><a href="#org42d4163">6. Page Rank</a>
 <ul>
-<li><a href="#orgbd81666">6.1. Overview of Computing Pageranks</a></li>
-<li><a href="#org045c23b">6.2. Sample Runs of <code>dense_pagerank_serial.c</code></a></li>
+<li><a href="#orgd5ec035">6.1. Overview of Computing Pageranks</a></li>
+<li><a href="#org62542d1">6.2. Sample Runs of <code>dense_pagerank_serial.c</code></a></li>
 </ul>
 </li>
-<li><a href="#org153f3c4">7. <b>Problem 2</b>: MPI PageRank (50%)</a>
+<li><a href="#org5bad04e">7. <b>Problem 2</b>: MPI PageRank (50%)</a>
 <ul>
-<li><a href="#org5e7cd8e">7.1. Reading Data Files</a></li>
-<li><a href="#org773494e">7.2. Row Partitioning Woes</a></li>
-<li><a href="#org86bc4d1">7.3. Parallelizing Column Normalization and Damping</a></li>
-<li><a href="#org7cab9df">7.4. Parallelizing the Repeated Matrix-vector Multiplication</a></li>
-<li><a href="#org5f522eb">7.5. Written Summary of <code>dense_pagerank_mpi</code> Results</a></li>
-<li><a href="#orgd9a59e5">7.6. Automated Tests for <code>dense_pagerank_mpi</code></a></li>
-<li><a href="#orgff1ec7c">7.7. Grading Criteria for Problem 2</a></li>
+<li><a href="#org4dff6f5">7.1. Reading Data Files</a></li>
+<li><a href="#org69e3969">7.2. Row Partitioning Woes</a></li>
+<li><a href="#org383496e">7.3. Parallelizing Column Normalization and Damping</a></li>
+<li><a href="#orgccf5005">7.4. Parallelizing the Repeated Matrix-vector Multiplication</a></li>
+<li><a href="#orge5f2842">7.5. Written Summary of <code>dense_pagerank_mpi</code> Results</a></li>
+<li><a href="#org573d103">7.6. Automated Tests for <code>dense_pagerank_mpi</code></a></li>
+<li><a href="#org43c2166">7.7. Grading Criteria for Problem 2</a></li>
 </ul>
 </li>
-<li><a href="#org018b089">8. <b>Problem 3</b>: OpenMP PageRank (25%)</a>
+<li><a href="#org55df763">8. <b>Problem 3</b>: OpenMP PageRank (25%)</a>
 <ul>
-<li><a href="#orgcd6b354">8.1. Shared Memory Implementation</a></li>
-<li><a href="#org0c8efcb">8.2. Written Summary of <code>dense_pagerank_omp</code> Results</a></li>
-<li><a href="#org9cb844f">8.3. Automated Tests for <code>dense_pagerank_omp</code></a></li>
-<li><a href="#orgc752f1c">8.4. Grading Criteria for Problem 3</a></li>
+<li><a href="#org5585a47">8.1. Shared Memory Implementation</a></li>
+<li><a href="#org27d4319">8.2. Written Summary of <code>dense_pagerank_omp</code> Results</a></li>
+<li><a href="#orge6efc6d">8.3. Automated Tests for <code>dense_pagerank_omp</code></a></li>
+<li><a href="#org3d890fa">8.4. Grading Criteria for Problem 3</a></li>
 </ul>
 </li>
-<li><a href="#org28cc62f">9. Optional MAKEUP Problem 4</a></li>
-<li><a href="#orgb25d5ec">10. Project Submission on Gradescope</a>
+<li><a href="#org7154171">9. Optional MAKEUP Problem 4</a></li>
+<li><a href="#org9c8b98a">10. Project Submission on Gradescope</a>
 <ul>
-<li><a href="#orge544bb0">10.1. Submit to Gradescope</a></li>
-<li><a href="#orgfb271e6">10.2. Late Policies</a></li>
+<li><a href="#orgd87ad38">10.1. Submit to Gradescope</a></li>
+<li><a href="#org1a613f3">10.2. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -443,8 +469,8 @@ text-align: justify;
 </div>
 </div>
 
-<div id="outline-container-orgd407933" class="outline-2">
-<h2 id="orgd407933"><span class="section-number-2">1</span> Overview</h2>
+<div id="outline-container-org1417c57" class="outline-2">
+<h2 id="org1417c57"><span class="section-number-2">1</span> Overview</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 The assignment involves programming in MPI and OpenMP then describing
@@ -473,8 +499,8 @@ some timing experiments and describe the results in a short text file.
 </div>
 </div>
 
-<div id="outline-container-org3fcb987" class="outline-2">
-<h2 id="org3fcb987"><span class="section-number-2">2</span> Download Code and Setup</h2>
+<div id="outline-container-org5745861" class="outline-2">
+<h2 id="org5745861"><span class="section-number-2">2</span> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -688,8 +714,8 @@ folder. Ultimately you will re-zip this folder to submit it.
 </div>
 </div>
 
-<div id="outline-container-orga2909df" class="outline-2">
-<h2 id="orga2909df"><span class="section-number-2">3</span> <code>A2-WRITEUP.txt</code> Writeup File</h2>
+<div id="outline-container-orgfc71e93" class="outline-2">
+<h2 id="orgfc71e93"><span class="section-number-2">3</span> <code>A2-WRITEUP.txt</code> Writeup File</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Below is a blank copy of the writeup document included in the code
@@ -859,8 +885,8 @@ OPTIONAL MAKEUP Problem 4
 </div>
 </div>
 
-<div id="outline-container-orgd50873f" class="outline-2">
-<h2 id="orgd50873f"><span class="section-number-2">4</span> <code>mpi_hello.c</code>: A Sample MPI Program</h2>
+<div id="outline-container-org603ccdb" class="outline-2">
+<h2 id="org603ccdb"><span class="section-number-2">4</span> <code>mpi_hello.c</code>: A Sample MPI Program</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 A simple sample program called <code>mpi_hello.c</code> is provided as part of
@@ -937,12 +963,12 @@ techniques.
 </div>
 </div>
 
-<div id="outline-container-orgcc39e6d" class="outline-2">
-<h2 id="orgcc39e6d"><span class="section-number-2">5</span> <b>Problem 1</b>: Parallel Heat (25%)</h2>
+<div id="outline-container-orgde08c29" class="outline-2">
+<h2 id="orgde08c29"><span class="section-number-2">5</span> <b>Problem 1</b>: Parallel Heat (25%)</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org617fcfd" class="outline-3">
-<h3 id="org617fcfd"><span class="section-number-3">5.1</span> The Heat Problem</h3>
+<div id="outline-container-orgfdd22a2" class="outline-3">
+<h3 id="orgfdd22a2"><span class="section-number-3">5.1</span> The Heat Problem</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 A slightly modified version of the heat propagation simulation from
@@ -997,8 +1023,8 @@ usage: ./heat_serial max_time width print
 </div>
 </div>
 
-<div id="outline-container-org2b6b490" class="outline-3">
-<h3 id="org2b6b490"><span class="section-number-3">5.2</span> MPI Heat</h3>
+<div id="outline-container-org0b8ef98" class="outline-3">
+<h3 id="org0b8ef98"><span class="section-number-3">5.2</span> MPI Heat</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 The central task of this problem is to create an MPI version of this
@@ -1047,8 +1073,8 @@ sys	0m0.073s
 </div>
 
 
-<div id="outline-container-orga9bfe19" class="outline-3">
-<h3 id="orga9bfe19"><span class="section-number-3">5.3</span> Features of <code>heat_mpi</code></h3>
+<div id="outline-container-org2fa8eae" class="outline-3">
+<h3 id="org2fa8eae"><span class="section-number-3">5.3</span> Features of <code>heat_mpi</code></h3>
 <div class="outline-text-3" id="text-5-3">
 <ul class="org-ul">
 <li>Name your program <code>heat_mpi.c</code> to be compatible with the provided
@@ -1219,8 +1245,8 @@ an error and exit immediately, etc.).
 </div>
 </div>
 
-<div id="outline-container-orga41b11a" class="outline-3">
-<h3 id="orga41b11a"><span class="section-number-3">5.4</span> Written Summary of the <code>heat_mpi</code> Results</h3>
+<div id="outline-container-orgdec1647" class="outline-3">
+<h3 id="orgdec1647"><span class="section-number-3">5.4</span> Written Summary of the <code>heat_mpi</code> Results</h3>
 <div class="outline-text-3" id="text-5-4">
 <p>
 Included with the project code is the file <code>A2-WRITEUP.txt</code> which has
@@ -1281,8 +1307,8 @@ biasing your own investigations.
 </div>
 </div>
 
-<div id="outline-container-org9169bc4" class="outline-3">
-<h3 id="org9169bc4"><span class="section-number-3">5.5</span> Automated Tests for <code>heat_mpi</code></h3>
+<div id="outline-container-org8a37e5f" class="outline-3">
+<h3 id="org8a37e5f"><span class="section-number-3">5.5</span> Automated Tests for <code>heat_mpi</code></h3>
 <div class="outline-text-3" id="text-5-5">
 <p>
 A battery of automated tests are provided to evaluate whether
@@ -1329,8 +1355,8 @@ faults.
 </div>
 </div>
 
-<div id="outline-container-orgaaca7c8" class="outline-3 grading 25">
-<h3 id="orgaaca7c8"><span class="section-number-3">5.6</span> <a id="org9b5dc78"></a> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="25">25</span></span></h3>
+<div id="outline-container-org3c082ac" class="outline-3 grading 25">
+<h3 id="org3c082ac"><span class="section-number-3">5.6</span> <a id="org14b9843"></a> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="25">25</span></span></h3>
 <div class="outline-text-3" id="text-5-6">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1372,12 +1398,12 @@ faults.
 </div>
 </div>
 
-<div id="outline-container-org7e54dc0" class="outline-2">
-<h2 id="org7e54dc0"><span class="section-number-2">6</span> Page Rank</h2>
+<div id="outline-container-org42d4163" class="outline-2">
+<h2 id="org42d4163"><span class="section-number-2">6</span> Page Rank</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-orgbd81666" class="outline-3">
-<h3 id="orgbd81666"><span class="section-number-3">6.1</span> Overview of Computing Pageranks</h3>
+<div id="outline-container-orgd5ec035" class="outline-3">
+<h3 id="orgd5ec035"><span class="section-number-3">6.1</span> Overview of Computing Pageranks</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 A key to Google's early success was its ability of its search engine
@@ -1488,8 +1514,8 @@ Take some time to examine the code provided carefully.
 </div>
 </div>
 
-<div id="outline-container-org045c23b" class="outline-3">
-<h3 id="org045c23b"><span class="section-number-3">6.2</span> Sample Runs of <code>dense_pagerank_serial.c</code></h3>
+<div id="outline-container-org62542d1" class="outline-3">
+<h3 id="org62542d1"><span class="section-number-3">6.2</span> Sample Runs of <code>dense_pagerank_serial.c</code></h3>
 <div class="outline-text-3" id="text-6-2">
 <p>
 Part of the code distribution includes some graph files which you can
@@ -1619,8 +1645,8 @@ PAGE RANKS
 </div>
 </div>
 
-<div id="outline-container-org153f3c4" class="outline-2">
-<h2 id="org153f3c4"><span class="section-number-2">7</span> <b>Problem 2</b>: MPI PageRank (50%)</h2>
+<div id="outline-container-org5bad04e" class="outline-2">
+<h2 id="org5bad04e"><span class="section-number-2">7</span> <b>Problem 2</b>: MPI PageRank (50%)</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 Parallelize the provided <code>dense_pagerank_serial.c</code> code for
@@ -1629,8 +1655,8 @@ the convention that is supported by provided <code>Makefile</code>.
 </p>
 </div>
 
-<div id="outline-container-org5e7cd8e" class="outline-3">
-<h3 id="org5e7cd8e"><span class="section-number-3">7.1</span> Reading Data Files</h3>
+<div id="outline-container-org4dff6f5" class="outline-3">
+<h3 id="org4dff6f5"><span class="section-number-3">7.1</span> Reading Data Files</h3>
 <div class="outline-text-3" id="text-7-1">
 <p>
 The program starts with reading input from a file which should be done
@@ -1656,8 +1682,8 @@ multiple adjacent rows with single communications.</li>
 </div>
 </div>
 
-<div id="outline-container-org773494e" class="outline-3">
-<h3 id="org773494e"><span class="section-number-3">7.2</span> Row Partitioning Woes</h3>
+<div id="outline-container-org69e3969" class="outline-3">
+<h3 id="org69e3969"><span class="section-number-3">7.2</span> Row Partitioning Woes</h3>
 <div class="outline-text-3" id="text-7-2">
 <p>
 The main source of parallelism is obtained by dividing up the link
@@ -1696,8 +1722,8 @@ them throughout.</li>
 </div>
 </div>
 
-<div id="outline-container-org86bc4d1" class="outline-3">
-<h3 id="org86bc4d1"><span class="section-number-3">7.3</span> Parallelizing Column Normalization and Damping</h3>
+<div id="outline-container-org383496e" class="outline-3">
+<h3 id="org383496e"><span class="section-number-3">7.3</span> Parallelizing Column Normalization and Damping</h3>
 <div class="outline-text-3" id="text-7-3">
 <p>
 It is suggested that you initially let the root processor read the
@@ -1726,8 +1752,8 @@ its elements.</li>
 </div>
 </div>
 
-<div id="outline-container-org7cab9df" class="outline-3">
-<h3 id="org7cab9df"><span class="section-number-3">7.4</span> Parallelizing the Repeated Matrix-vector Multiplication</h3>
+<div id="outline-container-orgccf5005" class="outline-3">
+<h3 id="orgccf5005"><span class="section-number-3">7.4</span> Parallelizing the Repeated Matrix-vector Multiplication</h3>
 <div class="outline-text-3" id="text-7-4">
 <p>
 The main computation loop involves repeatedly multiplying the link
@@ -1754,8 +1780,8 @@ iteration to share.
 </div>
 </div>
 
-<div id="outline-container-org5f522eb" class="outline-3">
-<h3 id="org5f522eb"><span class="section-number-3">7.5</span> Written Summary of <code>dense_pagerank_mpi</code> Results</h3>
+<div id="outline-container-orge5f2842" class="outline-3">
+<h3 id="orge5f2842"><span class="section-number-3">7.5</span> Written Summary of <code>dense_pagerank_mpi</code> Results</h3>
 <div class="outline-text-3" id="text-7-5">
 <p>
 Similar to the first problem, fill in the timing table in
@@ -1789,8 +1815,8 @@ runtime: procs 10 graph notredame-501.txt realtime 1.234
 </div>
 </div>
 
-<div id="outline-container-orgd9a59e5" class="outline-3">
-<h3 id="orgd9a59e5"><span class="section-number-3">7.6</span> Automated Tests for <code>dense_pagerank_mpi</code></h3>
+<div id="outline-container-org573d103" class="outline-3">
+<h3 id="org573d103"><span class="section-number-3">7.6</span> Automated Tests for <code>dense_pagerank_mpi</code></h3>
 <div class="outline-text-3" id="text-7-6">
 <p>
 Automated tests will be released later.
@@ -1807,8 +1833,8 @@ When the tests are released, you may run them with the provided
 </div>
 </div>
 </div>
-<div id="outline-container-orgff1ec7c" class="outline-3 grading 50">
-<h3 id="orgff1ec7c"><span class="section-number-3">7.7</span> Grading Criteria for Problem 2&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div id="outline-container-org43c2166" class="outline-3 grading 50">
+<h3 id="org43c2166"><span class="section-number-3">7.7</span> Grading Criteria for Problem 2&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
 <div class="outline-text-3" id="text-7-7">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1855,8 +1881,8 @@ When the tests are released, you may run them with the provided
 </div>
 </div>
 
-<div id="outline-container-org018b089" class="outline-2">
-<h2 id="org018b089"><span class="section-number-2">8</span> <b>Problem 3</b>: OpenMP PageRank (25%)</h2>
+<div id="outline-container-org55df763" class="outline-2">
+<h2 id="org55df763"><span class="section-number-2">8</span> <b>Problem 3</b>: OpenMP PageRank (25%)</h2>
 <div class="outline-text-2" id="text-8">
 <p>
 Similar to Problem 2, in this problem create a version of
@@ -1866,8 +1892,8 @@ this will make it compatible with the provided <code>Makefile</code>.
 </p>
 </div>
 
-<div id="outline-container-orgcd6b354" class="outline-3">
-<h3 id="orgcd6b354"><span class="section-number-3">8.1</span> Shared Memory Implementation</h3>
+<div id="outline-container-org5585a47" class="outline-3">
+<h3 id="org5585a47"><span class="section-number-3">8.1</span> Shared Memory Implementation</h3>
 <div class="outline-text-3" id="text-8-1">
 <p>
 It is best to start with the Serial Pagerank code and begin augmenting
@@ -1891,8 +1917,8 @@ and Outer loop, describe in a few lines your rationale.</li>
 </div>
 </div>
 
-<div id="outline-container-org0c8efcb" class="outline-3">
-<h3 id="org0c8efcb"><span class="section-number-3">8.2</span> Written Summary of <code>dense_pagerank_omp</code> Results</h3>
+<div id="outline-container-org27d4319" class="outline-3">
+<h3 id="org27d4319"><span class="section-number-3">8.2</span> Written Summary of <code>dense_pagerank_omp</code> Results</h3>
 <div class="outline-text-3" id="text-8-2">
 <p>
 As before, add fill in the timing table provided in <code>A2-WRITEUP.txt</code>
@@ -1919,8 +1945,8 @@ runtime: procs 10 graph notredame-501.txt realtime 1.23
 </div>
 </div>
 
-<div id="outline-container-org9cb844f" class="outline-3">
-<h3 id="org9cb844f"><span class="section-number-3">8.3</span> Automated Tests for <code>dense_pagerank_omp</code></h3>
+<div id="outline-container-orge6efc6d" class="outline-3">
+<h3 id="orge6efc6d"><span class="section-number-3">8.3</span> Automated Tests for <code>dense_pagerank_omp</code></h3>
 <div class="outline-text-3" id="text-8-3">
 <p>
 Automated tests will be released later.
@@ -1938,8 +1964,8 @@ When the tests are released, you may run them with the provided
 </div>
 </div>
 
-<div id="outline-container-orgc752f1c" class="outline-3 grading 25">
-<h3 id="orgc752f1c"><span class="section-number-3">8.4</span> Grading Criteria for Problem 3&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="25">25</span></span></h3>
+<div id="outline-container-org3d890fa" class="outline-3 grading 25">
+<h3 id="org3d890fa"><span class="section-number-3">8.4</span> Grading Criteria for Problem 3&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="25">25</span></span></h3>
 <div class="outline-text-3" id="text-8-4">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -2002,8 +2028,8 @@ When the tests are released, you may run them with the provided
 </div>
 
 
-<div id="outline-container-org28cc62f" class="outline-2">
-<h2 id="org28cc62f"><span class="section-number-2">9</span> Optional MAKEUP Problem 4</h2>
+<div id="outline-container-org7154171" class="outline-2">
+<h2 id="org7154171"><span class="section-number-2">9</span> Optional MAKEUP Problem 4</h2>
 <div class="outline-text-2" id="text-9">
 <p>
 An optional Makeup problem will be described here shortly. It is
@@ -2018,8 +2044,8 @@ Additional instructions will be posted shortly.
 </div>
 </div>
 
-<div id="outline-container-orgb25d5ec" class="outline-2">
-<h2 id="orgb25d5ec"><span class="section-number-2">10</span> Project Submission on Gradescope</h2>
+<div id="outline-container-org9c8b98a" class="outline-2">
+<h2 id="org9c8b98a"><span class="section-number-2">10</span> Project Submission on Gradescope</h2>
 <div class="outline-text-2" id="text-10">
 <p>
 NOTE 1: Submission to Gradescope is not yet open; follow the
@@ -2042,8 +2068,8 @@ the code.</li>
 </ol>
 </div>
 
-<div id="outline-container-orge544bb0" class="outline-3">
-<h3 id="orge544bb0"><span class="section-number-3">10.1</span> <a id="org5aa89aa"></a> Submit to Gradescope</h3>
+<div id="outline-container-orgd87ad38" class="outline-3">
+<h3 id="orgd87ad38"><span class="section-number-3">10.1</span> <a id="org267470e"></a> Submit to Gradescope</h3>
 <div class="outline-text-3" id="text-10-1">
 <p>
 Some of the pictures below mention 'Assignment' which is now 'Project'
@@ -2084,7 +2110,7 @@ open up submission
 </p>
 <div class="org-center">
 
-<div id="org5822688" class="figure">
+<div id="org6fd71f3" class="figure">
 <p><img src="gradescope01.png" alt="gradescope01.png" style="max-width:100%;" />
 </p>
 </div>
@@ -2095,7 +2121,7 @@ dialog; locate and choose your <code>a2-code.zip</code> file
 </p>
 <div class="org-center">
 
-<div id="orgdc23d8d" class="figure">
+<div id="orgb6122f8" class="figure">
 <p><img src="gradescope02.png" alt="gradescope02.png" style="max-width:100%;" />
 </p>
 </div>
@@ -2106,7 +2132,7 @@ C source files along with testing files and directories.
 </p>
 <div class="org-center">
 
-<div id="org2a73e38" class="figure">
+<div id="orgd36d465" class="figure">
 <p><img src="gradescope03.png" alt="gradescope03.png" style="max-width:100%;" />
 </p>
 </div>
@@ -2129,7 +2155,7 @@ files in a zip.
 
 <div class="org-center">
 
-<div id="org4798b9e" class="figure">
+<div id="org19e0e9f" class="figure">
 <p><img src="gradescope04.png" alt="gradescope04.png" style="max-width:100%;" />
 </p>
 </div>
@@ -2142,7 +2168,7 @@ the same tests that are run via <code>make test</code>.
 </p>
 <div class="org-center">
 
-<div id="org3ac3ecc" class="figure">
+<div id="org3aa7e61" class="figure">
 <p><img src="gradescope05.png" alt="gradescope05.png" style="max-width:100%;" />
 </p>
 </div>
@@ -2153,7 +2179,7 @@ summarizing scores along with output for each batch of tests.
 </p>
 <div class="org-center">
 
-<div id="org72f5799" class="figure">
+<div id="org7b594da" class="figure">
 <p><img src="gradescope06.png" alt="gradescope06.png" style="max-width:100%;" />
 </p>
 </div>
@@ -2164,8 +2190,8 @@ uploading. Only one partner needs to submit the code.</li>
 </div>
 </div>
 
-<div id="outline-container-orgfb271e6" class="outline-3">
-<h3 id="orgfb271e6"><span class="section-number-3">10.2</span> Late Policies</h3>
+<div id="outline-container-org1a613f3" class="outline-3">
+<h3 id="org1a613f3"><span class="section-number-3">10.2</span> Late Policies</h3>
 <div class="outline-text-3" id="text-10-2">
 <p>
 You may wish to review the policy on late project submission which
@@ -2181,7 +2207,7 @@ accepted more than 48 hours after the deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-11-19 Fri 22:32 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-11-30 Tue 14:35 <br/> </i>
 </div>
 </body>
 </html>
