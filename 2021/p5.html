@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-12-14 Tue 11:18 -->
+<!-- 2021-12-14 Tue 11:36 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Project 5: ELF File Symbol Modification</title>
@@ -365,7 +365,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-12-14 Tue 11:18</i>
+<i>Last Updated: 2021-12-14 Tue 11:36</i>
 </div>
 <div id="content">
 <h1 class="title">CSCI 2021 Project 5: ELF File Symbol Modification</h1>
@@ -377,18 +377,44 @@ text-align: justify;
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-org4ddb45e" class="outline-4">
-<h4 id="org4ddb45e">CODE DISTRIBUTION: <a href="p5-code.zip">p5-code.zip</a></h4>
-<div class="outline-text-4" id="text-org4ddb45e">
+<div id="outline-container-org1cd9c76" class="outline-4">
+<h4 id="org1cd9c76">CODE DISTRIBUTION: <a href="p5-code.zip">p5-code.zip</a></h4>
+<div class="outline-text-4" id="text-org1cd9c76">
 </div>
 </div>
 
-<div id="outline-container-org79ae24b" class="outline-4">
-<h4 id="org79ae24b">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org79ae24b">
+<div id="outline-container-org8f1669a" class="outline-4">
+<h4 id="org8f1669a">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org8f1669a">
 <dl class="org-dl">
-<dt>Tue Dec 14 11:17:47 AM CST 2021</dt><dd>Minor typo corrections / diagram updates.</dd>
+<dt>Tue Dec 14 11:17:47 AM CST 2021</dt><dd><p>
+Minor typo corrections / diagram updates were made to the
+spec. Submission is now open on Gradescope.
+</p>
 
+<p>
+A small bug in the <code>Makefile</code> might lead to some spurious errors
+being reported during automated testing. If you get messages like
+<code>valgrind: globals permission denied</code> then make the following
+modification to your <code>Makefile</code> (or download the codepack which has
+the update).
+</p>
+<div class="org-src-container">
+<pre class="src src-makefile">  # TESTING TARGETS
+  test: test-prob1
+  
+  test-setup :
+  	@chmod u+rx testy
+  	@chmod u+rx -R test-input   # ADD THIS LINE
+
+  test-prob1: patchsym test-setup 
+  ...
+</pre>
+</div></dd>
+</dl>
+
+
+<dl class="org-dl">
 <dt>Thu Dec  9 03:57:25 PM CST 2021</dt><dd><p>
 As reported in <a href="https://piazza.com/class/ksuvqq1tdpo2jx?cid=411">Post 411</a> the template program was inadvertently named
 <code>patchsymc.c</code> in the original codepack rather than just
@@ -405,35 +431,35 @@ avoid pointer arithmetic problems.
 </div>
 </div>
 
-<div id="outline-container-orgc00bd15" class="outline-4">
-<h4 id="orgc00bd15"></h4>
-<div class="outline-text-4" id="text-orgc00bd15">
+<div id="outline-container-org7cd1353" class="outline-4">
+<h4 id="org7cd1353"></h4>
+<div class="outline-text-4" id="text-org7cd1353">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgeff921e">1. Overview</a></li>
-<li><a href="#org4871089">2. Download Code and Setup</a></li>
-<li><a href="#org71ddefd">3. <b>Problem 1</b>: Changing ELF Symbol Values</a>
+<li><a href="#org4147512">1. Overview</a></li>
+<li><a href="#orgb817cda">2. Download Code and Setup</a></li>
+<li><a href="#org804729b">3. <b>Problem 1</b>: Changing ELF Symbol Values</a>
 <ul>
-<li><a href="#org47778b1">3.1. ELF File References</a></li>
-<li><a href="#org5c4dd82">3.2. Overall Approach</a></li>
-<li><a href="#org68ea225">3.3. ELF Header and Section Header Array</a></li>
-<li><a href="#orgb5d2d36">3.4. String Tables, Names, Section Headers</a></li>
-<li><a href="#org200882b">3.5. The <code>.data</code> Section and its Address</a></li>
-<li><a href="#org4b1498e">3.6. Symbol Table and <code>.strtab</code></a></li>
-<li><a href="#org3a06364">3.7. Altering a String Value</a></li>
-<li><a href="#orgebc1364">3.8. Example Invocations</a></li>
-<li><a href="#org92c66d5">3.9. Behavior in Error Cases</a></li>
-<li><a href="#orgccdbd93">3.10. <code>patchsym</code> Template</a></li>
-<li><a href="#org8674dd5">3.11. Automated Tests for Problem 1</a></li>
-<li><a href="#org210bdcc">3.12. Grading Criteria for <code>patchsym</code></a></li>
+<li><a href="#orgfd24867">3.1. ELF File References</a></li>
+<li><a href="#org0b316d1">3.2. Overall Approach</a></li>
+<li><a href="#org925bc67">3.3. ELF Header and Section Header Array</a></li>
+<li><a href="#orgbc7ce49">3.4. String Tables, Names, Section Headers</a></li>
+<li><a href="#org40ae619">3.5. The <code>.data</code> Section and its Address</a></li>
+<li><a href="#org2e4442a">3.6. Symbol Table and <code>.strtab</code></a></li>
+<li><a href="#org5483b4f">3.7. Altering a String Value</a></li>
+<li><a href="#org4a035e0">3.8. Example Invocations</a></li>
+<li><a href="#org902781c">3.9. Behavior in Error Cases</a></li>
+<li><a href="#orgddccd5d">3.10. <code>patchsym</code> Template</a></li>
+<li><a href="#orge713af1">3.11. Automated Tests for Problem 1</a></li>
+<li><a href="#orge554c5c">3.12. Grading Criteria for <code>patchsym</code></a></li>
 </ul>
 </li>
-<li><a href="#orgfdf78a5">4. Project Submission</a>
+<li><a href="#orge244952">4. Project Submission</a>
 <ul>
-<li><a href="#orgf489d3e">4.1. Submit to Gradescope</a></li>
-<li><a href="#org658fb3a">4.2. Late Policies</a></li>
+<li><a href="#org767f99f">4.1. Submit to Gradescope</a></li>
+<li><a href="#org6141ea6">4.2. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -442,8 +468,8 @@ avoid pointer arithmetic problems.
 </div>
 </div>
 
-<div id="outline-container-orgeff921e" class="outline-2">
-<h2 id="orgeff921e"><span class="section-number-2">1</span> Overview</h2>
+<div id="outline-container-org4147512" class="outline-2">
+<h2 id="org4147512"><span class="section-number-2">1</span> Overview</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This project features a single required problem pertaining to the
@@ -460,8 +486,8 @@ useful for handling binary files and is demonstrated in Lab 14.
 </div>
 </div>
 
-<div id="outline-container-org4871089" class="outline-2">
-<h2 id="org4871089"><span class="section-number-2">2</span> <a id="org2dddb12"></a> Download Code and Setup</h2>
+<div id="outline-container-orgb817cda" class="outline-2">
+<h2 id="orgb817cda"><span class="section-number-2">2</span> <a id="org96762f4"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -528,8 +554,8 @@ folder. Ultimately you will re-zip this folder to submit it.
 </div>
 </div>
 
-<div id="outline-container-org71ddefd" class="outline-2">
-<h2 id="org71ddefd"><span class="section-number-2">3</span> <b>Problem 1</b>: Changing ELF Symbol Values</h2>
+<div id="outline-container-org804729b" class="outline-2">
+<h2 id="org804729b"><span class="section-number-2">3</span> <b>Problem 1</b>: Changing ELF Symbol Values</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 The <a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format">Executable and Linkable (ELF) File Format</a> is the Unix standard for
@@ -706,8 +732,8 @@ associated ELF file data to alter its value.
 </p>
 </div>
 
-<div id="outline-container-org47778b1" class="outline-3">
-<h3 id="org47778b1"><span class="section-number-3">3.1</span> ELF File References</h3>
+<div id="outline-container-orgfd24867" class="outline-3">
+<h3 id="orgfd24867"><span class="section-number-3">3.1</span> ELF File References</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 It is recommended to do some reading on the structure of the ELF
@@ -737,8 +763,8 @@ use of 32-bit integers may still apply via <code>uint32_t</code>.
 </div>
 </div>
 
-<div id="outline-container-org5c4dd82" class="outline-3">
-<h3 id="org5c4dd82"><span class="section-number-3">3.2</span> Overall Approach</h3>
+<div id="outline-container-org0b316d1" class="outline-3">
+<h3 id="org0b316d1"><span class="section-number-3">3.2</span> Overall Approach</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 ELF files are divided into sections. Our main interest is to identify
@@ -781,8 +807,8 @@ manual page for <code>mmap()</code>.
 </div>
 </div>
 
-<div id="outline-container-org68ea225" class="outline-3">
-<h3 id="org68ea225"><span class="section-number-3">3.3</span> ELF Header and Section Header Array</h3>
+<div id="outline-container-org925bc67" class="outline-3">
+<h3 id="org925bc67"><span class="section-number-3">3.3</span> ELF Header and Section Header Array</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The initial bytes in an ELF file always have a fixed structure which
@@ -792,7 +818,7 @@ is the <code>ELF64_Ehdr</code> type.  Of primary interest are the following
 <li>Identification bytes and types in the field <code>e_ident[]</code>. These
 initial bytes identify the file as ELF format or not.  If they
 match the expected values, proceed. If incorrect, consult the later
-section on <a href="#org040582e">Error Conditions</a> on what error message to print.</li>
+section on <a href="#org91f28e1">Error Conditions</a> on what error message to print.</li>
 <li>The Section Header Array byte position in the field <code>e_shoff</code>.  The
 Section Header Array is like a table of contents for a book giving
 positions of most other sections in the file. It usually occurs near
@@ -810,7 +836,7 @@ parts of an ELF file.
 
 <div class="org-center">
 
-<div id="org21a1110" class="figure">
+<div id="org082941a" class="figure">
 <p><img src="elf-data1.png" alt="elf-data1.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>ELF File Header with Section Header Array and Section Header String Table.</p>
@@ -819,8 +845,8 @@ parts of an ELF file.
 </div>
 </div>
 
-<div id="outline-container-orgb5d2d36" class="outline-3">
-<h3 id="orgb5d2d36"><span class="section-number-3">3.4</span> String Tables, Names, Section Headers</h3>
+<div id="outline-container-orgbc7ce49" class="outline-3">
+<h3 id="orgbc7ce49"><span class="section-number-3">3.4</span> String Tables, Names, Section Headers</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 To keep the sizes of structures fixed while still allowing variable
@@ -870,8 +896,8 @@ of symbol table entries.
 </div>
 </div>
 
-<div id="outline-container-org200882b" class="outline-3">
-<h3 id="org200882b"><span class="section-number-3">3.5</span> <a id="org657565e"></a> The <code>.data</code> Section and its Address</h3>
+<div id="outline-container-org40ae619" class="outline-3">
+<h3 id="org40ae619"><span class="section-number-3">3.5</span> <a id="org9398f3a"></a> The <code>.data</code> Section and its Address</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 In addition to identifying the <code>.symtab</code> and <code>.strtab</code> sections in the
@@ -898,8 +924,8 @@ data about it in the following format.
 </div>
 </div>
 
-<div id="outline-container-org4b1498e" class="outline-3">
-<h3 id="org4b1498e"><span class="section-number-3">3.6</span> Symbol Table and <code>.strtab</code></h3>
+<div id="outline-container-org2e4442a" class="outline-3">
+<h3 id="org2e4442a"><span class="section-number-3">3.6</span> Symbol Table and <code>.strtab</code></h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 Similar to the Section Header Array, the Symbol Table is comprised of
@@ -910,7 +936,7 @@ symbol's name resides. The following diagram shows this relationship.
 
 <div class="org-center">
 
-<div id="org3cff68d" class="figure">
+<div id="org96a8c97" class="figure">
 <p><img src="elf-data2.png" alt="elf-data2.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 2: </span>ELF Symbol Table, associated String Table, and locations of symbol values in <code>.data</code> section. The entry location of symbol <code>string1</code> is bolded along with the location of its name "string1" and location of its value "Hello"</p>
@@ -969,21 +995,21 @@ by calculating its address as an offset from the address of the
     32</code> from the start of the <code>.data</code> section</li>
 </ul></li>
 <li>Add 32 to the offset of <code>.data</code> from the beginning of the file
-(found in earlier when <a href="#org657565e">locating the <code>.data</code> section</a>) to get the
+(found in earlier when <a href="#org9398f3a">locating the <code>.data</code> section</a>) to get the
 address of the string.</li>
 <li>Printing this address as a string should give string value <code>Hello</code></li>
 </ul>
 
 <p>
 If the symbol that is requested is not found in the symbol table,
-refer to the <a href="#org040582e">Error Conditions</a> section for the appropriate error
+refer to the <a href="#org91f28e1">Error Conditions</a> section for the appropriate error
 message to print.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org3a06364" class="outline-3">
-<h3 id="org3a06364"><span class="section-number-3">3.7</span> Altering a String Value</h3>
+<div id="outline-container-org5483b4f" class="outline-3">
+<h3 id="org5483b4f"><span class="section-number-3">3.7</span> Altering a String Value</h3>
 <div class="outline-text-3" id="text-3-7">
 <p>
 <code>patchsym</code> works in either <code>GET_MODE</code> or <code>SET_MODE</code>
@@ -1044,14 +1070,14 @@ New val is: 'Ciao'                                  # new value for string
 
 <p>
 If a request is made to change a string to new value which is too
-long, print an error message as indicated in the <a href="#org040582e">Error Conditions</a>
+long, print an error message as indicated in the <a href="#org91f28e1">Error Conditions</a>
 section.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgebc1364" class="outline-3">
-<h3 id="orgebc1364"><span class="section-number-3">3.8</span> Example Invocations</h3>
+<div id="outline-container-org4a035e0" class="outline-3">
+<h3 id="org4a035e0"><span class="section-number-3">3.8</span> Example Invocations</h3>
 <div class="outline-text-3" id="text-3-8">
 <p>
 The following are some example invocations of <code>patchsym</code> from the
@@ -1122,8 +1148,8 @@ a_doub: 1.234567
 </div>
 
 
-<div id="outline-container-org92c66d5" class="outline-3">
-<h3 id="org92c66d5"><span class="section-number-3">3.9</span> <a id="org040582e"></a> Behavior in Error Cases</h3>
+<div id="outline-container-org902781c" class="outline-3">
+<h3 id="org902781c"><span class="section-number-3">3.9</span> <a id="org91f28e1"></a> Behavior in Error Cases</h3>
 <div class="outline-text-3" id="text-3-9">
 <p>
 The following errors can occur during execution of <code>patchsym</code> and
@@ -1131,9 +1157,9 @@ should result in the given error messages being printed.
 </p>
 </div>
 
-<div id="outline-container-orgd1ca19c" class="outline-4">
-<h4 id="orgd1ca19c">Wrong Magic Bytes</h4>
-<div class="outline-text-4" id="text-orgd1ca19c">
+<div id="outline-container-org4967126" class="outline-4">
+<h4 id="org4967126">Wrong Magic Bytes</h4>
+<div class="outline-text-4" id="text-org4967126">
 <p>
 <code>patchsym</code> should check these "magic bytes" (first elements of
 <code>e_ident[]</code> in header). If they match the expected values, proceed but
@@ -1149,9 +1175,9 @@ ERROR: Magic bytes wrong, this is not an ELF file
 </div>
 
 
-<div id="outline-container-org2b5a2e7" class="outline-4">
-<h4 id="org2b5a2e7">Missing Symbol Tables</h4>
-<div class="outline-text-4" id="text-org2b5a2e7">
+<div id="outline-container-orgfad53f5" class="outline-4">
+<h4 id="orgfad53f5">Missing Symbol Tables</h4>
+<div class="outline-text-4" id="text-orgfad53f5">
 <p>
 During the search for the symbol table, it is possible that it is not
 found. Such objects are usually executables that have been "stripped"
@@ -1169,9 +1195,9 @@ ERROR: Couldn't find symbol table
 </div>
 
 
-<div id="outline-container-orgd24214b" class="outline-4">
-<h4 id="orgd24214b">Symbol Not Found</h4>
-<div class="outline-text-4" id="text-orgd24214b">
+<div id="outline-container-orgf3ecf79" class="outline-4">
+<h4 id="orgf3ecf79">Symbol Not Found</h4>
+<div class="outline-text-4" id="text-orgf3ecf79">
 <p>
 Any name that is not found in the symbol table should result in the
 following final error message.
@@ -1195,9 +1221,9 @@ ERROR: Symbol 'nada' not found
 </div>
 </div>
 
-<div id="outline-container-org400b726" class="outline-4">
-<h4 id="org400b726">Symbol Not in <code>.data</code> Section</h4>
-<div class="outline-text-4" id="text-org400b726">
+<div id="outline-container-org7aec163" class="outline-4">
+<h4 id="org7aec163">Symbol Not in <code>.data</code> Section</h4>
+<div class="outline-text-4" id="text-org7aec163">
 <p>
 Some symbols are not in the <code>.data</code> section; for example <code>FUNCTION</code>
 symbols like <code>main</code> are in the <code>.text</code> section so cannot be changed as
@@ -1229,9 +1255,9 @@ ERROR: 'main' in section 13, not in .data section 23
 </div>
 </div>
 
-<div id="outline-container-orgfef40e3" class="outline-4">
-<h4 id="orgfef40e3">New String Too Long</h4>
-<div class="outline-text-4" id="text-orgfef40e3">
+<div id="outline-container-org419892b" class="outline-4">
+<h4 id="org419892b">New String Too Long</h4>
+<div class="outline-text-4" id="text-org419892b">
 <p>
 If the space allocated for a string is too short for a new value, it
 is dangerous to alter the <code>.data</code> section as nearby values may be
@@ -1266,9 +1292,9 @@ New Size: 29 'Adios, muchachos. Lo siento.'
 </div>
 </div>
 
-<div id="outline-container-org9316430" class="outline-4">
-<h4 id="org9316430">Non-string Symbol Types</h4>
-<div class="outline-text-4" id="text-org9316430">
+<div id="outline-container-org0f2f823" class="outline-4">
+<h4 id="org0f2f823">Non-string Symbol Types</h4>
+<div class="outline-text-4" id="text-org0f2f823">
 <p>
 When <code>patchsym</code> is run, the type of the Symbol to be changed is
 provided. The required implementation of <code>patchsym</code> honors only string
@@ -1327,8 +1353,8 @@ understanding of the program.
 </div>
 
 
-<div id="outline-container-orgccdbd93" class="outline-3">
-<h3 id="orgccdbd93"><span class="section-number-3">3.10</span> <code>patchsym</code> Template</h3>
+<div id="outline-container-orgddccd5d" class="outline-3">
+<h3 id="orgddccd5d"><span class="section-number-3">3.10</span> <code>patchsym</code> Template</h3>
 <div class="outline-text-3" id="text-3-10">
 <p>
 A basic template for <code>patchsym.c</code> is provided in the code pack which
@@ -1339,8 +1365,8 @@ sure that your code complies with tests when the become available.
 </div>
 </div>
 
-<div id="outline-container-org8674dd5" class="outline-3">
-<h3 id="org8674dd5"><span class="section-number-3">3.11</span> Automated Tests for Problem 1</h3>
+<div id="outline-container-orge713af1" class="outline-3">
+<h3 id="orge713af1"><span class="section-number-3">3.11</span> Automated Tests for Problem 1</h3>
 <div class="outline-text-3" id="text-3-11">
 <p>
 As in previous projects, automated tests are provided and can be run
@@ -1379,8 +1405,8 @@ RESULTS: 10 / 10 tests passed
 </div>
 </div>
 
-<div id="outline-container-org210bdcc" class="outline-3 grading">
-<h3 id="org210bdcc"><span class="section-number-3">3.12</span> Grading Criteria for <code>patchsym</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span></span></h3>
+<div id="outline-container-orge554c5c" class="outline-3 grading">
+<h3 id="orge554c5c"><span class="section-number-3">3.12</span> Grading Criteria for <code>patchsym</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span></span></h3>
 <div class="outline-text-3" id="text-3-12">
 <p>
 Both binary and shell tests can be run with <code>make test-p2</code>
@@ -1517,12 +1543,12 @@ Both binary and shell tests can be run with <code>make test-p2</code>
 </div>
 
 
-<div id="outline-container-orgfdf78a5" class="outline-2">
-<h2 id="orgfdf78a5"><span class="section-number-2">4</span> Project Submission</h2>
+<div id="outline-container-orge244952" class="outline-2">
+<h2 id="orge244952"><span class="section-number-2">4</span> Project Submission</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgf489d3e" class="outline-3">
-<h3 id="orgf489d3e"><span class="section-number-3">4.1</span> <a id="orgaccc941"></a> Submit to Gradescope</h3>
+<div id="outline-container-org767f99f" class="outline-3">
+<h3 id="org767f99f"><span class="section-number-3">4.1</span> <a id="org647d8d1"></a> Submit to Gradescope</h3>
 <div class="outline-text-3" id="text-4-1">
 <ol class="org-ol">
 <li><p>
@@ -1573,8 +1599,8 @@ pictures.</li>
 </div>
 </div>
 
-<div id="outline-container-org658fb3a" class="outline-3">
-<h3 id="org658fb3a"><span class="section-number-3">4.2</span> Late Policies</h3>
+<div id="outline-container-org6141ea6" class="outline-3">
+<h3 id="org6141ea6"><span class="section-number-3">4.2</span> Late Policies</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 You may wish to review the policy on late project submission which
@@ -1591,7 +1617,7 @@ deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-12-14 Tue 11:18 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-12-14 Tue 11:36 <br/> </i>
 </div>
 </body>
 </html>
