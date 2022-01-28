@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-01-26 Wed 21:56 -->
+<!-- 2022-01-28 Fri 11:09 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Project 1: C Programming</title>
@@ -365,7 +365,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-01-26 Wed 21:56</i>
+<i>Last Updated: 2022-01-28 Fri 11:09</i>
 </div>
 <div id="content">
 <h1 class="title">CSCI 2021 Project 1: C Programming</h1>
@@ -377,73 +377,116 @@ text-align: justify;
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-org9c6175c" class="outline-4">
-<h4 id="org9c6175c">CODE DISTRIBUTION: <a href="p1-code.zip">p1-code.zip</a></h4>
+<div id="outline-container-org6ace9ab" class="outline-4">
+<h4 id="org6ace9ab">CODE DISTRIBUTION: <a href="p1-code.zip">p1-code.zip</a></h4>
 </div>
-<div id="outline-container-org936bba4" class="outline-4">
-<h4 id="org936bba4">VIDEO OVERVIEW: <i>Not yet Available</i></h4>
+<div id="outline-container-orge73835f" class="outline-4">
+<h4 id="orge73835f">VIDEO OVERVIEW: <i>Not yet Available</i></h4>
 </div>
-<div id="outline-container-org1f8784b" class="outline-4">
-<h4 id="org1f8784b">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-org1f8784b">
+<div id="outline-container-org3f7ed4b" class="outline-4">
+<h4 id="org3f7ed4b">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org3f7ed4b">
+<dl class="org-dl">
+<dt>Fri Jan 28 09:28:24 AM CST 2022</dt><dd><p>
+The initial project spec was
+missing the <code>hash_code()</code> function which was to be provided and
+copied into the <code>hashmap_funcs.c</code> file. That function has been added
+into the spec in the <a href="#org2d92e26">Provided <code>hash_code()</code> Function</a> section and is
+also copied below.
+</p>
+
+<pre class="example" id="orge3afd4f">
+  // PROVIDED: Compute a simple hash code for the given character
+  // string. The code is "computed" by casting the first 8 characters of
+  // the string to a long and returning it. The empty string has hash
+  // code 0. If the string is a single character, this will be the ASCII
+  // code for the character (e.g. "A" hashes to 65).  Longer strings
+  // will have numbers which are the integer interpretation of up to
+  // their first 8 bytes.  ADVANTAGE: constant time to compute the hash
+  // code. DISADVANTAGE: poor distribution for long strings; all strings
+  // with same first 8 chars hash to the same location.
+  long hashcode(char key[]){
+    union {
+      char str[8];
+      long num;
+    } strnum;
+    strnum.num = 0;
+
+    for(int i=0; i&lt;8; i++){
+      if(key[i] == '\0'){
+        break;
+      }
+      strnum.str[i] = key[i];
+    }
+    return strnum.num;
+  }
+</pre>
+
+<p>
+There is also now an <a href="#org4874c67">outline of the suggested functions for
+<code>hashmap_funcs.c</code></a> provided. A good first step is to copy this
+outline into <code>hashmap_funcs.c</code> and begin implementing functions that
+are described there.
+</p></dd>
+</dl>
 </div>
 </div>
 
-<div id="outline-container-org48d19b9" class="outline-4">
-<h4 id="org48d19b9"></h4>
-<div class="outline-text-4" id="text-org48d19b9">
+<div id="outline-container-orgb14196e" class="outline-4">
+<h4 id="orgb14196e"></h4>
+<div class="outline-text-4" id="text-orgb14196e">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org7a9fdf4">1. Introduction</a>
+<li><a href="#org5600d47">1. Introduction</a>
 <ul>
-<li><a href="#org61381e2">1.1. Grading Criteria</a></li>
-<li><a href="#org120df1f">1.2. Getting Started</a></li>
+<li><a href="#orge3c099d">1.1. Grading Criteria</a></li>
+<li><a href="#org2a938e1">1.2. Getting Started</a></li>
 </ul>
 </li>
-<li><a href="#orgc003600">2. Download Code and Setup</a>
+<li><a href="#orgf70271e">2. Download Code and Setup</a>
 <ul>
-<li><a href="#org61a90d0">2.1. Makefile</a></li>
-<li><a href="#orga0fcdd0">2.2. Automated Tests</a></li>
+<li><a href="#org900c896">2.1. Makefile</a></li>
+<li><a href="#org3201a1e">2.2. Automated Tests</a></li>
 </ul>
 </li>
-<li><a href="#org5b99178">3. <b>Problem 1</b>: Stock Plotting</a>
+<li><a href="#org8a56faa">3. <b>Problem 1</b>: Stock Plotting</a>
 <ul>
-<li><a href="#org426e597">3.1. Overview and Demo</a></li>
-<li><a href="#org546feeb">3.2. Outline of <code>stock_funcs.c</code></a></li>
-<li><a href="#orgf61291c">3.3. Editing and Testing</a></li>
-<li><a href="#org004f2f8">3.4. Implementation Notes</a></li>
-<li><a href="#orgd966117">3.5. Grading Criteria for Problem 1</a></li>
+<li><a href="#org4d457c5">3.1. Overview and Demo</a></li>
+<li><a href="#org22bd389">3.2. Outline of <code>stock_funcs.c</code></a></li>
+<li><a href="#orged06e2a">3.3. Editing and Testing</a></li>
+<li><a href="#orgbecc5c3">3.4. Implementation Notes</a></li>
+<li><a href="#org26c9f56">3.5. Grading Criteria for Problem 1</a></li>
 </ul>
 </li>
-<li><a href="#orgdbc71d8">4. <b>Problem 2</b>: Completing Stock Plot</a>
+<li><a href="#orgf8edf97">4. <b>Problem 2</b>: Completing Stock Plot</a>
 <ul>
-<li><a href="#orga21945a">4.1. Overview</a></li>
-<li><a href="#orgcc314ac">4.2. Setting Low/High Index</a></li>
-<li><a href="#org04f9e9f">4.3. Best Buy/Sell Index</a></li>
-<li><a href="#orgacf5a37">4.4. Stock Files</a></li>
-<li><a href="#org0eafaec">4.5. Counting Lines</a></li>
-<li><a href="#org50fdd2c">4.6. Loading Stock Files</a></li>
-<li><a href="#org8f83e56">4.7. Plotting Stocks</a></li>
-<li><a href="#org8fafa21">4.8. Optional MAKEUP CREDIT</a></li>
-<li><a href="#orgfaeb0d7">4.9. Grading Criteria for Problem 2</a></li>
+<li><a href="#orgc8b25f4">4.1. Overview</a></li>
+<li><a href="#org17e3174">4.2. Setting Low/High Index</a></li>
+<li><a href="#org41aa448">4.3. Best Buy/Sell Index</a></li>
+<li><a href="#org9b1d359">4.4. Stock Files</a></li>
+<li><a href="#orgc2be240">4.5. Counting Lines</a></li>
+<li><a href="#org8f2b8b4">4.6. Loading Stock Files</a></li>
+<li><a href="#orgec354c6">4.7. Plotting Stocks</a></li>
+<li><a href="#orgfc9a93d">4.8. Optional MAKEUP CREDIT</a></li>
+<li><a href="#orga70622f">4.9. Grading Criteria for Problem 2</a></li>
 </ul>
 </li>
-<li><a href="#org9e89ea1">5. <b>Problem 3</b>: Hash Tables in C</a>
+<li><a href="#orgf3f2826">5. <b>Problem 3</b>: Hash Tables in C</a>
 <ul>
-<li><a href="#org7821a85">5.1. Overview</a></li>
-<li><a href="#org0ed2d4b">5.2. <code>hash_main</code> Demonstration</a></li>
-<li><a href="#org1122919">5.3. <code>hash_funcs.c</code>: Hash Table Functions</a></li>
-<li><a href="#org425f148">5.4. Provided <code>hash_code()</code> Function</a></li>
-<li><a href="#org82f0dc6">5.5. <code>hash_main.c</code>: main function / application</a></li>
-<li><a href="#org347d2f4">5.6. Grading Criteria for P3</a></li>
+<li><a href="#org2a3a934">5.1. Overview</a></li>
+<li><a href="#orgb395180">5.2. <code>hashmap_main</code> Demonstration</a></li>
+<li><a href="#orgd97f0fc">5.3. <code>hashmap_funcs.c</code>: Hash Table Functions</a></li>
+<li><a href="#org3d2647c">5.4. Provided <code>hash_code()</code> Function</a></li>
+<li><a href="#org83f37e0">5.5. <code>hashmap_main.c</code>: main function / application</a></li>
+<li><a href="#org7fc4fc5">5.6. Grading Criteria for P3</a></li>
 </ul>
 </li>
-<li><a href="#orga07c473">6. Project Submission</a>
+<li><a href="#orgb77ab3b">6. Project Submission</a>
 <ul>
-<li><a href="#org416f460">6.1. Submit to Gradescope</a></li>
-<li><a href="#orgf7f065a">6.2. Late Policies</a></li>
+<li><a href="#org1cd2e83">6.1. Submit to Gradescope</a></li>
+<li><a href="#orga90256f">6.2. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -452,8 +495,8 @@ is allowed. Seek help from course staff if you get stuck for too long.</li>
 </div>
 </div>
 
-<div id="outline-container-org7a9fdf4" class="outline-2">
-<h2 id="org7a9fdf4"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-org5600d47" class="outline-2">
+<h2 id="org5600d47"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Basic application programming in C is an essential step downward
@@ -489,8 +532,8 @@ open-ended final problem.
 </p>
 </div>
 
-<div id="outline-container-org61381e2" class="outline-3">
-<h3 id="org61381e2"><span class="section-number-3">1.1</span> Grading Criteria</h3>
+<div id="outline-container-orge3c099d" class="outline-3">
+<h3 id="orge3c099d"><span class="section-number-3">1.1</span> Grading Criteria</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Credit for this assignment will be given based on two categories.
@@ -510,8 +553,8 @@ to the descriptions given so make sure you verify that these work.</li>
 </div>
 </div>
 
-<div id="outline-container-org120df1f" class="outline-3">
-<h3 id="org120df1f"><span class="section-number-3">1.2</span> Getting Started</h3>
+<div id="outline-container-org2a938e1" class="outline-3">
+<h3 id="org2a938e1"><span class="section-number-3">1.2</span> Getting Started</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 Take the following steps to get started
@@ -520,7 +563,7 @@ Take the following steps to get started
 <li>Download the code associated with the project linked at the top of
 the spec. Unzip it and examine some of the provided code.</li>
 <li>Examine the overview of the files provided listed in the
-<a href="#org0409f70">Download and Setup</a> section. This gives brief descriptions of files
+<a href="#org5079bb7">Download and Setup</a> section. This gives brief descriptions of files
 that already exist and those that you must create.</li>
 <li>Pick a problem and read. There is a lot of information and many
 examples provided for each problem. Reading this will help you
@@ -538,8 +581,8 @@ be accepted more than 48 hours after the deadline.</b></li>
 </div>
 </div>
 
-<div id="outline-container-orgc003600" class="outline-2">
-<h2 id="orgc003600"><span class="section-number-2">2</span> <a id="org0409f70"></a> Download Code and Setup</h2>
+<div id="outline-container-orgf70271e" class="outline-2">
+<h2 id="orgf70271e"><span class="section-number-2">2</span> <a id="org5079bb7"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -739,8 +782,8 @@ folder. Ultimately you will re-zip this folder to submit it.
 </table>
 </div>
 
-<div id="outline-container-org61a90d0" class="outline-3">
-<h3 id="org61a90d0"><span class="section-number-3">2.1</span> Makefile</h3>
+<div id="outline-container-org900c896" class="outline-3">
+<h3 id="org900c896"><span class="section-number-3">2.1</span> Makefile</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 A <code>Makefile</code> is provided as part of this project. Building programs in
@@ -807,8 +850,8 @@ Typical usage is:
 </div>
 </div>
 
-<div id="outline-container-orga0fcdd0" class="outline-3">
-<h3 id="orga0fcdd0"><span class="section-number-3">2.2</span> <a id="orgbfec72e"></a> Automated Tests</h3>
+<div id="outline-container-org3201a1e" class="outline-3">
+<h3 id="org3201a1e"><span class="section-number-3">2.2</span> <a id="orgd7d4819"></a> Automated Tests</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Automated tests are included with the code distribution. <b>These tests
@@ -899,12 +942,12 @@ check program results.
 </div>
 
 
-<div id="outline-container-org5b99178" class="outline-2">
-<h2 id="org5b99178"><span class="section-number-2">3</span> <b>Problem 1</b>: Stock Plotting</h2>
+<div id="outline-container-org8a56faa" class="outline-2">
+<h2 id="org8a56faa"><span class="section-number-2">3</span> <b>Problem 1</b>: Stock Plotting</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org426e597" class="outline-3">
-<h3 id="org426e597"><span class="section-number-3">3.1</span> Overview and Demo</h3>
+<div id="outline-container-org4d457c5" class="outline-3">
+<h3 id="org4d457c5"><span class="section-number-3">3.1</span> Overview and Demo</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Problems 1 and 2 create a small plotting application that is focused
@@ -1142,8 +1185,8 @@ plot step:   0.53
 </div>
 </div>
 
-<div id="outline-container-org546feeb" class="outline-3">
-<h3 id="org546feeb"><span class="section-number-3">3.2</span> Outline of <code>stock_funcs.c</code></h3>
+<div id="outline-container-org22bd389" class="outline-3">
+<h3 id="org22bd389"><span class="section-number-3">3.2</span> Outline of <code>stock_funcs.c</code></h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 The file <code>stock_funcs.c</code> will contain most of the support functions
@@ -1152,7 +1195,7 @@ presented below. Note that each function has the Problem # to which it
 belongs.
 </p>
 
-<pre class="example" id="org8a7d040">
+<pre class="example" id="org3d87e3b">
 // stock_funcs.c: support functions for the stock_main program.
 
 stock_t *stock_new();
@@ -1342,8 +1385,8 @@ void stock_plot(stock_t *stock, int max_height, int start, int stop);
 </div>
 </div>
 
-<div id="outline-container-orgf61291c" class="outline-3">
-<h3 id="orgf61291c"><span class="section-number-3">3.3</span> Editing and Testing</h3>
+<div id="outline-container-orged06e2a" class="outline-3">
+<h3 id="orged06e2a"><span class="section-number-3">3.3</span> Editing and Testing</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The project code contains a skeleton version of <code>stock_funcs.c</code> which
@@ -1484,13 +1527,13 @@ ACTUAL:  17) Segmentation Fault
 </div>
 </div>
 
-<div id="outline-container-org004f2f8" class="outline-3">
-<h3 id="org004f2f8"><span class="section-number-3">3.4</span> Implementation Notes</h3>
+<div id="outline-container-orgbecc5c3" class="outline-3">
+<h3 id="orgbecc5c3"><span class="section-number-3">3.4</span> Implementation Notes</h3>
 <div class="outline-text-3" id="text-3-4">
 </div>
-<div id="outline-container-orgb1f356d" class="outline-4">
-<h4 id="orgb1f356d">Use the Arrow</h4>
-<div class="outline-text-4" id="text-orgb1f356d">
+<div id="outline-container-org0f91214" class="outline-4">
+<h4 id="org0f91214">Use the Arrow</h4>
+<div class="outline-text-4" id="text-org0f91214">
 <p>
 The first 3 functions to implement in <code>stock_funcs.c</code> are utility
 functions for stocks to allocate, de-allocate and print them. As will
@@ -1514,9 +1557,9 @@ used in most functions.
 </div>
 </div>
 
-<div id="outline-container-org38adec8" class="outline-4">
-<h4 id="org38adec8">Allocating Stocks in Heap Memory</h4>
-<div class="outline-text-4" id="text-org38adec8">
+<div id="outline-container-org9659048" class="outline-4">
+<h4 id="org9659048">Allocating Stocks in Heap Memory</h4>
+<div class="outline-text-4" id="text-org9659048">
 <p>
 In order to get dynamically allocated memory in the Heap, the
 <code>malloc()</code> function should be used. This function takes a number of
@@ -1553,9 +1596,9 @@ the header as this may break tests that you'll run later.
 </div>
 </div>
 
-<div id="outline-container-orgf031554" class="outline-4">
-<h4 id="orgf031554">Avoid Freeing NULL</h4>
-<div class="outline-text-4" id="text-orgf031554">
+<div id="outline-container-orgdb4cc55" class="outline-4">
+<h4 id="orgdb4cc55">Avoid Freeing NULL</h4>
+<div class="outline-text-4" id="text-orgdb4cc55">
 <p>
 While the <code>free()</code> function is used to de-allocate memory that has
 been obtained via <code>malloc()</code>, it should never be called with a <code>NULL</code>
@@ -1576,9 +1619,9 @@ of those fields.
 </div>
 </div>
 
-<div id="outline-container-org19ccbb2" class="outline-4">
-<h4 id="org19ccbb2">Printing Prices Array</h4>
-<div class="outline-text-4" id="text-org19ccbb2">
+<div id="outline-container-org4a6f1e6" class="outline-4">
+<h4 id="org4a6f1e6">Printing Prices Array</h4>
+<div class="outline-text-4" id="text-org4a6f1e6">
 <p>
 During <code>stock_print()</code>, some special code will be needed to print the
 <code>prices[]</code> array if it has 3 or fewer elements. As per the function
@@ -1623,8 +1666,8 @@ into it as an array.
 </div>
 
 
-<div id="outline-container-orgd966117" class="outline-3 grading 30">
-<h3 id="orgd966117"><span class="section-number-3">3.5</span> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="30">30</span></span></h3>
+<div id="outline-container-org26c9f56" class="outline-3 grading 30">
+<h3 id="org26c9f56"><span class="section-number-3">3.5</span> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="30">30</span></span></h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 The following criteria will be checked.
@@ -1750,12 +1793,12 @@ The following criteria will be checked.
 </div>
 </div>
 
-<div id="outline-container-orgdbc71d8" class="outline-2">
-<h2 id="orgdbc71d8"><span class="section-number-2">4</span> <b>Problem 2</b>: Completing Stock Plot</h2>
+<div id="outline-container-orgf8edf97" class="outline-2">
+<h2 id="orgf8edf97"><span class="section-number-2">4</span> <b>Problem 2</b>: Completing Stock Plot</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orga21945a" class="outline-3">
-<h3 id="orga21945a"><span class="section-number-3">4.1</span> Overview</h3>
+<div id="outline-container-orgc8b25f4" class="outline-3">
+<h3 id="orgc8b25f4"><span class="section-number-3">4.1</span> Overview</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 This problem implements further functions to complete the Stock
@@ -1773,8 +1816,8 @@ hints on how to handle the various functions.
 </div>
 </div>
 
-<div id="outline-container-orgcc314ac" class="outline-3">
-<h3 id="orgcc314ac"><span class="section-number-3">4.2</span> Setting Low/High Index</h3>
+<div id="outline-container-org17e3174" class="outline-3">
+<h3 id="org17e3174"><span class="section-number-3">4.2</span> Setting Low/High Index</h3>
 <div class="outline-text-3" id="text-4-2">
 <div class="org-src-container">
 <pre class="src src-c">void stock_set_hilo(stock_t *stock)
@@ -1790,8 +1833,8 @@ subsequently set the <code>lo_index</code> and <code>hi_index</code> fields.
 </div>
 </div>
 
-<div id="outline-container-org04f9e9f" class="outline-3">
-<h3 id="org04f9e9f"><span class="section-number-3">4.3</span> Best Buy/Sell Index</h3>
+<div id="outline-container-org41aa448" class="outline-3">
+<h3 id="org41aa448"><span class="section-number-3">4.3</span> Best Buy/Sell Index</h3>
 <div class="outline-text-3" id="text-4-3">
 <div class="org-src-container">
 <pre class="src src-c">int stock_set_best(stock_t *stock);
@@ -1829,15 +1872,15 @@ works. Then move on to solve other problems here.
 
 <p>
 For those that want a bit more fun, revisit this function later to
-implement a more efficient version of it as described in the <a href="#org25db05a">Optional
+implement a more efficient version of it as described in the <a href="#orgfb3448a">Optional
 MAKEUP CREDIT Section</a>.
 </p>
 </div>
 </div>
 
 
-<div id="outline-container-orgacf5a37" class="outline-3">
-<h3 id="orgacf5a37"><span class="section-number-3">4.4</span> Stock Files</h3>
+<div id="outline-container-org9b1d359" class="outline-3">
+<h3 id="org9b1d359"><span class="section-number-3">4.4</span> Stock Files</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 Data on stock prices over time are stored in several example files in
@@ -1887,8 +1930,8 @@ which is the stock price at that time.</li>
 </div>
 </div>
 
-<div id="outline-container-org0eafaec" class="outline-3">
-<h3 id="org0eafaec"><span class="section-number-3">4.5</span> Counting Lines</h3>
+<div id="outline-container-orgc2be240" class="outline-3">
+<h3 id="orgc2be240"><span class="section-number-3">4.5</span> Counting Lines</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 Since the number of lines in stock files corresponded to the number of
@@ -1957,8 +2000,8 @@ function to indicate a failure has occurred.
 </div>
 </div>
 
-<div id="outline-container-org50fdd2c" class="outline-3">
-<h3 id="org50fdd2c"><span class="section-number-3">4.6</span> Loading Stock Files</h3>
+<div id="outline-container-org8f2b8b4" class="outline-3">
+<h3 id="org8f2b8b4"><span class="section-number-3">4.6</span> Loading Stock Files</h3>
 <div class="outline-text-3" id="text-4-6">
 <div class="org-src-container">
 <pre class="src src-c">int stock_load(stock_t *stock, char *filename)
@@ -2028,8 +2071,8 @@ file. Do not modify any other fields in the stock.
 </div>
 </div>
 
-<div id="outline-container-org8f83e56" class="outline-3">
-<h3 id="org8f83e56"><span class="section-number-3">4.7</span> Plotting Stocks</h3>
+<div id="outline-container-orgec354c6" class="outline-3">
+<h3 id="orgec354c6"><span class="section-number-3">4.7</span> Plotting Stocks</h3>
 <div class="outline-text-3" id="text-4-7">
 <p>
 By far the trickiest function is the stock plot function which
@@ -2064,9 +2107,9 @@ function more tractable.
 </p>
 </div>
 
-<div id="outline-container-org4ebd296" class="outline-4">
-<h4 id="org4ebd296">Plot Data</h4>
-<div class="outline-text-4" id="text-org4ebd296">
+<div id="outline-container-orge0722be" class="outline-4">
+<h4 id="orge0722be">Plot Data</h4>
+<div class="outline-text-4" id="text-orge0722be">
 <p>
 Initially, some plot data should be printed to verify that correct
 values are being used for the remainder of the plotting routine.
@@ -2088,9 +2131,9 @@ range by <code>max_height</code>.
 </div>
 </div>
 
-<div id="outline-container-org36bf79f" class="outline-4">
-<h4 id="org36bf79f">Vertical Printing</h4>
-<div class="outline-text-4" id="text-org36bf79f">
+<div id="outline-container-orgde70ec4" class="outline-4">
+<h4 id="orgde70ec4">Vertical Printing</h4>
+<div class="outline-text-4" id="text-orgde70ec4">
 <p>
 Character terminals tend to print things well horizontally so printing
 the vertical bars that appear in the main body of the plot will take
@@ -2139,9 +2182,9 @@ these elements in.
 </div>
 </div>
 
-<div id="outline-container-org0400e12" class="outline-4">
-<h4 id="org0400e12">Left-side Axis Values and Left/Right Bars</h4>
-<div class="outline-text-4" id="text-org0400e12">
+<div id="outline-container-org6e75a44" class="outline-4">
+<h4 id="org6e75a44">Left-side Axis Values and Left/Right Bars</h4>
+<div class="outline-text-4" id="text-org6e75a44">
 <p>
 The left side axis labels look something like
 </p>
@@ -2185,9 +2228,9 @@ the right axis bar and carry down to the next line.
 </div>
 </div>
 
-<div id="outline-container-org502524d" class="outline-4">
-<h4 id="org502524d">Top Axis Buy/Sell Markings</h4>
-<div class="outline-text-4" id="text-org502524d">
+<div id="outline-container-org1c8f888" class="outline-4">
+<h4 id="org1c8f888">Top Axis Buy/Sell Markings</h4>
+<div class="outline-text-4" id="text-org1c8f888">
 <p>
 The top axis will look like one of the following:
 </p>
@@ -2228,9 +2271,9 @@ left side numeric labels.
 </div>
 </div>
 
-<div id="outline-container-org8bf45bb" class="outline-4">
-<h4 id="org8bf45bb">Bottom Axis Tic Marks and Numeric Indices</h4>
-<div class="outline-text-4" id="text-org8bf45bb">
+<div id="outline-container-org76d5ddb" class="outline-4">
+<h4 id="org76d5ddb">Bottom Axis Tic Marks and Numeric Indices</h4>
+<div class="outline-text-4" id="text-org76d5ddb">
 <p>
 The bottom axis and axis labels will look something like one of the
 following.
@@ -2300,8 +2343,8 @@ attempting to only use the test cases.
 </div>
 
 
-<div id="outline-container-org8fafa21" class="outline-3">
-<h3 id="org8fafa21"><span class="section-number-3">4.8</span> <a id="org25db05a"></a> Optional MAKEUP CREDIT</h3>
+<div id="outline-container-orgfc9a93d" class="outline-3">
+<h3 id="orgfc9a93d"><span class="section-number-3">4.8</span> <a id="orgfb3448a"></a> Optional MAKEUP CREDIT</h3>
 <div class="outline-text-3" id="text-4-8">
 <p>
 The "brute force" approach initially suggested to find <code>best_buy /
@@ -2352,8 +2395,8 @@ beyond the overall total will simply be dropped.
 </div>
 
 
-<div id="outline-container-orgfaeb0d7" class="outline-3 grading 30">
-<h3 id="orgfaeb0d7"><span class="section-number-3">4.9</span> Grading Criteria for Problem 2&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="30">30</span></span></h3>
+<div id="outline-container-orga70622f" class="outline-3 grading 30">
+<h3 id="orga70622f"><span class="section-number-3">4.9</span> Grading Criteria for Problem 2&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="30">30</span></span></h3>
 <div class="outline-text-3" id="text-4-9">
 <p>
 The following criteria will be checked.
@@ -2520,12 +2563,12 @@ The following criteria will be checked.
 </div>
 </div>
 
-<div id="outline-container-org9e89ea1" class="outline-2">
-<h2 id="org9e89ea1"><span class="section-number-2">5</span> <b>Problem 3</b>: Hash Tables in C</h2>
+<div id="outline-container-orgf3f2826" class="outline-2">
+<h2 id="orgf3f2826"><span class="section-number-2">5</span> <b>Problem 3</b>: Hash Tables in C</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org7821a85" class="outline-3">
-<h3 id="org7821a85"><span class="section-number-3">5.1</span> Overview</h3>
+<div id="outline-container-org2a3a934" class="outline-3">
+<h3 id="org2a3a934"><span class="section-number-3">5.1</span> Overview</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 This problem implements a rudimentary hash table application in C
@@ -2557,8 +2600,8 @@ use.</li>
 </div>
 </div>
 
-<div id="outline-container-org0ed2d4b" class="outline-3">
-<h3 id="org0ed2d4b"><span class="section-number-3">5.2</span> <code>hash_main</code> Demonstration</h3>
+<div id="outline-container-orgb395180" class="outline-3">
+<h3 id="orgb395180"><span class="section-number-3">5.2</span> <code>hashmap_main</code> Demonstration</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 The intent of this problem is to develop a small application which
@@ -2799,8 +2842,8 @@ HM&gt; quit                                # quit the program
 </div>
 
 
-<div id="outline-container-org1122919" class="outline-3">
-<h3 id="org1122919"><span class="section-number-3">5.3</span> <code>hash_funcs.c</code>: Hash Table Functions</h3>
+<div id="outline-container-orgd97f0fc" class="outline-3">
+<h3 id="orgd97f0fc"><span class="section-number-3">5.3</span> <a id="org4874c67"></a> <code>hashmap_funcs.c</code>: Hash Table Functions</h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 We will favor <b>separately chained</b> hash maps which have the
@@ -2857,14 +2900,166 @@ performance.</li>
 
 <p>
 These are broken down into the following C functions which you will
-need to implement in <code>hash_funcs.c</code> except for the first <code>hashcode()</code>
+need to implement in <code>hashmap_funcs.c</code> except for the first <code>hashcode()</code>
 function which is provided.  
 </p>
+
+<pre class="example" id="orgdbc1064">
+// hashmap_funcs.c: utility functions for operating on hash maps. Most
+// functions are used in hash_main.c which provides an application to
+// work with the functions.
+
+long hashcode(char key[]);
+// PROVIDED: Compute a simple hash code for the given character
+// string. The code is "computed" by casting the first 8 characters of
+// the string to a long and returning it. The empty string has hash
+// code 0. If the string is a single character, this will be the ASCII
+// code for the character (e.g. "A" hashes to 65).  Longer strings
+// will have numbers which are the integer interpretation of up to
+// their first 8 bytes.  ADVANTAGE: constant time to compute the hash
+// code. DISADVANTAGE: poor distribution for long strings; all strings
+// with same first 8 chars hash to the same location.
+
+void hashmap_init(hashmap_t *hm, int table_size);
+// Initialize the hash map 'hm' to have given size and item_count
+// 0. Ensures that the 'table' field is initialized to an array of
+// size 'table_size' and filled with NULLs. 
+
+int hashmap_put(hashmap_t *hm, char key[], char val[]);
+// Adds given key/val to the hash map. 'hashcode(key) modulo
+// table_size' is used to calculate the position to insert the
+// key/val.  Searches the entire list at the insertion location for
+// the given key. If key is not present, a new node is added. If key
+// is already present, the current value is altered in place to the
+// given value "val" (no duplicate keys are every introduced).  If new
+// nodes are added, increments field "item_count".  Makes use of
+// standard string.h functions like strcmp() to compare strings and
+// strcpy() to copy strings. Lists in the hash map are arbitrarily
+// ordered (not sorted); new items are always appended to the end of
+// the list.  Returns 1 if a new node is added (new key) and 0 if an
+// existing key has its value modified.
+
+char *hashmap_get(hashmap_t *hm, char key[]);
+// Looks up value associated with given key in the hashmap. Uses
+// hashcode() and field "table_size" to determine which index in table
+// to search.  Iterates through the list at that index using strcmp()
+// to check for matching key. If found, returns a pointer to the
+// associated value.  Otherwise returns NULL to indicate no associated
+// key is present.
+
+void hashmap_free_table(hashmap_t *hm);
+// De-allocates the hashmap's "table" field. Iterates through the
+// "table" array and its lists de-allocating all nodes present
+// there. Subsequently de-allocates the "table" field and sets all
+// fields to 0 / NULL. Does NOT attempt to free 'hm' as it may be
+// stack allocated.
+
+void hashmap_show_structure(hashmap_t *hm);
+// Displays detailed structure of the hash map. Shows stats for the
+// hash map as below including the load factor (item count divided
+// by table_size) to 4 digits of accuracy.  Then shows each table
+// array index ("bucket") on its own line with the linked list of
+// key/value pairs on the same line. The hash code for keys is appears
+// prior to each key.  EXAMPLE:
+// 
+// item_count: 6
+// table_size: 5
+// load_factor: 1.2000
+//   0 : {(65) A : 1} 
+//   1 : 
+//   2 : {(122) z : 3} {(26212) df : 6} 
+//   3 : {(98) b : 2} {(25443) cc : 5} 
+//   4 : {(74) J : 4} 
+//
+// NOTES:
+// - Uses format specifier "%3d : " to print the table indices
+// - Shows the following information for each key/val pair
+//   {(25443) cc : 5}
+//     |      |    |
+//     |      |    +-&gt; value
+//     |      +-&gt; key
+//     +-&gt; hashcode("cc"), print using format "%ld" for 64-bit longs
+
+void hashmap_write_items(hashmap_t *hm, FILE *out);
+// Outputs all elements of the hash table according to the order they
+// appear in "table". The format is
+// 
+//       Peach : 3.75
+//      Banana : 0.89
+//  Clementine : 2.95
+// DragonFruit : 10.65
+//       Apple : 2.25
+// 
+// with each key/val on a separate line. The format specifier
+//   "%12s : %s\n"
+// 
+// is used to achieve the correct spacing. Output is done to the file
+// stream 'out' which is standard out for printing to the screen or an
+// open file stream for writing to a file as in hashmap_save().
+
+void hashmap_save(hashmap_t *hm, char *filename);
+// Writes the given hash map to the given 'filename' so that it can be
+// loaded later.  Opens the file and writes its 'table_size' and
+// 'item_count' to the file. Then uses the hashmap_write_items()
+// function to output all items in the hash map into the file.
+// EXAMPLE FILE:
+// 
+// 5 6
+//            A : 2
+//            Z : 2
+//            B : 3
+//            R : 6
+//           TI : 89
+//            T : 7
+// 
+// First two numbers are the 'table_size' and 'item_count' field and
+// remaining text are key/val pairs.
+
+int hashmap_load(hashmap_t *hm, char *filename);
+// Loads a hash map file created with hashmap_save(). If the file
+// cannot be opened, prints the message
+// 
+// ERROR: could not open file 'somefile.hm'
+//
+// and returns 0 without changing anything. Otherwise clears out the
+// current hash map 'hm', initializes a new one based on the size
+// present in the file, and adds all elements to the hash map. Returns
+// 0 on successful loading. This function does no error checking of
+// the contents of the file so if they are corrupted, it may cause an
+// application to crash or loop infinitely.
+
+int next_prime(int num);
+// If 'num' is a prime number, returns 'num'. Otherwise, returns the
+// first prime that is larger than 'num'. Uses a simple algorithm to
+// calculate primeness: check if any number between 2 and (num/2)
+// divide num. If none do, it is prime. If not, tries next odd number
+// above num. Loops this approach until a prime number is located and
+// returns this. Used to ensure that hash table_size stays prime which
+// theoretically distributes elements better among the array indices
+// of the table.
+
+void hashmap_expand(hashmap_t *hm);
+// Allocates a new, larger area of memory for the "table" field and
+// re-adds all items currently in the hash table to it. The size of
+// the new table is next_prime(2*table_size+1) which keeps the size
+// prime.  After allocating the new table, all entries are initialized
+// to NULL then the old table is iterated through and all items are
+// added to the new table according to their hash code. The memory for
+// the old table is de-allocated and the new table assigned to the
+// hashmap fields "table" and "table_size".  This function increases
+// "table_size" while keeping "item_count" the same thereby reducing
+// the load of the hash table. Ensures that all memory associated with
+// the old table is free()'d (linked nodes and array). Cleverly makes
+// use of existing functions like hashmap_init(), hashmap_put(),
+// and hashmap_free_table() to avoid re-writing algorithms
+// implemented in those functions.
+
+</pre>
 </div>
 </div>
 
-<div id="outline-container-org425f148" class="outline-3">
-<h3 id="org425f148"><span class="section-number-3">5.4</span> Provided <code>hash_code()</code> Function</h3>
+<div id="outline-container-org3d2647c" class="outline-3">
+<h3 id="org3d2647c"><span class="section-number-3">5.4</span> <a id="org2d92e26"></a> Provided <code>hash_code()</code> Function</h3>
 <div class="outline-text-3" id="text-5-4">
 <p>
 The code for <code>hash_code()</code> is provided below. All hash tables require
@@ -2874,27 +3069,54 @@ that will be discussed of the progression of the class. Some of the
 advantages/disadvantages of the hash function are mentioned in the
 comments.
 </p>
+
+<pre class="example" id="org81eb2fc">
+// PROVIDED: Compute a simple hash code for the given character
+// string. The code is "computed" by casting the first 8 characters of
+// the string to a long and returning it. The empty string has hash
+// code 0. If the string is a single character, this will be the ASCII
+// code for the character (e.g. "A" hashes to 65).  Longer strings
+// will have numbers which are the integer interpretation of up to
+// their first 8 bytes.  ADVANTAGE: constant time to compute the hash
+// code. DISADVANTAGE: poor distribution for long strings; all strings
+// with same first 8 chars hash to the same location.
+long hashcode(char key[]){
+  union {
+    char str[8];
+    long num;
+  } strnum;
+  strnum.num = 0;
+
+  for(int i=0; i&lt;8; i++){
+    if(key[i] == '\0'){
+      break;
+    }
+    strnum.str[i] = key[i];
+  }
+  return strnum.num;
+}
+</pre>
 </div>
 </div>
 
-<div id="outline-container-org82f0dc6" class="outline-3">
-<h3 id="org82f0dc6"><span class="section-number-3">5.5</span> <code>hash_main.c</code>: main function / application</h3>
+<div id="outline-container-org83f37e0" class="outline-3">
+<h3 id="org83f37e0"><span class="section-number-3">5.5</span> <code>hashmap_main.c</code>: main function / application</h3>
 <div class="outline-text-3" id="text-5-5">
 <p>
-In <code>hash_main.c</code> implement an interactive program which allows users
+In <code>hashmap_main.c</code> implement an interactive program which allows users
 to type commands to manipulate the hash map. 
 </p>
 
 <p>
-The provided <code>Makefile</code> should compile the <code>hash_main</code> program as follows.
+The provided <code>Makefile</code> should compile the <code>hashmap_main</code> program as follows.
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">&gt; make hash_main                # Compile with Makefile
-gcc -Wall -g -lm -c hash_main.c
-gcc -Wall -g -lm -c hash_funcs.c
-gcc -Wall -g -lm -o hash_main hash_main.o hash_funcs.o
+<pre class="src src-sh">&gt; make hashmap_main                # Compile with Makefile
+gcc -Wall -g -lm -c hashmap_main.c
+gcc -Wall -g -lm -c hashmap_funcs.c
+gcc -Wall -g -lm -o hashmap_main hashmap_main.o hashmap_funcs.o
 
-&gt; ./hash_main                   # Run hash_main application
+&gt; ./hashmap_main                   # Run hashmap_main application
 Hashmap Main
 Commands:
   hashcode &lt;key&gt;   : prints out the numeric hash code for the given key (does not change the hash map)
@@ -2917,11 +3139,11 @@ The following sections provide some implementation details.
 </p>
 </div>
 
-<div id="outline-container-org78b79d1" class="outline-4">
-<h4 id="org78b79d1">Read commands, Execute</h4>
-<div class="outline-text-4" id="text-org78b79d1">
+<div id="outline-container-org5e3a56d" class="outline-4">
+<h4 id="org5e3a56d">Read commands, Execute</h4>
+<div class="outline-text-4" id="text-org5e3a56d">
 <p>
-The basic flow of <code>hash_main.c</code> follows the same pattern that code for
+The basic flow of <code>hashmap_main.c</code> follows the same pattern that code for
 a lab exercise demonstrates.  A good way to get started on the main
 application is to <b>copy over the lab solution</b> and begin modifying it.
 </p>
@@ -2939,19 +3161,35 @@ needed (commands like <code>put</code> and <code>get</code>)</li>
 </div>
 </div>
 
-<div id="outline-container-org2aadd5b" class="outline-4">
-<h4 id="org2aadd5b">Supported Commands</h4>
-<div class="outline-text-4" id="text-org2aadd5b">
+<div id="outline-container-orgcd834c2" class="outline-4">
+<h4 id="orgcd834c2">Supported Commands</h4>
+<div class="outline-text-4" id="text-orgcd834c2">
 <p>
 To indicate to users of the program the supported commands, use the
 following code to print out the initial option list.
 </p>
+
+<pre class="example" id="orga959aff">
+  printf("Hashmap Main\n");
+  printf("Commands:\n");
+  printf("  hashcode &lt;key&gt;   : prints out the numeric hash code for the given key (does not change the hash map)\n");
+  printf("  put &lt;key&gt; &lt;val&gt;  : inserts the given key/val into the hash map, overwrites existing values if present\n");
+  printf("  get &lt;key&gt;        : prints the value associated with the given key or NOT FOUND\n");
+  printf("  print            : shows contents of the hashmap ordered by how they appear in the table\n");
+  printf("  structure        : prints detailed structure of the hash map\n");
+  printf("  clear            : reinitializes hash map to be empty with default size\n");
+  printf("  save &lt;file&gt;      : writes the contents of the hash map the given file\n");
+  printf("  load &lt;file&gt;      : clears the current hash map and loads the one in the given file\n");
+  printf("  next_prime &lt;int&gt; : if &lt;int&gt; is prime, prints it, otherwise finds the next prime and prints it\n");
+  printf("  expand           : expands memory size of hashmap to reduce its load factor\n");
+  printf("  quit             : exit the program\n");
+</pre>
 </div>
 </div>
 
-<div id="outline-container-orgd2ae9e9" class="outline-4">
-<h4 id="orgd2ae9e9">Clearing Hashmaps</h4>
-<div class="outline-text-4" id="text-orgd2ae9e9">
+<div id="outline-container-orgc37a4f6" class="outline-4">
+<h4 id="orgc37a4f6">Clearing Hashmaps</h4>
+<div class="outline-text-4" id="text-orgc37a4f6">
 <p>
 When issuing the <code>clear</code> command, the contents of the current hash map
 should be eliminated and the hash map reinitialized to the default
@@ -2967,9 +3205,9 @@ constant defined in <code>hashmap.h</code>.</li>
 
 
 
-<div id="outline-container-orgb95ae64" class="outline-4">
-<h4 id="orgb95ae64"><a id="orga8e44d4"></a> Paths to Files for Saving and Loading</h4>
-<div class="outline-text-4" id="text-orgb95ae64">
+<div id="outline-container-orgc951007" class="outline-4">
+<h4 id="orgc951007"><a id="orgddf0886"></a> Paths to Files for Saving and Loading</h4>
+<div class="outline-text-4" id="text-orgc951007">
 <p>
 Saving and loading data involves writing to files. The names
 associated with the files must be specified as a <i>path</i> so that if
@@ -2979,7 +3217,7 @@ provided in the <code>data/</code> directory and once loading functionality is
 code, it can be loaded as follows.
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">p1-code&gt; ./hash_main
+<pre class="src src-sh">p1-code&gt; ./hashmap_main
 ..
 HM&gt; load data/stranger.hm                 # load the provided hash map from a subdirectory
 HM&gt; print                                 # show contents of hash map
@@ -3032,9 +3270,9 @@ HM&gt; quit
 </div>
 </div>
 
-<div id="outline-container-org2282445" class="outline-4">
-<h4 id="org2282445">Failing to Load Files</h4>
-<div class="outline-text-4" id="text-org2282445">
+<div id="outline-container-org38e2dba" class="outline-4">
+<h4 id="org38e2dba">Failing to Load Files</h4>
+<div class="outline-text-4" id="text-org38e2dba">
 <p>
 If a file cannot be opened with the <code>load 'file.hm'</code> command, the
 underlying <code>hashmap_load()</code> should print an error of the form
@@ -3044,7 +3282,7 @@ underlying <code>hashmap_load()</code> should print an error of the form
 </pre>
 </div>
 <p>
-and the <code>hash_main.c</code> main loop should NOT change the hash map and
+and the <code>hashmap_main.c</code> main loop should NOT change the hash map and
 print the message
 </p>
 <div class="org-src-container">
@@ -3077,9 +3315,9 @@ HM&gt; print                            # hash map is unchanged
 </div>
 </div>
 
-<div id="outline-container-org2f39fd0" class="outline-4">
-<h4 id="org2f39fd0">Command Echoing: <code>-echo</code> option to <code>hash_main</code></h4>
-<div class="outline-text-4" id="text-org2f39fd0">
+<div id="outline-container-orgcc34928" class="outline-4">
+<h4 id="orgcc34928">Command Echoing: <code>-echo</code> option to <code>hashmap_main</code></h4>
+<div class="outline-text-4" id="text-orgcc34928">
 <p>
 Some users may wish to "script" this the main program: allow it to
 process input commands from a file rather than from the user typing.
@@ -3145,11 +3383,11 @@ The file can be fed directly to the program without needing type it
 using Unix pipes as per the following:
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">&gt; cat data/hash-demo.script | ./hash_main -echo
+<pre class="src src-sh">&gt; cat data/hash-demo.script | ./hashmap_main -echo
 </pre>
 </div>
 <p>
-Notice the use of a command line argument for <code>hash_main</code>: the <code>-echo</code>
+Notice the use of a command line argument for <code>hashmap_main</code>: the <code>-echo</code>
 option. This is a REQUIRED feature which prints commands typed by
 users to the screen. To implement this, do the following.
 </p>
@@ -3182,7 +3420,7 @@ like the example below.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">&gt; cat data/hash-demo.script | ./hash_main -echo
+<pre class="src src-sh">&gt; cat data/hash-demo.script | ./hashmap_main -echo
 Hashmap Main
 Commands:
   hashcode &lt;key&gt;   : prints out the numeric hash code for the given key (does not change the hash map)
@@ -3384,8 +3622,8 @@ HM&gt; quit
 </div>
 </div>
 
-<div id="outline-container-org347d2f4" class="outline-3 grading 40">
-<h3 id="org347d2f4"><span class="section-number-3">5.6</span> Grading Criteria for P3&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="40">40</span></span></h3>
+<div id="outline-container-org7fc4fc5" class="outline-3 grading 40">
+<h3 id="org7fc4fc5"><span class="section-number-3">5.6</span> Grading Criteria for P3&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="40">40</span></span></h3>
 <div class="outline-text-3" id="text-5-6">
 <p>
 The following criteria will be checked in this problem.
@@ -3547,13 +3785,13 @@ The following criteria will be checked in this problem.
 </div>
 
 
-<div id="outline-container-orga07c473" class="outline-2">
-<h2 id="orga07c473"><span class="section-number-2">6</span> Project Submission</h2>
+<div id="outline-container-orgb77ab3b" class="outline-2">
+<h2 id="orgb77ab3b"><span class="section-number-2">6</span> Project Submission</h2>
 <div class="outline-text-2" id="text-6">
 </div>
 
-<div id="outline-container-org416f460" class="outline-3">
-<h3 id="org416f460"><span class="section-number-3">6.1</span> <a id="org494b33a"></a> Submit to Gradescope</h3>
+<div id="outline-container-org1cd2e83" class="outline-3">
+<h3 id="org1cd2e83"><span class="section-number-3">6.1</span> <a id="orgc5400e0"></a> Submit to Gradescope</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 Some of the pictures below mention 'Assignment' which is now 'Project'
@@ -3594,7 +3832,7 @@ open up submission
 </p>
 <div class="org-center">
 
-<div id="org7db8ec7" class="figure">
+<div id="org591ba51" class="figure">
 <p><img src="gradescope01.png" alt="gradescope01.png" style="max-width:100%;" />
 </p>
 </div>
@@ -3605,7 +3843,7 @@ dialog; locate and choose your <code>p1-code.zip</code> file
 </p>
 <div class="org-center">
 
-<div id="org9e9d951" class="figure">
+<div id="org7b606aa" class="figure">
 <p><img src="gradescope02.png" alt="gradescope02.png" style="max-width:100%;" />
 </p>
 </div>
@@ -3616,7 +3854,7 @@ C source files along with testing files and directories.
 </p>
 <div class="org-center">
 
-<div id="orgcc08780" class="figure">
+<div id="orgba8d372" class="figure">
 <p><img src="gradescope03.png" alt="gradescope03.png" style="max-width:100%;" />
 </p>
 </div>
@@ -3639,7 +3877,7 @@ files in a zip.
 
 <div class="org-center">
 
-<div id="org1731878" class="figure">
+<div id="org813e9ab" class="figure">
 <p><img src="gradescope04.png" alt="gradescope04.png" style="max-width:100%;" />
 </p>
 </div>
@@ -3652,7 +3890,7 @@ the same tests that are run via <code>make test</code>.
 </p>
 <div class="org-center">
 
-<div id="org02a19d5" class="figure">
+<div id="org15f07c9" class="figure">
 <p><img src="gradescope05.png" alt="gradescope05.png" style="max-width:100%;" />
 </p>
 </div>
@@ -3663,7 +3901,7 @@ summarizing scores along with output for each batch of tests.
 </p>
 <div class="org-center">
 
-<div id="org4d96bd7" class="figure">
+<div id="orgdc71480" class="figure">
 <p><img src="gradescope06.png" alt="gradescope06.png" style="max-width:100%;" />
 </p>
 </div>
@@ -3672,8 +3910,8 @@ summarizing scores along with output for each batch of tests.
 </div>
 </div>
 
-<div id="outline-container-orgf7f065a" class="outline-3">
-<h3 id="orgf7f065a"><span class="section-number-3">6.2</span> Late Policies</h3>
+<div id="outline-container-orga90256f" class="outline-3">
+<h3 id="orga90256f"><span class="section-number-3">6.2</span> Late Policies</h3>
 <div class="outline-text-3" id="text-6-2">
 <p>
 You may wish to review the policy on late project submission which
@@ -3689,7 +3927,7 @@ accepted more than 48 hours after the deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-01-26 Wed 21:56 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-01-28 Fri 11:09 <br/> </i>
 </div>
 </body>
 </html>
