@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-02-21 Mon 12:42 -->
+<!-- 2022-02-28 Mon 12:54 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Project 2: Bit Ops and Debugging</title>
@@ -365,31 +365,36 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-02-21 Mon 12:42</i>
+<i>Last Updated: 2022-02-28 Mon 12:54</i>
 </div>
 <div id="content">
 <h1 class="title">CSCI 2021 Project 2: Bit Ops and Debugging</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Mon 2/28/2021</b></li>
+<li><b>Due: 11:59pm Tue 3/1/2022</b> <del>Mon 2/28/2021</del></li>
 <li><i>Approximately 3.0-4.0% of total grade</i></li>
 <li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a></li>
 <li>Projects are <b>individual work</b>: no collaboration with other students
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-org061d7f6" class="outline-4">
-<h4 id="org061d7f6">CODE/TEST DISTRIBUTION: <a href="p2-code.zip">p2-code.zip</a></h4>
+<div id="outline-container-orgaf9d414" class="outline-4">
+<h4 id="orgaf9d414">CODE/TEST DISTRIBUTION: <a href="p2-code.zip">p2-code.zip</a></h4>
 </div>
 
-<div id="outline-container-orgf4871be" class="outline-4">
-<h4 id="orgf4871be">VIDEO OVERVIEW: <a href="https://canvas.umn.edu/courses/290363/pages/week-05-videos">Fri 2/18 Lecture</a></h4>
+<div id="outline-container-orgb7faeb7" class="outline-4">
+<h4 id="orgb7faeb7">VIDEO OVERVIEW: <a href="https://canvas.umn.edu/courses/290363/pages/week-05-videos">Fri 2/18 Lecture</a></h4>
 </div>
-<div id="outline-container-org98f0b2b" class="outline-4">
-<h4 id="org98f0b2b">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org98f0b2b">
+<div id="outline-container-orgb7d5efe" class="outline-4">
+<h4 id="orgb7d5efe">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-orgb7d5efe">
 <dl class="org-dl">
+<dt>Mon Feb 28 12:53:13 PM CST 2022</dt><dd>Due to a CSE Labs power outage, all students may submit Project 2
+through Tue 3/1 11:59pm without late penalties. Submitting on Wed
+3/2 will be marked as 1 day late and this will be the final day that
+submissions will be accepted.</dd>
+
 <dt>Mon Feb 21 12:40:12 PM CST 2022</dt><dd>Some line count limits and constraints on code complexity have been
-added to the <a href="#orgf1a08bd">Problem 1 Grading Criteria</a>. The shorter and more
+added to the <a href="#org5432782">Problem 1 Grading Criteria</a>. The shorter and more
 concise one can make the <code>thermo_update.c</code> C functions, the easier
 it will be to convert these functions to assembly code later. For
 this reason, try to make these functions very clean.</dd>
@@ -399,7 +404,7 @@ Added overview video from Fri 2/18 lecture.
 </p>
 
 <p>
-Updated documentation associated with <a href="#org73bca1f"><code>thermo_update()</code></a> to remove
+Updated documentation associated with <a href="#orgb7863e8"><code>thermo_update()</code></a> to remove
 some inconsistencies: this function should always change
 <code>THERMO_DISPLAY_PORT</code> and show <code>ERR</code> there if previous functions
 return errors.
@@ -413,42 +418,42 @@ diagrams.
 </div>
 </div>
 
-<div id="outline-container-org09cd20c" class="outline-4">
-<h4 id="org09cd20c"></h4>
-<div class="outline-text-4" id="text-org09cd20c">
+<div id="outline-container-org0938990" class="outline-4">
+<h4 id="org0938990"></h4>
+<div class="outline-text-4" id="text-org0938990">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org34e9eac">1. Introduction</a></li>
-<li><a href="#orgc31c951">2. Download Code and Setup</a></li>
-<li><a href="#orgcb7b813">3. <b>Problem 1</b>: Thermometer Simulation</a>
+<li><a href="#orged4e275">1. Introduction</a></li>
+<li><a href="#org637f41a">2. Download Code and Setup</a></li>
+<li><a href="#org2c4ab78">3. <b>Problem 1</b>: Thermometer Simulation</a>
 <ul>
-<li><a href="#org51ce2b3">3.1. Overview</a></li>
-<li><a href="#org8036886">3.2. Diagrams of Display</a></li>
-<li><a href="#org91b9d72">3.3. <code>thermo_update.c</code>: Updating the Display with User Code</a></li>
-<li><a href="#org8f0a7c7">3.4. <code>set_temp_from_ports()</code></a></li>
-<li><a href="#orgb1fe36c">3.5. <code>set_display_from_temp()</code></a></li>
-<li><a href="#orge4aa4bf">3.6. <code>thermo_update()</code></a></li>
-<li><a href="#orgd0f242e">3.7. Thermometer Simulator</a></li>
-<li><a href="#org9ac6c15">3.8. Sample Runs of <code>thermo_main</code></a></li>
-<li><a href="#orgd245c35">3.9. Grading Criteria for <code>thermo_update.c</code></a></li>
+<li><a href="#orga541cc8">3.1. Overview</a></li>
+<li><a href="#org702dcbb">3.2. Diagrams of Display</a></li>
+<li><a href="#orge9d0988">3.3. <code>thermo_update.c</code>: Updating the Display with User Code</a></li>
+<li><a href="#org0d44b18">3.4. <code>set_temp_from_ports()</code></a></li>
+<li><a href="#org0bbe158">3.5. <code>set_display_from_temp()</code></a></li>
+<li><a href="#orgf644ec7">3.6. <code>thermo_update()</code></a></li>
+<li><a href="#org479ae5b">3.7. Thermometer Simulator</a></li>
+<li><a href="#orge84b56f">3.8. Sample Runs of <code>thermo_main</code></a></li>
+<li><a href="#orgf4dc054">3.9. Grading Criteria for <code>thermo_update.c</code></a></li>
 </ul>
 </li>
-<li><a href="#org8ba3465">4. <b>Problem 2</b>: Debugging the Puzzlebox</a>
+<li><a href="#org43d230c">4. <b>Problem 2</b>: Debugging the Puzzlebox</a>
 <ul>
-<li><a href="#org122da28">4.1. Overview</a></li>
-<li><a href="#orgf10b693">4.2. <code>input.txt</code> Input File</a></li>
-<li><a href="#org94193ae">4.3. <code>gdb</code> The GNU Debugger</a></li>
-<li><a href="#org84db734">4.4. Typical Cycle</a></li>
-<li><a href="#orgb170e8c">4.5. Kinds of Puzzles</a></li>
-<li><a href="#orgce10a65">4.6. Tests for <code>puzzlebox.c</code></a></li>
+<li><a href="#org4453991">4.1. Overview</a></li>
+<li><a href="#org6bec644">4.2. <code>input.txt</code> Input File</a></li>
+<li><a href="#org18eaaa2">4.3. <code>gdb</code> The GNU Debugger</a></li>
+<li><a href="#orgebbec55">4.4. Typical Cycle</a></li>
+<li><a href="#org46bb363">4.5. Kinds of Puzzles</a></li>
+<li><a href="#org4bba87a">4.6. Tests for <code>puzzlebox.c</code></a></li>
 </ul>
 </li>
-<li><a href="#org74df1f7">5. Assignment Submission</a>
+<li><a href="#org0c0b68e">5. Assignment Submission</a>
 <ul>
-<li><a href="#org99288d2">5.1. Submit to Gradescope</a></li>
-<li><a href="#org836245b">5.2. Late Policies</a></li>
+<li><a href="#org3dd6b10">5.1. Submit to Gradescope</a></li>
+<li><a href="#orga90a940">5.2. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -457,8 +462,8 @@ diagrams.
 </div>
 </div>
 
-<div id="outline-container-org34e9eac" class="outline-2">
-<h2 id="org34e9eac"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orged4e275" class="outline-2">
+<h2 id="orged4e275"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <b>Bit-level operations</b> are common in C and systems programming.  This
@@ -474,9 +479,9 @@ to work through a puzzle program requiring specific inputs to pass its
 </p>
 </div>
 
-<div id="outline-container-orgda95a3b" class="outline-4">
-<h4 id="orgda95a3b">Makefile</h4>
-<div class="outline-text-4" id="text-orgda95a3b">
+<div id="outline-container-org5e54203" class="outline-4">
+<h4 id="org5e54203">Makefile</h4>
+<div class="outline-text-4" id="text-org5e54203">
 <p>
 As in the first assignment, a <code>Makefile</code> is provided as part of this
 project. The essential targets pertinent to each problem are described
@@ -499,9 +504,9 @@ Typical usage is:
 </div>
 
 
-<div id="outline-container-orgda6641d" class="outline-4">
-<h4 id="orgda6641d">Automated Tests</h4>
-<div class="outline-text-4" id="text-orgda6641d">
+<div id="outline-container-orgf68a60a" class="outline-4">
+<h4 id="orgf68a60a">Automated Tests</h4>
+<div class="outline-text-4" id="text-orgf68a60a">
 <p>
 As in previous assignments, automated tests are provided and
 associated with problems. Each problem describes how to run tests
@@ -528,8 +533,8 @@ gcc -Wall -Wno-comment -Werror -g  -c thermo_update.c
 </div>
 
 
-<div id="outline-container-orgc31c951" class="outline-2">
-<h2 id="orgc31c951"><span class="section-number-2">2</span> <a id="org9f55b57"></a> Download Code and Setup</h2>
+<div id="outline-container-org637f41a" class="outline-2">
+<h2 id="org637f41a"><span class="section-number-2">2</span> <a id="orgff62540"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -633,12 +638,12 @@ folder. Ultimately you will re-zip this folder to submit it.
 </div>
 </div>
 
-<div id="outline-container-orgcb7b813" class="outline-2">
-<h2 id="orgcb7b813"><span class="section-number-2">3</span> <b>Problem 1</b>: Thermometer Simulation</h2>
+<div id="outline-container-org2c4ab78" class="outline-2">
+<h2 id="org2c4ab78"><span class="section-number-2">3</span> <b>Problem 1</b>: Thermometer Simulation</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org51ce2b3" class="outline-3">
-<h3 id="org51ce2b3"><span class="section-number-3">3.1</span> Overview</h3>
+<div id="outline-container-orga541cc8" class="outline-3">
+<h3 id="orga541cc8"><span class="section-number-3">3.1</span> Overview</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 You are tasked with writing code which will be run by a
@@ -665,9 +670,9 @@ write in <code>thermo_update.c</code> are discussed in subsequent sections.
 </p>
 </div>
 
-<div id="outline-container-orgbcdf926" class="outline-4">
-<h4 id="orgbcdf926">Temperature Sensor</h4>
-<div class="outline-text-4" id="text-orgbcdf926">
+<div id="outline-container-orge0467cf" class="outline-4">
+<h4 id="orge0467cf">Temperature Sensor</h4>
+<div class="outline-text-4" id="text-orge0467cf">
 <p>
 A temperature sensor is attached to the thermometer and can be
 accessed via a C global variable. This is declared in the <code>thermo.h</code>
@@ -832,9 +837,9 @@ Notice also that the temperature should be <b>rounded</b> appropriately:
 </div>
 </div>
 
-<div id="outline-container-org67d3d6d" class="outline-4">
-<h4 id="org67d3d6d">Temperature Display Mode</h4>
-<div class="outline-text-4" id="text-org67d3d6d">
+<div id="outline-container-org7d9feb2" class="outline-4">
+<h4 id="org7d9feb2">Temperature Display Mode</h4>
+<div class="outline-text-4" id="text-org7d9feb2">
 <p>
 Another global variable exposes whether the user has pressed a button
 which toggles between displaying temperature in the two most common
@@ -863,9 +868,9 @@ ignored.
 </div>
 </div>
 
-<div id="outline-container-orgabd4d03" class="outline-4">
-<h4 id="orgabd4d03">Display Port</h4>
-<div class="outline-text-4" id="text-orgabd4d03">
+<div id="outline-container-org667c6ef" class="outline-4">
+<h4 id="org667c6ef">Display Port</h4>
+<div class="outline-text-4" id="text-org667c6ef">
 <p>
 The thermometer has a digital display which shows the
 temperature. This display is controlled by a special memory area
@@ -887,8 +892,8 @@ display is lit up while 0 means it is not lit.
 </div>
 </div>
 
-<div id="outline-container-org8036886" class="outline-3">
-<h3 id="org8036886"><span class="section-number-3">3.2</span> Diagrams of Display</h3>
+<div id="outline-container-org702dcbb" class="outline-3">
+<h3 id="org702dcbb"><span class="section-number-3">3.2</span> Diagrams of Display</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 The following diagram shows bit patterns for various symbols and how
@@ -899,7 +904,7 @@ to certain bits in the <code>THERMO_DISPLAY_PORT</code> being set.
 
 <div class="org-center">
 
-<div id="org26c64c3" class="figure">
+<div id="orgb06423f" class="figure">
 <p><img src="digital-digits-top-down.png" alt="digital-digits-top-down.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Correspondence of bit in <code>THERMO_DISPLAY_PORT</code> to bars in a single digit. The 0th bit controls the top horizontal bar, the 1th bit controls the upper left bar, and so on working generally left to right nad top down. When a bit is 1 (set), the bar will be darkened while when the bit is 0 (clear) the bar will not be displayed (shown as empty).  The combinations of bits shown are the only ones that arise when showing digits for temperatures.</p>
@@ -940,7 +945,7 @@ set in order to make the temperature appear as it does.
 
 <div class="org-center">
 
-<div id="orgf2391f3" class="figure">
+<div id="orgf149daa" class="figure">
 <p><img src="digital-thermo-top-down.png" alt="digital-thermo-top-down.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Full examples of how the 30 bits of the thermometer display state control which parts of the temperature are shown.  Each digit follows the same pattern of bit to bar correspondence as the right-most bits. The lowest order (rightmost) bit controls the top bar of each digit and remaining bits control bars proceeding left-to-right and top down for digit.  The highest order bits (28 and 29) control whether the Celsius or Fahrenheit indicators are shown. Note that both could be shown at the same time or neither shown but this should not be done for actual temperatures.</p>
@@ -964,8 +969,8 @@ Notice the following.
 </div>
 </div>
 
-<div id="outline-container-org91b9d72" class="outline-3">
-<h3 id="org91b9d72"><span class="section-number-3">3.3</span> <code>thermo_update.c</code>: Updating the Display with User Code</h3>
+<div id="outline-container-orge9d0988" class="outline-3">
+<h3 id="orge9d0988"><span class="section-number-3">3.3</span> <code>thermo_update.c</code>: Updating the Display with User Code</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 Periodically the microcontroller will run code to adjust the
@@ -999,8 +1004,8 @@ All these function should be written in <code>thermo_update.c</code>.
 </div>
 </div>
 
-<div id="outline-container-org8f0a7c7" class="outline-3">
-<h3 id="org8f0a7c7"><span class="section-number-3">3.4</span> <code>set_temp_from_ports()</code></h3>
+<div id="outline-container-org0d44b18" class="outline-3">
+<h3 id="org0d44b18"><span class="section-number-3">3.4</span> <code>set_temp_from_ports()</code></h3>
 <div class="outline-text-3" id="text-3-4">
 <div class="org-src-container">
 <pre class="src src-c">int set_temp_from_ports(temp_t *temp);
@@ -1077,8 +1082,8 @@ floating point operations as they lack a <i>Floating Point Unit
 </div>
 </div>
 
-<div id="outline-container-orgb1fe36c" class="outline-3">
-<h3 id="orgb1fe36c"><span class="section-number-3">3.5</span> <code>set_display_from_temp()</code></h3>
+<div id="outline-container-org0bbe158" class="outline-3">
+<h3 id="org0bbe158"><span class="section-number-3">3.5</span> <code>set_display_from_temp()</code></h3>
 <div class="outline-text-3" id="text-3-5">
 <div class="org-src-container">
 <pre class="src src-c">int set_display_from_temp(temp_t temp, int *display);
@@ -1175,8 +1180,8 @@ ERR._ _____   ERR.0 deg C
 </div>
 </div>
 
-<div id="outline-container-orge4aa4bf" class="outline-3">
-<h3 id="orge4aa4bf"><span class="section-number-3">3.6</span> <a id="org73bca1f"></a> <code>thermo_update()</code></h3>
+<div id="outline-container-orgf644ec7" class="outline-3">
+<h3 id="orgf644ec7"><span class="section-number-3">3.6</span> <a id="orgb7863e8"></a> <code>thermo_update()</code></h3>
 <div class="outline-text-3" id="text-3-6">
 <div class="org-src-container">
 <pre class="src src-c">int thermo_update();
@@ -1205,8 +1210,8 @@ should be relatively short by making use of the previous functions.
 </div>
 </div>
 
-<div id="outline-container-orgd0f242e" class="outline-3">
-<h3 id="orgd0f242e"><span class="section-number-3">3.7</span> Thermometer Simulator</h3>
+<div id="outline-container-org479ae5b" class="outline-3">
+<h3 id="org479ae5b"><span class="section-number-3">3.7</span> Thermometer Simulator</h3>
 <div class="outline-text-3" id="text-3-7">
 <p>
 While we do not have actual hardware with the features mentioned, a
@@ -1245,8 +1250,8 @@ code; it is only used to show how the display would look when the
 </div>
 </div>
 
-<div id="outline-container-org9ac6c15" class="outline-3">
-<h3 id="org9ac6c15"><span class="section-number-3">3.8</span> Sample Runs of <code>thermo_main</code></h3>
+<div id="outline-container-orge84b56f" class="outline-3">
+<h3 id="orge84b56f"><span class="section-number-3">3.8</span> Sample Runs of <code>thermo_main</code></h3>
 <div class="outline-text-3" id="text-3-8">
 <p>
 Below are samples generated by compiling and running the <code>main()</code>
@@ -1256,7 +1261,7 @@ compiles the the functions you write in the file <code>thermo_update.c</code> an
 combines them with functions in <code>thermo_main.c</code>.
 </p>
 
-<pre class="example" id="org51d18b0">
+<pre class="example" id="org042b4a2">
 
 ==========CELSIUS FOR 0==========
 &gt; ./thermo_main 0 C
@@ -1902,8 +1907,8 @@ Thermometer Display:
 </div>
 </div>
 
-<div id="outline-container-orgd245c35" class="outline-3 grading 50">
-<h3 id="orgd245c35"><span class="section-number-3">3.9</span> <a id="orgf1a08bd"></a> Grading Criteria for <code>thermo_update.c</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div id="outline-container-orgf4dc054" class="outline-3 grading 50">
+<h3 id="orgf4dc054"><span class="section-number-3">3.9</span> <a id="org5432782"></a> Grading Criteria for <code>thermo_update.c</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
 <div class="outline-text-3" id="text-3-9">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -2072,12 +2077,12 @@ Thermometer Display:
 </div>
 
 
-<div id="outline-container-org8ba3465" class="outline-2">
-<h2 id="org8ba3465"><span class="section-number-2">4</span> <b>Problem 2</b>: Debugging the Puzzlebox</h2>
+<div id="outline-container-org43d230c" class="outline-2">
+<h2 id="org43d230c"><span class="section-number-2">4</span> <b>Problem 2</b>: Debugging the Puzzlebox</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org122da28" class="outline-3">
-<h3 id="org122da28"><span class="section-number-3">4.1</span> Overview</h3>
+<div id="outline-container-org4453991" class="outline-3">
+<h3 id="org4453991"><span class="section-number-3">4.1</span> Overview</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 The file <code>puzzlebox.c</code> contains source code that reads inputs from a
@@ -2112,8 +2117,8 @@ at various points make it <b>much easier</b> to solve the puzzles.
 </div>
 </div>
 
-<div id="outline-container-orgf10b693" class="outline-3">
-<h3 id="orgf10b693"><span class="section-number-3">4.2</span> <code>input.txt</code> Input File</h3>
+<div id="outline-container-org6bec644" class="outline-3">
+<h3 id="org6bec644"><span class="section-number-3">4.2</span> <code>input.txt</code> Input File</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 Name your input file <code>input.txt</code> and put your internet ID in it along
@@ -2165,8 +2170,8 @@ inputs for <code>input.txt</code>.
 </div>
 </div>
 
-<div id="outline-container-org94193ae" class="outline-3">
-<h3 id="org94193ae"><span class="section-number-3">4.3</span> <code>gdb</code> The GNU Debugger</h3>
+<div id="outline-container-org18eaaa2" class="outline-3">
+<h3 id="org18eaaa2"><span class="section-number-3">4.3</span> <code>gdb</code> The GNU Debugger</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 You will definitely need to use a debugger to solve the puzzlebox and
@@ -2192,8 +2197,8 @@ TUI mode</li>
 </div>
 </div>
 
-<div id="outline-container-org84db734" class="outline-3">
-<h3 id="org84db734"><span class="section-number-3">4.4</span> Typical Cycle</h3>
+<div id="outline-container-orgebbec55" class="outline-3">
+<h3 id="orgebbec55"><span class="section-number-3">4.4</span> Typical Cycle</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 A typical cycle of working on <code>puzzlebox</code> will be the following.
@@ -2249,8 +2254,8 @@ run
 </div>
 </div>
 
-<div id="outline-container-orgb170e8c" class="outline-3">
-<h3 id="orgb170e8c"><span class="section-number-3">4.5</span> Kinds of Puzzles</h3>
+<div id="outline-container-org46bb363" class="outline-3">
+<h3 id="org46bb363"><span class="section-number-3">4.5</span> Kinds of Puzzles</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 The puzzles presented in the different phases make use of a variety of
@@ -2266,8 +2271,8 @@ character) through pointers and unions</li>
 </div>
 </div>
 
-<div id="outline-container-orgce10a65" class="outline-3 grading 50">
-<h3 id="orgce10a65"><span class="section-number-3">4.6</span> Tests for <code>puzzlebox.c</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div id="outline-container-org4bba87a" class="outline-3 grading 50">
+<h3 id="org4bba87a"><span class="section-number-3">4.6</span> Tests for <code>puzzlebox.c</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
 <code>puzzlebox.c</code> itself reports how many points one can earn at the end
@@ -2296,12 +2301,12 @@ make test-prob2
 </div>
 </div>
 
-<div id="outline-container-org74df1f7" class="outline-2">
-<h2 id="org74df1f7"><span class="section-number-2">5</span> Assignment Submission</h2>
+<div id="outline-container-org0c0b68e" class="outline-2">
+<h2 id="org0c0b68e"><span class="section-number-2">5</span> Assignment Submission</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org99288d2" class="outline-3">
-<h3 id="org99288d2"><span class="section-number-3">5.1</span> <a id="org1455e5d"></a> Submit to Gradescope</h3>
+<div id="outline-container-org3dd6b10" class="outline-3">
+<h3 id="org3dd6b10"><span class="section-number-3">5.1</span> <a id="org4f42361"></a> Submit to Gradescope</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 Refer to the Project 1 instructions and adapt them for details of how
@@ -2315,8 +2320,8 @@ to submit to Gradescope. In summary they are
 </div>
 </div>
 
-<div id="outline-container-org836245b" class="outline-3">
-<h3 id="org836245b"><span class="section-number-3">5.2</span> Late Policies</h3>
+<div id="outline-container-orga90a940" class="outline-3">
+<h3 id="orga90a940"><span class="section-number-3">5.2</span> Late Policies</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 You may wish to review the policy on late project submission which
@@ -2332,7 +2337,7 @@ accepted more than 48 hours after the deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-02-21 Mon 12:42 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-02-28 Mon 12:54 <br/> </i>
 </div>
 </body>
 </html>
