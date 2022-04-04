@@ -1,0 +1,1846 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-04-04 Mon 11:17 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 2021 Project 4: Performance Optimization and Timing</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2022-04-04 Mon 11:17</i>
+</div>
+<div id="content">
+<h1 class="title">CSCI 2021 Project 4: Performance Optimization and Timing</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Mon 4/18/2022</b></li>
+<li><i>Approximately 3.0-4.0% of total grade</i></li>
+<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a></li>
+<li>Projects are <b>individual work</b>: no collaboration with other students
+is allowed. Seek help from course staff if you get stuck for too long.</li>
+</ul>
+
+<div id="outline-container-org3d08dc9" class="outline-4">
+<h4 id="org3d08dc9">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
+</div>
+
+<div id="outline-container-org0342fe5" class="outline-4">
+<h4 id="org0342fe5">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org0342fe5">
+</div>
+</div>
+
+<div id="outline-container-org4fde4c0" class="outline-4">
+<h4 id="org4fde4c0"></h4>
+<div class="outline-text-4" id="text-org4fde4c0">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgdf486f6">1. Introduction</a></li>
+<li><a href="#orgcd339c7">2. Download Code and Setup</a></li>
+<li><a href="#org98a917d">3. <b>Problem 1</b>: Squaring a Matrix</a>
+<ul>
+<li><a href="#org1acf127">3.1. Overview</a></li>
+<li><a href="#org61cd8aa">3.2. Optimize Matrix Squaring</a></li>
+<li><a href="#orga164a7e">3.3. Evaluation on <code>csel-kh1250-NN</code></a></li>
+<li><a href="#org2b13099">3.4. <code>matsquare_print.c</code> Testing Program</a></li>
+<li><a href="#org6ea4952">3.5. Optimization Suggestions and Documentation</a></li>
+<li><a href="#orgbfd6188">3.6. Grading Criteria for Problem 1 (55%)</a></li>
+</ul>
+</li>
+<li><a href="#org324b859">4. <b>Problem 2</b>: Timing Search Algorithms</a>
+<ul>
+<li><a href="#orgce53991">4.1. Overview</a></li>
+<li><a href="#org59fe47f">4.2. <code>main()</code> in <code>search_benchmark.c</code></a></li>
+<li><a href="#org2b9f142">4.3. Running Algorithms based on Command Line Arguments</a></li>
+<li><a href="#org7267f48">4.4. Sample <code>main()</code> Runs</a></li>
+<li><a href="#org2fccbb8">4.5. Proper Setup and Cleanup for Searches</a></li>
+<li><a href="#org27fe091">4.6. What to Measure</a></li>
+<li><a href="#orgf0e5c77">4.7. MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></a></li>
+<li><a href="#org8df4625">4.8. Grading Criteria for Problem 2 (45%)</a></li>
+</ul>
+</li>
+<li><a href="#orgea3a1e9">5. Writeup</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgdf486f6" class="outline-2">
+<h2 id="orgdf486f6"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+This assignment focuses on aspects of optimizing and measuring
+performance.  
+</p>
+<ul class="org-ul">
+<li>The first problem provides a baseline implementation for
+a function and asks for a more performant version which runs
+faster. To do so, one must exploit knowledge of the memory hierarchy
+and processor pipeline.</li>
+<li>The second problem provides a series of functions for classic search
+algorithms and requires implementation of a <code>main()</code> function to
+benchmark the performance of those functions.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgcd339c7" class="outline-2">
+<h2 id="orgcd339c7"><span class="section-number-2">2</span> <a id="org5e20689"></a> Download Code and Setup</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Download the code pack linked at the top of the page. Unzip this which
+will create a project folder. Create new files in this
+folder. Ultimately you will re-zip this folder to submit it.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">State</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 &amp; 2 Build file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>P4-WRITEUP.txt</code></td>
+<td class="org-left">Edit</td>
+<td class="org-left">Fill in answers to assignment questions</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>matsquare_benchmark.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 main benchmark</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>matsquare_print.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 testing program</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>matvec.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 header file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>matvec_util.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 utility functions for matrices/vectors</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>matsquare_base.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 baseline function to beat</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>matsquare_optm.c</code></td>
+<td class="org-left">EDIT/COMPLETE</td>
+<td class="org-left">Problem 1 create and fill in optimized function definition</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>search.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2 header file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>search_funcs.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2 search, setup, and cleanup functions</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>search_benchmark.c</code></td>
+<td class="org-left">EDIT/COMPLETE</td>
+<td class="org-left">Problem 2 timing <code>main()</code> to create</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Testing script</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_matsquare.org</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Tests to check for memory issues in problem 1</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_search_benchmark.org</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Tests to check for memory issues in problem 2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<div id="outline-container-org98a917d" class="outline-2">
+<h2 id="org98a917d"><span class="section-number-2">3</span> <b>Problem 1</b>: Squaring a Matrix</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org1acf127" class="outline-3">
+<h3 id="org1acf127"><span class="section-number-3">3.1</span> Overview</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+A problem that occasionally arises in numerical computing when working
+with Matrices (2D Arrays) is to compute the <b>Square</b> of a matrix. This
+is a special case of general <a href="https://en.wikipedia.org/wiki/Matrix_multiplication">matrix multiplication</a> and students
+unfamiliar with this operation should study it to get some context for
+the present work.  
+</p>
+
+<p>
+Terminology can get a little confusing so keep the following in mind.
+</p>
+<ul class="org-ul">
+<li>A <b>Square Matrix</b> has equal numbers of rows and columns and can be
+multiplied by itself.</li>
+<li><b>Squaring</b> a matrix, sometimes notated <code>M*M = M^2</code> is multiplying a
+matrix by itself which can only be done if it is a square matrix
+(equal rows/columns).</li>
+</ul>
+
+<p>
+The diagram below illustrates the result of squaring a matrix by
+multiplying it by itself.  
+</p>
+
+<div class="org-center">
+
+<div id="org9a08569" class="figure">
+<p><img src="matsquare.png" alt="matsquare.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 1: </span>3 by 3 matrix <code>M</code> with colored elements along with result of squaring the matrix as <code>M*M</code>.</p>
+</div>
+</div>
+
+<p>
+Note that that for each of the elements of the squared matrix, the
+elements are the result of a row multiplied by a column from the
+original matrix:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">MatSq[i][j] = 0;
+for(k = 0 to Mat.rows){
+  MatSq[i][j] += Mat[i][k] * Mat[k][j];
+}
+</pre>
+</div>
+<p>
+The file <code>matsquare_base.c</code> provides a baseline function that performs
+this computation in a direct fashion as the above definition indicates
+The algorithm uses the most "natural" approach of multiplying each row
+by each column to produce the result in the for each part of the
+squared result.  As you survey the code, note the use of various
+convenience macros such as <code>MGET(mat,i,j)</code> interact with the matrix
+type used.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">// Baseline version
+int matsquare_BASE(matrix_t mat, matrix_t matsq) {
+  if(mat.rows != mat.cols ||                       // must be a square matrix to square it
+     mat.rows != matsq.rows || mat.cols != matsq.cols)
+  {
+    printf("matsquare_BASE: dimension mismatch\n");
+    return 1;
+  }
+
+  for(int i=0; i&lt;mat.rows; i++){
+    for(int j=0; j&lt;mat.cols; j++){
+      MSET(matsq,i,j,0);                          // initialize to 0s
+      for(int k=0; k&lt;mat.rows; k++){
+        int mik = MGET(mat, i, k);
+        int mkj = MGET(mat, k, j);
+        int cur = MGET(matsq, i, j);
+        int new = cur + mik*mkj;
+        MSET(matsq, i, j, new);
+      }
+    }
+  }
+
+  return 0;                                       // return success
+}
+</pre>
+</div>
+<p>
+Note that the original matrix comes in as the parameter <code>mat</code> and the
+result of squaring the matrix is stored in the parameter <code>matsq</code>.
+</p>
+
+<p>
+While this algorithm is a direct translation of how humans would
+visually calculate the square of small matrices, it is unfortunately
+fairly slow when executing on most modern computing systems.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org61cd8aa" class="outline-3">
+<h3 id="org61cd8aa"><span class="section-number-3">3.2</span> Optimize Matrix Squaring</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+The purpose of this problem is to write <code>matsquare_OPTM()</code> which is a
+faster version of the provided <code>matsquare_BASE()</code> to calculate the
+results.
+</p>
+
+<p>
+Write your code in the file <code>matsquare_optm.c</code>.
+</p>
+
+<p>
+Keep the following things in mind.
+</p>
+<ol class="org-ol">
+<li>You will need to acquaint yourself with the functions and types
+related to matrices and vectors provided in the <code>matvec.h</code> and
+demonstrated in the baseline function. Understanding the layout of
+the matrix in memory is essential to unlocking performance.</li>
+<li>The goal of <code>matsquare_OPTM()</code> is to exceed the performance of
+<code>matsquare_BASE()</code> by as much as possible.</li>
+<li>To achieve this goal, several optimizations must be implemented and
+suggestions are given in a later section.</li>
+<li>You will need to document your optimizations in the file
+<code>P4-WRITEUP.txt</code> and provide timing results of running the
+optimized version.</li>
+<li>Part of your grade will be based on the speed of the optimized code
+on the machine <code>csel-kh1250-NN.cselabs.umn.edu</code>. The main routine
+<code>matsquare_benchmark.c</code> will be used for this.</li>
+</ol>
+
+<p>
+Some details are provided in subsequent sections.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orga164a7e" class="outline-3">
+<h3 id="orga164a7e"><span class="section-number-3">3.3</span> Evaluation on <code>csel-kh1250-NN</code></h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+The provided file <code>matsquare_benchmark.c</code> provides a benchmark for the
+speed of squaring a matrix. It will be used by graders to evaluate the
+submitted code and should be used during development to gauge
+performance improvements.
+</p>
+
+<p>
+The machines <code>csel-kh1250-NN.cselabs.umn.edu</code> where <code>NN</code> is <code>01</code> to
+<code>37</code> will be used for evaluation and the scoring present in
+<code>matsquare_benchmark.c</code> is "tuned" to the CPU/Memory on these
+machines.  That means that codes should be <b>tested on csel-kh1250-NN</b>
+so that no unexpected results occur after submission. Results reported
+should be from <code>csel-kh1250-NN</code>.
+</p>
+
+<p>
+The output of the <code>matsquare_benchmark</code> is shown below.
+</p>
+<ul class="org-ul">
+<li>SIZE: the size of the matrix being used. The benchmark always
+uses square matrices</li>
+<li>Runtimes for the 2 functions
+<ul class="org-ul">
+<li>BASE: the time it takes for <code>matsquare_BASE()</code> to complete.</li>
+<li>OPTM: the time it takes for <code>matsquare_OPTM()</code> to complete.</li>
+</ul></li>
+<li>SPDUP: the speedup of <code>matsquare_OPTM()</code> over <code>matsquare_BASE()</code> which
+is <code>BASE / OPTM</code>.</li>
+<li><p>
+POINTS: which are earned according to the following code:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">    double factor =                               // scale based on size: speedup on 
+      (( ((double) size) / ((double) sizes[0]))); // larger matrix worth more points
+
+    double log2spdup = log2(speedup_OPTM);        // log_2 so equal speed is 0 points, 2X is 1pt, etc
+    if(log2spdup &lt; 0){                            // no negative scores
+      log2spdup = 0.0;
+    }
+    double points = log2spdup * factor;           // scale speedup by size factor
+</pre>
+</div>
+<p>
+This scheme, while a little involved, means that unless actual
+optimizations are implemented, 0 points will be scored. It is also
+weighted towards earning more points on for larger size matrices.
+</p></li>
+</ul>
+
+<p>
+Below are several demonstration runs of <code>matsquare_benchmark</code>.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"># BUILD/RUN ON NON-CSEL-KH1250-NN MACHINE: NOTE WARNINGS
+homeputer&gt; make
+gcc -Wall -Werror -g -Og -c matsquare_print.c
+gcc -Wall -Werror -g -Og -c matvec_util.c
+gcc -Wall -Werror -g -Og -c matsquare_base.c
+gcc -Wall -Werror -g -Og -c matsquare_optm.c
+gcc -Wall -Werror -g -Og -o matsquare_print matsquare_print.o matvec_util.o matsquare_base.o matsquare_optm.o
+gcc -Wall -Werror -g -Og -c matsquare_benchmark.c
+gcc -Wall -Werror -g -Og -o matsquare_benchmark matsquare_benchmark.o matvec_util.o matsquare_base.o matsquare_optm.o -lm
+...
+
+homeputer&gt; ./matsquare_benchmark 
+WARNING: expected host 'csel-kh1250-NN' but got host 'homeputer'
+WARNING: timing results / scoring will not reflect actual scoring
+WARNING: run on host 'csel-kh1250-NN' for accurate results
+==== Matrix Square Benchmark Version 1 ====
+  SIZE       BASE       OPTM  SPDUP   LOG2 FACTOR POINTS 
+   273 6.3082e-02 3.2783e-02   1.92   0.94   1.00   0.94 
+   512 3.3868e-01 1.6586e-01   2.04   1.03   1.88   1.93 
+   722 8.9180e-01 4.7556e-01   1.88   0.91   2.64   2.40 
+   801 1.2462e+00 6.6762e-01   1.87   0.90   2.93   2.64 
+  1024 7.8568e+00 1.3765e+00   5.71   2.51   3.75   9.43 
+  1101 5.1476e+00 1.7365e+00   2.96   1.57   4.03   6.32 
+  1309 1.0345e+01 2.9614e+00   3.49   1.80   4.79   8.65 
+RAW POINTS: 32.32
+TOTAL POINTS: 32 / 35
+WARNING: expected host 'csel-kh1250-NN' but got host 'homeputer'
+WARNING: timing results / scoring will not reflect actual scoring
+WARNING: run on host 'csel-kh1250-NN' for accurate results
+
+# PARTIAL CREDIT RUN
+csel-kh1250-05&gt; ./matsquare_benchmark 
+==== Matrix Square Benchmark Version 1 ====
+  SIZE       BASE       OPTM  SPDUP   LOG2 FACTOR POINTS 
+   273 5.7477e-02 3.0015e-02   1.91   0.94   1.00   0.94 
+   512 3.4969e-01 3.1837e-01   1.10   0.14   1.88   0.25 
+   722 8.7826e-01 6.8763e-01   1.28   0.35   2.64   0.93 
+   801 1.2606e+00 1.0596e+00   1.19   0.25   2.93   0.74 
+  1024 6.5164e+00 6.1829e+00   1.05   0.08   3.75   0.28 
+  1101 4.9575e+00 4.5922e+00   1.08   0.11   4.03   0.45 
+  1309 1.0595e+01 9.1156e+00   1.16   0.22   4.79   1.04 
+RAW POINTS: 4.63
+TOTAL POINTS: 5 / 35
+
+# FULL CREDIT RUN
+csel-kh1250-05&gt; ./matsquare_benchmark 
+==== Matrix Square Benchmark Version 1 ====
+  SIZE       BASE       OPTM  SPDUP   LOG2 FACTOR POINTS 
+   273 6.3368e-02 1.8595e-02   3.41   1.77   1.00   1.77 
+   512 3.3387e-01 1.2201e-01   2.74   1.45   1.88   2.72 
+   722 7.7923e-01 3.3930e-01   2.30   1.20   2.64   3.17 
+   801 1.2133e+00 4.5901e-01   2.64   1.40   2.93   4.11 
+  1024 7.0291e+00 1.0000e+00   7.03   2.81   3.75  10.55 
+  1101 5.1465e+00 1.2481e+00   4.12   2.04   4.03   8.24 
+  1309 1.0387e+01 2.1238e+00   4.89   2.29   4.79  10.98 
+RAW POINTS: 41.55
+TOTAL POINTS: 35 / 35
+
+</pre>
+</div>
+
+<p>
+Note that it is possible to exceed the score associated with maximal
+performance (as seen in the RAW POINTS reported) but no more than the
+final reported points will be given for the performance portion of the
+problem. <i>There may be Makeup Credit associate with sufficient
+speedups;</i> <i>if this occurs, output for the program will make this
+obvious.</i>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2b13099" class="outline-3">
+<h3 id="org2b13099"><span class="section-number-3">3.4</span> <code>matsquare_print.c</code> Testing Program</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+As one works on implementing optimizations in <code>matsquare_OPTM()</code>, bugs
+which compute incorrect results are often introduced.  To aid in
+testing, the <code>matsquare_print()</code> program runs both the BASE and OPTM
+versions on the same matrix and shows all results. The matrix size is
+determined from the command line and is printed on the screen to
+enable hand verification. Examples are below.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">./matsquare_print 3             # run on 3 by 3 matrix
+==== Matrix Square Print ====
+Original Matrix:                # original test matrix
+3 x 3 matrix
+   0:      0      1      2 
+   1:      3      4      5 
+   2:      6      7      8 
+
+BASE Matrix Squared :           # results for matsquare_BASE()
+3 x 3 matrix
+   0:     15     18     21 
+   1:     42     54     66 
+   2:     69     90    111 
+
+OPTM Matrix Squared :           # results for matsquare_OPTM()
+3 x 3 matrix
+   0:     15     18     21 
+   1:     42     59     66 
+   2:     69    103    111 
+
+BASE/OPTM Element Comparison:
+[  i][  j]:   BASE   OPTM       # elemnent by element comparison
+[  0][  0]:     15     15       # to help spot errors in results
+[  0][  1]:     18     18       # for matsquare_OPTM()
+[  0][  2]:     21     21 
+[  1][  0]:     42     42 
+[  1][  1]:     54     59 ***   # NON-matching
+[  1][  2]:     66     66 
+[  2][  0]:     69     69 
+[  2][  1]:     90    103 ***   # NON-matching
+[  2][  2]:    111    111 
+
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org6ea4952" class="outline-3">
+<h3 id="org6ea4952"><span class="section-number-3">3.5</span> <a id="org6cd1b08"></a> Optimization Suggestions and Documentation</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+Labs and lectures have covered several kinds of optimizations which
+are useful to improve the speed of <code>matsquare_OPTM()</code>.  These techniques
+include:
+</p>
+<ul class="org-ul">
+<li>Re-ordering memory accesses to be as sequential as possible which
+favors cache (<b>very important</b>)</li>
+<li>Increasing potential processor pipelining by adjusting the
+destinations of arithmetic operations.</li>
+<li>Decreasing any unnecessary work such as memory accesses or
+arithmetic operations.</li>
+</ul>
+<p>
+These should be sufficient to gain full credit though you are free to
+explore additional optimizations.
+</p>
+
+<p>
+One handy realization most folks will reach is that it is useful to
+recognize a way to re-order the memory access pattern to favor
+cache. Recall that the most favorable access pattern for most matrix
+computations in a row-major programming environment like C is to work
+across rows.  Below is a diagram which suggests one possible way to do
+this in the context of squaring a matrix.  It favors repeated walking
+across a matrix in a row-wise fashion to avoid the stride required for
+column-wise access.  Study this diagram carefully and consider
+implementing the approach illustrated as your first optimization. As
+discussed in lecture, if data is not getting to the processor, other
+optimizations that favor pipelining/superscalar execution will have no
+effect so focusing first on the memory access pattern is crucial.
+</p>
+
+<div class="org-center">
+
+<div id="org202db99" class="figure">
+<p><img src="matsquare-order.png" alt="matsquare-order.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Illustration of how to favor row-wise access to compute squared matrix. Computation of first row results are shown with the beginnings of the second row.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgbfd6188" class="outline-3 grading 55">
+<h3 id="orgbfd6188"><span class="section-number-3">3.6</span> Grading Criteria for Problem 1 (55%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="55">55</span></span></h3>
+<div class="outline-text-3" id="text-3-6">
+<p>
+The file <code>P4-WRITEUP.txt</code> has several questions that should be
+answered in a similar fashion to lab write-ups. These document the
+optimizations used in <code>matsquare_OPTM()</code> require a justification for
+their use.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">AUTOMATED TESTS</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">No memory errors reported by Valgrind via <code>make test-prob1</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">MANUAL INSPECTION of <code>matsquare_optm.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">35</td>
+<td class="org-left">Performance of <code>matsquare_OPTM()</code> on <code>csel-kh1250-NN.cselabs.umn.edu</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">As measured by the provided <code>matsquare_benchmark</code></td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Clean and well-documented code for <code>matsquare_OPTM()</code></td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>P4-WRITEUP.txt</code></td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">Answer 1A <code>P4-WRITEUP.txt</code> (source code)</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left">Answer 1B <code>P4-WRITEUP.txt</code> (timing table)</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Answer 1C <code>P4-WRITEUP.txt</code> (optimizations description)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org324b859" class="outline-2">
+<h2 id="org324b859"><span class="section-number-2">4</span> <b>Problem 2</b>: Timing Search Algorithms</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-orgce53991" class="outline-3">
+<h3 id="orgce53991"><span class="section-number-3">4.1</span> Overview</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+This problem centers on timing several algorithms to measure their
+performance. This will require use of C timing functions which have
+been demonstrated in various parts of the class including the previous
+problem.
+</p>
+
+<p>
+You will measure the performance of 4 search functions which simply
+determine whether an integer <code>query</code> is present in an associated data
+structure.  All of these along with associated setup functions are
+provided in the <code>search_funcs.c</code> file.  The search algorithms are as
+follows.
+</p>
+
+<dl class="org-dl">
+<dt>Linear Search in an Array</dt><dd>The array need not be sorted and is
+searched from beginning to end.</dd>
+<dt>Linear Search in a Linked List</dt><dd>Nodes are linked together and the
+list is searched for a query from beginning to end.</dd>
+<dt>Binary Search in a Sorted Array</dt><dd>The classic divide and conquer
+algorithm which repeatedly halves the search space.</dd>
+<dt>Binary Search in a Tree</dt><dd>A binary search tree enables searching
+for a query by following left/right branches.</dd>
+</dl>
+
+<p>
+If you do not have a sense of the relative computational complexities
+of these algorithms, you should review these as they should factor
+into your analysis of the timings of the algorithms.
+</p>
+
+<p>
+As was the case for problem 1, you can develop your timing program on
+any platform but the analysis should be conducted on
+<code>csel-kh1250-NN.cselabs.umn.edu</code> to ensure comparability.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org59fe47f" class="outline-3">
+<h3 id="org59fe47f"><span class="section-number-3">4.2</span> <code>main()</code> in <code>search_benchmark.c</code></h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+The requirements from this problem is that you provide a <code>main()</code>
+function in the file <code>search_benchmark.c</code> with the following features.
+</p>
+
+<ol class="org-ol">
+<li>Runs on a range of sizes that can be specified on the command
+line.  A typical approach is to allow one to specify a minimum and
+maximum size of the search data structures and repeatedly double
+starting at the minimum and ending at the max.</li>
+<li><p>
+Create "even" data in the structures using the provided
+functions. 
+</p>
+<ul class="org-ul">
+<li><code>make_even_array()</code> for arrays</li>
+<li><code>make_even_list()</code> for linked lists</li>
+<li><code>make_even_trees()</code> for  trees</li>
+</ul>
+<p>
+This will populate the data structure with the sequence
+<code>0,2,4,...,(len-1)*2</code>.  This data population allows searches
+for items that are known to be present (even numbers) and items
+that are known not to be present (odd numbers).
+</p></li>
+<li><p>
+Perform a variable number of searches on the data structures.  This
+should be done the following way.
+</p>
+<ul class="org-ul">
+<li>On the command line the number of repetitions of searches should
+be specified on the command line.</li>
+<li>Search for every element in the data structures the given number
+of repetitions.</li>
+<li>Search an equal number of times for elements NOT in the data
+structure.</li>
+</ul>
+<p>
+A typical example method for this is as follows. For a size 100
+data structure perform
+</p>
+<ul class="org-ul">
+<li>An outer loop over the number of repetitions</li>
+<li>An inner loop that searches for the numbers
+<code>0,1,2,3,4,...,(2*len)-1</code></li>
+</ul>
+<p>
+This pattern searches for an equal number of present/not-present
+items.
+</p></li>
+<li><p>
+Measure the <b>Total Time for the Entire Search Loop</b> for a given
+algorithm. Since individual searches will take a minuscule amount
+of time, the Total Time for the loop is the most robust measure to
+discuss. While such a time may include some artifacts such as
+incriminating loop variables, these will be "charged" to all
+algorithms equally so that the comparison remains fair. <b>Avoid use
+of functions like pow()</b> as these will introduce unnecessarily
+calculations inflating the measured times. Favor multiplications to
+increase size such as
+</p>
+<pre class="example">
+cur_search_size = cur_search_size * 2;
+</pre></li>
+<li><p>
+Enable any combination of algorithms to be tested by specifying
+which are to be run on the command line.  The required way to do
+this is to accept optional 4th, 5th, etc. command line arguments
+which enable different search types.  The associated strings for
+each algorithm are
+</p>
+<ul class="org-ul">
+<li><code>la</code> for linear array search</li>
+<li><code>ll</code> for linked list search</li>
+<li><code>bl</code> for binary search</li>
+<li><code>bt</code> for tree search</li>
+</ul>
+<p>
+Specify additional command line arguments which enable the searches:
+</p>
+<ul class="org-ul">
+<li><code>ll</code>: run linked list search only</li>
+<li><code>la ba</code>: run linear array search and binary array search</li>
+<li><code>la ll bt</code>: run all but the binary array search</li>
+<li><code>ll bt la ba</code>: run all algorithms</li>
+<li>If no string is specified, run all algorithms; this is the
+default.</li>
+<li>The order of the additional command line arguments need not
+affect the output. For example specifying <code>la ll</code> can have the
+same output as <code>ll la</code> (both run linear search in arrays and
+linked lists).</li>
+</ul></li>
+<li>Ensure that an equal number of searches is done for each
+of the algorithms being benchmarked.</li>
+<li>Ensure that the timing that is done is ONLY for searching and not
+for setup and cleanup for the data structures.</li>
+<li>Ensure that there are no memory leaks or other problems in setup
+and cleanup for the searches.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org2b9f142" class="outline-3">
+<h3 id="org2b9f142"><span class="section-number-3">4.3</span> Running Algorithms based on Command Line Arguments</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Many folks who have not had to handle command line arguments struggle
+some what with the style of <code>search_benchmark</code> so here is some
+additional guidance on handling this aspect of the program.
+</p>
+</div>
+
+
+<div id="outline-container-org897db74" class="outline-4">
+<h4 id="org897db74">Run the algorithms in a fixed order</h4>
+<div class="outline-text-4" id="text-org897db74">
+<p>
+An invocation like
+</p>
+<pre class="example">
+./search_benchmark 5 10 10 la ll
+</pre>
+
+<p>
+should run the linear array search (<code>a</code>) and linear linked list search
+(<code>l</code>).  So should the invocation
+</p>
+<pre class="example">
+./search_benchmark 5 10 10 ll la
+</pre>
+
+<p>
+Since we are interested <b>only</b> in comparing timing for these
+algorithms, the order of which is run first and printed first does not
+matter so <b>run the algorithms and print results in a fixed order.</b>
+That is, both of the above will run the array search first and linked
+list search second giving identical ordering results:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt; ./search_benchmark 5 10 10 la ll
+  LENGTH SEARCHES      array       list 
+      32      640 1.2345e+06 1.2345e+06 
+      64     1280 1.2345e+06 1.2345e+06 
+     128     2560 1.2345e+06 1.2345e+06 
+     256     5120 1.2345e+06 1.2345e+06 
+     512    10240 1.2345e+06 1.2345e+06 
+    1024    20480 1.2345e+06 1.2345e+06 
+
+&gt; ./search_benchmark 5 10 10 ll la         # still running linear array search first
+  LENGTH SEARCHES      array       list 
+      32      640 1.2345e+06 1.2345e+06 
+      64     1280 1.2345e+06 1.2345e+06 
+     128     2560 1.2345e+06 1.2345e+06 
+     256     5120 1.2345e+06 1.2345e+06 
+     512    10240 1.2345e+06 1.2345e+06 
+    1024    20480 1.2345e+06 1.2345e+06 
+
+</pre>
+</div>
+
+<p>
+Search times above are intentionally left out so you will need to
+trust your own code to get an idea of how long things are
+running. However, very short run times are generally unreliable. Aim
+for a <b>minimum time of 1e-02 seconds</b> in order to make sure your
+results are reliable.  Shorter times like 1e-05 will vary too much to
+trust. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3fc814e" class="outline-4">
+<h4 id="org3fc814e">Use Boolean-like variables to track which algorithms to run</h4>
+<div class="outline-text-4" id="text-org3fc814e">
+<p>
+If following the advice of the previous section, to run the 4
+algorithms in a fixed order, one can simple assign variables in
+<code>main()</code> which indicate which algorithms to run as in the following.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">  int run_linear_array = 0;
+  int run_linear_list  = 0;
+  ...
+</pre>
+</div>
+<p>
+Later, these variables are checked in a conditional as in:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">  if(run_linear_array){
+    // run loops to time linear search in an array
+  }
+  if(run_linear_list){
+    // run loops to time linear search in a list
+  }
+  ...
+</pre>
+</div>
+
+<p>
+When processing the command line argument associated with which
+algorithms to run, one can 'turn on' the algorithm if the associated
+character is present according to the following pseudo-code
+</p>
+<div class="org-src-container">
+<pre class="src src-c">  set algs_string to argv[4]
+  for(i=0; i &lt; length(algs_string); i++){
+    if(algs_string[i] == 'a'){
+      do_linear_array = 1;
+    }
+    ...
+  }
+</pre>
+</div>
+
+<p>
+While the above approach does not allow one to run algorithms in an
+arbitrary order, it does allow any combination of algorithms to be run
+and compared which is all that is needed to complete the timing.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb209e36" class="outline-4">
+<h4 id="orgb209e36">Free and Re-allocate Memory for Different Sizes</h4>
+<div class="outline-text-4" id="text-orgb209e36">
+<p>
+While the search functions for Linked Lists and Binary Search Trees
+both take size arguments, these are ignored in the searches.  Instead,
+<code>NULL</code>'s in the data structures are used to find the bounds of them.
+This means if one is searching for data that is not in a small list,
+the end of the data structure will be reached sooner and <i>not found</i>
+will be determined faster than if searching in a large list.  To that
+end <b>allocate data structures that are sized specifically to the
+search size</b> each time. Do NOT allocate one large data structure and
+do all size searches on it as this will create artificially bad
+timings for the linked structures.
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org7267f48" class="outline-3">
+<h3 id="org7267f48"><span class="section-number-3">4.4</span> Sample <code>main()</code> Runs</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+Below are some sample runs of the <code>main()</code> function and output that is
+produced.  Note that the times have intentionally been set to all
+identical times.  Your exact output may vary some but <code>main()</code> must
+use the command line options as indicated below. These arguments are
+</p>
+<ol class="org-ol">
+<li>Minimum data size (power of 2)</li>
+<li>Maximum data size (power of 2)</li>
+<li>Number of repeats</li>
+<li>(Optional) Characters specifying which search algorithms to run. If
+this is omitted, run all algorithms.</li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt; ./search_benchmark 
+usage: ./search_benchmark &lt;minpow&gt; &lt;maxpow&gt; &lt;repeats&gt; [alg1 alg2 ...]
+ with alg1 alg2 as a combination of:
+  la : Linear Array Search
+  ll : Linked List Search
+  ba : Binary Array Search
+  bt : Binary Tree Search
+  (default all)
+
+# run all algorithms, single repetition of searches
+&gt; ./search_benchmark 9 14 1 
+  LENGTH SEARCHES      array       list     binary       tree 
+     512     1024 1.2345e+06 1.2345e+06 1.2345e+06 1.2345e+06 
+    1024     2048 1.2345e+06 1.2345e+06 1.2345e+06 1.2345e+06
+    2048     4096 1.2345e+06 1.2345e+06 1.2345e+06 1.2345e+06
+    4096     8192 1.2345e+06 1.2345e+06 1.2345e+06 1.2345e+06
+    8192    16384 1.2345e+06 1.2345e+06 1.2345e+06 1.2345e+06
+   16384    32768 1.2345e+06 1.2345e+06 1.2345e+06 1.2345e+06
+
+# Note that SEARCHES is 2*LENGTH as 1 successful and 1 unsuccessful
+# search is run for each element in the data structure
+
+# run linear array, linked list, binary array search algorithms, 10 repetition of searches
+&gt; ./search_benchmark 5 10 10 la ll ba
+  LENGTH SEARCHES      array       list     binary 
+      32      640 1.2345e+06 1.2345e+06 1.2345e+06
+      64     1280 1.2345e+06 1.2345e+06 1.2345e+06
+     128     2560 1.2345e+06 1.2345e+06 1.2345e+06
+     256     5120 1.2345e+06 1.2345e+06 1.2345e+06
+     512    10240 1.2345e+06 1.2345e+06 1.2345e+06
+    1024    20480 1.2345e+06 1.2345e+06 1.2345e+06
+
+# run linear binary array and tree search algorithms, 2 repetition of searches
+&gt; ./search_benchmark 14 19 2 ba bt
+  LENGTH SEARCHES     binary       tree 
+   16384    65536 1.2345e+06 1.2345e+06
+   32768   131072 1.2345e+06 1.2345e+06
+   65536   262144 1.2345e+06 1.2345e+06
+  131072   524288 1.2345e+06 1.2345e+06
+  262144  1048576 1.2345e+06 1.2345e+06
+  524288  2097152 1.2345e+06 1.2345e+06
+
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org2fccbb8" class="outline-3">
+<h3 id="org2fccbb8"><span class="section-number-3">4.5</span> Proper Setup and Cleanup for Searches</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+Each search algorithm requires setup and cleanup which is described
+below. All these follow the same patter which can enable somewhat more
+elegant setup/search/cleanup which is discussed in the section on
+bonus credit.
+</p>
+</div>
+
+<div id="outline-container-orgfe59d06" class="outline-4">
+<h4 id="orgfe59d06">Linear and Binary Array Search</h4>
+<div class="outline-text-4" id="text-orgfe59d06">
+<p>
+Use the function <code>make_evens_array()</code> to create an appropriately
+sized <code>int</code> array for these functions.  Call <code>free()</code> on this array
+when finished with it.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb204238" class="outline-4">
+<h4 id="orgb204238">Linked List Search</h4>
+<div class="outline-text-4" id="text-orgb204238">
+<p>
+Use the function <code>make_evens_list()</code> to create an appropriately
+sized <code>list_t</code>.  Call <code>list_free()</code> on this list when finished with
+it.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2efd831" class="outline-4">
+<h4 id="org2efd831">Binary Tree Search</h4>
+<div class="outline-text-4" id="text-org2efd831">
+<p>
+Use the function <code>make_evens_tree()</code> to create an appropriately
+sized <code>bst_t</code>.  Call <code>bst_free()</code> on this list when finished with
+it.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org27fe091" class="outline-3">
+<h3 id="org27fe091"><span class="section-number-3">4.6</span> What to Measure</h3>
+<div class="outline-text-3" id="text-4-6">
+<p>
+The reason for the requirements mentioned above is to study the
+performance of different search algorithms and answer associated
+questions in the <code>P4-WRITEUP.txt</code>.  The main goals of these questions
+are to elucidate.
+</p>
+<ol class="org-ol">
+<li>To compare the linear and logarithmic search complexities to see if
+one or the other is superior at small and large input sizes</li>
+<li>To compare the contiguous memory (array) approaches to the linked
+memory (list/tree) approaches to see if one or the other is
+superior at small and large sizes.</li>
+</ol>
+<p>
+To that end make sure to answer the thoroughly answer questions
+provided.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf0e5c77" class="outline-3">
+<h3 id="orgf0e5c77"><span class="section-number-3">4.7</span> MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></h3>
+<div class="outline-text-3" id="text-4-7">
+<p>
+"Makeup" credit will allow the score on this assignment to exceed 100%
+but will not allow the overall score on the project portion of the
+grade to exceed the weight specified in the syllabus. It is designed
+to help "make up" for lost credit on previous assignments.
+</p>
+
+<p>
+Makeup credit is available in this assignment for implementing the
+selection of which search functions to run in an "elegant" fashion.
+Likely the best method for this is to use a table of function
+pointers. This style is demonstrated in Lab09 and Lab11 but must be
+expanded upon in this lab to reach its full potential.
+</p>
+
+<p>
+The main purpose to using such a table is to avoid a large <code>if/else</code>
+or <code>switch/case</code> block.  For example, a simple approach to doing
+different search types is something like the following.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">int main(...){
+  int do_linear_array = 1;
+  int do_linked_list  = 1;
+  ...;
+  for(all sizes){
+    if(do_linear_array){
+      // setup array
+      // start timer
+      // do searches
+      // stop timer
+      // print output
+      // free the array
+    }
+    if(do_linked_list){
+      // setup list
+      // start timer
+      // do searches
+      // stop timer
+      // print output
+      // free the list
+    }
+    ...;
+  }
+}
+</pre>
+</div>
+<p>
+This formulation obviously involves a much redundant code. A good way
+to avoid this is to parameterize the repeated parts as functions and
+iterate over the table invoking functions appropriate to the different
+types of searches.
+</p>
+
+<p>
+To get a sense of how this might work, here is an incomplete example
+setup used in one solution.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// Table of search algorithms
+searchalg_t algs[] = {
+  {"Linear Array Search", "array",  'a', 1,
+   (search_t) linear_array_search, (setup_t) make_evens_array, (cleanup_t) free},
+  {"Linked List Search",  "list",   'l', 1,
+   (search_t) linkedlist_search,   (setup_t) make_evens_list,  (cleanup_t) list_free},
+  ...
+  {NULL}
+};
+</pre>
+</div>
+<p>
+None of the types are given in the above but several notable things
+are present.
+</p>
+<ol class="org-ol">
+<li>The types of searches are described in an array (table) of structs</li>
+<li>Each field pertains to a description or function for the search</li>
+<li>Some of the functions are for setup, others for cleanup, and the
+first is the actual search function.</li>
+<li>Casting is required to get the different function prototypes to
+"fit" into the same kind of struct.</li>
+<li>All of the searches are enabled by default but fields can changed
+to disable them.</li>
+<li>One only needs to iterate through the array invoking appropriate
+functions. This avoids the need for a large <code>if/else</code> style
+program.</li>
+</ol>
+
+<p>
+To complete this part, document your code with comments and also
+describe you design using function pointers/structs in
+<code>P4-WRITEUP.txt</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8df4625" class="outline-3 grading 45">
+<h3 id="org8df4625"><span class="section-number-3">4.8</span> Grading Criteria for Problem 2 (45%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="45">45</span></span></h3>
+<div class="outline-text-3" id="text-4-8">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">AUTOMATED TESTS</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Passed tests associated with <code>make test-prob2</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">MANUAL INSPECTION of <code>search_benchmark.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">Accepts parameters that control the min/max data sizes and number of repeats</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">Proper searching for success and fail elements</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">The Total Search Loop Time is measured for each algorithm and reported, not an average per search</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">Timing does not include memory allocationo/de-allocation</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">Allocates data that is exactly to search sizes to prevent handicapping lists and arrays</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Clean and well-documented code for <code>main()</code> that uses simple approaches to run algorithms requested</td>
+</tr>
+
+<tr>
+<td class="org-right">15</td>
+<td class="org-left">SUBTOTAL</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>P4-WRITEUP.txt</code></td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">Timing results larger than 1e-03 seconds for most cases; smaller times are unreliable.</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left">Answer 2A <code>P4-WRITEUP.txt</code> (min size for differences)</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Answer 2B <code>P4-WRITEUP.txt</code> (list vs array)</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Answer 2C <code>P4-WRITEUP.txt</code> (tree vs array))</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Answer 2D <code>P4-WRITEUP.txt</code> (caching effects))</td>
+</tr>
+
+<tr>
+<td class="org-right">25</td>
+<td class="org-left">SUBTOTAL</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">OPTIONAL MAKEUP CREDIT</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Use a table of function pointers effectively in <code>search_benchmark.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Must describe this design in section 2E of <code>P4-WRITEUP.txt</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgea3a1e9" class="outline-2">
+<h2 id="orgea3a1e9"><span class="section-number-2">5</span> Writeup</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+This assignment involves answering questions in the file
+<code>P4-WRITEUP.txt</code> which is included in the code pack and pasted below.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                              ____________
+
+                               P4 WRITEUP
+                              ____________
+
+
+- Name: (FILL THIS in)
+- NetID: (THE kauf0095 IN kauf0095@umn.edu)
+
+Answer the questions below according to the project specification. Write
+your answers directly in this text file and submit it along with your
+code.
+
+
+PROBLEM 1: matsquare_OPTM()
+===========================
+
+  Do your timing study on csel-keller1250-NN.cselabs.umn.edu
+
+
+(A) Paste Source Code
+~~~~~~~~~~~~~~~~~~~~~
+
+  Paste a copy of your source code for the function `matsquare_OPTM()'
+
+  ####################### YOUR ANSWER HERE #########################
+
+  ##################################################################
+
+
+(B) Timing on csel-kh1250-NN
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Paste a copy of the results of running `matsquare_benchmark' on
+  csel-kh1250-NN.cselabs.umn.edu in the space below which shows how your
+  performance optimizations improved on the baseline codes.
+
+  ####################### YOUR ANSWER HERE #########################
+
+  ##################################################################
+
+
+(C) Optimizations
+~~~~~~~~~~~~~~~~~
+
+  Describe in some detail the optimizations you used to speed the code
+  up.  THE CODE SHOULD CONTAIN SOME COMMENTS already to describe these
+  but in the section below, describe in English the techniques you used
+  to make the code run faster.  Format your descriptions into discrete
+  chunks such as.
+        Optimization 1: Blah bla blah... This should make run
+        faster because yakkety yakeety yak.
+
+        Optimization 2: Blah bla blah... This should make run
+        faster because yakkety yakeety yak.
+
+        ...  Optimization N: Blah bla blah... This should make run
+        faster because yakkety yakeety yak.
+  Full credit solutions will have a least two optimizations and describe
+  WHY these improved performance in at least a couple sentences.
+
+  ####################### YOUR ANSWER HERE #########################
+
+  ##################################################################
+
+
+PROBLEM 2: Timing Search Algorithms
+===================================
+
+  Do your timing study on csel-kh1250-NN.cselabs.umn.edu. In most cases,
+  report times larger than 1e-03 seconds as times shorter than this are
+  unreliable. Run searches for more repetitions to lengthen run times.
+
+
+(A) Min Size for Algorithmic Differences
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Determine the size of input array where one starts to see a measurable
+  difference in the performance of the linear and logarithmic
+  algorithms.  Produce a timing table which includes all algorithms
+  which clearly demonstrates an uptick in the times associated with some
+  while others remain much lower.  Identify what size this appears to be
+  a occur.
+
+  ####################### YOUR ANSWER HERE #########################
+
+  ##################################################################
+
+
+(B) Linear Search in List vs Array
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Determine whether the linear array and linked list search remain
+  approximately at the same performance level as size increases to large
+  data or whether one begins to become favorable over other. Determine
+  the approximate size at which this divergence becomes obvious. Discuss
+  reasons WHY this difference arises.
+
+  ####################### YOUR ANSWER HERE #########################
+
+  ##################################################################
+
+
+(C) Binary Search in Tree vs Array
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Compare the binary array search and binary tree search on small to
+  very large arrays. Determine if there is a size at which the
+  performance of these two begins to diverge. If so, describe why this
+  might be happening based on your understanding of the data structures
+  and the memory system. If not, describe why you believe there is
+  little performance difference between the two.
+
+  ####################### YOUR ANSWER HERE #########################
+
+  ##################################################################
+
+
+(D) Caching Effects on Algorithms
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  It is commonly believed that memory systems that feature a Cache will
+  lead to arrays performing faster than linked structures such as Linked
+  Lists and Binary Search Trees. Describe whether your timings confirm
+  or refute this belief.  Address both types of algorithms in your
+  answer:
+  - What effects does Cache have on Linear Search in arrays and lists
+    and why?
+  - What effects does Cache have on Binary Search in arrays and trees
+    and why?
+
+  ####################### YOUR ANSWER HERE #########################
+
+  ##################################################################
+
+
+(E) OPTIONAL MAKEUP CREDIT
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  If you decided to make use of a table of function pointers/structs
+  which is worth makeup credit, describe your basic design for this
+  below.
+
+  ####################### YOUR ANSWER HERE #########################
+
+  ##################################################################
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-04-04 Mon 11:17 <br/> </i>
+</div>
+</body>
+</html>
