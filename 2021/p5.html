@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-04-26 Tue 17:03 -->
+<!-- 2022-04-27 Wed 15:21 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Project 5: Memory Allocator</title>
@@ -365,7 +365,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-04-26 Tue 17:03</i>
+<i>Last Updated: 2022-04-27 Wed 15:21</i>
 </div>
 <div id="content">
 <h1 class="title">CSCI 2021 Project 5: Memory Allocator</h1>
@@ -377,18 +377,38 @@ text-align: justify;
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-org704c163" class="outline-4">
-<h4 id="org704c163">CODE DISTRIBUTION: <a href="p5-code.zip">p5-code.zip</a></h4>
+<div id="outline-container-orgd12d164" class="outline-4">
+<h4 id="orgd12d164">CODE DISTRIBUTION: <a href="p5-code.zip">p5-code.zip</a></h4>
 </div>
 
-<div id="outline-container-orgebe2108" class="outline-4">
-<h4 id="orgebe2108">Video Overview: <a href="https://youtu.be/z1kuaOQq_Fk">https://youtu.be/z1kuaOQq_Fk</a></h4>
+<div id="outline-container-orgbb6a91b" class="outline-4">
+<h4 id="orgbb6a91b">Video Overview: <a href="https://youtu.be/z1kuaOQq_Fk">https://youtu.be/z1kuaOQq_Fk</a></h4>
 </div>
 
-<div id="outline-container-org4612062" class="outline-4">
-<h4 id="org4612062">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org4612062">
+<div id="outline-container-org9b6ddc0" class="outline-4">
+<h4 id="org9b6ddc0">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org9b6ddc0">
 <dl class="org-dl">
+<dt>Wed Apr 27 03:18:58 PM CDT 2022</dt><dd><p>
+The documentation associated with the function <code>el_first_avail()</code>
+was incorrect and contradicted the project tests. This is detailed
+in <a href="https://piazza.com/class/kyd94kiq4gns3?cid=1006">Post 1006</a> but gist is that the function should only bother to
+find a block with the stated size or larger and not worry about the
+block overhead. The update documentation is:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">  el_blockhead_t *el_find_first_avail(size_t size);
+  // REQUIRED
+  // Find the first block in the available list with block size of at
+  // least `size`.  Returns a pointer to the found block or NULL if no
+  // block of sufficient size is available.
+</pre>
+</div>
+<p>
+Implement this behavior as it is expected by the automated tests and
+the remainder of the system.
+</p></dd>
+
 <dt>Tue Apr 26 05:02:22 PM CDT 2022</dt><dd><p>
 An overview video of Project 5 has been posted here:
 <a href="https://youtu.be/z1kuaOQq_Fk">https://youtu.be/z1kuaOQq_Fk</a>
@@ -400,7 +420,7 @@ project entails.
 </p>
 
 <p>
-The <a href="#org543fb5e">project description of block splitting</a> has been updated to
+The <a href="#org5f342c6">project description of block splitting</a> has been updated to
 include a mild change in language and some additional detail in a
 diagram on block splitting. Students struggling with this part of
 the project may wish to look at the updated diagram.
@@ -409,35 +429,36 @@ the project may wish to look at the updated diagram.
 </div>
 </div>
 
-<div id="outline-container-org213a911" class="outline-4">
-<h4 id="org213a911"></h4>
-<div class="outline-text-4" id="text-org213a911">
+
+<div id="outline-container-orgc4f2879" class="outline-4">
+<h4 id="orgc4f2879"></h4>
+<div class="outline-text-4" id="text-orgc4f2879">
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgd85163d">1. Overview</a></li>
-<li><a href="#org0c20e5b">2. Download Code and Setup</a></li>
-<li><a href="#org2b6e8da">3. <b>Problem 1</b> : EL Malloc</a>
+<li><a href="#org9a38bc7">1. Overview</a></li>
+<li><a href="#org2e147bf">2. Download Code and Setup</a></li>
+<li><a href="#org0bebca5">3. <b>Problem 1</b> : EL Malloc</a>
 <ul>
-<li><a href="#orgfc0161f">3.1. EL Malloc Data Structures</a></li>
-<li><a href="#org6777ccf">3.2. Block Header/Footer</a></li>
-<li><a href="#org06a9529">3.3. Footers and Blocks Above/Below</a></li>
-<li><a href="#org5a5c5e0">3.4. Block Lists and Global Control</a></li>
-<li><a href="#org5d63a5b">3.5. Pointers and "Actual" Space</a></li>
-<li><a href="#org13b11c1">3.6. Doubly Linked List Operations</a></li>
-<li><a href="#org73c087e">3.7. Allocation via Block Splitting</a></li>
-<li><a href="#orgbc58952">3.8. Freeing Blocks and Merging</a></li>
-<li><a href="#orge625552">3.9. Expanding the Heap</a></li>
-<li><a href="#org138a327">3.10. Overall Code Structure of EL Malloc</a></li>
-<li><a href="#org8895a3a">3.11. Demo Run using EL Malloc</a></li>
-<li><a href="#org91bec4a">3.12. Grading Criteria for El Malloc</a></li>
+<li><a href="#org828abc5">3.1. EL Malloc Data Structures</a></li>
+<li><a href="#orgbbc3d05">3.2. Block Header/Footer</a></li>
+<li><a href="#org687e7eb">3.3. Footers and Blocks Above/Below</a></li>
+<li><a href="#orgd956c4e">3.4. Block Lists and Global Control</a></li>
+<li><a href="#org17c067d">3.5. Pointers and "Actual" Space</a></li>
+<li><a href="#org2f999ec">3.6. Doubly Linked List Operations</a></li>
+<li><a href="#org1188335">3.7. Allocation via Block Splitting</a></li>
+<li><a href="#org4abd705">3.8. Freeing Blocks and Merging</a></li>
+<li><a href="#orgaee64a9">3.9. Expanding the Heap</a></li>
+<li><a href="#org81dd1a6">3.10. Overall Code Structure of EL Malloc</a></li>
+<li><a href="#orgc8858cf">3.11. Demo Run using EL Malloc</a></li>
+<li><a href="#org3b5c700">3.12. Grading Criteria for El Malloc</a></li>
 </ul>
 </li>
-<li><a href="#org8062537">4. Project Submission</a>
+<li><a href="#org62af5b5">4. Project Submission</a>
 <ul>
-<li><a href="#org5d8e686">4.1. Submit to Gradescope</a></li>
-<li><a href="#orgfddd71a">4.2. Late Policies</a></li>
+<li><a href="#org2c19117">4.1. Submit to Gradescope</a></li>
+<li><a href="#org1b433b9">4.2. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -446,8 +467,8 @@ the project may wish to look at the updated diagram.
 </div>
 </div>
 
-<div id="outline-container-orgd85163d" class="outline-2">
-<h2 id="orgd85163d"><span class="section-number-2">1</span> Overview</h2>
+<div id="outline-container-org9a38bc7" class="outline-2">
+<h2 id="org9a38bc7"><span class="section-number-2">1</span> Overview</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This project features a single required problem pertaining to the
@@ -464,8 +485,8 @@ replacement for <code>malloc() / free()</code>.</li>
 </div>
 
 
-<div id="outline-container-org0c20e5b" class="outline-2">
-<h2 id="org0c20e5b"><span class="section-number-2">2</span> <a id="org62a1aa8"></a> Download Code and Setup</h2>
+<div id="outline-container-org2e147bf" class="outline-2">
+<h2 id="org2e147bf"><span class="section-number-2">2</span> <a id="org23e833b"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -539,8 +560,8 @@ folder. Ultimately you will re-zip this folder to submit it.
 </div>
 
 
-<div id="outline-container-org2b6e8da" class="outline-2">
-<h2 id="org2b6e8da"><span class="section-number-2">3</span> <b>Problem 1</b> : EL Malloc</h2>
+<div id="outline-container-org0bebca5" class="outline-2">
+<h2 id="org0bebca5"><span class="section-number-2">3</span> <b>Problem 1</b> : EL Malloc</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 A <b>memory allocator</b> is small system which manages heap memory,
@@ -591,8 +612,8 @@ adjacent available blocks if possible.</li>
 </ul>
 </div>
 
-<div id="outline-container-orgfc0161f" class="outline-3">
-<h3 id="orgfc0161f"><span class="section-number-3">3.1</span> EL Malloc Data Structures</h3>
+<div id="outline-container-org828abc5" class="outline-3">
+<h3 id="org828abc5"><span class="section-number-3">3.1</span> EL Malloc Data Structures</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Several data structures defined in <code>el_malloc.h</code> should be studied so
@@ -603,8 +624,8 @@ the required functions should implement.
 </div>
 </div>
 
-<div id="outline-container-org6777ccf" class="outline-3">
-<h3 id="org6777ccf"><span class="section-number-3">3.2</span> Block Header/Footer</h3>
+<div id="outline-container-orgbbc3d05" class="outline-3">
+<h3 id="orgbbc3d05"><span class="section-number-3">3.2</span> Block Header/Footer</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Each block of memory tracked by EL Malloc is preceded and succeeded by
@@ -648,7 +669,7 @@ shown below.
 </p>
 <div class="org-center">
 
-<div id="orgecd716d" class="figure">
+<div id="orgec3906f" class="figure">
 <p><img src="block.png" alt="block.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Block data preceded by a header (<code>el_blockhead_t</code>) and followed by a footer (<code>el_blockfoot_t</code>)._</p>
@@ -659,8 +680,8 @@ shown below.
 
 
 
-<div id="outline-container-org06a9529" class="outline-3">
-<h3 id="org06a9529"><span class="section-number-3">3.3</span> Footers and Blocks Above/Below</h3>
+<div id="outline-container-org687e7eb" class="outline-3">
+<h3 id="org687e7eb"><span class="section-number-3">3.3</span> Footers and Blocks Above/Below</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 One might wonder why the footer appears.  In tracking blocks, there
@@ -676,7 +697,7 @@ This is illustrated in the diagram below.
 </p>
 <div class="org-center">
 
-<div id="org5f55388" class="figure">
+<div id="org7bc8027" class="figure">
 <p><img src="headfoot.png" alt="headfoot.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Finding preceding block header using footer (<code>el_block_below(header)</code>)</p>
@@ -722,8 +743,8 @@ useful for doing pointer operations involving bytes.
 </div>
 </div>
 
-<div id="outline-container-org5a5c5e0" class="outline-3">
-<h3 id="org5a5c5e0"><span class="section-number-3">3.4</span> Block Lists and Global Control</h3>
+<div id="outline-container-orgd956c4e" class="outline-3">
+<h3 id="orgd956c4e"><span class="section-number-3">3.4</span> Block Lists and Global Control</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 The main purpose of the memory allocator is to track the available and
@@ -770,7 +791,7 @@ structure <code>el_ctl</code> has two lists for available and used space.
 
 <div class="org-center">
 
-<div id="orga08d7ed" class="figure">
+<div id="org82ae710" class="figure">
 <p><img src="listsglobal.png" alt="listsglobal.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 3: </span>Structure of heap with several used/available blocks. Pointers from <code>el_ctl</code> lists allow access to these blocks.</p>
@@ -792,8 +813,8 @@ void el_cleanup();
 </div>
 
 
-<div id="outline-container-org5d63a5b" class="outline-3">
-<h3 id="org5d63a5b"><span class="section-number-3">3.5</span> Pointers and "Actual" Space</h3>
+<div id="outline-container-org17c067d" class="outline-3">
+<h3 id="org17c067d"><span class="section-number-3">3.5</span> Pointers and "Actual" Space</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 In several structures, there appear pointers named <code>xxx</code> and structs
@@ -834,8 +855,8 @@ the struct for the list.
 </div>
 </div>
 
-<div id="outline-container-org13b11c1" class="outline-3">
-<h3 id="org13b11c1"><span class="section-number-3">3.6</span> Doubly Linked List Operations</h3>
+<div id="outline-container-org2f999ec" class="outline-3">
+<h3 id="org2f999ec"><span class="section-number-3">3.6</span> Doubly Linked List Operations</h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 A large number of operations in EL Malloc boil down to doubly linked
@@ -886,8 +907,8 @@ void el_remove_block(el_blocklist_t *list, el_blockhead_t *block);
 </div>
 </div>
 
-<div id="outline-container-org73c087e" class="outline-3">
-<h3 id="org73c087e"><span class="section-number-3">3.7</span> <a id="org543fb5e"></a> Allocation via Block Splitting</h3>
+<div id="outline-container-org1188335" class="outline-3">
+<h3 id="org1188335"><span class="section-number-3">3.7</span> <a id="org5f342c6"></a> Allocation via Block Splitting</h3>
 <div class="outline-text-3" id="text-3-7">
 <p>
 The basic operation of granting memory on a call to <code>el_malloc(size)</code>
@@ -910,7 +931,7 @@ after the <code>el_blockhead_t</code> is returned from <code>el_malloc()</code>.
 
 <div class="org-center">
 
-<div id="orgcad49af" class="figure">
+<div id="org7d387c4" class="figure">
 <p><img src="split.png" alt="split.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 4: </span>Splitting a block in an allocation request. Top panels shows the behavior of the <code>el_split_block()</code> function. Bottom panels show the beginning and ending state of <code>el_malloc()</code> and one possibility of splitting a block affects the used and available lists.</p>
@@ -930,8 +951,8 @@ void *el_malloc(size_t nbytes);
 </div>
 </div>
 
-<div id="outline-container-orgbc58952" class="outline-3">
-<h3 id="orgbc58952"><span class="section-number-3">3.8</span> Freeing Blocks and Merging</h3>
+<div id="outline-container-org4abd705" class="outline-3">
+<h3 id="org4abd705"><span class="section-number-3">3.8</span> Freeing Blocks and Merging</h3>
 <div class="outline-text-3" id="text-3-8">
 <p>
 Freeing memory passes in a pointer to the user area that was
@@ -963,7 +984,7 @@ The diagrams below show two of these cases.
 </p>
 <div class="org-center">
 
-<div id="org4147b1f" class="figure">
+<div id="orgef3d50f" class="figure">
 <p><img src="free-merge.png" alt="free-merge.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 5: </span>Two cases of freeing blocks. The 2nd involves merging adjacent nodes with available space.</p>
@@ -987,8 +1008,8 @@ void el_free(void *ptr);
 </div>
 </div>
 
-<div id="outline-container-orge625552" class="outline-3">
-<h3 id="orge625552"><span class="section-number-3">3.9</span> Expanding the Heap</h3>
+<div id="outline-container-orgaee64a9" class="outline-3">
+<h3 id="orgaee64a9"><span class="section-number-3">3.9</span> Expanding the Heap</h3>
 <div class="outline-text-3" id="text-3-9">
 <p>
 El Malloc initializes the heap with just a single page of memory
@@ -1052,8 +1073,8 @@ constant and print the error message indicated if so.</li>
 </div>
 
 
-<div id="outline-container-org138a327" class="outline-3">
-<h3 id="org138a327"><span class="section-number-3">3.10</span> Overall Code Structure of EL Malloc</h3>
+<div id="outline-container-org81dd1a6" class="outline-3">
+<h3 id="org81dd1a6"><span class="section-number-3">3.10</span> Overall Code Structure of EL Malloc</h3>
 <div class="outline-text-3" id="text-3-10">
 <p>
 Below is the code structure of the EL Malloc library.  Some of the
@@ -1061,7 +1082,7 @@ functions have been implemented already while those marked <code>REQUIRED</code>
 must be completed for full credit on the problem.
 </p>
 
-<pre class="example" id="orgaf00b58">
+<pre class="example" id="org29e4db0">
 // el_malloc.c: implementation of explicit list malloc functions.
 /////////// SOLUTION //////////////
 
@@ -1154,10 +1175,8 @@ void el_remove_block(el_blocklist_t *list, el_blockhead_t *block);
 el_blockhead_t *el_find_first_avail(size_t size);
 // REQUIRED
 // Find the first block in the available list with block size of at
-// least (size+EL_BLOCK_OVERHEAD). Overhead is accounted so this
-// routine may be used to find an available block to split: splitting
-// requires adding in a new header/footer. Returns a pointer to the
-// found block or NULL if no of sufficient size is available.
+// least `size`.  Returns a pointer to the found block or NULL if no
+// block of sufficient size is available.
 
 el_blockhead_t *el_split_block(el_blockhead_t *block, size_t new_size);
 // REQUIRED
@@ -1229,8 +1248,8 @@ int el_append_pages_to_heap(int npages);
 </div>
 </div>
 
-<div id="outline-container-org8895a3a" class="outline-3">
-<h3 id="org8895a3a"><span class="section-number-3">3.11</span> Demo Run using EL Malloc</h3>
+<div id="outline-container-orgc8858cf" class="outline-3">
+<h3 id="orgc8858cf"><span class="section-number-3">3.11</span> Demo Run using EL Malloc</h3>
 <div class="outline-text-3" id="text-3-11">
 <p>
 Below is a run showing the behavior of a series of <code>el_malloc() /
@@ -1239,9 +1258,9 @@ program.
 </p>
 </div>
 
-<div id="outline-container-org1d272bd" class="outline-4">
-<h4 id="org1d272bd">Source for <code>el_demo.c</code></h4>
-<div class="outline-text-4" id="text-org1d272bd">
+<div id="outline-container-org60de262" class="outline-4">
+<h4 id="org60de262">Source for <code>el_demo.c</code></h4>
+<div class="outline-text-4" id="text-org60de262">
 <div class="org-src-container">
 <pre class="src src-c">// el_demo.c: Shows use cases for el_malloc() and el_free(). This file
 // can be used for testing but is not itself a test.
@@ -1356,9 +1375,9 @@ int main(){
 </div>
 </div>
 
-<div id="outline-container-org9812bb8" class="outline-4">
-<h4 id="org9812bb8"><a id="org89ed6ed"></a> Output of El Malloc Demo</h4>
-<div class="outline-text-4" id="text-org9812bb8">
+<div id="outline-container-org4bf9c9d" class="outline-4">
+<h4 id="org4bf9c9d"><a id="orgb255914"></a> Output of El Malloc Demo</h4>
+<div class="outline-text-4" id="text-org4bf9c9d">
 <div class="org-src-container">
 <pre class="src src-text">EL_BLOCK_OVERHEAD: 40
 INITIAL
@@ -2099,8 +2118,8 @@ HEAP BLOCKS:
 </div>
 </div>
 
-<div id="outline-container-org91bec4a" class="outline-3 grading50">
-<h3 id="org91bec4a"><span class="section-number-3">3.12</span> <a id="org1c5e64c"></a> Grading Criteria for El Malloc&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading50">grading50</span></span></h3>
+<div id="outline-container-org3b5c700" class="outline-3 grading50">
+<h3 id="org3b5c700"><span class="section-number-3">3.12</span> <a id="org55103e8"></a> Grading Criteria for El Malloc&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading50">grading50</span></span></h3>
 <div class="outline-text-3" id="text-3-12">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -2356,12 +2375,12 @@ HEAP BLOCKS:
 
 
 
-<div id="outline-container-org8062537" class="outline-2">
-<h2 id="org8062537"><span class="section-number-2">4</span> Project Submission</h2>
+<div id="outline-container-org62af5b5" class="outline-2">
+<h2 id="org62af5b5"><span class="section-number-2">4</span> Project Submission</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org5d8e686" class="outline-3">
-<h3 id="org5d8e686"><span class="section-number-3">4.1</span> <a id="org232bfd4"></a> Submit to Gradescope</h3>
+<div id="outline-container-org2c19117" class="outline-3">
+<h3 id="org2c19117"><span class="section-number-3">4.1</span> <a id="org41a0f2b"></a> Submit to Gradescope</h3>
 <div class="outline-text-3" id="text-4-1">
 <ol class="org-ol">
 <li><p>
@@ -2412,8 +2431,8 @@ pictures.</li>
 </div>
 </div>
 
-<div id="outline-container-orgfddd71a" class="outline-3">
-<h3 id="orgfddd71a"><span class="section-number-3">4.2</span> Late Policies</h3>
+<div id="outline-container-org1b433b9" class="outline-3">
+<h3 id="org1b433b9"><span class="section-number-3">4.2</span> Late Policies</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 You may wish to review the policy on late project submission which
@@ -2430,7 +2449,7 @@ deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-04-26 Tue 17:03 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-04-27 Wed 15:21 <br/> </i>
 </div>
 </body>
 </html>
