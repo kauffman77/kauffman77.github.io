@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-01-23 Sun 20:34 -->
+<!-- 2022-09-08 Thu 14:05 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CSCI 2021 Lab02: Compiling / Testing C Code</title>
-<meta name="generator" content="Org mode" />
+<title>CSCI 2021 Lab02: Basic C Application Coding</title>
 <meta name="author" content="Chris Kauffman" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -191,7 +192,6 @@
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { width: 90%; }
-  /*]]>*/-->
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -248,6 +248,7 @@ pre {
 }
 #content, #preamble, #postamble {
 margin-left:300px;
+max-width: 100%;
 }
 .tag {
 background-color: inherit; font-family: inherit;
@@ -340,68 +341,45 @@ text-align: justify;
 }
 }
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-01-23 Sun 20:34</i>
+<i>Last Updated: 2022-09-08 Thu 14:05</i>
 </div>
-<div id="content">
-<h1 class="title">CSCI 2021 Lab02: Compiling / Testing C Code</h1>
+<div id="content" class="content">
+<h1 class="title">CSCI 2021 Lab02: Basic C Application Coding</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 2/1/2022</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm 20-Sep-2022</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-orgffee7bc" class="outline-4">
-<h4 id="orgffee7bc">CODE DISTRIBUTION: <a href="lab02-code.zip">lab02-code.zip</a></h4>
+<div id="outline-container-org4e7aaa6" class="outline-4">
+<h4 id="org4e7aaa6">CODE DISTRIBUTION: <a href="lab02-code.zip">lab02-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org5ea8fec" class="outline-4">
-<h4 id="org5ea8fec">CHANGELOG: Empty</h4>
+<div id="outline-container-orgfce965c" class="outline-4">
+<h4 id="orgfce965c">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-orgba9bf94" class="outline-4">
-<h4 id="orgba9bf94"></h4>
-<div class="outline-text-4" id="text-orgba9bf94">
-<div id="table-of-contents">
+<div id="outline-container-org5782fbb" class="outline-4">
+<h4 id="org5782fbb"></h4>
+<div class="outline-text-4" id="text-org5782fbb">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org4450d0d">1. Rationale</a></li>
-<li><a href="#org1d3ff6e">2. Codepack</a></li>
-<li><a href="#org39aff74">3. Overview of Labwork</a></li>
-<li><a href="#org4f1fcf7">4. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org9f57d2e">5. Submission</a></li>
+<li><a href="#org7e800e6">1. Rationale</a></li>
+<li><a href="#org2da1c92">2. Codepack</a></li>
+<li><a href="#org92c11d6">3. QUESTIONS.txt File Contents</a></li>
+<li><a href="#orgeb0b990">4. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org4450d0d" class="outline-2">
-<h2 id="org4450d0d"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org7e800e6" class="outline-2">
+<h2 id="org7e800e6"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This lab demonstrates a number of C programming conventions through a
@@ -415,9 +393,9 @@ approach will be used in an upcoming project.
 </p>
 </div>
 
-<div id="outline-container-org854d0c3" class="outline-4">
-<h4 id="org854d0c3">Grading Policy</h4>
-<div class="outline-text-4" id="text-org854d0c3">
+<div id="outline-container-orga942e6d" class="outline-4">
+<h4 id="orga942e6d">Grading Policy</h4>
+<div class="outline-text-4" id="text-orga942e6d">
 <p>
 Credit for this Lab is earned by completing the exercises here and
 submitting a Zip of the work to Gradescope. Students are responsible
@@ -440,8 +418,8 @@ See the <a href="../syllabus.html">full policies in the course syllabus</a>.
 </div>
 </div>
 
-<div id="outline-container-org1d3ff6e" class="outline-2">
-<h2 id="org1d3ff6e"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org2da1c92" class="outline-2">
+<h2 id="org2da1c92"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for this lab is linked at the top of this
@@ -532,86 +510,15 @@ the following files which are briefly described.
 </div>
 </div>
 
-
-<div id="outline-container-org39aff74" class="outline-2">
-<h2 id="org39aff74"><span class="section-number-2">3</span> Overview of Labwork</h2>
+<div id="outline-container-org92c11d6" class="outline-2">
+<h2 id="org92c11d6"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-3">
-<ol class="org-ol">
-<li>If at any point you become confused by what to do next <b>ask for
-help</b> from your labmates or course staff.</li>
-<li><p>
-Download the <code>lab01-code.zip</code> file linked at the top of this
-document into your Unix environment and unzip it. In most UNIX
-environments you can use the terminal command
-</p>
-<pre class="example">
-&gt; unzip lab01-code.zip
-</pre>
-
 <p>
-to accomplish this.  A number of files will be created in a the new
-folder <code>lab01-code/</code>.
-</p></li>
-<li>Find and open the <code>QUESTIONS.txt</code> file in a text editor which
-contains further instructions on what to do. There are several asks
-to play with basic UNIX commands. Execute the commands indicated
-and observer their results.</li>
-<li><p>
-Some parts of the text file are marked with <code>QUESTION</code> and have
-multiple choices. <b>Mark the correct response as follows:</b>
+For a quick overview of work involved with each lab, refer to the
+corresponding section in Lab01 which is here:
+<a href="https://www-users.cse.umn.edu/~kauffman/2021/lab01.html#org116bf21">https://www-users.cse.umn.edu/~kauffman/2021/lab01.html#org116bf21</a>
 </p>
-<div class="org-src-container">
-<pre class="src src-text">   QUESTION: Which of these is correct?
-   - ( ) This is a wrong answer
-   - ( ) This is also wrong
-   - (X) This is the correct answer
-   - ( ) And another wrong answer
-</pre>
-</div>
-<p>
-When you have filled in all your answers, check them via
-</p>
-<pre class="example">
-&gt; make test-quiz
-</pre></li>
-<li><p>
-Some activities will be based on writing CODE and marked as
-such. These will involve editing a file like the provided <code>hello.c</code>
-to complete it. Once you have completed the code necessary check it
-via
-</p>
-<pre class="example">
-&gt; make test-code
-</pre></li>
-<li><p>
-You can run tests for both the QUIZ and CODE sections with
-</p>
-<pre class="example">
-&gt; make test
-</pre>
 
-<p>
-which you should always do prior to submitting
-</p></li>
-<li><p>
-When you complete the QUIZ and CODE questions, create a zip of your
-lab work via
-</p>
-<pre class="example">
-&gt; make zip
-</pre>
-
-<p>
-and then upload the file to Gradscope as per the instructions in
-the last section.
-</p></li>
-</ol>
-</div>
-</div>
-
-<div id="outline-container-org4f1fcf7" class="outline-2">
-<h2 id="org4f1fcf7"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
-<div class="outline-text-2" id="text-4">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
 Follow the instructions in it to complete the QUIZ and CODE questions
@@ -712,65 +619,78 @@ CODE for Linked List Application
   - You will need to write one like it in an upcoming project
 
   The `list_main' program has several problems that must be corrected to
-  complete it.
-
-  1. The builtin `get' command produces some errors. This will require
-     editing the associated C function in `list_funcs.c' to correct it.
-  2. The `contains' command is not implemented which will require adding
-     a function to `list_funcs.c' and adding that command to
-     `list_main.c'.
-  3. The `list_insert()' function has a problem with its return value
-     which causes `main()' to report incorrect results for it.
-
-  Refer to HW02 for more detail. The objective is to fix the code so all
-  tests for it pass:
-  ,----
-  | &gt; make test-code
-  | gcc -Wall -Wno-comment -Werror -g  -c list_main.c
-  | gcc -Wall -Wno-comment -Werror -g  -c list_funcs.c
-  | gcc -Wall -Wno-comment -Werror -g  -o list_main list_main.o list_funcs.o list.h
-  | ./testy test_list_main.org 
-  | ============================================================
-  | == test_list_main.org : list_main application tests
-  | == Running 4 / 4 tests
-  | 1)  Print then Exit      : ok
-  | 2)  Insert 3 and Print   : ok
-  | 3)  Get Command          : ok
-  | 4)  Contains Items       : ok
-  | ============================================================
-  | RESULTS: 4 / 4 tests passed
-  `----
-
-  NOTE: Initially the code for `list_main' will not compile. This is
-  because the `main()' function uses the `list_contains()' function
-  which is not present. Compiling will give an error like the following:
-
+  complete it. The application will compile and run but produce errors
+  during testing.
   ,----
   | &gt; make
   | gcc -Wall -Werror -g  -c list_main.c
   | gcc -Wall -Werror -g  -c list_funcs.c
   | gcc -Wall -Werror -g  -o list_main list_main.o list_funcs.o list.h
-  | /usr/bin/ld: list_main.o: in function `main':
-  | lab02-code/list_main.c:91: undefined reference to `list_contains'   &lt;&lt;&lt; missing function
-  | collect2: error: ld returned 1 exit status
-  | make: *** [Makefile:51: list_main] Error 1
+  | 
+  | &gt; make test-code
+  | ./testy test_list_main.org 
+  | ============================================================
+  | == test_list_main.org : list_main application tests
+  | == Running 4 / 4 tests
+  | 1)  Print then Exit      : ok
+  | 2)  Insert 3 and Print   : FAIL -&gt; results in file 'test-results/list_main-02-result.tmp'
+  | 3)  Get Command          : FAIL -&gt; results in file 'test-results/list_main-03-result.tmp'
+  | 4)  Contains Items       : FAIL -&gt; results in file 'test-results/list_main-04-result.tmp'
+  | ============================================================
+  | RESULTS: 1 / 4 tests passed
   `----
+  The goal is to correct all the errors to pass all tests and learn
+  something about C coding along the way.
 
-  To initially fix this, you can uncommon the prototype for
-  `list_contains()' at the end of the `list_funcs.c' file and add a
-  return value as in
+
+Edits to Make `list_main.c' and `list_funcs.c'
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  There are 3 overarching problems with the list application.
+
+
+get command and list_get()
+--------------------------
+
+  The builtin `get' command produces some errors. This will require
+  editing the associated `list_get()' C function in `list_funcs.c' to
+  correct it. The function is missing some bounds checking which cause
+  requests for out-of-bounds accesses to crash the application.
+
+
+list_insert
+-----------
+
+  The `list_insert()' function has a problem with its return value which
+  causes `main()' to report incorrect results for it.  Read the
+  documentation carefully about what this function is intended to
+  return. Check these and check that the list_main.c application behaves
+  appropriately for the return values as well. Adjust as needed.
+
+
+list_contains
+-------------
+
+  The `contains' command is not implemented which will require adding a
+  function to `list_funcs.c' and adding that command to `list_main.c'.
+  Start with the `list_contains()' C function which only has a "stub"
+  implementation in `list_funcs.c'.
   ,----
   | int list_contains(list_t *list, char *query){
   |   //IMPLEMENT ME
   |   return 0;
   | }
   `----
+  You will need to fill in code to complete it according to the
+  documentation provided.
+
   Do not do any printing in `list_contains()' : this is to be done in
   `list_main()' based on the return value received from the function.
 
-  Next visit the `list_main.c' file and add a case there which will
-  allow the `contains xyz' command to run and produce output when
-  running `list_main' like the following example:
+  After writing some code in `list_funcs.c', visit the `list_main.c'
+  file and add a case there which will allow the `contains xyz' command
+  to run and produce output when running `list_main' like the following
+  example:
   ,----
   | list&gt; insert Mario
   | list&gt; insert Luigi
@@ -790,34 +710,62 @@ CODE for Linked List Application
   `----
 
 
-  This should allow you to compile and run the tests. Most will fail but
-  runnable tests are the first step to victory.
+Testing Your Code
+~~~~~~~~~~~~~~~~~
+
+  If all functions are behaving correctly, you should pass all tests as
+  shown below.
   ,----
-  | &gt; make
-  | gcc -Wall -Werror -g  -c list_main.c
-  | gcc -Wall -Werror -g  -c list_funcs.c
-  | gcc -Wall -Werror -g  -o list_main list_main.o list_funcs.o list.h
-  | 
   | &gt; make test-code
+  | gcc -Wall -Wno-comment -Werror -g  -c list_main.c
+  | gcc -Wall -Wno-comment -Werror -g  -c list_funcs.c
+  | gcc -Wall -Wno-comment -Werror -g  -o list_main list_main.o list_funcs.o list.h
   | ./testy test_list_main.org 
   | ============================================================
   | == test_list_main.org : list_main application tests
   | == Running 4 / 4 tests
   | 1)  Print then Exit      : ok
-  | 2)  Insert 3 and Print   : FAIL -&gt; results in file 'test-results/list_main-02-result.tmp'
-  | 3)  Get Command          : FAIL -&gt; results in file 'test-results/list_main-03-result.tmp'
-  | 4)  Contains Items       : FAIL -&gt; results in file 'test-results/list_main-04-result.tmp'
+  | 2)  Insert 3 and Print   : ok
+  | 3)  Get Command          : ok
+  | 4)  Contains Items       : ok
   | ============================================================
-  | RESULTS: 1 / 4 tests passed
+  | RESULTS: 4 / 4 tests passed
   `----
+
+
+Additional Practice
+~~~~~~~~~~~~~~~~~~~
+
+  While not part of the lab requirements, you can practice additionally
+  by further extending the list application. All of these are likely to
+  follow the same basic structure of 1 or more C functions being added
+  to `list_funcs.c' and a corresponding command added to
+  `list_main.c'. Note that you will also need to add new function
+  prototypes to `list.h' for any new functions so that the compiler is
+  aware of them.
+
+  Some possible additions are.
+  - `count' which returns the number of items currently in the list
+  - `remove_index &lt;N&gt;' to remove a specific list item number;
+    e.g. `remove_indx 4' to remove element 4 of the list
+  - `remove_item &lt;item&gt;' to remove a specific item by name such as
+    `remove_item apple'
+  - `drop_from &lt;N&gt;' which deletes all items starting at index `&lt;N&gt;' to
+    the end of the list from the list
+  - `drop_upto &lt;N&gt;' which deletes items from the beginning of the list
+    up to index `&lt;N&gt;'
+  - `load &lt;file&gt;' and `save &lt;file&gt;' which read a list from a file or
+    store the current file in a list. These will require knowledge of
+    C's basic I/O functions which we will study later but will required
+    functionality for an upcoming project.
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org9f57d2e" class="outline-2">
-<h2 id="org9f57d2e"><span class="section-number-2">5</span> Submission</h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-orgeb0b990" class="outline-2">
+<h2 id="orgeb0b990"><span class="section-number-2">4</span> Submission</h2>
+<div class="outline-text-2" id="text-4">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
 how to upload your completed lab zip to Gradescope.
@@ -826,7 +774,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-01-23 Sun 20:34 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-09-08 Thu 14:05 <br/> </i>
 </div>
 </body>
 </html>
