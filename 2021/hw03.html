@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-02-22 Tue 11:25 -->
+<!-- 2022-09-19 Mon 11:55 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 HW03: Basic I/O + Binary Integers</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -191,7 +192,6 @@
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { width: 90%; }
-  /*]]>*/-->
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -248,6 +248,7 @@ pre {
 }
 #content, #preamble, #postamble {
 margin-left:300px;
+max-width: 100%;
 }
 .tag {
 background-color: inherit; font-family: inherit;
@@ -340,46 +341,24 @@ text-align: justify;
 }
 }
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-02-22 Tue 11:25</i>
+<i>Last Updated: 2022-09-19 Mon 11:55</i>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">CSCI 2021 HW03: Basic I/O + Binary Integers</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 2/08/2022</b></li>
+<li><b>Due: 11:59pm Tue 27-Sep-2022</b></li>
 <li><i>Approximately 0.83% of total grade</i></li>
 <li>Homework and Quizzes are open resource/open collaboration. You must
 submit your own work but you may freely discuss HW topics with other
 members of the class.</li>
 </ul>
 
-<div id="outline-container-orge569c8c" class="outline-4">
-<h4 id="orge569c8c">CODE DISTRIBUTION: <a href="hw03-code.zip">hw03-code.zip</a></h4>
-<div class="outline-text-4" id="text-orge569c8c">
+<div id="outline-container-orgeb34c3e" class="outline-4">
+<h4 id="orgeb34c3e">CODE DISTRIBUTION: <a href="hw03-code.zip">hw03-code.zip</a></h4>
+<div class="outline-text-4" id="text-orgeb34c3e">
 <ul class="org-ul">
 <li>Download the code distribution</li>
 <li>See further setup instructions below</li>
@@ -387,32 +366,32 @@ members of the class.</li>
 </div>
 </div>
 
-<div id="outline-container-org0cc6b39" class="outline-4">
-<h4 id="org0cc6b39">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org0cc6b39">
-<div id="table-of-contents">
+<div id="outline-container-org663f36f" class="outline-4">
+<h4 id="org663f36f">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org663f36f">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org02e1b71">1. Rationale</a>
+<li><a href="#org6d89e12">1. Rationale</a>
 <ul>
-<li><a href="#org80ba977">Associated Reading / Preparation</a></li>
-<li><a href="#org821ccc3">Grading Policy</a></li>
+<li><a href="#org1052ca6">Associated Reading / Preparation</a></li>
+<li><a href="#orgc3ba752">Grading Policy</a></li>
 </ul>
 </li>
-<li><a href="#org32f8a52">2. Codepack</a></li>
-<li><a href="#orgcf0a338">3. Two's Complement Arithmetic</a></li>
-<li><a href="#orga6338ba">4. Octal and Hexadecimal Representation of Numbers</a></li>
-<li><a href="#org4b2860b">5. What to Understand</a></li>
-<li><a href="#org349a0b4">6. Questions</a></li>
+<li><a href="#org2906d76">2. Codepack</a></li>
+<li><a href="#orgc68b0d8">3. Two's Complement Arithmetic</a></li>
+<li><a href="#org8eb3954">4. Octal and Hexadecimal Representation of Numbers</a></li>
+<li><a href="#org334de33">5. What to Understand</a></li>
+<li><a href="#org23e76a7">6. Questions</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org02e1b71" class="outline-2">
-<h2 id="org02e1b71"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org6d89e12" class="outline-2">
+<h2 id="org6d89e12"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Reading data from files is an essential skill in any programming
@@ -433,9 +412,9 @@ also discussed.
 </p>
 </div>
 
-<div id="outline-container-org80ba977" class="outline-3">
-<h3 id="org80ba977">Associated Reading / Preparation</h3>
-<div class="outline-text-3" id="text-org80ba977">
+<div id="outline-container-org1052ca6" class="outline-3">
+<h3 id="org1052ca6">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-org1052ca6">
 <p>
 Most C references will contain information on C's standard I/O
 libraries which discuss functions like <code>fopen(), fscanf(), rewind()</code>
@@ -445,14 +424,14 @@ and <code>fclose()</code>.
 <p>
 Bryant and O'Hallaron: Ch 2.1-2.3 on binary representations of
 integers in unsigned and two's complement signed format. This page
-also includes a <a href="#orgef92680">summary of the Two's Complement system</a>.
+also includes a <a href="#org81719f3">summary of the Two's Complement system</a>.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org821ccc3" class="outline-3">
-<h3 id="org821ccc3">Grading Policy</h3>
-<div class="outline-text-3" id="text-org821ccc3">
+<div id="outline-container-orgc3ba752" class="outline-3">
+<h3 id="orgc3ba752">Grading Policy</h3>
+<div class="outline-text-3" id="text-orgc3ba752">
 <p>
 Credit for this HW is earned by taking the associated HW Quiz which is
 linked under <code>Gradescope</code>.  The quiz will ask similar questions as
@@ -474,8 +453,8 @@ See the <a href="../2021/syllabus.html">full policies in the course syllabus</a>
 </div>
 </div>
 
-<div id="outline-container-org32f8a52" class="outline-2">
-<h2 id="org32f8a52"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org2906d76" class="outline-2">
+<h2 id="org2906d76"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -525,8 +504,8 @@ The codepack for the HW contains the following files:
 </div>
 </div>
 
-<div id="outline-container-orgcf0a338" class="outline-2">
-<h2 id="orgcf0a338"><span class="section-number-2">3</span> <a id="orgef92680"></a> Two's Complement Arithmetic</h2>
+<div id="outline-container-orgc68b0d8" class="outline-2">
+<h2 id="orgc68b0d8"><span class="section-number-2">3</span> <a id="org81719f3"></a> Two's Complement Arithmetic</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Understanding two's complement is necessary to complete a problem
@@ -670,8 +649,8 @@ in the following
 </div>
 </div>
 
-<div id="outline-container-orga6338ba" class="outline-2">
-<h2 id="orga6338ba"><span class="section-number-2">4</span> Octal and Hexadecimal Representation of Numbers</h2>
+<div id="outline-container-org8eb3954" class="outline-2">
+<h2 id="org8eb3954"><span class="section-number-2">4</span> Octal and Hexadecimal Representation of Numbers</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 The base-10 numbering system is taught rigorously from an early age
@@ -718,8 +697,8 @@ bits by 4: each 4 bits corresponds to one hexadecimal digit</li>
 </div>
 </div>
 
-<div id="outline-container-org4b2860b" class="outline-2">
-<h2 id="org4b2860b"><span class="section-number-2">5</span> What to Understand</h2>
+<div id="outline-container-org334de33" class="outline-2">
+<h2 id="org334de33"><span class="section-number-2">5</span> What to Understand</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Ensure that you understand
@@ -734,8 +713,8 @@ Ensure that you understand
 </div>
 
 
-<div id="outline-container-org349a0b4" class="outline-2">
-<h2 id="org349a0b4"><span class="section-number-2">6</span> Questions</h2>
+<div id="outline-container-org23e76a7" class="outline-2">
+<h2 id="org23e76a7"><span class="section-number-2">6</span> Questions</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Analyze the files in the provided codepack and answer the questions
@@ -978,7 +957,7 @@ PROBLEM 4: Converting Strings to Numbers
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-02-22 Tue 11:25 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-09-19 Mon 11:55 <br/> </i>
 </div>
 </body>
 </html>
