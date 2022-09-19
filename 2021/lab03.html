@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-01-31 Mon 11:14 -->
+<!-- 2022-09-19 Mon 11:52 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Lab03: Basic File Input and Structs</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -191,7 +192,6 @@
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { width: 90%; }
-  /*]]>*/-->
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -248,6 +248,7 @@ pre {
 }
 #content, #preamble, #postamble {
 margin-left:300px;
+max-width: 100%;
 }
 .tag {
 background-color: inherit; font-family: inherit;
@@ -340,63 +341,41 @@ text-align: justify;
 }
 }
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-01-31 Mon 11:14</i>
+<i>Last Updated: 2022-09-19 Mon 11:52</i>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">CSCI 2021 Lab03: Basic File Input and Structs</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 2/08/2022</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm Tue 27-Sep-2022</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-org7f3821a" class="outline-4">
-<h4 id="org7f3821a">CODE DISTRIBUTION: <a href="lab03-code.zip">lab03-code.zip</a></h4>
+<div id="outline-container-org174b12f" class="outline-4">
+<h4 id="org174b12f">CODE DISTRIBUTION: <a href="lab03-code.zip">lab03-code.zip</a></h4>
 </div>
 
-<div id="outline-container-orgaca22ec" class="outline-4">
-<h4 id="orgaca22ec">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-orgaca22ec">
-<div id="table-of-contents">
+<div id="outline-container-org6a624c1" class="outline-4">
+<h4 id="org6a624c1">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org6a624c1">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgde3a18a">1. Rationale</a></li>
-<li><a href="#org05c7767">2. Codepack</a></li>
-<li><a href="#orgbc9a858">3. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org6d58439">4. Submission</a></li>
+<li><a href="#orgd143fb4">1. Rationale</a></li>
+<li><a href="#orgbdd0e14">2. Codepack</a></li>
+<li><a href="#orgbdfd9d1">3. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org7e6416a">4. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgde3a18a" class="outline-2">
-<h2 id="orgde3a18a"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orgd143fb4" class="outline-2">
+<h2 id="orgd143fb4"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Reading basic data from a file is essential in any programming
@@ -410,9 +389,9 @@ associated with this situation is an essential C-programming skill.
 </p>
 </div>
 
-<div id="outline-container-org0e9ddb1" class="outline-4">
-<h4 id="org0e9ddb1">Grading Policy</h4>
-<div class="outline-text-4" id="text-org0e9ddb1">
+<div id="outline-container-orgb957a07" class="outline-4">
+<h4 id="orgb957a07">Grading Policy</h4>
+<div class="outline-text-4" id="text-orgb957a07">
 <p>
 Credit for this Lab is earned by completing the exercises here and
 submitting a Zip of the work to Gradescope. Students are responsible
@@ -435,8 +414,8 @@ See the <a href="../syllabus.html">full policies in the course syllabus</a>.
 </div>
 </div>
 
-<div id="outline-container-org05c7767" class="outline-2">
-<h2 id="org05c7767"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orgbdd0e14" class="outline-2">
+<h2 id="orgbdd0e14"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for this lab is linked at the top of this
@@ -528,8 +507,8 @@ the following files which are briefly described.
 </div>
 
 
-<div id="outline-container-orgbc9a858" class="outline-2">
-<h2 id="orgbc9a858"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-orgbdfd9d1" class="outline-2">
+<h2 id="orgbdfd9d1"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -787,8 +766,8 @@ CODE Complete treasure_main.c
 </div>
 </div>
 
-<div id="outline-container-org6d58439" class="outline-2">
-<h2 id="org6d58439"><span class="section-number-2">4</span> Submission</h2>
+<div id="outline-container-org7e6416a" class="outline-2">
+<h2 id="org7e6416a"><span class="section-number-2">4</span> Submission</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -798,7 +777,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-01-31 Mon 11:14 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-09-19 Mon 11:52 <br/> </i>
 </div>
 </body>
 </html>
