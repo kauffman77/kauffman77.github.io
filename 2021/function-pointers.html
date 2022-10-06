@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-04-08 Fri 11:34 -->
+<!-- 2022-10-06 Thu 16:34 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Function Pointers Tutorial</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -191,7 +192,6 @@
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { width: 90%; }
-  /*]]>*/-->
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -248,6 +248,7 @@ pre {
 }
 #content, #preamble, #postamble {
 margin-left:300px;
+max-width: 100%;
 }
 .tag {
 background-color: inherit; font-family: inherit;
@@ -340,60 +341,38 @@ text-align: justify;
 }
 }
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-04-08 Fri 11:34</i>
+<i>Last Updated: 2022-10-06 Thu 16:34</i>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">CSCI 2021 Function Pointers Tutorial</h1>
 
-<div id="outline-container-org246b8ef" class="outline-4">
-<h4 id="org246b8ef">CODE DISTRIBUTION: <a href="function-pointers-code.zip">function-pointers-code.zip</a></h4>
+<div id="outline-container-org590850e" class="outline-4">
+<h4 id="org590850e">CODE DISTRIBUTION: <a href="function-pointers-code.zip">function-pointers-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org7e3a5e5" class="outline-4">
-<h4 id="org7e3a5e5">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-org7e3a5e5">
-<div id="table-of-contents">
+<div id="outline-container-orgbfa5122" class="outline-4">
+<h4 id="orgbfa5122">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orgbfa5122">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org00c79be">1. Rationale</a></li>
-<li><a href="#orgc473aad">2. Function Pointer Basics</a></li>
-<li><a href="#org17d45a7">3. <code>qsort()</code> Library Function</a></li>
-<li><a href="#org637ddd7">4. Tables of Function Pointers</a></li>
-<li><a href="#org747dc9c">5. Additional Info</a></li>
+<li><a href="#org3b6dfa7">1. Rationale</a></li>
+<li><a href="#org3119672">2. Function Pointer Basics</a></li>
+<li><a href="#org0530ee6">3. <code>qsort()</code> Library Function</a></li>
+<li><a href="#orga305809">4. Tables of Function Pointers</a></li>
+<li><a href="#org0fd2267">5. Additional Info</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org00c79be" class="outline-2">
-<h2 id="org00c79be"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org3b6dfa7" class="outline-2">
+<h2 id="org3b6dfa7"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 C programmers constantly make use of pointers to various kinds of
@@ -407,9 +386,9 @@ in the C standard library.
 </p>
 </div>
 
-<div id="outline-container-orgb524734" class="outline-4">
-<h4 id="orgb524734">Grading</h4>
-<div class="outline-text-4" id="text-orgb524734">
+<div id="outline-container-org848c551" class="outline-4">
+<h4 id="org848c551">Grading</h4>
+<div class="outline-text-4" id="text-org848c551">
 <p>
 This is an <b>optional</b> tutorial. There is no grade associated with it
 and may be skipped if it is not of interest to you at this time.
@@ -417,9 +396,9 @@ and may be skipped if it is not of interest to you at this time.
 </div>
 </div>
 
-<div id="outline-container-org543876b" class="outline-4">
-<h4 id="org543876b">Codepack</h4>
-<div class="outline-text-4" id="text-org543876b">
+<div id="outline-container-org6e57758" class="outline-4">
+<h4 id="org6e57758">Codepack</h4>
+<div class="outline-text-4" id="text-org6e57758">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -466,8 +445,8 @@ and may be skipped if it is not of interest to you at this time.
 </div>
 
 
-<div id="outline-container-orgc473aad" class="outline-2">
-<h2 id="orgc473aad"><span class="section-number-2">2</span> Function Pointer Basics</h2>
+<div id="outline-container-org3119672" class="outline-2">
+<h2 id="org3119672"><span class="section-number-2">2</span> Function Pointer Basics</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 While functions themselves are a stream of bytes that represent
@@ -594,8 +573,8 @@ func_ptr(3) = 9
 </div>
 </div>
 
-<div id="outline-container-org17d45a7" class="outline-2">
-<h2 id="org17d45a7"><span class="section-number-2">3</span> <code>qsort()</code> Library Function</h2>
+<div id="outline-container-org0530ee6" class="outline-2">
+<h2 id="org0530ee6"><span class="section-number-2">3</span> <code>qsort()</code> Library Function</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 The C standard library provides a general purpose implementation of
@@ -698,8 +677,8 @@ function meaning it can be used with <code>qsort()</code> to sort strings.
 </div>
 </div>
 
-<div id="outline-container-org637ddd7" class="outline-2">
-<h2 id="org637ddd7"><span class="section-number-2">4</span> Tables of Function Pointers</h2>
+<div id="outline-container-orga305809" class="outline-2">
+<h2 id="orga305809"><span class="section-number-2">4</span> Tables of Function Pointers</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Some situations arise in which the same body of code is meant to be
@@ -782,8 +761,8 @@ to the function pointer passed in.
 </div>
 </div>
 
-<div id="outline-container-org747dc9c" class="outline-2">
-<h2 id="org747dc9c"><span class="section-number-2">5</span> Additional Info</h2>
+<div id="outline-container-org0fd2267" class="outline-2">
+<h2 id="org0fd2267"><span class="section-number-2">5</span> Additional Info</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Like <code>qsort()</code>, the C standard library <code>bsearch()</code> provides standard
@@ -801,7 +780,7 @@ of data.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-04-08 Fri 11:34 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-10-06 Thu 16:34 <br/> </i>
 </div>
 </body>
 </html>
