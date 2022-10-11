@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-02-21 Mon 10:31 -->
+<!-- 2022-10-11 Tue 10:32 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Lab06: GDB Basics</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -191,7 +192,6 @@
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { width: 90%; }
-  /*]]>*/-->
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -248,6 +248,7 @@ pre {
 }
 #content, #preamble, #postamble {
 margin-left:300px;
+max-width: 100%;
 }
 .tag {
 background-color: inherit; font-family: inherit;
@@ -340,67 +341,45 @@ text-align: justify;
 }
 }
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-02-21 Mon 10:31</i>
+<i>Last Updated: 2022-10-11 Tue 10:32</i>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">CSCI 2021 Lab06: GDB Basics</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 3/01/2022</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm Tue 18-Oct-2022</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-org6563355" class="outline-4">
-<h4 id="org6563355">CODE DISTRIBUTION: <a href="lab06-code.zip">lab06-code.zip</a></h4>
+<div id="outline-container-orgb829c36" class="outline-4">
+<h4 id="orgb829c36">CODE DISTRIBUTION: <a href="lab06-code.zip">lab06-code.zip</a></h4>
 </div>
 
-<div id="outline-container-orge0d0535" class="outline-4">
-<h4 id="orge0d0535">CHANGELOG: Empty</h4>
+<div id="outline-container-org6c7afe6" class="outline-4">
+<h4 id="org6c7afe6">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-orgfdab2b6" class="outline-4">
-<h4 id="orgfdab2b6"></h4>
-<div class="outline-text-4" id="text-orgfdab2b6">
-<div id="table-of-contents">
+<div id="outline-container-org9df5ef9" class="outline-4">
+<h4 id="org9df5ef9"></h4>
+<div class="outline-text-4" id="text-org9df5ef9">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orga9f87c6">1. Rationale</a></li>
-<li><a href="#orgcc606e8">2. Codepack</a></li>
-<li><a href="#org7c34cfc">3. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org8bc5d2b">4. Submission</a></li>
+<li><a href="#org4ca83db">1. Rationale</a></li>
+<li><a href="#org323f210">2. Codepack</a></li>
+<li><a href="#org5423f48">3. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org88807da">4. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orga9f87c6" class="outline-2">
-<h2 id="orga9f87c6"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org4ca83db" class="outline-2">
+<h2 id="org4ca83db"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Debuggers are an essential tool for any serious coder. They provide
@@ -413,9 +392,9 @@ is made immensely easier through the use of the debugger.
 </p>
 </div>
 
-<div id="outline-container-orgcd36b04" class="outline-4">
-<h4 id="orgcd36b04">Associated Reading</h4>
-<div class="outline-text-4" id="text-orgcd36b04">
+<div id="outline-container-orgf6d910e" class="outline-4">
+<h4 id="orgf6d910e">Associated Reading</h4>
+<div class="outline-text-4" id="text-orgf6d910e">
 <p>
 <a href="http://www-users.cs.umn.edu/~kauffman/2021/gdb.html">CSCI 2021 Quick Guide to gdb: The GNU Debugger</a>: Page describing how to
 start the debugger, a sample session using <code>puzzlebox</code>, an overview of
@@ -424,9 +403,9 @@ the most common commands.
 </div>
 </div>
 
-<div id="outline-container-org16a88b7" class="outline-4">
-<h4 id="org16a88b7">Grading Policy</h4>
-<div class="outline-text-4" id="text-org16a88b7">
+<div id="outline-container-org821de8e" class="outline-4">
+<h4 id="org821de8e">Grading Policy</h4>
+<div class="outline-text-4" id="text-org821de8e">
 <p>
 Credit for this Lab is earned by completing the exercises here and
 submitting a Zip of the work to Gradescope. Students are responsible
@@ -449,8 +428,8 @@ See the <a href="../syllabus.html">full policies in the course syllabus</a>.
 </div>
 </div>
 
-<div id="outline-container-orgcc606e8" class="outline-2">
-<h2 id="orgcc606e8"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org323f210" class="outline-2">
+<h2 id="org323f210"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for this lab is linked at the top of this
@@ -536,8 +515,8 @@ the following files which are briefly described.
 </div>
 
 
-<div id="outline-container-org7c34cfc" class="outline-2">
-<h2 id="org7c34cfc"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org5423f48" class="outline-2">
+<h2 id="org5423f48"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -747,13 +726,29 @@ CODE input.txt for phase03
   `----
 
   to create a zip to submit.
+
+
+Hints to Determine the Input
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  - There are 4 input numbers required for the phase and these are
+    extracted from the input.txt file
+  - There is a variable called `targ' which is important to examine; you
+    may wish to examine its value carefully using gdb's `print' command;
+    set a breakpoint after `targ' has its value set and try the
+    following commands
+    ,----
+    |   gdb&gt; print targ     # print as decimal int
+    |   gdb&gt; print/x targ   # print as hexadecimal
+    |   gdb&gt; print/t targ   # print in binary
+    `----
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org8bc5d2b" class="outline-2">
-<h2 id="org8bc5d2b"><span class="section-number-2">4</span> Submission</h2>
+<div id="outline-container-org88807da" class="outline-2">
+<h2 id="org88807da"><span class="section-number-2">4</span> Submission</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -763,7 +758,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-02-21 Mon 10:31 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-10-11 Tue 10:32 <br/> </i>
 </div>
 </body>
 </html>
