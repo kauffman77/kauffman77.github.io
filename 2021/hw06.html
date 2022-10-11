@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-02-22 Tue 15:45 -->
+<!-- 2022-10-11 Tue 10:38 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 HW06: Assembly Basics</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -191,7 +192,6 @@
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { width: 90%; }
-  /*]]>*/-->
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -248,6 +248,7 @@ pre {
 }
 #content, #preamble, #postamble {
 margin-left:300px;
+max-width: 100%;
 }
 .tag {
 background-color: inherit; font-family: inherit;
@@ -340,46 +341,24 @@ text-align: justify;
 }
 }
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-02-22 Tue 15:45</i>
+<i>Last Updated: 2022-10-11 Tue 10:38</i>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">CSCI 2021 HW06: Assembly Basics</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 3/01/2022</b></li>
+<li><b>Due: 11:59pm Tue 18-Oct-2022</b></li>
 <li><i>Approximately 0.83% of total grade</i></li>
 <li>Homework and Quizzes are open resource/open collaboration. You must
 submit your own work but you may freely discuss HW topics with other
 members of the class.</li>
 </ul>
 
-<div id="outline-container-org2ea273a" class="outline-4">
-<h4 id="org2ea273a">CODE DISTRIBUTION: <a href="hw06-code.zip">hw06-code.zip</a></h4>
-<div class="outline-text-4" id="text-org2ea273a">
+<div id="outline-container-orgf5cda3a" class="outline-4">
+<h4 id="orgf5cda3a">CODE DISTRIBUTION: <a href="hw06-code.zip">hw06-code.zip</a></h4>
+<div class="outline-text-4" id="text-orgf5cda3a">
 <ul class="org-ul">
 <li>Download the code distribution</li>
 <li>See further setup instructions below</li>
@@ -387,30 +366,30 @@ members of the class.</li>
 </div>
 </div>
 
-<div id="outline-container-orga2f2886" class="outline-4">
-<h4 id="orga2f2886">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-orga2f2886">
-<div id="table-of-contents">
+<div id="outline-container-orgb3da7c7" class="outline-4">
+<h4 id="orgb3da7c7">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orgb3da7c7">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org15863f8">1. Rationale</a>
+<li><a href="#orgfc9c2e5">1. Rationale</a>
 <ul>
-<li><a href="#orgd2a6e49">Associated Reading / Preparation</a></li>
-<li><a href="#org721fa25">Grading Policy</a></li>
+<li><a href="#org17d3ef8">Associated Reading / Preparation</a></li>
+<li><a href="#org7e3d3a5">Grading Policy</a></li>
 </ul>
 </li>
-<li><a href="#org58214d3">2. Codepack</a></li>
-<li><a href="#orgf445ff7">3. What to Understand</a></li>
-<li><a href="#org3b3a0ad">4. Questions</a></li>
+<li><a href="#orga3c774b">2. Codepack</a></li>
+<li><a href="#orgceb676d">3. What to Understand</a></li>
+<li><a href="#org2ebde92">4. Questions</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org15863f8" class="outline-2">
-<h2 id="org15863f8"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orgfc9c2e5" class="outline-2">
+<h2 id="orgfc9c2e5"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 The basics of working with existing assembly language code are covered
@@ -419,9 +398,9 @@ adding to existing assembly code and compiling it are covered.
 </p>
 </div>
 
-<div id="outline-container-orgd2a6e49" class="outline-3">
-<h3 id="orgd2a6e49">Associated Reading / Preparation</h3>
-<div class="outline-text-3" id="text-orgd2a6e49">
+<div id="outline-container-org17d3ef8" class="outline-3">
+<h3 id="org17d3ef8">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-org17d3ef8">
 <ul class="org-ul">
 <li>Bryant and O'Hallaron: Ch 3.1-3.7 on assembly code instructions in
 x86-64.</li>
@@ -434,9 +413,9 @@ materials.</li>
 </div>
 </div>
 
-<div id="outline-container-org721fa25" class="outline-3">
-<h3 id="org721fa25">Grading Policy</h3>
-<div class="outline-text-3" id="text-org721fa25">
+<div id="outline-container-org7e3d3a5" class="outline-3">
+<h3 id="org7e3d3a5">Grading Policy</h3>
+<div class="outline-text-3" id="text-org7e3d3a5">
 <p>
 Credit for this HW is earned by taking the associated HW Quiz which is
 linked under <code>Gradescope</code>.  The quiz will ask similar questions as
@@ -458,8 +437,8 @@ See the <a href="../2021/syllabus.html">full policies in the course syllabus</a>
 </div>
 </div>
 
-<div id="outline-container-org58214d3" class="outline-2">
-<h2 id="org58214d3"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orga3c774b" class="outline-2">
+<h2 id="orga3c774b"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -526,8 +505,8 @@ The codepack for the HW contains the following files:
 </div>
 </div>
 
-<div id="outline-container-orgf445ff7" class="outline-2">
-<h2 id="orgf445ff7"><span class="section-number-2">3</span> What to Understand</h2>
+<div id="outline-container-orgceb676d" class="outline-2">
+<h2 id="orgceb676d"><span class="section-number-2">3</span> What to Understand</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Ensure that you understand
@@ -542,8 +521,8 @@ functions.</li>
 </div>
 </div>
 
-<div id="outline-container-org3b3a0ad" class="outline-2">
-<h2 id="org3b3a0ad"><span class="section-number-2">4</span> Questions</h2>
+<div id="outline-container-org2ebde92" class="outline-2">
+<h2 id="org2ebde92"><span class="section-number-2">4</span> Questions</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Analyze the files in the provided codepack and answer the questions
@@ -748,7 +727,7 @@ D
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-02-22 Tue 15:45 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-10-11 Tue 10:38 <br/> </i>
 </div>
 </body>
 </html>
