@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-03-28 Mon 11:09 -->
+<!-- 2022-10-17 Mon 10:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Project 3: Assembly Coding and Debugging</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -190,8 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
+  .org-svg { }
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -248,6 +248,7 @@ pre {
 }
 #content, #preamble, #postamble {
 margin-left:300px;
+max-width: 100%;
 }
 .tag {
 background-color: inherit; font-family: inherit;
@@ -340,34 +341,12 @@ text-align: justify;
 }
 }
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-03-28 Mon 11:09</i>
+<i>Last Updated: 2022-10-17 Mon 10:42</i>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">CSCI 2021 Project 3: Assembly Coding and Debugging</h1>
 <ul class="org-ul">
 <li><b>Due: 11:59pm Wed 3/23/2022</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
@@ -376,17 +355,17 @@ text-align: justify;
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-org7856721" class="outline-4">
-<h4 id="org7856721">CODE/TEST DISTRIBUTION: <a href="p3-code.zip">p3-code.zip</a></h4>
+<div id="outline-container-org72f84a3" class="outline-4">
+<h4 id="org72f84a3">CODE/TEST DISTRIBUTION: <a href="p3-code.zip">p3-code.zip</a></h4>
 </div>
-<div id="outline-container-org983ee9c" class="outline-4">
-<h4 id="org983ee9c">VIDEO OVERVIEW: <a href="https://canvas.umn.edu/courses/290363/pages/week-07">3/4 Lecture P3 Overview</a></h4>
-<div class="outline-text-4" id="text-org983ee9c">
+<div id="outline-container-orgfbdb17d" class="outline-4">
+<h4 id="orgfbdb17d">VIDEO OVERVIEW: <a href="https://canvas.umn.edu/courses/290363/pages/week-07">3/4 Lecture P3 Overview</a></h4>
+<div class="outline-text-4" id="text-orgfbdb17d">
 </div>
 </div>
-<div id="outline-container-orgc45025a" class="outline-4">
-<h4 id="orgc45025a">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-orgc45025a">
+<div id="outline-container-orge4d528d" class="outline-4">
+<h4 id="orge4d528d">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-orge4d528d">
 <dl class="org-dl">
 <dt>Wed Mar 23 11:31:37 AM CDT 2022</dt><dd>Corrected typos in the scoring
 examples on the binary bomb.</dd>
@@ -397,36 +376,36 @@ the project.</dd>
 </div>
 </div>
 
-<div id="outline-container-org034ae85" class="outline-4">
-<h4 id="org034ae85"></h4>
-<div class="outline-text-4" id="text-org034ae85">
-<div id="table-of-contents">
+<div id="outline-container-orgbdc63c2" class="outline-4">
+<h4 id="orgbdc63c2"></h4>
+<div class="outline-text-4" id="text-orgbdc63c2">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org8f97840">1. Introduction</a></li>
-<li><a href="#orgc613c97">2. Download Code and Setup</a></li>
-<li><a href="#org237bf67">3. <b>Problem 1</b>: Thermometer Assembly Functions</a>
+<li><a href="#org9fe458b">1. Introduction</a></li>
+<li><a href="#orgb92c58c">2. Download Code and Setup</a></li>
+<li><a href="#org75bb016">3. <b>Problem 1</b>: Battery Meter Assembly Functions</a>
 <ul>
-<li><a href="#orgfa38e10">3.1. Hand-Code Your Assembly</a></li>
-<li><a href="#org32a0187">3.2. General Cautions when coding Assembly</a></li>
-<li><a href="#org5e3af65">3.3. Iterative Development Strategy</a></li>
-<li><a href="#orgaccd0c8">3.4. Structure of <code>thermo_update_asm.s</code></a></li>
-<li><a href="#org24ba0ea">3.5. <code>set_temp_from_ports</code></a></li>
-<li><a href="#org9e85b06">3.6. <code>set_display_from_temp</code></a></li>
-<li><a href="#orgad21eef">3.7. <code>thermo_update</code></a></li>
-<li><a href="#org01f77f3">3.8. Grading Criteria for Problem 1</a></li>
+<li><a href="#org59040a4">3.1. Hand-Code Your Assembly</a></li>
+<li><a href="#org6d4c641">3.2. General Cautions when coding Assembly</a></li>
+<li><a href="#org403e527">3.3. Iterative Development Strategy</a></li>
+<li><a href="#orgbab939e">3.4. Structure of <code>batt_update_asm.s</code></a></li>
+<li><a href="#org6dc8aae">3.5. <code>set_batt_from_ports()</code></a></li>
+<li><a href="#orgc6f8e69">3.6. <code>set_display_from_batt()</code></a></li>
+<li><a href="#orgb4a5e9d">3.7. <code>batt_update()</code></a></li>
+<li><a href="#org1ad6ab5">3.8. Grading Criteria for Problem 1</a></li>
 </ul>
 </li>
-<li><a href="#orgca8d672">4. <b>Problem 2</b>: The Binary Bomb</a>
+<li><a href="#org102a4de">4. <b>Problem 2</b>: The Binary Bomb</a>
 <ul>
-<li><a href="#org298905f">4.1. Quick Links</a></li>
-<li><a href="#orge57cbfd">4.2. Overview</a></li>
-<li><a href="#orgebfdc35">4.3. Machines on which bombs run</a></li>
-<li><a href="#orgc58ab9c">4.4. Bomb Download and Setup</a></li>
-<li><a href="#orgdfa6daa">4.5. Scoring and Scoreboard (40%)</a></li>
-<li><a href="#org72580ec">4.6. WARNING on Downloading Multiple Bombs</a></li>
-<li><a href="#orgf35518d">4.7. Advice</a></li>
+<li><a href="#org64777f1">4.1. Quick Links</a></li>
+<li><a href="#orgfbe4a64">4.2. Overview</a></li>
+<li><a href="#orgcd8b9c2">4.3. Machines on which bombs run</a></li>
+<li><a href="#org5b620f3">4.4. Bomb Download and Setup</a></li>
+<li><a href="#orgef912f2">4.5. Scoring and Scoreboard (40%)</a></li>
+<li><a href="#orgd3de38c">4.6. WARNING on Downloading Multiple Bombs</a></li>
+<li><a href="#org1ad6dc5">4.7. Advice</a></li>
 </ul>
 </li>
 </ul>
@@ -435,8 +414,8 @@ the project.</dd>
 </div>
 </div>
 
-<div id="outline-container-org8f97840" class="outline-2">
-<h2 id="org8f97840"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-org9fe458b" class="outline-2">
+<h2 id="org9fe458b"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This project will feel somewhat familiar in that it is nearly
@@ -460,8 +439,8 @@ appreciation for "high-level" languages (like C).
 </div>
 </div>
 
-<div id="outline-container-orgc613c97" class="outline-2">
-<h2 id="orgc613c97"><span class="section-number-2">2</span> <a id="org6ebfc6d"></a> Download Code and Setup</h2>
+<div id="outline-container-orgb92c58c" class="outline-2">
+<h2 id="orgb92c58c"><span class="section-number-2">2</span> <a id="orgfa61f8a"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -557,7 +536,7 @@ folder. Ultimately you will re-zip this folder to submit it.
 <tr>
 <td class="org-left"><code>bombNN.zip</code></td>
 <td class="org-left">Download</td>
-<td class="org-left">Problem 2 Debugging problem, <a href="#org8edf82d">download from server</a></td>
+<td class="org-left">Problem 2 Debugging problem, <a href="#orga57e042">download from server</a></td>
 </tr>
 
 <tr>
@@ -594,51 +573,50 @@ folder. Ultimately you will re-zip this folder to submit it.
 </div>
 </div>
 
-<div id="outline-container-org237bf67" class="outline-2">
-<h2 id="org237bf67"><span class="section-number-2">3</span> <b>Problem 1</b>: Thermometer Assembly Functions</h2>
+<div id="outline-container-org75bb016" class="outline-2">
+<h2 id="org75bb016"><span class="section-number-2">3</span> <b>Problem 1</b>: Battery Meter Assembly Functions</h2>
 <div class="outline-text-2" id="text-3">
 <p>
-The functions in this problem are identical to a previous assignment
-in which code to support digital thermometer was written. These
+The functions in this problem are identical to a previous project
+in which code to support a battery meter was written. These
 functions are:
 </p>
 <dl class="org-dl">
-<dt><code>int set_temp_from_ports(temp_t *temp)</code></dt><dd>Read global variables corresponding to sensor and mode
-information and set the fields of a <code>temp_t</code> structure
+<dt><code>int set_batt_from_ports(batt_t *batt)</code></dt><dd>Read global variables corresponding to sensor and mode
+information and set the fields of a <code>batt_t</code> structure
 accordingly.</dd>
-<dt><code>int set_display_from_temp(temp_t temp, int *display)</code></dt><dd>Given a <code>temp_t</code> struct, reset and alter the bits pointed to by
-<code>display</code> to cause a proper temperature display.</dd>
-<dt><code>int thermo_update()</code></dt><dd>Update global <code>THERMO_DISPLAY_PORT</code> using the above functions.</dd>
+<dt><code>int set_display_from_batt(batt_t batt, int *display)</code></dt><dd>Given a <code>batt_t</code> struct, reset and alter the bits pointed to by
+<code>display</code> to cause a proper batterature display.</dd>
+<dt><code>int batt_update()</code></dt><dd>Update global <code>BATT_DISPLAY_PORT</code> using the above functions.</dd>
 </dl>
 
 <p>
 The big change in this iteration will be that <b>the functions must be
 written in x86-64 assembly code</b>. As C functions each of these is
-short, 30-50 lines maximum. The assembly versions will be somewhat
-longer as each C line typically needs 1-4 lines of assembly code to
-implement fully. Coding these functions in assembly give you real
-experience writing working assembly code and working with it in
-combination with C.
+short, typically 40-65. The assembly versions will be longer as each C
+line typically needs 1-4 lines of assembly code to implement
+fully. Coding these functions in assembly gives real experience
+writing instruction-level code code and working with it in combination
+with C.
 </p>
 
 <p>
-<b>The code setup and tests are identical</b> for this problem as for the
-previous C version of the problem.  <a href="https://www-users.cse.umn.edu/~kauffman/2021/p2#org2c4ab78">Refer to original Thermometer
-Problem description</a> for a broad overview of the thermometer simulator
-and files associated with it.
+<b>The code setup and tests are mostly identical</b> for this problem as
+for the previous C version of the problem.  <a href="https://www-users.cs.umn.edu/~kauffman/2021/p2.html">Refer to original Battery
+Meter Problem description</a> for a broad overview of the battery meter
+simulator and files associated with it.
 </p>
 </div>
 
-
-<div id="outline-container-orgfa38e10" class="outline-3">
-<h3 id="orgfa38e10"><span class="section-number-3">3.1</span> Hand-Code Your Assembly</h3>
+<div id="outline-container-org59040a4" class="outline-3">
+<h3 id="org59040a4"><span class="section-number-3">3.1</span> Hand-Code Your Assembly</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 As discussed in class, one can generate assembly code from C code with
 appropriate compiler flags. This can be useful for getting oriented
 and as a beginning to the code your assembly versions of the
 functions.  However, <b>code that is clearly compiler-generated with no
-hand coding will receive no credit</b>.
+hand coding will receive 0 credit</b>.
 </p>
 <ul class="org-ul">
 <li>No credit will be given on manual inspection</li>
@@ -652,38 +630,36 @@ criteria.
 </p>
 </div>
 
-<div id="outline-container-org9e0c93a" class="outline-4">
-<h4 id="org9e0c93a">Base your Assembly code on your C code</h4>
-<div class="outline-text-4" id="text-org9e0c93a">
+<div id="outline-container-org7601aa0" class="outline-4">
+<h4 id="org7601aa0">Base your Assembly code on your C code</h4>
+<div class="outline-text-4" id="text-org7601aa0">
 <p>
 The files to be submitted for this problem include
 </p>
 <ul class="org-ul">
-<li><code>thermo_update.c</code>: C version of the functions</li>
-<li><code>thermo_update_asm.s</code>: Assembly version of the functions</li>
+<li><code>batt_update.c</code>: C version of the functions</li>
+<li><code>batt_update_asm.s</code>: Assembly version of the functions</li>
 </ul>
 <p>
-Graders will examine these for a correspondence between to the
+Graders may examine these for a correspondence between to the
 algorithm used in the C version to the Assembly version. Compiler
 generated assembly often does significant re-arrangements of assembly
 code with many intermediate labels that hand-written code will not
-have. Sure signs of compiler-generated code are labels like <code>.L23</code>
-rather than informative labels like <code>.FAHRENHEIT_MODE</code>.
+have.
 </p>
 
 <p>
 <b>If you were not able to complete the C functions for the Project 2
-display problem from the previous project</b> <b>or are not confident in
-your solution</b> <b>see a course staff member who will help you get them
-up and running quickly.</b> <b>Such help MUST occur during office hours or
-an individual appointment.</b>
+display problem from the previous project,</b> <b>see a course staff member
+during office hours</b> <b>who will help you get them up and running
+quickly.</b>
 </p>
 </div>
 </div>
 
-<div id="outline-container-org9ed0bf5" class="outline-4">
-<h4 id="org9ed0bf5">Annotate your Assembly Thoroughly</h4>
-<div class="outline-text-4" id="text-org9ed0bf5">
+<div id="outline-container-org1961981" class="outline-4">
+<h4 id="org1961981">Annotate your Assembly Thoroughly</h4>
+<div class="outline-text-4" id="text-org1961981">
 <p>
 Comment your assembly code A LOT. While good C code can be quite
 self-explanatory with descriptive variable names and clear control
@@ -706,9 +682,9 @@ accomplishing.</li>
 </div>
 </div>
 
-<div id="outline-container-orgd1a356e" class="outline-4">
-<h4 id="orgd1a356e">Use Division</h4>
-<div class="outline-text-4" id="text-orgd1a356e">
+<div id="outline-container-orga6f4f51" class="outline-4">
+<h4 id="orga6f4f51">Use Division</h4>
+<div class="outline-text-4" id="text-orga6f4f51">
 <p>
 While it is a slow instruction that is cumbersome to set up, using
 <code>idivX</code> division instruction is the most human-readable means to
@@ -721,15 +697,18 @@ effort has been put into the assembly code.
 </div>
 </div>
 
-
-<div id="outline-container-org32a0187" class="outline-3">
-<h3 id="org32a0187"><span class="section-number-3">3.2</span> General Cautions when coding Assembly</h3>
+<div id="outline-container-org6d4c641" class="outline-3">
+<h3 id="org6d4c641"><span class="section-number-3">3.2</span> General Cautions when coding Assembly</h3>
 <div class="outline-text-3" id="text-3-2">
 <ol class="org-ol">
 <li>Get your editor set up to make coding assembly easier. If you are
 using VS Code, the following video will show you how to install an
 extension to do syntax highlighting and block comment/uncomment
 operations in assembly: <a href="https://youtu.be/AgmXUFOEgIw">https://youtu.be/AgmXUFOEgIw</a></li>
+<li>Be disciplined about your register use: comment what "variables" are
+in which registers as it is up to you to keep track. The #1 advice
+from past students to future students is "<b>Comment the Crap out of
+your assembly code</b>" on this project.</li>
 <li><p>
 Be Careful with constants: forgetting a <code>$</code> in constants will lead
 to a bare, absolute memory address which will likely segfault your
@@ -747,9 +726,6 @@ to identify these problems. In Valgrind output, look for a line
 number in the assembly code which has absolute memory addresses or a
 register that has an invalid address.
 </p></li>
-<li>Be disciplined about your register use: comment what "variables" are
-in which registers as it is up to you to keep track. Comments here
-are as helpful to you as to other readers.</li>
 <li><p>
 Recognize that in x86-64 function parameters are passed in registers
 for up to 6 arguments. These are arranged as follows
@@ -795,10 +771,10 @@ This is typically done by pushing the callee registers to be used on
 the stack, using them, them popping them off the stack in reverse
 order. Avoid this if you can (and you probably can in our case).
 </p></li>
-<li>Be careful to adjust the stack pointer using <code>pushX</code> and <code>popX</code>
-calls. Keep in mind the stack must be aligned to 16-byte boundaries
-for function calls to work correctly.  Above all, don't treat <code>rsp</code>
-as a general purpose register.</li>
+<li>Be careful to adjust the stack pointer using <code>pushX/popX</code> or
+<code>subq/addq</code> . Keep in mind the stack must be aligned to 16-byte
+boundaries for function calls to work correctly.  Above all, don't
+treat <code>rsp</code> as a general purpose register.</li>
 </ol>
 
 <p>
@@ -809,7 +785,7 @@ x86-64.
 
 <div class="org-center">
 
-<div id="orgb1966e5" class="figure">
+<div id="org48933a0" class="figure">
 <p><img src="registers.png" alt="registers.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Summary of general purpose register usages in x86-64.</p>
@@ -819,8 +795,8 @@ x86-64.
 </div>
 
 
-<div id="outline-container-org5e3af65" class="outline-3">
-<h3 id="org5e3af65"><span class="section-number-3">3.3</span> <a id="orge78b15e"></a> Iterative Development Strategy</h3>
+<div id="outline-container-org403e527" class="outline-3">
+<h3 id="org403e527"><span class="section-number-3">3.3</span> <a id="org5cc29e7"></a> Iterative Development Strategy</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 With working C versions of the three required functions, you should be
@@ -831,18 +807,18 @@ specifically set up for this and details iterative development are as
 follows.
 </p>
 <ol class="org-ol">
-<li>In <code>thermo_update_asm.s</code>, comment all code/declarations of global
-symbols except for <code>set_temp_from_ports</code>.</li>
-<li>In <code>thermo_update.c</code>, comment out the definition of the
-<code>set_temp_from_ports()</code> function. This leaves working C versions of
+<li>In <code>batt_update_asm.s</code>, comment all code/declarations of global
+symbols except for <code>set_batt_from_ports</code>.</li>
+<li>In <code>batt_update.c</code>, comment out the definition of the
+<code>set_batt_from_ports()</code> function. This leaves working C versions of
 the other two functions.</li>
 <li><p>
-Write some assembly code for <code>set_temp_from_ports</code>. Attempt to
+Write some assembly code for <code>set_batt_from_ports</code>. Attempt to
 compile it on its own with
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">   &gt; make thermo_update_asm.o 
-   gcc -Wall -Werror -g -c thermo_update_asm.s
+<pre class="src src-sh">   &gt; make batt_update_asm.o 
+   gcc -Wall -g -c batt_update_asm.s
 </pre>
 </div>
 <p>
@@ -854,11 +830,11 @@ program which will combine the uncommented assembly and C functions
 </p>
 <div class="org-src-container">
 <pre class="src src-sh">   &gt; make hybrid_main
-   gcc -Wall -g -c thermo_main.c
-   gcc -Wall -g -c thermo_sim.c
-   gcc -Wall -g -c thermo_update_asm.s   # compiles assembly ..
-   gcc -Wall -g -c thermo_update.c       # and C version to produce executable
-   gcc -Wall -g -o hybrid_main thermo_main.o thermo_sim.o thermo_update_asm.o thermo_update.o
+   gcc -Wall -g -c batt_main.c
+   gcc -Wall -g -c batt_sim.c
+   gcc -Wall -g -c batt_update_asm.s   # compiles assembly ..
+   gcc -Wall -g -c batt_update.c       # and C version to produce executable
+   gcc -Wall -g -o hybrid_main batt_main.o batt_sim.o batt_update_asm.o batt_update.o
 </pre>
 </div></li>
 <li><p>
@@ -866,17 +842,14 @@ One can then experiment with the <code>hybrid_main</code> to see if the
 written assembly function is working correctly.
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">&gt; ./hybrid_main 12345 F
-THERMO_SENSOR_PORT set to: 12345
-THERMO_STAUS_PORT set to: 1010 1000
-index:                       4    0
-result = set_temp_from_ports(&amp;temp);
-result: 0
-temp = {
-  .tenths_degrees = -450
-  .temp_mode      = 2
+<pre class="src src-sh">&gt; ./hybrid_main 7578 V
+BATT_VOLTAGE_PORT set to: 7578
+set_batt_from_ports(&amp;batt );
+batt is {
+  .mlvolts = 3789
+  .percent = -27
+  .mode    = 0
 }
-Simulated temp is: -45.0 deg F
 ...
 </pre>
 </div>
@@ -890,143 +863,142 @@ on the hybrid codes.
 </p>
 <div class="org-src-container">
 <pre class="src src-sh">&gt; make test-hybrid
-gcc -Wall -g -c test_thermo_update.c
-gcc -Wall -g -o test_hybrid_thermo_update test_thermo_update.o thermo_sim.o thermo_update_asm.o thermo_update.o
-./testy test_hybrid_update.org 
+gcc -Wall -Wno-comment -Werror -g  -c batt_main.c
+gcc -Wall -Wno-comment -Werror -g  -c batt_sim.c
+gcc -Wall -Wno-comment -Werror -g  -c batt_update_asm.s
+gcc -Wall -Wno-comment -Werror -g  -c batt_update.c
+gcc -Wall -Wno-comment -Werror -g  -o hybrid_main batt_main.o batt_sim.o batt_update_asm.o batt_update.o
+gcc -Wall -Wno-comment -Werror -g  -c test_batt_update.c
+gcc -Wall -Wno-comment -Werror -g  -o test_hybrid_batt_update test_batt_update.o batt_sim.o batt_update_asm.o batt_update.o
+./testy test_hybrid.org 
 ============================================================
-== test_hybrid_update.org : test_hybrid_update and hybrid_main tests
+== test_hybrid.org : Problem 1 test_hybrid_batt_update_asm and hybrid_main tests
 == Running 35 / 35 tests
-1)  set_temp_from_ports() 0 C               : ok
-2)  set_temp_from_ports() 0 F               : ok
-3)  set_temp_from_ports() 128 C/F           : ok
-4)  set_temp_from_ports() freezing C        : ok
-5)  set_temp_from_ports() freezing F        : ok
+1)  set_batt_from_ports() 0 V                 : ok
+2)  set_batt_from_ports() 0 P                 : ok
+3)  set_batt_from_ports() 7400 V              : ok
+4)  set_batt_from_ports() 7400 P              : ok
+5)  set_batt_from_ports() STATUS=0b10011001 V : ok
+6)  set_batt_from_ports() STATUS=0b01110110 P : ok
+7)  set_batt_from_ports() 7845 P is 100%      : ok
 ...
-============================================================
-RESULTS: 18 / 35 tests passed
-
-WARNING: These are the hybrid tests used for incremental development.
-         Make sure to run 'make test' to run the full tests before submitting.
 </pre>
 </div></li>
 <li>When all seems to be working correctly with the first assembly
 function, move on.  Comment another C function and uncomment the
 corresponding assembly, write some code and repeat.</li>
-<li>When finished make sure to test the standard executable via <code>make
-   test</code>: this version compiles only with the assembly functions and
-is what will be done by the autograder.</li>
 </ol>
 </div>
 </div>
 
-<div id="outline-container-orgaccd0c8" class="outline-3">
-<h3 id="orgaccd0c8"><span class="section-number-3">3.4</span> Structure of <code>thermo_update_asm.s</code></h3>
+<div id="outline-container-orgbab939e" class="outline-3">
+<h3 id="orgbab939e"><span class="section-number-3">3.4</span> Structure of <code>batt_update_asm.s</code></h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
-Below is a rough outline of the structure of <code>thermo_updat_asm.s</code>.
+Below is a rough outline of the structure of <code>batt_updat_asm.s</code>.
 Consider copying this file as you get started and commenting parts of
 it out as needed.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-asm">### Begin with functions/executable code in the assmebly file via '.text' directive
-.text
-.global  set_temp_from_ports
+<pre class="src src-asm">.text
+.global  set_batt_from_ports
         
 ## ENTRY POINT FOR REQUIRED FUNCTION
-set_temp_from_ports:
+set_batt_from_ports:
         ## assembly instructions here
 
         ## a useful technique for this problem
-        movX    SOME_GLOBAL_VAR(%rip), %reg  # load global variable into register
-                                             # use movl / movq / movw / movb
-                                             # and appropriately sized destination register
+        movX    SOME_GLOBAL_VAR(%rip), %reg
+        # load global variable into register
+        # Check the C type of the variable
+        #    char / short / int / long
+        # and use one of
+        #    movb / movw / movl / movq 
+        # and appropriately sized destination register                                            
 
-        ret                     # eventually return from the function
-
-### Change to definine semi-global variables used with the next function 
+### Change to definint semi-global variables used with the next function 
 ### via the '.data' directive
 .data
 	
-an_int:                         # declare location an single integer named 'an_int'
+my_int:                         # declare location an single integer named 'my_int'
         .int 1234               # value 1234
 
 other_int:                      # declare another int accessible via name 'other_int'
         .int 0b0101             # binary value as per C
 
-an_array:                       # declare multiple ints sequentially starting at location
-        .int 10                 # 'an_array' for an array. Each are spaced 4 bytes from the
+my_array:                       # declare multiple ints sequentially starting at location
+        .int 10                 # 'my_array' for an array. Each are spaced 4 bytes from the
         .int 0x00014            # next and can be given values using the same prefixes as 
         .int 0b11110            # are understood by gcc.
 
 
-### Change back to defining functions/execurable instructions
+## WARNING: Don't forget to switch back to .text as below
+## Otherwise you may get weird permission errors when executing 
 .text
-.global  set_display_from_temp
+.global  set_display_from_batt
 
 ## ENTRY POINT FOR REQUIRED FUNCTION
-set_display_from_temp:  
+set_display_from_batt:  
         ## assembly instructions here
 
 	## two useful techniques for this problem
-        movl    an_int(%rip),%eax    # load an_int into register eax
-        leaq    an_array(%rip),%rdx  # load pointer to beginning of an_array into edx
-        
-        ret                     # eventually return from the function
+        movl    my_int(%rip),%eax    # load my_int into register eax
+        leaq    my_array(%rip),%rdx  # load pointer to beginning of my_array into rdx
+
 
 .text
-.global thermo_update
+.global batt_update
         
 ## ENTRY POINT FOR REQUIRED FUNCTION
-thermo_update:
+batt_update:
 	## assembly instructions here
-
-        ret                     # eventually return from the function
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org24ba0ea" class="outline-3">
-<h3 id="org24ba0ea"><span class="section-number-3">3.5</span> <code>set_temp_from_ports</code></h3>
+<div id="outline-container-org6dc8aae" class="outline-3">
+<h3 id="org6dc8aae"><span class="section-number-3">3.5</span> <code>set_batt_from_ports()</code></h3>
 <div class="outline-text-3" id="text-3-5">
 <div class="org-src-container">
-<pre class="src src-c">int set_temp_from_ports(temp_t *temp);
-// Uses the two global variables (ports) THERMO_SENSOR_PORT and
-// THERMO_STATUS_PORT to set the fields of `temp`. If
-// THERMO_SENSOR_PORT is negative or above its maximum trusted value
-// (associated with +45.0 deg C), this function sets the
-// tenths_degrees to 0 and the temp_mode to 3 for `temp` before
-// returning 1.  Otherwise, converts the sensor value to deg C using
-// shift operations.  Further converts to deg F if indicated from
-// THERMO_STATUS_PORT. Sets the fields of `temp` to appropriate
-// values. `temp_mode` is 1 for Celsius, and 2 for Fahrenheit. Returns
-// 0 on success. This function DOES NOT modify any global variables
-// but may access them.
+<pre class="src src-c">int set_batt_from_ports(batt_t *batt);
+// Uses the two global variables (ports) BATT_VOLTAGE_PORT and
+// BATT_STATUS_PORT to set the fields of the parameter 'batt'.  If
+// BATT_VOLTAGE_PORT is negative, then battery has been wired wrong;
+// no fields of 'batt' are changed and 1 is returned to indicate an
+// error.  Otherwise, sets fields of batt based on reading the voltage
+// value and converting to percent using the provided formula. Returns
+// 0 on a successful execution with no errors. This function DOES NOT
+// modify any global variables but may access global variables.
 //
-// CONSTRAINTS: Uses only integer operations. No floating point
-// operations are used as the target machine does not have a FPU. Does
-// not use any math functions such as abs().
+// CONSTRAINT: Avoids the use of the division operation as much as
+// possible. Makes use of shift operations in place of division where
+// possible.
+//
+// CONSTRAINT: Uses only integer operations. No floating point
+// operations are used as the target machine does not have a FPU.
 </pre>
 </div>
 
 <p>
-Note that this function uses a <code>temp_t</code> struct which is in <code>thermo.h</code>
+Note that this function uses a <code>batt_t</code> struct which is in <code>batt.h</code>
 described here:
 </p>
 <div class="org-src-container">
-<pre class="src src-c">// Breaks temperature down into constituent parts
+<pre class="src src-c">// Breaks battery stats down into constituent parts
 typedef struct{
-  short tenths_degrees;     // actual temp in tenths of degrees
-  char temp_mode;           // 1 for celsius, 2 for fahrenheit, other values are errors
-} temp_t;
+  short mlvolts;     // voltage read from port, units of 0.001 Volts (milli Volts)
+  char  percent;     // percent full converted from voltage
+  char  mode;        // 1 for percent, 2 for volts, set based on bit 4 of BATT_STATUS_PORT
+} batt_t;
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org92f49e0" class="outline-4">
-<h4 id="org92f49e0">Assembly Implementation Notes <code>set_temp_from_ports</code></h4>
-<div class="outline-text-4" id="text-org92f49e0">
+<div id="outline-container-org50936f9" class="outline-4">
+<h4 id="org50936f9">Assembly Implementation Notes for <code>set_batt_from_ports()</code></h4>
+<div class="outline-text-4" id="text-org50936f9">
 <ol class="org-ol">
 <li>The function takes a single argument, a pointer in <code>rdi</code>.</li>
 <li>Return values or functions are to be placed <code>eax</code> for 32 bit
@@ -1038,12 +1010,9 @@ pointer register which allows the linker to handle the
 task. Specifically relevant examples are
 </p>
 <div class="org-src-container">
-<pre class="src src-asm">   movw  THERMO_SENSOR_PORT(%rip), %dx   # copy global var to reg dx  (16-bit word)
-   movb  THERMO_STATUS_PORT(%rip), %cl   # copy global var to reg cl  (8-bit byte)
-   movl  %r8d,THERMO_DISPLAY_PORT(%rip)  # copy reg r8d to global var (32-bit long-word)
-   ### WARNING: Not all of the above instructions belong in
-   ### set_temp_from_ports. Determine which are relevant and which
-   ### are useful for this function and which belong elsewhere.
+<pre class="src src-asm">   movw  BATT_VOLTAGE_PORT(%rip), %dx   # copy global var to reg dx  (16-bit word)
+   movb  BATT_STATUS_PORT(%rip), %cl    # copy global var to reg cl  (8-bit byte)
+   movl  %r8d, BATT_DISPLAY_PORT(%rip)  # copy reg r8d to global var (32-bit long-word)
 </pre>
 </div></li>
 <li>Use comparisons and jump to a separate section of code that is
@@ -1058,39 +1027,10 @@ done on <b>signed quantities</b>.</li>
 <li>Jump instructions like <code>ja</code> assume prior comparison was done on
 <b>unsigned quantities</b>.</li>
 </ul></li>
+<li>When doing the conversion of Voltage to Percentage, one may need to
+divide by 8. Avoid the division and <b>use a shift instruction instead</b>.</li>
 <li><p>
-To do the initial temperature conversion of the temperature sensor
-one must divide by 32. Avoid the division and <b>use a shift
-instead</b>.  The remainder can also be found by <b>masking / anding low
-order bits</b> that would be shifted off which will allow for
-rounding.
-</p>
-
-<p>
-As with your C version, convert to Celsius and perform rounding
-first. Then if needed, convert the rounded temperature to
-Fahrenheit. 
-</p></li>
-<li><p>
-If the temperature must be converted to Fahrenheit, make use of
-division instructions to achieve <code>fahrenheit = (9 * celsius) / 5 +
-   32</code>. Keep in mind that the <code>idivX</code> instruction must have <code>rax</code> as
-the dividend and <code>rdx</code> sign-extended from it. This may involve use
-of the following sequence of instructions:
-</p>
-<div class="org-src-container">
-<pre class="src src-asm">   cwtl           # sign extend ax to long word
-   cltq           # sign extend eax to quad word
-   cqto           # sign extend rax to rdx
-</pre>
-</div>
-<p>
-Any register can contain the divisor.  After the instruction, <code>rax
-   / eax / ax</code> will hold the <code>quotient</code> and <code>rdx / edx / dx</code> the
-remainder.  In this function, a single division will be sufficient.
-</p></li>
-<li><p>
-A pointer to a <code>temp_t</code> struct can access its fields using the
+A pointer to a <code>batt_t</code> struct can access its fields using the
 following offset table which assume that <code>%reg</code> holds a pointer to
 the struct (substitute an actual register name).
 </p>
@@ -1118,22 +1058,29 @@ the struct (substitute an actual register name).
 <th scope="col" class="org-left">C Field Access</th>
 <th scope="col" class="org-left">Offset</th>
 <th scope="col" class="org-left">Size</th>
-<th scope="col" class="org-left">Assign 5 to field</th>
+<th scope="col" class="org-left">Assign '5' to field</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="org-left"><code>temp-&gt;tenths_degrees</code></td>
+<td class="org-left"><code>batt-&gt;mlvolts</code></td>
 <td class="org-left">0 bytes</td>
 <td class="org-left">2 bytes</td>
 <td class="org-left"><code>movw $5,0(%reg)</code></td>
 </tr>
 
 <tr>
-<td class="org-left"><code>temp-&gt;temp_mode</code></td>
+<td class="org-left"><code>batt-&gt;percent</code></td>
 <td class="org-left">2 bytes</td>
 <td class="org-left">1 byte</td>
 <td class="org-left"><code>movb $5,2(%reg)</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batt-&gt;mode</code></td>
+<td class="org-left">3 bytes</td>
+<td class="org-left">1 byte</td>
+<td class="org-left"><code>movb $5,3(%reg)</code></td>
 </tr>
 </tbody>
 </table>
@@ -1141,43 +1088,54 @@ the struct (substitute an actual register name).
 You will need to use these offsets to set the fields of the struct
 near the end of the routine.
 </p></li>
+<li>There are several spots where division is required but it is always
+by powers of 2; e.g. divide the sensor value by 2 to get the
+voltage and divide by 8 during conversion of volts to percent.
+<b>Use shift operations</b> when dividing by powers of 2 to avoid the
+<code>idivX</code> instruction (though <code>idivX</code> will be used later).</li>
 </ol>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org9e85b06" class="outline-3">
-<h3 id="org9e85b06"><span class="section-number-3">3.6</span> <code>set_display_from_temp</code></h3>
+<div id="outline-container-orgc6f8e69" class="outline-3">
+<h3 id="orgc6f8e69"><span class="section-number-3">3.6</span> <code>set_display_from_batt()</code></h3>
 <div class="outline-text-3" id="text-3-6">
 <div class="org-src-container">
-<pre class="src src-c">int set_display_from_temp(temp_t temp, int *display);
-// Alters the bits of integer pointed to by display to reflect the
-// temperature in struct arg temp.  If temp has a temperature value
-// that is below minimum or above maximum temperature allowable or if
-// the temp_mode is not Celsius or Fahrenheit, sets the display to
-// read "ERR" and returns 1. Otherwise, calculates each digit of the
-// temperature and changes bits at display to show the temperature
-// according to the pattern for each digit.  This function DOES NOT
-// modify any global variables except if `display` points at one.
+<pre class="src src-c">
+int set_display_from_batt(batt_t batt, int *display);
+// Alters the bits of integer pointed to by 'display' to reflect the
+// data in struct param 'batt'.  Does not assume any specific bit
+// pattern stored at 'display' and completely resets all bits in it on
+// successfully completing.  Selects either to show Volts (mode=1) or
+// Percent (mode=2). If Volts are displayed, only displays 3 digits
+// rounding the lowest digit up or down appropriate to the last digit.
+// Calculates each digit to display changes bits at 'display' to show
+// the volts/percent according to the pattern for each digit. Modifies
+// additional bits to show a decimal place for volts and a 'V' or '%'
+// indicator appropriate to the mode. In both modes, places bars in
+// the level display as indicated by percentage cutoffs in provided
+// diagrams. This function DOES NOT modify any global variables but
+// may access global variables. Always returns 0.
 // 
-// CONSTRAINTS: Uses only integer operations. No floating point
-// operations are used as the target machine does not have a FPU. Does
-// not use any math functions such as abs().
+// ASSEMBLY NOTE: If batt.mode is not 1 or 2, then make no change to
+// 'display' and return 1 to indicate an error. This is a slight
+// change from the original C implementation.
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org1dcb920" class="outline-4">
-<h4 id="org1dcb920">Assembly Implementation Notes <code>set_display_from_temp</code></h4>
-<div class="outline-text-4" id="text-org1dcb920">
+<div id="outline-container-orgff3454f" class="outline-4">
+<h4 id="orgff3454f">Assembly Implementation Notes <code>set_display_from_batt()</code></h4>
+<div class="outline-text-4" id="text-orgff3454f">
 <ol class="org-ol">
 <li>Arguments will be
 <ul class="org-ul">
-<li>a packed <code>temp</code> struct in <code>rdi</code></li>
+<li>a packed <code>batt_t</code> struct in <code>rdi</code></li>
 <li>an integer pointer in <code>rsi</code></li>
 </ul></li>
 <li><p>
-The packed <code>temp_t</code> struct is entirely in the 64-bit <code>rdi</code> register
+The packed <code>batt_t</code> struct is entirely in the 64-bit <code>rdi</code> register
 which has the following layout.
 </p>
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -1209,16 +1167,23 @@ which has the following layout.
 </thead>
 <tbody>
 <tr>
-<td class="org-left"><code>temp.tenths_degrees</code></td>
+<td class="org-left"><code>batt.mlvolts</code></td>
 <td class="org-right">00-15</td>
 <td class="org-left">None</td>
 <td class="org-left">2 bytes</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>temp.temp_mode</code></td>
+<td class="org-left"><code>batt.percent</code></td>
 <td class="org-right">16-23</td>
 <td class="org-left">Right by 16</td>
+<td class="org-left">1 byte</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batt.mode</code></td>
+<td class="org-right">24-31</td>
+<td class="org-left">Right by 24</td>
 <td class="org-left">1 byte</td>
 </tr>
 </tbody>
@@ -1227,10 +1192,6 @@ which has the following layout.
 To access individual fields of the struct, you will need to do
 shifting and masking to extract the values from the <code>rdi</code> register.
 </p></li>
-<li>Use comparisons and jump to a separate section of code that is
-clearly marked as "error" if you detect bad fields in the <code>temp</code>
-struct argument such as temperature values that are outside the
-minimum/maximum values allowed for Fahrenheit or Celsius.</li>
 <li><p>
 As was the case in the C version of the problem, it is useful to
 create a table of bit masks corresponding to the bits that should be
@@ -1245,8 +1206,8 @@ is below.
            .int 0b101              # array[0] = 0b101
            .int 0b010              # array[1] = 0b010
            .int 0b111              # array[2] = 0b111
-   spcial_const:
-           .int 17                 # "special" constant
+   const:
+           .int 17                 # special constant
     
    .section .text
    .globl func
@@ -1262,33 +1223,51 @@ Adapt this example to create a table of useful bit masks for
 digits. The GCC assembler understands binary constants specified
 with the <code>0b0011011</code> style syntax.
 </p></li>
-<li>Make sure to check for a negative temperature and adjust the
-display to contain a negative sign in the correct position.  It may
-be useful to then negate a temperature below zero so that later
-divisions always result in positive values.</li>
-<li>Make use of division instructions to compute "digits" for the
-tenths, ones, tens, and hundreds place for the thermometer. With
-cleverness, you should only need 3-4 divisions. Use these digits to
-reference into the table of digit bit masks you create to
-progressively build up the correct bit pattern for the display.</li>
-<li>Use shifts and ORs to combine the digit bit patterns to create the
-final display bit pattern.</li>
+<li>Early on in the function <b>check the batt.mode field</b>: it should be
+either 1 or 2 and if not, return from the function immediately with
+return value 1.</li>
+<li><p>
+Make use of division instructions to compute "digits" for the left,
+middle, and right digits of the battery meter. With cleverness, you
+should only need 2-3 divisions. Use these digits to reference into
+the table of digit bit masks you create to progressively build up
+the correct bit pattern for the display.
+</p>
+
+<p>
+Keep in mind that the <code>idivX</code> instruction must have <code>rax</code> as the
+dividend and <code>rdx</code> sign-extended from it. This may involve use of
+the following sequence of instructions:
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">   cwtl           # sign extend ax to long word
+   cltq           # sign extend eax to quad word
+   cqto           # sign extend ax to dx
+</pre>
+</div>
+<p>
+Any register can contain the divisor.  After the instruction, <code>rax
+   / eax / ax</code> will hold the <code>quotient</code> and <code>rdx / edx / dx</code> the
+remainder.  In this function, a single division will be sufficient.
+</p></li>
+
+<li>Use shifts with bitwise-or operations to combine the digit bit
+patterns to create the final display bit pattern.</li>
 </ol>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgad21eef" class="outline-3">
-<h3 id="orgad21eef"><span class="section-number-3">3.7</span> <code>thermo_update</code></h3>
+<div id="outline-container-orgb4a5e9d" class="outline-3">
+<h3 id="orgb4a5e9d"><span class="section-number-3">3.7</span> <code>batt_update()</code></h3>
 <div class="outline-text-3" id="text-3-7">
 <div class="org-src-container">
-<pre class="src src-c">int thermo_update();
-// Called to update the thermometer display.  Makes use of
-// set_temp_from_ports() and set_display_from_temp() to access
-// temperature sensor then set the display. Always sets the display
-// even if the other functions returns an error. Returns 0 if both
-// functions complete successfully and return 0. Returns 1 if either
-// function or both return a non-zero values.
+<pre class="src src-c">int batt_update();
+// Called to update the battery meter display.  Makes use of
+// set_batt_from_ports() and set_display_from_batt() to access battery
+// voltage sensor then set the display. Checks these functions and if
+// they indicate an error, does NOT change the display.  If functions
+// succeed, modifies BATT_DISPLAY_PORT to show current battery level.
 // 
 // CONSTRAINT: Does not allocate any heap memory as malloc() is NOT
 // available on the target microcontroller.  Uses stack and global
@@ -1297,74 +1276,71 @@ final display bit pattern.</li>
 </div>
 </div>
 
-<div id="outline-container-orge08e740" class="outline-4">
-<h4 id="orge08e740">Assembly Implementation Notes for <code>thermo_update</code></h4>
-<div class="outline-text-4" id="text-orge08e740">
+<div id="outline-container-org6ffd78e" class="outline-4">
+<h4 id="org6ffd78e">Assembly Implementation Notes for <code>batt_update()</code></h4>
+<div class="outline-text-4" id="text-org6ffd78e">
 <ol class="org-ol">
 <li>No arguments come into the function.</li>
 <li>Use the syntax described earlier to access global symbols/variables
-such as <code>THERMO_SENSOR_PORT</code>.</li>
-<li>Call the two previous functions to create the struct and manipulate
-the bits of an the display. Capture the return value for each of
-these functions. If either of them fails (returns non-zero) then
-<code>therm_update()</code> will return <code>1</code>. Calling functions and retaining
-values in registers across the function calls requires some care.</li>
-<li>It is necessary to capture the return value from
-<code>set_temp_from_display()</code> and retain it while running
-<code>set_display_from_temp()</code>. This likely means using a callee-save
-register which is retained across function calls. Make sure to
-push/save any callee save register and then pop/restore them before
-returning from <code>thermo_update()</code>.</li>
+such as <code>BATT_VOLTAGE_PORT</code>.</li>
 <li><p>
-Calling a function requires that the stack be aligned to 16-bytes;
-there is always an 8-byte quantity on the stack (previous value of
-the <code>rsp</code> stack pointer).  This means the stack must be extended
-via <code>pushq</code> or <code>subq</code> instruction before any calls. After aligning
-the stack, several function calls can be made such as in the
-following sequence.
+Call the two previous functions to create the struct and manipulate
+the bits of an the display.  Calling a function requires that the
+stack be aligned to 16-bytes; there is always an 8-byte quantity on
+the stack (previous value of the <code>rsp</code> stack pointer).  This means
+the stack must be extended with a <code>pushq</code> or <code>subq</code> instruction before any
+calls (but don't use both). A typical sequence is:
 </p>
 <div class="org-src-container">
-<pre class="src src-asm">   pushq/subq %rsp      # adjust the stack pointer to make space for local      
-                       # values AND align to a 16-byte boundary
-
+<pre class="src src-asm">   subq    $8,%rsp     # extend the stack 8 bytes
+   ...
    call    some_func   # stack aligned, call function
    ## return val from func in rax or eax
-
-   call    other_func  # stack still aligned, call other function
+   ...
+   addq    $8,%rsp     # shrink the stack to restore it to its original position
+</pre>
+</div></li>
+<li><p>
+If several function calls will be made, a single extension of the
+stack is all that is needed as in the below
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">   subq    $8,%rsp     # extend the stack 8 bytes
+   ...
+   call    some_func1  # stack aligned, call function
    ## return val from func in rax or eax
 
-   popq/addq %rsp       # restore the stack pointer to its original value
+   ## do some more stuff
+
+   call    some_func2   # stack aligned, call function
+   ## return val from func in rax or eax
+   ...
+   addq    $8,%rsp     # shrink the stack to restore it to its original position
 </pre>
-</div>
-<p>
-NOTE: the specific number of <code>pushq</code> instructions to use or <code>subq</code>
-values to decrease <code>%rsp</code> is dependent on the situation. Common
-total adjustments are 8 bytes, 24 bytes, and 40 bytes. Pick one
-that fits the situation here.
-</p></li>
-<li>In order to call the <code>set_temp_from_ports()</code> function, this
-function will need to allocate space on the stack for a <code>temp_t</code>.
-As described previously, this can be done via a stack adjustment,
-<code>pushq</code> or <code>subq X,%rsp</code> instructions. Once fresh stack space is
-pointed to by <code>%rsp</code>, it can be copied as arguments to functions
-that need main memory space for data such as a <code>temp_t</code> struct.</li>
-<li>Similarly, to call the <code>set_display_from_temp()</code> function, one will
-need a packed <code>temp_t</code> in a register. If the preceding
-<code>set_temp_from_ports()</code> call succeeded, this packed struct can be
-read from memory into a register with a <code>movX</code> instruction. That
+</div></li>
+<li>In order to call the <code>set_batt_from_ports()</code> function, this
+function will need to allocate space on the stack for a <code>batt_t</code>.
+As described previously, this struct can be packed to fit in 8
+bytes so a <code>pushq $0</code> will put a "zero" <code>batt_t</code> struct on the
+stack and <code>%rsp</code> is then a pointer to it which can be copied to
+other registers.</li>
+<li>Similarly, to call the <code>set_display_from_batt()</code> function, one will
+need a packed <code>batt_t</code> in a register. If the preceding
+<code>set_batt_from_ports()</code> call succeeded, this packed struct can be
+read from memory into a register with a <code>movq</code> instruction. That
 stack space can be re-used if needed.</li>
 <li>Keep in mind that you will need to do error checking of the return
-values from the two functions: if either of them return non-zero
-values, then <code>thermo_update()</code> must return a non-zero value. Make
-sure to retain earlier return values across function calls by using
-callee-save registers.</li>
+values from the two functions: if they return non-zero values jump
+to a clearly marked "error" section and return a 1. If an error
+occurs, <b>don't forget to pop any values off the stack that have been
+pushed before returning.</b></li>
 </ol>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org01f77f3" class="outline-3 grading 60">
-<h3 id="org01f77f3"><span class="section-number-3">3.8</span> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="60">60</span></span></h3>
+<div id="outline-container-org1ad6ab5" class="outline-3 grading 50">
+<h3 id="org1ad6ab5"><span class="section-number-3">3.8</span> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
 <div class="outline-text-3" id="text-3-8">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1393,12 +1369,12 @@ callee-save registers.</li>
 
 <tr>
 <td class="org-right">35</td>
-<td class="org-left"><code>make test-prob1</code> which uses programs <code>test_thermo_update</code> and <code>thermo_main</code></td>
+<td class="org-left"><code>make test-prob1</code> which uses programs <code>test_batt_update</code> and <code>batt_main</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Provides 30 tests for functions in <code>thermo_update_asm.s</code> and 5 for <code>thermo_main</code></td>
+<td class="org-left">Provides 35 tests for functions in <code>batt_update_asm.s</code></td>
 </tr>
 
 <tr>
@@ -1424,7 +1400,7 @@ callee-save registers.</li>
 <tbody>
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">MANUAL INSPECTION</td>
+<td class="org-left">MANUAL INSPECTION CRITERIA</td>
 </tr>
 
 <tr>
@@ -1449,17 +1425,27 @@ callee-save registers.</li>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">There is a clear relation of the code to the C algorithm used in <code>thermo_update.c</code></td>
+<td class="org-left">There is a clear relation of the code to the C algorithm used in <code>batt_update.c</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">High-level variables and registers they occupy are described.</td>
+<td class="org-left">Use of good label names to indicate jump targets: <code>.NEG_VOLTS</code> is good, <code>.L32</code> is bad</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Error checking on the input values is done with clear "error" sections and labels</td>
+<td class="org-left">High-level variables and registers they occupy are documented in comments</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Error checking on the input values is done with a clear "error" section/label</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Any callee save registers used (<code>rbx rbp r12 r13 r14 r15</code>) are pushed at the top of functions and popped at the end</td>
 </tr>
 
 <tr>
@@ -1468,23 +1454,13 @@ callee-save registers.</li>
 </tr>
 
 <tr>
-<td class="org-right">10</td>
-<td class="org-left"><code>set_temp_from_ports()</code></td>
+<td class="org-right">5</td>
+<td class="org-left"><code>set_batt_from_ports()</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">The initial division by 64 is done using a bitwise shift instruction.</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Remainders from the division by 64 are obtained through bitwise-AND on the low-order bits.</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Division is used to compute Fahrenheit temperature conversions.</td>
+<td class="org-left">Divisions by powers of 2 are done using a bitwise shift instruction.</td>
 </tr>
 
 <tr>
@@ -1504,7 +1480,7 @@ callee-save registers.</li>
 
 <tr>
 <td class="org-right">10</td>
-<td class="org-left"><code>set_display_from_temp()</code></td>
+<td class="org-left"><code>set_display_from_batt()</code></td>
 </tr>
 
 <tr>
@@ -1519,7 +1495,7 @@ callee-save registers.</li>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Division is used to compute quotients and remainders that are needed.</td>
+<td class="org-left">The <code>idivX</code> instruction is used to compute quotients and remainders that are needed.</td>
 </tr>
 
 <tr>
@@ -1534,56 +1510,46 @@ callee-save registers.</li>
 
 <tr>
 <td class="org-right">5</td>
-<td class="org-left"><code>thermo_update()</code></td>
+<td class="org-left"><code>batt_update()</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">The stack is extended to create space for local variables that must be passed by address and the restored before returning</td>
+<td class="org-left">Memory is pushed onto the stack for local variables that must be passed by reference</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">The stack is correctly aligned to a 16-byte boundary to be compatible with function calls</td>
+<td class="org-left">Function calls to the earlier two functions are made with appropriate arguments passed</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Function calls to the earlier two functions are made with arguments passed in appropriate registers</td>
+<td class="org-left">The stack is properly aligned at an 8-byte boundary for function calls, likely through a <code>subq/pushq</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">The return value for the first function call is retained across the second function call in a callee save register or the stack</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">The return value is 1 if either function returns a 1 and zero otherwise</td>
-</tr>
-</tbody>
-<tbody>
-<tr>
-<td class="org-right">60</td>
-<td class="org-left">TOTAL for problem, 65 points possible</td>
+<td class="org-left">Changes to the stack for local variables / alignment are undone via a complementary <code>addq/popq</code> instruction</td>
 </tr>
 </tbody>
 </table>
+
 <p>
 <b>NOTE</b>: Passing all tests and earning all manual inspection criteria
-will earn up to <b>5 Points of Project Makeup Credit</b> which will offset
+will earn up to <b>10 Points of Project Makeup Credit</b> which will offset
 past and future loss of credit on projects.
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgca8d672" class="outline-2">
-<h2 id="orgca8d672"><span class="section-number-2">4</span> <b>Problem 2</b>: The Binary Bomb</h2>
+<div id="outline-container-org102a4de" class="outline-2">
+<h2 id="org102a4de"><span class="section-number-2">4</span> <b>Problem 2</b>: The Binary Bomb</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org298905f" class="outline-3">
-<h3 id="org298905f"><span class="section-number-3">4.1</span> Quick Links</h3>
+<div id="outline-container-org64777f1" class="outline-3">
+<h3 id="org64777f1"><span class="section-number-3">4.1</span> Quick Links</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 <b>Available only on Lab Machines or Vole</b>
@@ -1620,8 +1586,8 @@ More details on these are described in subsequent sections.
 </div>
 </div>
 
-<div id="outline-container-orge57cbfd" class="outline-3">
-<h3 id="orge57cbfd"><span class="section-number-3">4.2</span> Overview</h3>
+<div id="outline-container-orgfbe4a64" class="outline-3">
+<h3 id="orgfbe4a64"><span class="section-number-3">4.2</span> Overview</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 The nature of this problem is similar to the previous project's
@@ -1668,8 +1634,8 @@ your bomb by hand.</dd>
 </div>
 </div>
 
-<div id="outline-container-orgebfdc35" class="outline-3">
-<h3 id="orgebfdc35"><span class="section-number-3">4.3</span> Machines on which bombs run</h3>
+<div id="outline-container-orgcd8b9c2" class="outline-3">
+<h3 id="orgcd8b9c2"><span class="section-number-3">4.3</span> Machines on which bombs run</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 The binary bomb makes frequent contact with a scoring server so you
@@ -1810,8 +1776,8 @@ Legal hosts are as follows:
 </div>
 </div>
 
-<div id="outline-container-orgc58ab9c" class="outline-3">
-<h3 id="orgc58ab9c"><span class="section-number-3">4.4</span> <a id="org8edf82d"></a> Bomb Download and Setup</h3>
+<div id="outline-container-org5b620f3" class="outline-3">
+<h3 id="org5b620f3"><span class="section-number-3">4.4</span> <a id="orga57e042"></a> Bomb Download and Setup</h3>
 <div class="outline-text-3" id="text-4-4">
 <ul class="org-ul">
 <li>Download your bomb from the following web address
@@ -1870,8 +1836,8 @@ ahead a little bit in the bomb after solving a phase.</li>
 </div>
 </div>
 
-<div id="outline-container-orgdfa6daa" class="outline-3 grading 40">
-<h3 id="orgdfa6daa"><span class="section-number-3">4.5</span> Scoring and Scoreboard (40%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="40">40</span></span></h3>
+<div id="outline-container-orgef912f2" class="outline-3 grading 40">
+<h3 id="orgef912f2"><span class="section-number-3">4.5</span> Scoring and Scoreboard (40%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="40">40</span></span></h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 Scoring is done according to the following table.
@@ -1952,7 +1918,7 @@ Scoring is done according to the following table.
 </p>
 
 <p>
-<a id="org933b640"></a>
+<a id="org0d9b0b6"></a>
 On successfully defusing stages, the bomb will contact a server which
 tracks scores by number. The scoreboard is here:
 </p>
@@ -1967,9 +1933,9 @@ see the scores of others.
 </p>
 </div>
 
-<div id="outline-container-org3467887" class="outline-4">
-<h4 id="org3467887">Examples of Scoring</h4>
-<div class="outline-text-4" id="text-org3467887">
+<div id="outline-container-orgfd7bfc0" class="outline-4">
+<h4 id="orgfd7bfc0">Examples of Scoring</h4>
+<div class="outline-text-4" id="text-orgfd7bfc0">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -2078,11 +2044,11 @@ see the scores of others.
 </div>
 </div>
 
-<div id="outline-container-org6a87963" class="outline-4">
-<h4 id="org6a87963">Getting Credit for the Problem</h4>
-<div class="outline-text-4" id="text-org6a87963">
+<div id="outline-container-orgf7653e0" class="outline-4">
+<h4 id="orgf7653e0">Getting Credit for the Problem</h4>
+<div class="outline-text-4" id="text-orgf7653e0">
 <ul class="org-ul">
-<li>Ensure that the score listed on the <a href="#org933b640">Scoreboard site</a> reflects your
+<li>Ensure that the score listed on the <a href="#org0d9b0b6">Scoreboard site</a> reflects your
 progress.</li>
 <li>Ensure your <code>input.txt</code> along with your <code>bombNN/</code> directory are in
 your project directory with the rest of your code.</li>
@@ -2091,8 +2057,8 @@ your project directory with the rest of your code.</li>
 </div>
 </div>
 
-<div id="outline-container-org72580ec" class="outline-3">
-<h3 id="org72580ec"><span class="section-number-3">4.6</span> WARNING on Downloading Multiple Bombs</h3>
+<div id="outline-container-orgd3de38c" class="outline-3">
+<h3 id="orgd3de38c"><span class="section-number-3">4.6</span> WARNING on Downloading Multiple Bombs</h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
 It is possible to download multiple bombs but this will NOT reset your
@@ -2111,8 +2077,8 @@ advised to download a single bomb and work with it.
 </div>
 </div>
 
-<div id="outline-container-orgf35518d" class="outline-3">
-<h3 id="orgf35518d"><span class="section-number-3">4.7</span> Advice</h3>
+<div id="outline-container-org1ad6dc5" class="outline-3">
+<h3 id="org1ad6dc5"><span class="section-number-3">4.7</span> Advice</h3>
 <div class="outline-text-3" id="text-4-7">
 <ul class="org-ul">
 <li><p>
@@ -2164,7 +2130,7 @@ differ but the techniques to defuse it may be similar to others.</li>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-03-28 Mon 11:09 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-10-17 Mon 10:42 <br/> </i>
 </div>
 </body>
 </html>
