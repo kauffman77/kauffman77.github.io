@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-03-15 Tue 16:15 -->
+<!-- 2022-10-24 Mon 14:48 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 HW08: Assembly Debugging and Stack Security</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -190,8 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
+  .org-svg { }
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -248,6 +248,7 @@ pre {
 }
 #content, #preamble, #postamble {
 margin-left:300px;
+max-width: 100%;
 }
 .tag {
 background-color: inherit; font-family: inherit;
@@ -340,46 +341,24 @@ text-align: justify;
 }
 }
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-03-15 Tue 16:15</i>
+<i>Last Updated: 2022-10-24 Mon 14:48</i>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">CSCI 2021 HW08: Assembly Debugging and Stack Security</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 3/22/2022</b></li>
+<li><b>Due: 11:59pm Tue 01-Nov-2022</b></li>
 <li><i>Approximately 0.83% of total grade</i></li>
 <li>Homework and Quizzes are open resource/open collaboration. You must
 submit your own work but you may freely discuss HW topics with other
 members of the class.</li>
 </ul>
 
-<div id="outline-container-org9aa5486" class="outline-4">
-<h4 id="org9aa5486">CODE DISTRIBUTION: <a href="hw08-code.zip">hw08-code.zip</a></h4>
-<div class="outline-text-4" id="text-org9aa5486">
+<div id="outline-container-org02296b6" class="outline-4">
+<h4 id="org02296b6">CODE DISTRIBUTION: <a href="hw08-code.zip">hw08-code.zip</a></h4>
+<div class="outline-text-4" id="text-org02296b6">
 <ul class="org-ul">
 <li>Download the code distribution</li>
 <li>See further setup instructions below</li>
@@ -387,30 +366,30 @@ members of the class.</li>
 </div>
 </div>
 
-<div id="outline-container-orgd798fec" class="outline-4">
-<h4 id="orgd798fec">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-orgd798fec">
-<div id="table-of-contents">
+<div id="outline-container-orged88d8c" class="outline-4">
+<h4 id="orged88d8c">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orged88d8c">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org525883a">1. Rationale</a>
+<li><a href="#org02b00a2">1. Rationale</a>
 <ul>
-<li><a href="#orgfea7d60">Associated Reading / Preparation</a></li>
-<li><a href="#org29d78e6">Grading Policy</a></li>
+<li><a href="#org11fefb6">Associated Reading / Preparation</a></li>
+<li><a href="#org79d5b52">Grading Policy</a></li>
 </ul>
 </li>
-<li><a href="#orgb7c3da9">2. Codepack</a></li>
-<li><a href="#orgab50a37">3. What to Understand</a></li>
-<li><a href="#org2a4088a">4. Questions</a></li>
+<li><a href="#org955dccd">2. Codepack</a></li>
+<li><a href="#org116d274">3. What to Understand</a></li>
+<li><a href="#org0d2cefe">4. Questions</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org525883a" class="outline-2">
-<h2 id="org525883a"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org02b00a2" class="outline-2">
+<h2 id="org02b00a2"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Code that deals with linked data structures such as lists,
@@ -431,9 +410,9 @@ programs crashing. This HW studies such a case.
 </p>
 </div>
 
-<div id="outline-container-orgfea7d60" class="outline-3">
-<h3 id="orgfea7d60">Associated Reading / Preparation</h3>
-<div class="outline-text-3" id="text-orgfea7d60">
+<div id="outline-container-org11fefb6" class="outline-3">
+<h3 id="org11fefb6">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-org11fefb6">
 <ul class="org-ul">
 <li>Bryant and O'Hallaron: Ch 3.1-3.9 on assembly code instructions in
 x86-64 are essential for understanding how to follow assembly code
@@ -448,9 +427,9 @@ code is available.</li>
 </div>
 
 
-<div id="outline-container-org29d78e6" class="outline-3">
-<h3 id="org29d78e6">Grading Policy</h3>
-<div class="outline-text-3" id="text-org29d78e6">
+<div id="outline-container-org79d5b52" class="outline-3">
+<h3 id="org79d5b52">Grading Policy</h3>
+<div class="outline-text-3" id="text-org79d5b52">
 <p>
 Credit for this HW is earned by taking the associated HW Quiz which is
 linked under <code>Gradescope</code>.  The quiz will ask similar questions as
@@ -472,8 +451,8 @@ See the <a href="../2021/syllabus.html">full policies in the course syllabus</a>
 </div>
 </div>
 
-<div id="outline-container-orgb7c3da9" class="outline-2">
-<h2 id="orgb7c3da9"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org955dccd" class="outline-2">
+<h2 id="org955dccd"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -525,8 +504,8 @@ The codepack for the HW contains the following files:
 </div>
 </div>
 
-<div id="outline-container-orgab50a37" class="outline-2">
-<h2 id="orgab50a37"><span class="section-number-2">3</span> What to Understand</h2>
+<div id="outline-container-org116d274" class="outline-2">
+<h2 id="org116d274"><span class="section-number-2">3</span> What to Understand</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Ensure that you understand
@@ -542,8 +521,8 @@ clobbered if when writing of the end of stack arrays</li>
 </div>
 </div>
 
-<div id="outline-container-org2a4088a" class="outline-2">
-<h2 id="org2a4088a"><span class="section-number-2">4</span> Questions</h2>
+<div id="outline-container-org0d2cefe" class="outline-2">
+<h2 id="org0d2cefe"><span class="section-number-2">4</span> Questions</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Analyze the files in the provided codepack and answer the questions
@@ -835,7 +814,7 @@ stack smashing detected ***: terminated
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-03-15 Tue 16:15 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-10-24 Mon 14:48 <br/> </i>
 </div>
 </body>
 </html>
