@@ -1,0 +1,1241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-10-26 Wed 10:53 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 2021: x86-64 Assembly Extras and Wrap</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">CSCI 2021: x86-64 Assembly Extras and Wrap</h1>
+
+<div id="outline-container-org0eb1149" class="outline-2">
+<h2 id="org0eb1149"><span class="section-number-2">1</span> Logistics</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<ol class="org-ol">
+<li><a id="orgdde21fc"></a>Cols<br />
+<div class="outline-text-3" id="text-1-1">
+</div>
+
+<ol class="org-ol">
+<li><a id="org7a363c0"></a><br />
+<div class="outline-text-4" id="text-1-1-1">
+</div>
+
+<ol class="org-ol">
+<li><a id="orga2ae390"></a>Reading Bryant/O&rsquo;Hallaron<br />
+<div class="outline-text-5" id="text-1-1-1-1">
+<p>
+Read in Full
+</p>
+<ul class="org-ul">
+<li>Ch 3.7 Procedure Calls</li>
+</ul>
+<p>
+Skim the following 
+</p>
+<ul class="org-ul">
+<li>Ch 3.8-3.9: Arrays, Structs</li>
+<li>Ch 3.10: Pointers/Security</li>
+<li>Ch 3.11: Floating Point</li>
+</ul>
+</div>
+</li>
+
+<li><a id="org30aa330"></a>Goals<br />
+<div class="outline-text-5" id="text-1-1-1-2">
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> Assembly vs C</li>
+<li class="off"><code>[&#xa0;]</code> Data in Assembly</li>
+<li class="off"><code>[&#xa0;]</code> Security Risks</li>
+<li class="off"><code>[&#xa0;]</code> Floating Point Instr/Regs</li>
+</ul>
+</div>
+</li>
+</ol>
+</li>
+
+<li><a id="org34613cc"></a><br />
+<div class="outline-text-4" id="text-1-1-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Date</th>
+<th scope="col" class="org-left">Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Wed 26-Oct</td>
+<td class="org-left">Asm Extras</td>
+</tr>
+
+<tr>
+<td class="org-left">Fri 28-Oct</td>
+<td class="org-left">Asm Extras</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">Mon 31-Oct</td>
+<td class="org-left">Asm Wrap-up</td>
+</tr>
+
+<tr>
+<td class="org-left">Wed 02-Nov</td>
+<td class="org-left">Practice Exam 2</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">Lab/HW 9: Review</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><b>P3 Due</b></td>
+</tr>
+
+<tr>
+<td class="org-left">Fri 04-Nov</td>
+<td class="org-left"><span class="underline">Exam 2</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<ol class="org-ol">
+<li><a id="org74af219"></a>Project 3<br />
+<div class="outline-text-5" id="text-1-1-2-1">
+<ul class="org-ul">
+<li>Problem 1: Thermometer Asm Functions (60%)</li>
+<li>Problem 2: Binary Bomb via debugger (40%)</li>
+</ul>
+<p>
+<span class="underline">Start NOW if you haven&rsquo;t already</span>
+</p>
+</div>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+
+<div id="outline-container-org2224e88" class="outline-2">
+<h2 id="org2224e88"><span class="section-number-2">2</span> Reminders of Techniques for Binary Bomb</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<ol class="org-ol">
+<li><a id="org0fe5011"></a>GDB Tricks<br />
+<div class="outline-text-3" id="text-2-1">
+<p>
+From <a href="https://www-users.cse.umn.edu/~kauffman/2021/gdb">Quick Guide to gdb</a>
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Command</th>
+<th scope="col" class="org-left">Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>break *0x1248f2</code></td>
+<td class="org-left">Break at specific instruction address</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>break *func+24</code></td>
+<td class="org-left">Break at instruction with decimal offset from a label</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>break *func+0x18</code></td>
+<td class="org-left">Break at instruction with hex offset from a label</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>x $rax</code></td>
+<td class="org-left">Print memory pointed to by register <code>rax</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>x /gx $rax</code></td>
+<td class="org-left">Print as &ldquo;giant&rdquo; 64-bit numbers in hexadecimal format</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>x /5gd $rax</code></td>
+<td class="org-left">Print 5 64-bit numbers starting where <code>rax</code> points in decimal format</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+
+<li><a id="orge5d4852"></a>Disassembling Binaries: <code>objdump -d prog &gt; code.txt</code><br />
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; objdump -d a.out              # DISASSEMBLE BINARY
+0000000000001119 &lt;main&gt;:
+    1119:       48 c7 c0 00 00 00 00    mov    $0x0,%rax
+    1120:       48 c7 c1 01 00 00 00    mov    $0x1,%rcx
+    1127:       48 c7 c2 64 00 00 00    mov    $0x64,%rdx
+000000000000112e &lt;LOOP&gt;:
+    112e:       48 39 d1                cmp    %rdx,%rcx
+    1131:       7f 08                   jg     113b &lt;END&gt;
+    1133:       48 01 c8                add    %rcx,%rax
+...
+&gt;&gt; objdump -d a.out &gt; code.txt  # STORE RESULTS IN FILE
+</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+
+
+<div id="outline-container-org3ad8b12" class="outline-2">
+<h2 id="org3ad8b12"><span class="section-number-2">3</span> <span class="underline">Exercise</span>: All Models are Wrong&#x2026;</h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li>Rule #1: The Doctor Lies</li>
+<li>Below is our original model for memory layout of C programs</li>
+<li>Describe what is <b>incorrect</b> based on x86-64 assembly</li>
+<li>What is <b>actually</b> in the stack? How are registers likely used?</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-picture">      9: int main(...){             STACK: Caller main(), prior to swap()
+     10:   int x = 19;              | FRAME   | ADDR  | NAME | VALUE | 
+     11:   int y = 31;              |---------+-------+------+-------| 
+  +-&lt;12:   swap(&amp;x, &amp;y);            | main()  | #2048 | x    |    19 |
+  |  13:   printf("%d %d\n",x,y);   | line:12 | #2044 | y    |    31 |
+  |  14:   return 0;                |---------+-------+------+-------| 
+  V  15: }                          
+  |                                 STACK: Callee swap() takes control
+  |  18: void swap(int *a,int *b){  | FRAME   | ADDR  | NAME | VALUE |
+  +-&gt;19:   int tmp = *a;            |---------+-------+------+-------|
+     20:   *a = *b;                 | main()  | #2048 | x    |    19 |&lt;-+
+     21:   *b = tmp;                | line:12 | #2044 | y    |    31 |&lt;-|+
+     22:   return;                  |---------+-------+------+-------|  ||
+     23: }                          | swap()  | #2036 | a    | #2048 |--+|
+                                    | line:19 | #2028 | b    | #2044 |---+
+                                    |         | #2024 | tmp  |     ? |
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org368b314" class="outline-2">
+<h2 id="org368b314"><span class="section-number-2">4</span> <b>Answers</b>: All Models are Wrong, Some are Useful</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+<pre class="src src-picture">      9: int main(...){               STACK: Callee swap() takes control      
+     10:   int x = 19;                | FRAME   | ADDR  | NAME | VALUE |      
+     11:   int y = 31;                |---------+-------+------+-------|      
+  +-&lt;12:   swap(&amp;x, &amp;y);              | main()  | #2048 | x    |    19 |      
+  |  13:   printf("%d %d\n",x,y);     |         | #2044 | y    |    31 |      
+  |  14:   return 0;                  |---------+-------+------+-------|      
+  V  15: }                            | swap()  | #2036 | rip  |Line 13|      
+  |                                   |---------+-------+------+-------|      
+  |  18: void swap(int *a,int *b){    REGS as swap() starts                 
+  +-&gt;19:   int tmp = *a;              | REG | VALUE | NOTE         |
+     20:   *a = *b;                   |-----+-------+--------------|
+     21:   *b = tmp;                  | rdi | #2048 | for *a       |          
+     22:   return;                    | rsi | #2044 | for *b       |
+     23: }                            | rax |     ? | for tmp      |
+                                      | rip |   L19 | line in swap |
+</pre>
+</div>
+<ul class="org-ul">
+<li><code>main()</code> must have stack space for locals passed by address</li>
+<li><code>swap()</code> needs no stack space for arguments: in registers</li>
+<li>Return address is next value of <code>rip</code> register in <code>main()</code></li>
+<li>Mostly don&rsquo;t need to think at this level of detail but <b>can be
+useful in some situations</b></li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org1e4d5e3" class="outline-2">
+<h2 id="org1e4d5e3"><span class="section-number-2">5</span> Aggregate Data In Assembly (Arrays + Structs)</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<ol class="org-ol">
+<li><a id="org935c2d6"></a>Cols<br />
+<div class="outline-text-3" id="text-5-1">
+</div>
+
+<ol class="org-ol">
+<li><a id="orgc377a0f"></a><br />
+<div class="outline-text-4" id="text-5-1-1">
+</div>
+<ol class="org-ol">
+<li><a id="org49dd767"></a>Arrays<br />
+<div class="outline-text-5" id="text-5-1-1-1">
+<p>
+Usually: base + index &times; size
+</p>
+<div class="org-src-container">
+<pre class="src src-c">arr[i] = 12;
+movl $12,(%rdi,%rsi,4)
+
+int x = arr[j];
+movl (%rdi,%rcx,4),%r8d
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Array starting address often held in a register</li>
+<li>Index often in a register</li>
+<li>Compiler inserts appropriate size (1,2,4,8)</li>
+</ul>
+</div>
+</li>
+</ol>
+</li>
+
+<li><a id="orgfe1d282"></a><br />
+<div class="outline-text-4" id="text-5-1-2">
+</div>
+<ol class="org-ol">
+<li><a id="org2f73cda"></a>Structs<br />
+<div class="outline-text-5" id="text-5-1-2-1">
+<p>
+Usually base+offset
+</p>
+<div class="org-src-container">
+<pre class="src src-c">typedef struct {
+  int i; short s; 
+  char c[2]; 
+} foo_t;
+foo_t *f = ...;
+
+short sh = f-&gt;s;
+movw 4(%rdi),%si
+
+f-&gt;c[i] = 'X';
+movb $88, 6(%rdi,%rax)
+</pre>
+</div>
+</div>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+
+
+<div id="outline-container-orgd560f25" class="outline-2">
+<h2 id="orgd560f25"><span class="section-number-2">6</span> Accessing Global Variables in Assembly</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Global data can be set up in assembly in <code>.data</code> sections with
+labels and assembler directives like <code>.int</code> and <code>.short</code> 
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">.data
+an_int:              # single int
+        .int 17
+some_shorts:         # array of shorts
+        .short 10    # some_shorts[0]
+        .short 12    # some_shorts[1]
+        .short 14    # some_shorts[2]
+</pre>
+</div>
+</div>
+<ol class="org-ol">
+<li><a id="org79dad53"></a>Cols&#xa0;&#xa0;&#xa0;<span class="tag"><span class="B_columns">B_columns</span></span><br />
+<div class="outline-text-3" id="text-6-1">
+</div>
+
+<ol class="org-ol">
+<li><a id="org54dd8fe"></a><br />
+<div class="outline-text-4" id="text-6-1-1">
+</div>
+<ol class="org-ol">
+<li><a id="orge76b11f"></a>Modern Access to Globals<br />
+<div class="outline-text-5" id="text-6-1-1-1">
+<div class="org-src-container">
+<pre class="src src-asm">movl an_int(%rip),  %eax     
+leaq some_shorts(%rip), %rdi 
+</pre>
+</div>
+<ul class="org-ul">
+<li>Uses <code>%rip</code> relative addressing</li>
+<li>Default in <code>gcc</code> as it plays nice with OS security features</li>
+<li>May discuss again later during Linking/ELF coverage</li>
+</ul>
+</div>
+</li>
+</ol>
+</li>
+
+<li><a id="org9cdd72b"></a><br />
+<div class="outline-text-4" id="text-6-1-2">
+</div>
+<ol class="org-ol">
+<li><a id="org033224d"></a>Traditional Access to Globals<br />
+<div class="outline-text-5" id="text-6-1-2-1">
+<div class="org-src-container">
+<pre class="src src-asm">movl an_int,  %eax        # ERROR
+leaq (some_shorts), %rdi  # ERROR
+</pre>
+</div>
+<ul class="org-ul">
+<li>Not accepted by <code>gcc</code> by default</li>
+<li>Yields compile/link errors</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-sh">/usr/bin/ld: /tmp/ccocSiw5.o: 
+  relocation R_X86_64_32S against `.data'  
+  can not be used when making a PIE object; 
+  recompile with -fPIE
+</pre>
+</div>
+</div>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+
+
+<div id="outline-container-orgcfd68c3" class="outline-2">
+<h2 id="orgcfd68c3"><span class="section-number-2">7</span> Packed Structures as Procedure Arguments</h2>
+<div class="outline-text-2" id="text-7">
+<ul class="org-ul">
+<li>Passing pointers to structs is &rsquo;normal&rsquo;: registers contain addresses
+to main memory</li>
+<li>Passing actual structs may result in <i>packed structs</i> where several
+fields are in a single register</li>
+<li>Assembly must <i>unpack</i> these through <b>shifts and masking</b></li>
+</ul>
+</div>
+<ol class="org-ol">
+<li><a id="org8a2789a"></a>Cols&#xa0;&#xa0;&#xa0;<span class="tag"><span class="B_columns">B_columns</span></span><br />
+<div class="outline-text-3" id="text-7-1">
+</div>
+
+<ol class="org-ol">
+<li><a id="org5c435e5"></a><br />
+<div class="outline-text-4" id="text-7-1-1">
+<div class="org-src-container">
+<pre class="src src-c"><span class="linenr"> 1: </span>// packed_struct_main.c
+<span class="linenr"> 2: </span>typedef struct {
+<span class="linenr"> 3: </span>  short first;
+<span class="linenr"> 4: </span>  short second;
+<span class="linenr"> 5: </span>} twoshort_t;                    
+<span class="linenr"> 6: </span>
+<span class="linenr"> 7: </span>short sub_struct(twoshort_t ti);
+<span class="linenr"> 8: </span>
+<span class="linenr"> 9: </span>int main(){
+<span class="linenr">10: </span>  twoshort_t ts = {.first=10,
+<span class="linenr">11: </span>                   .second=-2};
+<span class="linenr">12: </span>  int sum = sub_struct(ts);
+<span class="linenr">13: </span>  printf("%d - %d = %d\n",
+<span class="linenr">14: </span>         ts.first, ts.second, sum);
+<span class="linenr">15: </span>  return 0;
+<span class="linenr">16: </span>}
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="org318bbd9"></a><br />
+<div class="outline-text-4" id="text-7-1-2">
+<div class="org-src-container">
+<pre class="src src-asm"><span class="linenr"> 1: </span>### packed_struct.s
+<span class="linenr"> 2: </span>.text
+<span class="linenr"> 3: </span>.globl  sub_struct
+<span class="linenr"> 4: </span>sub_struct:
+<span class="linenr"> 5: </span>  ## first arg is twoshort_t ts
+<span class="linenr"> 6: </span>  ## %rdi has 2 packed shorts in it
+<span class="linenr"> 7: </span>  ## bits  0-15 are ts.first
+<span class="linenr"> 8: </span>  ## bits 16-31 are ts.second
+<span class="linenr"> 9: </span>  ## upper bits could be anything
+<span class="linenr">10: </span>
+<span class="linenr">11: </span>  movl %edi,%eax      # eax = ts;
+<span class="linenr">12: </span>  andl $0xFFFF,%eax   # eax = ts.first; 
+<span class="linenr">13: </span>  sarl $16,%edi       # edi = edi &gt;&gt; 16;
+<span class="linenr">14: </span>  andl $0xFFFF,%edi   # edi = ts.second;
+<span class="linenr">15: </span>  subw %di,%ax        # ax = ax - di
+<span class="linenr">16: </span>  ret                 # answer in ax
+</pre>
+</div>
+</div>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+
+
+<div id="outline-container-orgb6a307d" class="outline-2">
+<h2 id="orgb6a307d"><span class="section-number-2">8</span> Example: <code>coins_t</code> in HW06 / Lab07</h2>
+<div class="outline-text-2" id="text-8">
+</div>
+<ol class="org-ol">
+<li><a id="orgec616d1"></a>Cols&#xa0;&#xa0;&#xa0;<span class="tag"><span class="B_columns">B_columns</span></span><br />
+<div class="outline-text-3" id="text-8-1">
+</div>
+
+<ol class="org-ol">
+<li><a id="org9b10a00"></a><br />
+<div class="outline-text-4" id="text-8-1-1">
+<div class="org-src-container">
+<pre class="src src-c">// Type for collections of coins
+typedef struct {  // coint_t has the following memory layout      
+  char quarters;  //                                         
+  char dimes;     // |          | Pointer | Packed | Packed |
+  char nickels;   // |          |  Memory | Struct | Struct |
+  char pennies;   // | Field    |  Offset | Arg#   | Bits   |
+} coins_t;        // |----------+---------+--------+--------|
+                  // | quarters |      +0 | #1     | 0-7    |
+                  // | dimes    |      +1 | #1     | 8-15   |
+                  // | nickels  |      +2 | #1     | 16-23  |
+                  // | pennies  |      +3 | #1     | 24-31  |
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-asm">## | #2048 | c-&gt;quarters | 2 |
+## | #2049 | c-&gt;dimes    | 1 |
+## | #2050 | c-&gt;nickels  | - |
+## | #2051 | c-&gt;pennies  | - |
+
+set_coins:
+### int set_coins(int cents, coins_t *coins)
+### %edi = int cents
+### %rsi = coints_t *coins
+  ...
+  # rsi: #2048
+  # al: 0  %dl: 3
+  movb    %al,2(%rsi)     # coins-&gt;nickels = al;
+  movb    %dl,3(%rsi)     # coins-&gt;pennies = dl;
+
+## | #2048 | c-&gt;quarters | 2 |
+## | #2049 | c-&gt;dimes    | 1 |
+## | #2050 | c-&gt;nickels  | 0 |
+## | #2051 | c-&gt;pennies  | 3 |
+
+
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="orga92c5d6"></a><br />
+<div class="outline-text-4" id="text-8-1-2">
+<div class="org-src-container">
+<pre class="src src-asm">
+
+
+
+
+
+
+
+
+total_coins:
+### args are
+### %rdi packed coin_t struct with struct fields
+### { 0- 7: quarters, 8-15: dimes, 
+###  16-23: nickels, 24-31: pennies}
+  ...
+
+### rdi: 0x00 00 00 00 03 00 01 02
+###                     p  n  d  q
+  movq    %rdi,%rdx        # extract dimes
+### rdx: 0x00 00 00 00 03 00 01 02
+###                     p  n  d  q
+  sarq    $8,%rdx          # shift dimes to low bits
+### rdx: 0x00 00 00 00 00 03 00 01 
+###                        p  n  d  
+  andq    $0xFF,%rdx       # rdx = dimes
+### rdx: 0x00 00 00 00 00 00 00 01 
+###                        p  n  d  
+</pre>
+</div>
+</div>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+
+
+<div id="outline-container-orgfd5e04b" class="outline-2">
+<h2 id="orgfd5e04b"><span class="section-number-2">9</span> General Cautions on Structs</h2>
+<div class="outline-text-2" id="text-9">
+</div>
+<ol class="org-ol">
+<li><a id="orgc5fc028"></a>Cols<br />
+<div class="outline-text-3" id="text-9-1">
+</div>
+
+<ol class="org-ol">
+<li><a id="org929c41c"></a><br />
+<div class="outline-text-4" id="text-9-1-1">
+</div>
+
+<ol class="org-ol">
+<li><a id="org4db87fa"></a>Struct Layout by Compilers<br />
+<div class="outline-text-5" id="text-9-1-1-1">
+<ul class="org-ul">
+<li>Compiler honors order of source code fields in struct</li>
+<li>BUT compiler may add padding between/after fields for alignment</li>
+<li>Compiler determines total struct size</li>
+</ul>
+</div>
+</li>
+<li><a id="org6729065"></a>Struct Layout Algorimths<br />
+<div class="outline-text-5" id="text-9-1-1-2">
+<ul class="org-ul">
+<li>Baked into compiler</li>
+<li><b>May change from compiler to compiler</b></li>
+<li>May change through history of compiler</li>
+</ul>
+</div>
+</li>
+</ol>
+</li>
+
+<li><a id="orga6e0932"></a><br />
+<div class="outline-text-4" id="text-9-1-2">
+</div>
+<ol class="org-ol">
+<li><a id="orgb64de34"></a>Structs in Mem/Regs<br />
+<div class="outline-text-5" id="text-9-1-2-1">
+<ul class="org-ul">
+<li>Stack structs spread across several registers</li>
+<li>Don&rsquo;t need a struct on the stack at all in some cases (just like
+don&rsquo;t need local variables on stack)</li>
+<li>Struct arguments packed into 1+ registers</li>
+</ul>
+</div>
+</li>
+
+<li><a id="org878075c"></a>Stay Insulated<br />
+<div class="outline-text-5" id="text-9-1-2-2">
+<ul class="org-ul">
+<li>Programming in C insulates you from all of this</li>
+<li>Feel the <b>warmth</b> of <code>gcc</code>&rsquo;s abstraction blanket</li>
+</ul>
+</div>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+
+<div id="outline-container-org4a91ec2" class="outline-2">
+<h2 id="org4a91ec2"><span class="section-number-2">10</span> Security Risks in C</h2>
+<div class="outline-text-2" id="text-10">
+</div>
+<ol class="org-ol">
+<li><a id="orgb8415ff"></a>Cols<br />
+<div class="outline-text-3" id="text-10-1">
+</div>
+
+<ol class="org-ol">
+<li><a id="org4343674"></a><br />
+<div class="outline-text-4" id="text-10-1-1">
+</div>
+<ol class="org-ol">
+<li><a id="org2f470bc"></a>Buffer Overflow Attacks<br />
+<div class="outline-text-5" id="text-10-1-1-1">
+<ul class="org-ul">
+<li>No default bounds checking in C:
+Performance favored over safety</li>
+<li><p>
+Allows classic security flaws:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">
+char buf[1024];
+printf("Enter you name:");
+fscanf(file,"%s",buf); // BAD
+// or
+gets(buf);             // BAD
+// my name is 1500 chars 
+// long, what happens?
+
+</pre>
+</div></li>
+<li>For data larger than <code>buf</code>, begin overwriting other parts of the
+stack
+<ul class="org-ul">
+<li>Clobber return addresses</li>
+<li>Insert executable code and run it</li>
+</ul></li>
+</ul>
+</div>
+</li>
+</ol>
+</li>
+
+
+<li><a id="org78d3996"></a><br />
+<div class="outline-text-4" id="text-10-1-2">
+</div>
+<ol class="org-ol">
+<li><a id="org83bc5af"></a>Counter-measures<br />
+<div class="outline-text-5" id="text-10-1-2-1">
+<ul class="org-ul">
+<li><b>Stack protection</b> is default in <code>gcc</code> in the modern era</li>
+<li>Inserts &ldquo;canary&rdquo; values on the stack near return address</li>
+<li>Prior to function return, checks that canaries are unchanged</li>
+<li><b>Stack / Text Section Start randomized</b> by kernel, return address
+and function addresses difficult to predict ahead of time</li>
+<li>Kernel may also vary virtual memory address as well</li>
+<li>Disabling protections is risky</li>
+</ul>
+</div>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+
+<div id="outline-container-org2f36b19" class="outline-2">
+<h2 id="org2f36b19"><span class="section-number-2">11</span> Stack Smashing</h2>
+<div class="outline-text-2" id="text-11">
+<ul class="org-ul">
+<li>Explored in a recent homework</li>
+<li>See <code>stack_smash.c</code> for a similar example</li>
+<li>Demonstrates detection of changes to stack that could be harmful</li>
+</ul>
+</div>
+<ol class="org-ol">
+<li><a id="orgd802a50"></a>Cols&#xa0;&#xa0;&#xa0;<span class="tag"><span class="B_columns">B_columns</span></span><br />
+<div class="outline-text-3" id="text-11-1">
+</div>
+
+<ol class="org-ol">
+<li><a id="org13220a0"></a><br />
+<div class="outline-text-4" id="text-11-1-1">
+<div class="org-src-container">
+<pre class="src src-c">#define END 8   // too big for array
+void demo(){
+  int arr[4];   // fill array off the end
+  for(int i=0; i&lt;END; i++){     
+    arr[i] = (i+1)*2;
+  }
+
+  for(int i=0; i&lt;4; i++){
+    printf("[%d]: %d\n",i,arr[i]);
+  }
+}  
+
+int main(){
+  printf("About to do the demo\n");
+  demo();
+  printf("Demo Complete\n");
+  return 0;
+}
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="orgb3c7172"></a><br />
+<div class="outline-text-4" id="text-11-1-2">
+<div class="org-src-container">
+<pre class="src src-sh">&gt; cd 08-assembly-extras-code/
+&gt; gcc stack_smash1.c
+&gt; ./a.out
+About to do the demo
+[0]: 2
+[1]: 4
+[2]: 6
+[3]: 8
+*** stack smashing detected ***: terminated
+Aborted (core dumped)
+</pre>
+</div>
+</div>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+
+<div id="outline-container-org4548932" class="outline-2">
+<h2 id="org4548932"><span class="section-number-2">12</span> Sample Buffer Overflow Code</h2>
+<div class="outline-text-2" id="text-12">
+<div class="org-src-container">
+<pre class="src src-c">#include &lt;stdio.h&gt;          // compiled with gcc will likely result
+void never(){               // only in 'stack smashing'
+  printf("This should never happen\n");
+  return;
+}
+int main(){
+  printf("Enter a string: ");
+  char buf[4];
+  fscanf(stdin,"%s",buf);
+  // By entering the correct length of string followed by the ASCII
+  // representation of the address of never(), one might be able to
+  // get that function to run (on windows...)
+
+  printf("You entered: %s\n",buf);
+  return 0;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5efd024" class="outline-2">
+<h2 id="org5efd024"><span class="section-number-2">13</span> Demonstration of Buffer Overflow Attack</h2>
+<div class="outline-text-2" id="text-13">
+<ul class="org-ul">
+<li>See the code <code>buffer_overflow.c</code></li>
+<li>Presents an easier case to demo stack manipulations</li>
+<li>Prints addresses of functions <code>main()</code> and <code>never()</code></li>
+<li><p>
+Reads <code>long</code> values which are 64-bits, easier to line up data in
+stack than with strings; still overflowing the buffer by reading too
+much data as in:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">void always(){
+  long buf[1] = {0xABCD};         // room for 1
+  ...
+  printf("Enter 4 hex values: ");
+  fscanf(stdin,"%lx %lx %lx %lx", // reads 4
+         &amp;buf[0], &amp;buf[1], &amp;buf[2], &amp;buf[3]);
+</pre>
+</div></li>
+<li><p>
+When compiled via
+</p>
+<pre class="example">
+&gt;&gt; gcc -fno-stack-protector buffer_overflow.c 
+</pre>
+
+<p>
+can get <code>never()</code> to run by entering its address as input which will
+overwrite the return address
+</p></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org608d5c7" class="outline-2">
+<h2 id="org608d5c7"><span class="section-number-2">14</span> Details of GCC / Linux Stack Security</h2>
+<div class="outline-text-2" id="text-14">
+<ul class="org-ul">
+<li>Programs compiled with GCC + Glibc on Linux for x86-64 will default
+to having stack protection</li>
+<li>This is can be seen in compiled code as short blocks near the
+beginning and end of functions which
+<ol class="org-ol">
+<li>At the beginning of the function uses an instruction like <code>movq
+     %fs:40, %rax</code> and places a value in the stack beneath the return
+address</li>
+<li>At the end of the function again accesses <code>%fs:40</code> and the value
+earlier placed in the stack.</li>
+</ol></li>
+<li>The <code>%fs</code> register is a special <a href="https://en.wikipedia.org/wiki/X86_memory_segmentation">segment register</a> originally
+introduced in the 16-bit era to surmount memory addressing
+limitations; now used only for limited purposes</li>
+<li>The complete details are beyond the scope of our course BUT</li>
+<li><b>A somewhat detailed explanation has been added to
+<code>08-assembly-extras-code/stack_protect.org</code></b></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org04424a4" class="outline-2">
+<h2 id="org04424a4"><span class="section-number-2">15</span> Floating Point Operations</h2>
+<div class="outline-text-2" id="text-15">
+<ul class="org-ul">
+<li>Original Intel 8086 Processor <b>didn&rsquo;t do floating point ops</b></li>
+<li>Had to buy a co-processor (Intel 8087) to enable FP ops</li>
+<li>Most modern CPUs have FP ops but they feel separate from the integer
+ops: FPU versus ALU</li>
+</ul>
+</div>
+<ol class="org-ol">
+<li><a id="org0af7825"></a>Cols<br />
+<div class="outline-text-3" id="text-15-1">
+</div>
+
+<ol class="org-ol">
+<li><a id="org765c36d"></a><br />
+<div class="outline-text-4" id="text-15-1-1">
+</div>
+<ol class="org-ol">
+<li><a id="org8502d35"></a>x86-64 &ldquo;Media&rdquo; Registers<br />
+<div class="outline-text-5" id="text-15-1-1-1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">512</th>
+<th scope="col" class="org-left">256</th>
+<th scope="col" class="org-left">128-bits</th>
+<th scope="col" class="org-left">Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>%zmm0</code></td>
+<td class="org-left"><code>%ymm0</code></td>
+<td class="org-left"><code>%xmm0</code></td>
+<td class="org-left">FP Arg1/Ret</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>%zmm1</code></td>
+<td class="org-left"><code>%ymm1</code></td>
+<td class="org-left"><code>%xmm1</code></td>
+<td class="org-left">FP Arg2</td>
+</tr>
+
+<tr>
+<td class="org-left">&#x2026;</td>
+<td class="org-left">&#x2026;</td>
+<td class="org-left">&#x2026;</td>
+<td class="org-left">&#x2026;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>%zmm7</code></td>
+<td class="org-left"><code>%ymm7</code></td>
+<td class="org-left"><code>%xmm7</code></td>
+<td class="org-left">FP Arg 8</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>%zmm8</code></td>
+<td class="org-left"><code>%ymm8</code></td>
+<td class="org-left"><code>%xmm8</code></td>
+<td class="org-left">Caller Save</td>
+</tr>
+
+<tr>
+<td class="org-left">&#x2026;</td>
+<td class="org-left">&#x2026;</td>
+<td class="org-left">&#x2026;</td>
+<td class="org-left">&#x2026;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>%zmm15</code></td>
+<td class="org-left"><code>%ymm15</code></td>
+<td class="org-left"><code>%xmm15</code></td>
+<td class="org-left">Caller Save</td>
+</tr>
+</tbody>
+</table>
+<ul class="org-ul">
+<li>Can be used as &ldquo;scalars&rdquo; - single values but&#x2026;</li>
+<li><code>xmmI</code> is 128 bits big holding
+<ul class="org-ul">
+<li>2 × 64-bit <code>double</code>&rsquo;s OR</li>
+<li>4 × 32-bit <code>float</code>&rsquo;s</li>
+</ul></li>
+<li><code>ymmI / zmmI</code> extend further</li>
+</ul>
+</div>
+</li>
+</ol>
+</li>
+
+<li><a id="org272d2cb"></a><br />
+<div class="outline-text-4" id="text-15-1-2">
+</div>
+
+<ol class="org-ol">
+<li><a id="org4b0a07e"></a>Instructions<br />
+<div class="outline-text-5" id="text-15-1-2-1">
+<div class="org-src-container">
+<pre class="src src-asm">addss %xmm2,%xmm4,%xmm0
+# xmm0[0] = xmm2[0] + xmm4[0]
+# Add Scalar Single-Precision 
+
+addps %xmm2,%xmm4,%xmm0
+# xmm0[:] = xmm2[:] + xmm4[:]
+# Add Packed Single-Precision 
+# "Vector" Instruction
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Operates on single values or &ldquo;vectors&rdquo; of packed values</li>
+<li>3-operands common in more &ldquo;modern&rdquo; assembly languages</li>
+</ul>
+</div>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+
+<div id="outline-container-orgd36f196" class="outline-2">
+<h2 id="orgd36f196"><span class="section-number-2">16</span> Floating Point and ALU Conversions</h2>
+<div class="outline-text-2" id="text-16">
+<ul class="org-ul">
+<li>Recall that bit layout of Integers and Floating Point numbers are
+quite different (<b>how?</b>)</li>
+<li><p>
+Leads to a series of assembly instructions to interconvert between
+types
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">  # int eax = ...;
+  # double xmm0 = (double) eax;
+  vcvtsi2sd       %eax,%xmm0,%xmm0
+  
+  # double xmm1 = ...
+  # long rcx = (int) xmm1;
+  vcvttsd2siq     %xmm1,%rcx
+</pre>
+</div></li>
+<li>These are non-trivial conversions: 5-cycle latency (delay) before
+completion, can have a performance impact on code which does conversions</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: \it Last Updated: \newline \input{|"/usr/bin/date"}</p>
+<p class="author">Author: Chris Kauffman</p>
+<p class="date">Created: 2022-10-26 Wed 10:53</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
