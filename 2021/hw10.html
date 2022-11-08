@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-08 Tue 13:36 -->
+<!-- 2022-11-08 Tue 13:53 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 HW10: Timing Code and Superscalar Processors</title>
@@ -344,21 +344,21 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-11-08 Tue 13:36</i>
+<i>Last Updated: 2022-11-08 Tue 13:53</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CSCI 2021 HW10: Timing Code and Superscalar Processors</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 4/05/2022</b></li>
+<li><b>Due: 11:59pm Tue 15-Nov-2022</b></li>
 <li><i>Approximately 0.83% of total grade</i></li>
 <li>Homework and Quizzes are open resource/open collaboration. You must
 submit your own work but you may freely discuss HW topics with other
 members of the class.</li>
 </ul>
 
-<div id="outline-container-org4b8adad" class="outline-4">
-<h4 id="org4b8adad">CODE DISTRIBUTION: <a href="hw10-code.zip">hw10-code.zip</a></h4>
-<div class="outline-text-4" id="text-org4b8adad">
+<div id="outline-container-org27993be" class="outline-4">
+<h4 id="org27993be">CODE DISTRIBUTION: <a href="hw10-code.zip">hw10-code.zip</a></h4>
+<div class="outline-text-4" id="text-org27993be">
 <ul class="org-ul">
 <li>Download the code distribution</li>
 <li>See further setup instructions below</li>
@@ -366,28 +366,33 @@ members of the class.</li>
 </div>
 </div>
 
-<div id="outline-container-orga32d849" class="outline-4">
-<h4 id="orga32d849">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-orga32d849">
+<div id="outline-container-orgf9c6eae" class="outline-4">
+<h4 id="orgf9c6eae">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orgf9c6eae">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org47e9da9">1. Rationale</a>
+<li><a href="#orgf6b33ec">1. Rationale</a>
 <ul>
-<li><a href="#orgf4ec9ec">Associated Reading / Preparation</a></li>
-<li><a href="#org419f5f3">Grading Policy</a></li>
+<li><a href="#org1bf7c5c">Associated Reading / Preparation</a></li>
+<li><a href="#org62dbe0b">Grading Policy</a></li>
 </ul>
 </li>
-<li><a href="#org800ce22">2. Codepack</a></li>
-<li><a href="#org93c6c02">3. The <code>time</code> Command</a></li>
-<li><a href="#orgb5f5b1b">4. Important: Run on csel-kh1260-NN</a></li>
-<li><a href="#org83a2fe0">5. What to Understand</a></li>
-<li><a href="#orgc9118de">6. Questions</a></li>
-<li><a href="#org354a156">7. Optional Information</a>
+<li><a href="#orgf49baeb">2. Codepack</a></li>
+<li><a href="#org928adaf">3. The <code>time</code> Command</a>
 <ul>
-<li><a href="#org7fceecf">Additional Information on <code>time</code> Results</a></li>
-<li><a href="#orge2d6ba8">Use of Function Pointers</a></li>
+<li><a href="#org2ab6552">Sample time Runs</a></li>
+<li><a href="#org6e2fc1c">Timing <code>superscalar_main</code></a></li>
+</ul>
+</li>
+<li><a href="#org5fbdb93">4. Important: Run on csel-kh1260-NN</a></li>
+<li><a href="#org7a37bab">5. What to Understand</a></li>
+<li><a href="#orgc6c7b15">6. Questions</a></li>
+<li><a href="#org3c9ae3a">7. Optional Information</a>
+<ul>
+<li><a href="#org0cc6ff3">Additional Information on <code>time</code> Results</a></li>
+<li><a href="#orge6d9344">Use of Function Pointers</a></li>
 </ul>
 </li>
 </ul>
@@ -396,8 +401,8 @@ members of the class.</li>
 </div>
 </div>
 
-<div id="outline-container-org47e9da9" class="outline-2">
-<h2 id="org47e9da9"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orgf6b33ec" class="outline-2">
+<h2 id="orgf6b33ec"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Measuring and understanding program performance is a vital aspect to
@@ -414,9 +419,9 @@ loop variations to illustrate peculiarities of modern processors.
 </p>
 </div>
 
-<div id="outline-container-orgf4ec9ec" class="outline-3">
-<h3 id="orgf4ec9ec">Associated Reading / Preparation</h3>
-<div class="outline-text-3" id="text-orgf4ec9ec">
+<div id="outline-container-org1bf7c5c" class="outline-3">
+<h3 id="org1bf7c5c">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-org1bf7c5c">
 <ul class="org-ul">
 <li>Bryant and O'Hallaron: Ch 4, paricularly the "Aside:
 State-of-the-art microprpocessor design" on page 471 (3rd ed) which
@@ -427,9 +432,9 @@ used to measure the amount of time taken by the programs</li>
 </div>
 </div>
 
-<div id="outline-container-org419f5f3" class="outline-3">
-<h3 id="org419f5f3">Grading Policy</h3>
-<div class="outline-text-3" id="text-org419f5f3">
+<div id="outline-container-org62dbe0b" class="outline-3">
+<h3 id="org62dbe0b">Grading Policy</h3>
+<div class="outline-text-3" id="text-org62dbe0b">
 <p>
 Credit for this HW is earned by taking the associated HW Quiz which is
 linked under <code>Gradescope</code>.  The quiz will ask similar questions as
@@ -452,8 +457,8 @@ See the <a href="../2021/syllabus.html">full policies in the course syllabus</a>
 </div>
 
 
-<div id="outline-container-org800ce22" class="outline-2">
-<h2 id="org800ce22"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orgf49baeb" class="outline-2">
+<h2 id="orgf49baeb"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the lab contains the following files:
@@ -504,8 +509,8 @@ The codepack for the lab contains the following files:
 </div>
 </div>
 
-<div id="outline-container-org93c6c02" class="outline-2">
-<h2 id="org93c6c02"><span class="section-number-2">3</span> The <code>time</code> Command</h2>
+<div id="outline-container-org928adaf" class="outline-2">
+<h2 id="org928adaf"><span class="section-number-2">3</span> The <code>time</code> Command</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 The Unix <code>time</code> command is used to measure the execution time of a
@@ -540,7 +545,78 @@ must wait around for it to finish</li>
 code on behalf of the user program such as reading from files or
 communicating over the network.</li>
 </ul>
+</div>
 
+<div id="outline-container-org2ab6552" class="outline-3">
+<h3 id="org2ab6552">Sample time Runs</h3>
+<div class="outline-text-3" id="text-org2ab6552">
+<p>
+The following are sample program runs with times reported on them. A
+commentary is given explaining some of the reasoning behind the times
+shown. 
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">################################################################################
+# EXAMPLE 2: make (lab10 build)
+# Compile the lab10 code. This involves mostly user operations as gcc
+# does the brunt of the work. However, some files need to created so
+# there is some interaction with the OS kernel.
+
+&gt;&gt; cd lab10-code
+&gt;&gt; time make
+gcc -Wall -Werror -g  -Og -o superscalar_main superscalar_main.c superscalar_funcs.c
+
+real	0m0.139s
+user	0m0.101s
+sys	0m0.037s
+
+################################################################################
+# EXAMPLE 2: ls -lR /sys &gt; dev/null
+# list all files under the /sys directory; don't print them to the
+# screen (output into &gt; /dev/null). Some directories can't be accessed
+# which is expected. This involves a lot of interactions with the OS
+# kernel to get directory listings so the sys time will be higher.
+
+&gt;&gt; time ls -lR /sys &gt; /dev/null
+ls: cannot open directory '/sys/fs/bpf': Permission denied
+ls: cannot open directory '/sys/fs/pstore': Permission denied
+ls: cannot open directory '/sys/kernel/debug': Permission denied
+ls: cannot open directory '/sys/kernel/tracing': Permission denied
+
+real	0m0.298s
+user	0m0.102s
+sys	0m0.195s
+
+################################################################################
+# Example 3: 
+
+# Contact google's server's 3 times to see how fast they respond. Most
+# of the time this program is waiting on a response so the wall time
+# is high and greatly exceeds the sum of the sys and user time.
+
+&gt;&gt; time ping -c 3 google.com
+PING google.com(ord38s32-in-x0e.1e100.net (2607:f8b0:4009:81b::200e)) 56 data bytes
+64 bytes from ord38s32.1e100.net: icmp_seq=1 ttl=118 time=10.7 ms
+64 bytes from ord38s32.1e100.net: icmp_seq=2 ttl=118 time=12.5 ms
+64 bytes from ord38s32.1e100.net: icmp_seq=3 ttl=118 time=12.3 ms
+
+--- google.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 10.705/11.833/12.511/0.803 ms
+
+real	0m2.039s
+user	0m0.004s
+sys	0m0.005s
+</pre>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-org6e2fc1c" class="outline-3">
+<h3 id="org6e2fc1c">Timing <code>superscalar_main</code></h3>
+<div class="outline-text-3" id="text-org6e2fc1c">
 <p>
 For this lab, we will mainly be timing runs of the <code>superscalar_main</code>
 program which can be obtained using the following invocation.
@@ -565,9 +641,10 @@ Mostly there should be a direct correspondence between <code>real</code> and
 </p>
 </div>
 </div>
+</div>
 
-<div id="outline-container-orgb5f5b1b" class="outline-2">
-<h2 id="orgb5f5b1b"><span class="section-number-2">4</span> Important: Run on csel-kh1260-NN</h2>
+<div id="outline-container-org5fbdb93" class="outline-2">
+<h2 id="org5fbdb93"><span class="section-number-2">4</span> Important: Run on csel-kh1260-NN</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 The provided code that you will analyze is meant to demonstrate some
@@ -608,8 +685,8 @@ on your own machine to those on the test machines.</li>
 </div>
 </div>
 
-<div id="outline-container-org83a2fe0" class="outline-2">
-<h2 id="org83a2fe0"><span class="section-number-2">5</span> What to Understand</h2>
+<div id="outline-container-org7a37bab" class="outline-2">
+<h2 id="org7a37bab"><span class="section-number-2">5</span> What to Understand</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Ensure that you understand
@@ -624,8 +701,8 @@ codes</li>
 </div>
 </div>
 
-<div id="outline-container-orgc9118de" class="outline-2">
-<h2 id="orgc9118de"><span class="section-number-2">6</span> Questions</h2>
+<div id="outline-container-orgc6c7b15" class="outline-2">
+<h2 id="orgc6c7b15"><span class="section-number-2">6</span> Questions</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Analyze the files in the provided codepack and answer the questions
@@ -861,13 +938,13 @@ PROBLEM 3: Combined Addition/Multiplication
 </div>
 </div>
 
-<div id="outline-container-org354a156" class="outline-2">
-<h2 id="org354a156"><span class="section-number-2">7</span> Optional Information</h2>
+<div id="outline-container-org3c9ae3a" class="outline-2">
+<h2 id="org3c9ae3a"><span class="section-number-2">7</span> Optional Information</h2>
 <div class="outline-text-2" id="text-7">
 </div>
-<div id="outline-container-org7fceecf" class="outline-3">
-<h3 id="org7fceecf">Additional Information on <code>time</code> Results</h3>
-<div class="outline-text-3" id="text-org7fceecf">
+<div id="outline-container-org0cc6ff3" class="outline-3">
+<h3 id="org0cc6ff3">Additional Information on <code>time</code> Results</h3>
+<div class="outline-text-3" id="text-org0cc6ff3">
 <p>
 In the examples provided earlier for <code>time</code>, it happens that the <code>real</code> time is the sum of
 <code>user</code> and <code>sys</code> times.  
@@ -934,9 +1011,9 @@ several files to be compiled simultaneously leading to a shorter
 </div>
 </div>
 
-<div id="outline-container-orge2d6ba8" class="outline-3">
-<h3 id="orge2d6ba8">Use of Function Pointers</h3>
-<div class="outline-text-3" id="text-orge2d6ba8">
+<div id="outline-container-orge6d9344" class="outline-3">
+<h3 id="orge6d9344">Use of Function Pointers</h3>
+<div class="outline-text-3" id="text-orge6d9344">
 <p>
 The <code>superscalar_main.c</code>  and <code>superscalar_funcs.c</code> uses an
 interesting technique: <i>function pointers</i>. Examining
@@ -1027,7 +1104,7 @@ naming the function to run via command line arguments as in
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-11-08 Tue 13:36 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-11-08 Tue 13:53 <br/> </i>
 </div>
 </body>
 </html>
