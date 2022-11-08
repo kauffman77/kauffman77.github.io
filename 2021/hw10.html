@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-03-29 Tue 16:45 -->
+<!-- 2022-11-08 Tue 13:36 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 HW10: Timing Code and Superscalar Processors</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -190,8 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
+  .org-svg { }
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -248,6 +248,7 @@ pre {
 }
 #content, #preamble, #postamble {
 margin-left:300px;
+max-width: 100%;
 }
 .tag {
 background-color: inherit; font-family: inherit;
@@ -340,34 +341,12 @@ text-align: justify;
 }
 }
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-03-29 Tue 16:45</i>
+<i>Last Updated: 2022-11-08 Tue 13:36</i>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">CSCI 2021 HW10: Timing Code and Superscalar Processors</h1>
 <ul class="org-ul">
 <li><b>Due: 11:59pm Tue 4/05/2022</b></li>
@@ -377,9 +356,9 @@ submit your own work but you may freely discuss HW topics with other
 members of the class.</li>
 </ul>
 
-<div id="outline-container-org4d6e1c5" class="outline-4">
-<h4 id="org4d6e1c5">CODE DISTRIBUTION: <a href="hw10-code.zip">hw10-code.zip</a></h4>
-<div class="outline-text-4" id="text-org4d6e1c5">
+<div id="outline-container-org4b8adad" class="outline-4">
+<h4 id="org4b8adad">CODE DISTRIBUTION: <a href="hw10-code.zip">hw10-code.zip</a></h4>
+<div class="outline-text-4" id="text-org4b8adad">
 <ul class="org-ul">
 <li>Download the code distribution</li>
 <li>See further setup instructions below</li>
@@ -387,28 +366,28 @@ members of the class.</li>
 </div>
 </div>
 
-<div id="outline-container-orgeae3b08" class="outline-4">
-<h4 id="orgeae3b08">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-orgeae3b08">
-<div id="table-of-contents">
+<div id="outline-container-orga32d849" class="outline-4">
+<h4 id="orga32d849">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orga32d849">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org753cc36">1. Rationale</a>
+<li><a href="#org47e9da9">1. Rationale</a>
 <ul>
-<li><a href="#orga78ae73">Associated Reading / Preparation</a></li>
-<li><a href="#org07bc3a2">Grading Policy</a></li>
+<li><a href="#orgf4ec9ec">Associated Reading / Preparation</a></li>
+<li><a href="#org419f5f3">Grading Policy</a></li>
 </ul>
 </li>
-<li><a href="#orga6ad14f">2. Codepack</a></li>
-<li><a href="#org57786b1">3. The <code>time</code> Command</a></li>
-<li><a href="#org5c4d859">4. Important: Run on csel-kh1260-NN</a></li>
-<li><a href="#orgcd3883b">5. What to Understand</a></li>
-<li><a href="#org2ddc2f1">6. Questions</a></li>
-<li><a href="#org804692e">7. Optional Information</a>
+<li><a href="#org800ce22">2. Codepack</a></li>
+<li><a href="#org93c6c02">3. The <code>time</code> Command</a></li>
+<li><a href="#orgb5f5b1b">4. Important: Run on csel-kh1260-NN</a></li>
+<li><a href="#org83a2fe0">5. What to Understand</a></li>
+<li><a href="#orgc9118de">6. Questions</a></li>
+<li><a href="#org354a156">7. Optional Information</a>
 <ul>
-<li><a href="#org76fbf32">Additional Information on <code>time</code> Results</a></li>
-<li><a href="#orgf80833b">Use of Function Pointers</a></li>
+<li><a href="#org7fceecf">Additional Information on <code>time</code> Results</a></li>
+<li><a href="#orge2d6ba8">Use of Function Pointers</a></li>
 </ul>
 </li>
 </ul>
@@ -417,8 +396,8 @@ members of the class.</li>
 </div>
 </div>
 
-<div id="outline-container-org753cc36" class="outline-2">
-<h2 id="org753cc36"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org47e9da9" class="outline-2">
+<h2 id="org47e9da9"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Measuring and understanding program performance is a vital aspect to
@@ -435,9 +414,9 @@ loop variations to illustrate peculiarities of modern processors.
 </p>
 </div>
 
-<div id="outline-container-orga78ae73" class="outline-3">
-<h3 id="orga78ae73">Associated Reading / Preparation</h3>
-<div class="outline-text-3" id="text-orga78ae73">
+<div id="outline-container-orgf4ec9ec" class="outline-3">
+<h3 id="orgf4ec9ec">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-orgf4ec9ec">
 <ul class="org-ul">
 <li>Bryant and O'Hallaron: Ch 4, paricularly the "Aside:
 State-of-the-art microprpocessor design" on page 471 (3rd ed) which
@@ -448,9 +427,9 @@ used to measure the amount of time taken by the programs</li>
 </div>
 </div>
 
-<div id="outline-container-org07bc3a2" class="outline-3">
-<h3 id="org07bc3a2">Grading Policy</h3>
-<div class="outline-text-3" id="text-org07bc3a2">
+<div id="outline-container-org419f5f3" class="outline-3">
+<h3 id="org419f5f3">Grading Policy</h3>
+<div class="outline-text-3" id="text-org419f5f3">
 <p>
 Credit for this HW is earned by taking the associated HW Quiz which is
 linked under <code>Gradescope</code>.  The quiz will ask similar questions as
@@ -473,8 +452,8 @@ See the <a href="../2021/syllabus.html">full policies in the course syllabus</a>
 </div>
 
 
-<div id="outline-container-orga6ad14f" class="outline-2">
-<h2 id="orga6ad14f"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org800ce22" class="outline-2">
+<h2 id="org800ce22"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the lab contains the following files:
@@ -525,8 +504,8 @@ The codepack for the lab contains the following files:
 </div>
 </div>
 
-<div id="outline-container-org57786b1" class="outline-2">
-<h2 id="org57786b1"><span class="section-number-2">3</span> The <code>time</code> Command</h2>
+<div id="outline-container-org93c6c02" class="outline-2">
+<h2 id="org93c6c02"><span class="section-number-2">3</span> The <code>time</code> Command</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 The Unix <code>time</code> command is used to measure the execution time of a
@@ -587,8 +566,8 @@ Mostly there should be a direct correspondence between <code>real</code> and
 </div>
 </div>
 
-<div id="outline-container-org5c4d859" class="outline-2">
-<h2 id="org5c4d859"><span class="section-number-2">4</span> Important: Run on csel-kh1260-NN</h2>
+<div id="outline-container-orgb5f5b1b" class="outline-2">
+<h2 id="orgb5f5b1b"><span class="section-number-2">4</span> Important: Run on csel-kh1260-NN</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 The provided code that you will analyze is meant to demonstrate some
@@ -629,8 +608,8 @@ on your own machine to those on the test machines.</li>
 </div>
 </div>
 
-<div id="outline-container-orgcd3883b" class="outline-2">
-<h2 id="orgcd3883b"><span class="section-number-2">5</span> What to Understand</h2>
+<div id="outline-container-org83a2fe0" class="outline-2">
+<h2 id="org83a2fe0"><span class="section-number-2">5</span> What to Understand</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Ensure that you understand
@@ -645,8 +624,8 @@ codes</li>
 </div>
 </div>
 
-<div id="outline-container-org2ddc2f1" class="outline-2">
-<h2 id="org2ddc2f1"><span class="section-number-2">6</span> Questions</h2>
+<div id="outline-container-orgc9118de" class="outline-2">
+<h2 id="orgc9118de"><span class="section-number-2">6</span> Questions</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Analyze the files in the provided codepack and answer the questions
@@ -882,13 +861,13 @@ PROBLEM 3: Combined Addition/Multiplication
 </div>
 </div>
 
-<div id="outline-container-org804692e" class="outline-2">
-<h2 id="org804692e"><span class="section-number-2">7</span> Optional Information</h2>
+<div id="outline-container-org354a156" class="outline-2">
+<h2 id="org354a156"><span class="section-number-2">7</span> Optional Information</h2>
 <div class="outline-text-2" id="text-7">
 </div>
-<div id="outline-container-org76fbf32" class="outline-3">
-<h3 id="org76fbf32">Additional Information on <code>time</code> Results</h3>
-<div class="outline-text-3" id="text-org76fbf32">
+<div id="outline-container-org7fceecf" class="outline-3">
+<h3 id="org7fceecf">Additional Information on <code>time</code> Results</h3>
+<div class="outline-text-3" id="text-org7fceecf">
 <p>
 In the examples provided earlier for <code>time</code>, it happens that the <code>real</code> time is the sum of
 <code>user</code> and <code>sys</code> times.  
@@ -955,9 +934,9 @@ several files to be compiled simultaneously leading to a shorter
 </div>
 </div>
 
-<div id="outline-container-orgf80833b" class="outline-3">
-<h3 id="orgf80833b">Use of Function Pointers</h3>
-<div class="outline-text-3" id="text-orgf80833b">
+<div id="outline-container-orge2d6ba8" class="outline-3">
+<h3 id="orge2d6ba8">Use of Function Pointers</h3>
+<div class="outline-text-3" id="text-orge2d6ba8">
 <p>
 The <code>superscalar_main.c</code>  and <code>superscalar_funcs.c</code> uses an
 interesting technique: <i>function pointers</i>. Examining
@@ -1048,7 +1027,7 @@ naming the function to run via command line arguments as in
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-03-29 Tue 16:45 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-11-08 Tue 13:36 <br/> </i>
 </div>
 </body>
 </html>
