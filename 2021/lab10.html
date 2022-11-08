@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-03-30 Wed 09:18 -->
+<!-- 2022-11-08 Tue 13:16 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Lab10: Timing Code and Machine Speed</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -190,8 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
+  .org-svg { }
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -248,6 +248,7 @@ pre {
 }
 #content, #preamble, #postamble {
 margin-left:300px;
+max-width: 100%;
 }
 .tag {
 background-color: inherit; font-family: inherit;
@@ -340,93 +341,63 @@ text-align: justify;
 }
 }
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-03-30 Wed 09:18</i>
+<i>Last Updated: 2022-11-08 Tue 13:16</i>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">CSCI 2021 Lab10: Timing Code and Machine Speed</h1>
 <ul class="org-ul">
 <li><b>Due: 11:59pm Tue 4/05/2022</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-org28a51d6" class="outline-4">
-<h4 id="org28a51d6">CODE DISTRIBUTION: <a href="lab10-code.zip">lab10-code.zip</a></h4>
+<div id="outline-container-orga150797" class="outline-4">
+<h4 id="orga150797">CODE DISTRIBUTION: <a href="lab10-code.zip">lab10-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org9a81e04" class="outline-4">
-<h4 id="org9a81e04">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org9a81e04">
-<dl class="org-dl">
-<dt>Wed Mar 30 09:17:35 AM CDT 2022</dt><dd>Prof K neglected to enable the
-autograder on Gradescope initially. This has been fixed and all
-submissions that were uploaded will automatically be run. This
-change will not affect anyone submitting Lab10 later in the day.</dd>
-</dl>
-</div>
+<div id="outline-container-org6c298d5" class="outline-4">
+<h4 id="org6c298d5">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-orgd2329f4" class="outline-4">
-<h4 id="orgd2329f4"></h4>
-<div class="outline-text-4" id="text-orgd2329f4">
-<div id="table-of-contents">
+<div id="outline-container-org8ea52cf" class="outline-4">
+<h4 id="org8ea52cf"></h4>
+<div class="outline-text-4" id="text-org8ea52cf">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org76cb5d5">1. Rationale</a></li>
-<li><a href="#org369cd5e">2. Codepack</a></li>
-<li><a href="#orge373738">3. Timing on Two Machines</a></li>
-<li><a href="#org5fcf30d">4. Using the time and lscpu Utilities</a></li>
-<li><a href="#org3b2b4ee">5. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org09383f3">6. Submission</a></li>
+<li><a href="#org6253df6">1. Rationale</a></li>
+<li><a href="#orge37b66a">2. Codepack</a></li>
+<li><a href="#org1d88696">3. Timing on Two Machines</a></li>
+<li><a href="#org0d84dc3">4. Using the time and lscpu Utilities</a></li>
+<li><a href="#orgb63d421">5. QUESTIONS.txt File Contents</a></li>
+<li><a href="#orga57318f">6. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org76cb5d5" class="outline-2">
-<h2 id="org76cb5d5"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org6253df6" class="outline-2">
+<h2 id="org6253df6"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Differences and oddities in CPU architecture are often revealed
 through observations about the time certain programs take to run.
 This lab explores these issues through a program that is provided as
 part of the most recent HW. The code implements some
-"micro-benchmarks" by repeatedly performing arithmetic operations with
-slight variations. Timing these, along with some knowledge of CPU
+"micro-benchmarks" which repeatedly performing arithmetic operations
+with slight variations. Timing these, along with some knowledge of CPU
 architecture, is instructive for observing some of the implementation
 differences that constitute low-level CPU implementation.
 </p>
 </div>
 
-<div id="outline-container-orgc2aa5cc" class="outline-4">
-<h4 id="orgc2aa5cc">Grading Policy</h4>
-<div class="outline-text-4" id="text-orgc2aa5cc">
+<div id="outline-container-org028133d" class="outline-4">
+<h4 id="org028133d">Grading Policy</h4>
+<div class="outline-text-4" id="text-org028133d">
 <p>
 Credit for this Lab is earned by completing the exercises here and
 submitting a Zip of the work to Gradescope. Students are responsible
@@ -437,7 +408,7 @@ Zip. Successful completion earns 1 Engagement Point.
 
 <p>
 Lab Exercises are open resource/open collaboration and <b>students are
-encouraged to coopearte on labs.</b> Students may submit work as groups
+encouraged to cooperate on labs.</b> Students may submit work as groups
 of up to 5 to Gradescope: one person submits then adds the names of
 their group members to the submission.
 </p>
@@ -449,8 +420,8 @@ See the <a href="../syllabus.html">full policies in the course syllabus</a>.
 </div>
 </div>
 
-<div id="outline-container-org369cd5e" class="outline-2">
-<h2 id="org369cd5e"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orge37b66a" class="outline-2">
+<h2 id="orge37b66a"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -482,9 +453,15 @@ The codepack for the HW contains the following files:
 </tbody>
 <tbody>
 <tr>
-<td class="org-left"><code>superscalar_main</code></td>
+<td class="org-left"><code>superscalar_main.c</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">C code also in HW10  that is used to observe CPU timing differences</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>superscalar_funcs.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
@@ -527,8 +504,8 @@ The codepack for the HW contains the following files:
 </div>
 </div>
 
-<div id="outline-container-orge373738" class="outline-2">
-<h2 id="orge373738"><span class="section-number-2">3</span> Timing on Two Machines</h2>
+<div id="outline-container-org1d88696" class="outline-2">
+<h2 id="org1d88696"><span class="section-number-2">3</span> Timing on Two Machines</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 HW10 has students timing the execution speed of the several different
@@ -549,8 +526,8 @@ much by showing timings of the same program runs on two different
 processors available through the CSE Labs system
 </p>
 <ol class="org-ol">
-<li><code>atlas.cselabs.umn.edu</code> which is single, large computer in the
-Keller Hall machine room (SSH only).</li>
+<li><code>csel-plate01.cselabs.umn.edu</code> which is a server in Keller Hall
+machine room (SSH only).</li>
 <li><code>csel-kh1260-NN.cselabs.umn.edu</code> machines such as <code>csel-kh1260-01</code>
 which are desktop workstations in the Keller 1-250 (physical access
 or SSH login)</li>
@@ -569,15 +546,15 @@ peculiarities of some processors.
 </p>
 
 <p>
-<b><b>NOTE:</b></b> Staff will show results on both the machines <code>atlas</code> and
-<code>csel-kh1260-NN</code> during the lab but for HW10, the focus is timing only
-in <code>csel-kh1260-NN</code> machines.
+<b><b>NOTE:</b></b> Staff will show results on both the machines <code>csel-plate01</code>
+and <code>csel-kh1260-NN</code> during the lab but for HW10, the focus is timing
+only in <code>csel-kh1260-NN</code> machines.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org5fcf30d" class="outline-2">
-<h2 id="org5fcf30d"><span class="section-number-2">4</span> Using the time and lscpu Utilities</h2>
+<div id="outline-container-org0d84dc3" class="outline-2">
+<h2 id="org0d84dc3"><span class="section-number-2">4</span> Using the time and lscpu Utilities</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Staff will briefly discuss the <code>time</code> utility and cover the 3 types of
@@ -590,7 +567,7 @@ explain the differing times for these.
 ...
 &gt; time ls -lR /usr            # recursive listing of /usr system directory
 ..
-&gt; time -c 3 ping google.com   # contact google 3 times to see if it responding
+&gt; time -c 3 ping google.com   # contact google 3 times to see if it is responding
 ...
 </pre>
 </div>
@@ -618,7 +595,6 @@ On a run of the program such as
 <div class="org-src-container">
 <pre class="src src-sh">&gt; time ./superscalar_main 1 30 add1_diff
 ...
-
 </pre>
 </div>
 
@@ -641,8 +617,8 @@ clock speed.
 </div>
 </div>
 
-<div id="outline-container-org3b2b4ee" class="outline-2">
-<h2 id="org3b2b4ee"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-orgb63d421" class="outline-2">
+<h2 id="orgb63d421"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -712,18 +688,19 @@ time utility
 Processor types
 ~~~~~~~~~~~~~~~
 
-  Use the `lscpu' utility on the two machines
-  - atlas.cselabs.umn.edu
-  - csel-kh1260-10.cselabs.umn.edu
-  to determine the types of processors and their relative processing
-  speed according to the "BogoMIPS" measure.
-  - ( ) `atlas' and `csel-kh1260-NN' both have Intel processors and the
-    BogoMIPS measure indicates `csel-kh1260-NN' is faster
-  - ( ) `atlas' and `csel-kh1260-NN' both have AMD processors and the
-    BogoMIPS measure indicates `atlas' is faster
-  - ( ) `atlas' has Intel processors and `csel-kh1260-NN' has AMD
-    processors and the BogoMIPS measure indicates `atlas' is faster
-  - ( ) `atlas' has AMD processors and `csel-kh1260-NN' has Intel
+  Use the `lscpu' utility on these two machines:
+  - csel-plate01.cselabs.umn.edu : a server machine
+  - csel-kh1260-10.cselabs.umn.edu : a desktop lab machine
+  Analyze the output to the types of processors and their relative
+  processing speed according to the "BogoMIPS" measure.
+  - ( ) `csel-plate01' and `csel-kh1260-NN' both have AMD processors and
+    the BogoMIPS measure indicates `csel-plate01' is faster
+  - ( ) `csel-plate01' and `csel-kh1260-NN' both have Intel processors
+    and the BogoMIPS measure indicates `csel-kh1260-NN' is faster
+  - ( ) `csel-plate01' has Intel processors and `csel-kh1260-NN' has AMD
+    processors and the BogoMIPS measure indicates `csel-plate01' is
+    faster
+  - ( ) `csel-plate01' has AMD processors and `csel-kh1260-NN' has Intel
     processors and the BogoMIPS measure indicates `csel-kh1260-NN' is
     faster
 
@@ -732,26 +709,29 @@ Timings using `superscalar_main'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   Compile the `superscalar_main' program using the provided `Makefile'
-  and time runs of it on both `atlas' and `csel-kh1260-25' using the
-  command:
+  and time runs of it on both `csel-plate01' and `csel-kh1260-25' using
+  the following commands:
   ,----
-  | time ./superscalar_main 1 30 add1_diff
+  | &gt;&gt; make
+  | gcc -Wall -Werror -g  -Og -o superscalar_main superscalar_main.c superscalar_funcs.c
+  | 
+  | &gt;&gt; time ./superscalar_main 1 30 add1_diff
   `----
 
   According to what you observe for this, which of the following best
   reflects the outcome of the runs between the two machines?
-  - ( ) `atlas' takes about 0.91s to run while `csel-kh1260-NN' takes
-    about 0.25s to run indicating `csel-kh1260-NN' is faster
-  - ( ) `atlas' takes about 0.50s to run while `csel-kh1260-NN' takes
-    about 0.85s to run indicating `atlas' is faster
-  - ( ) `atlas' takes about 1.23s to run while `csel-kh1260-NN' takes
-    about 0.61s to run indicating `csel-kh1260-NN' is faster
-  - ( ) `atlas' takes about 0.10s to run while `csel-kh1260-NN' takes
-    about 0.15s to run indicating `atlas' is faster
+  - ( ) `csel-plate01' takes about 0.91s to run while `csel-kh1260-NN'
+    takes about 0.63s to run indicating `csel-kh1260-NN' is faster
+  - ( ) `csel-plate01' takes about 0.50s to run while `csel-kh1260-NN'
+    takes about 0.85s to run indicating `csel-plate01' is faster
+  - ( ) `csel-plate01' takes about 1.99s to run while `csel-kh1260-NN'
+    takes about 0.25s to run indicating `csel-kh1260-NN' is faster
+  - ( ) `csel-plate01' takes about 0.10s to run while `csel-kh1260-NN'
+    takes about 1.15s to run indicating `csel-plate01' is faster
 
 
-Mysteries
-~~~~~~~~~
+Analysis of Benchmarks
+~~~~~~~~~~~~~~~~~~~~~~
 
   Among the micro 'benchmarks' implemented in `superscalar_main` are the
   following two
@@ -759,25 +739,49 @@ Mysteries
   |   add2_diff : add 2 times in same loop; different destination variables
   |   add2_same : add 2 times in same loop; same destination variable
   `----
-  Examining the code for these two should reveal only minor differences
-  but even this minor difference has some strange performance
-  implications. Time runs of the benchmark as
+  Find the code for the two functions that implement these benchmarks in
+  the file `superscalar_funcs.c' (each benchmark has a function named
+  for it).
+
+  Analyze the code and CHECK ALL OF THE BELOW ITEMS that are true.
+  - ( ) Both `add2_diff()' and `add2_same()' have loops the repeatedly
+    perform arithmetic operations
+  - ( ) `add2_diff()' will loop fewer times than `add2_same()' for the
+    same function parameters / command line arguments
+  - ( ) Both `add2_diff()' and `add2_same()' dereference pointers in
+    their loops so interact with main memory every iteration
+  - ( ) Both `add2_diff()' and `add2_same()' primarily work on registers
+    in their loops as there are no memory references in the loop body
+  - ( ) The biggest difference between them is that `add2_diff()' adds
+    each iteration to different variables/registers while `add2_same()'
+    adds to the same variable/register each iteration
+  - ( ) The biggest difference between them is that `add2_diff()' adds
+    twice each iteration while `add2_same()' adds once each iteration
+
+
+Timing Mysteries
+~~~~~~~~~~~~~~~~
+
+  Time runs of the two benchmarks above by running these commands.
   ,----
   | time ./superscalar_main 1 30 add2_diff
   | time ./superscalar_main 1 30 add2_same
   `----
-  on BOTH `atlas' and `csel-kh1260-NN' and report on the relations
-  below.
+  Perform the timing on BOTH `csel-plate01' and `csel-kh1260-NN' and
+  report on the relations below.
 
-  On atlas
-  - ( ) atlas: time for `add2_diff &lt; add2_same'
-  - ( ) atlas: time for `add2_diff &gt; add2_same'
-  - ( ) atlas: time for `add2_diff = add2_same'
+  On `csel-plate01'
+  - ( ) csel-plate01: time for `add2_diff &lt; add2_same'
+  - ( ) csel-plate01: time for `add2_diff &gt; add2_same'
+  - ( ) csel-plate01: time for `add2_diff = add2_same'
 
-  On csel-kh1260-NN
+  On `csel-kh1260-NN'
   - ( ) csel-kh1260-NN: time for `add2_diff &lt; add2_same'
   - ( ) csel-kh1260-NN: time for `add2_diff &gt; add2_same'
   - ( ) csel-kh1260-NN: time for `add2_diff = add2_same'
+
+  These results should seem strange to you and requires further
+  discussion which will come in lecture.
 
 
 CODE None
@@ -785,15 +789,15 @@ CODE None
 
   None for this lab : analyze the provided superscalar_main.c and
   superscalar_funcs.c to learn several interesting techniques such as
-  how to create an array of function pointers and select one to run.
+  how to create an array of *function pointers* and select one to run.
 </pre>
 </div>
 </div>
 </div>
 
 
-<div id="outline-container-org09383f3" class="outline-2">
-<h2 id="org09383f3"><span class="section-number-2">6</span> Submission</h2>
+<div id="outline-container-orga57318f" class="outline-2">
+<h2 id="orga57318f"><span class="section-number-2">6</span> Submission</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -803,7 +807,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-03-30 Wed 09:18 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-11-08 Tue 13:16 <br/> </i>
 </div>
 </body>
 </html>
