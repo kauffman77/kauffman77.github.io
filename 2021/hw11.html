@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-04-08 Fri 11:44 -->
+<!-- 2022-11-15 Tue 15:45 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 HW11: Matrices and Memory Optimization</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -190,8 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
+  .org-svg { }
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -248,6 +248,7 @@ pre {
 }
 #content, #preamble, #postamble {
 margin-left:300px;
+max-width: 100%;
 }
 .tag {
 background-color: inherit; font-family: inherit;
@@ -340,46 +341,24 @@ text-align: justify;
 }
 }
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-04-08 Fri 11:44</i>
+<i>Last Updated: 2022-11-15 Tue 15:45</i>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">CSCI 2021 HW11: Matrices and Memory Optimization</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 4/12/2022</b></li>
+<li><b>Due: 11:59pm Tue 22-Nov-2022</b></li>
 <li><i>Approximately 0.83% of total grade</i></li>
 <li>Homework and Quizzes are open resource/open collaboration. You must
 submit your own work but you may freely discuss HW topics with other
 members of the class.</li>
 </ul>
 
-<div id="outline-container-org3316232" class="outline-4">
-<h4 id="org3316232">CODE DISTRIBUTION: <a href="hw11-code.zip">hw11-code.zip</a></h4>
-<div class="outline-text-4" id="text-org3316232">
+<div id="outline-container-org7387c8e" class="outline-4">
+<h4 id="org7387c8e">CODE DISTRIBUTION: <a href="hw11-code.zip">hw11-code.zip</a></h4>
+<div class="outline-text-4" id="text-org7387c8e">
 <ul class="org-ul">
 <li>Download the code distribution</li>
 <li>See further setup instructions below</li>
@@ -387,37 +366,31 @@ members of the class.</li>
 </div>
 </div>
 
-<div id="outline-container-org9eab00f" class="outline-4">
-<h4 id="org9eab00f">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org9eab00f">
-<dl class="org-dl">
-<dt>Fri Apr  8 11:43:44 AM CDT 2022</dt><dd>Corrected a minor typo in the
-provided <code>col_sums()</code> routine where <code>rsums</code> was used rather than
-<code>csums</code>.</dd>
-</dl>
-
-<div id="table-of-contents">
+<div id="outline-container-orged4b256" class="outline-4">
+<h4 id="orged4b256">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-orged4b256">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd2a8503">1. Rationale</a>
+<li><a href="#org073ca2d">1. Rationale</a>
 <ul>
-<li><a href="#org41b4e51">Associated Reading / Preparation</a></li>
-<li><a href="#org3d3c259">Grading Policy</a></li>
+<li><a href="#org132dcbe">Associated Reading / Preparation</a></li>
+<li><a href="#org7f0ebba">Grading Policy</a></li>
 </ul>
 </li>
-<li><a href="#org4fdd197">2. Codepack</a></li>
-<li><a href="#org4947d64">3. Overview and Background</a></li>
-<li><a href="#org7fdd6db">4. What to Understand</a></li>
-<li><a href="#orgfb5b79b">5. Questions</a></li>
+<li><a href="#orga97367a">2. Codepack</a></li>
+<li><a href="#org9fba3d7">3. Overview and Background</a></li>
+<li><a href="#org328bc40">4. What to Understand</a></li>
+<li><a href="#org1901217">5. Questions</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgd2a8503" class="outline-2">
-<h2 id="orgd2a8503"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org073ca2d" class="outline-2">
+<h2 id="org073ca2d"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Basic understanding of how the memory system works to fulfill
@@ -436,9 +409,9 @@ performance.
 </p>
 </div>
 
-<div id="outline-container-org41b4e51" class="outline-3">
-<h3 id="org41b4e51">Associated Reading / Preparation</h3>
-<div class="outline-text-3" id="text-org41b4e51">
+<div id="outline-container-org132dcbe" class="outline-3">
+<h3 id="org132dcbe">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-org132dcbe">
 <p>
 Bryant and O'Hallaron: Ch 6 on The Memory Hierarchy. Ch 6.5 and 6.6
 may be particularly helpful
@@ -446,9 +419,9 @@ may be particularly helpful
 </div>
 </div>
 
-<div id="outline-container-org3d3c259" class="outline-3">
-<h3 id="org3d3c259">Grading Policy</h3>
-<div class="outline-text-3" id="text-org3d3c259">
+<div id="outline-container-org7f0ebba" class="outline-3">
+<h3 id="org7f0ebba">Grading Policy</h3>
+<div class="outline-text-3" id="text-org7f0ebba">
 <p>
 Credit for this HW is earned by taking the associated HW Quiz which is
 linked under <code>Gradescope</code>.  The quiz will ask similar questions as
@@ -470,8 +443,8 @@ See the <a href="../2021/syllabus.html">full policies in the course syllabus</a>
 </div>
 </div>
 
-<div id="outline-container-org4fdd197" class="outline-2">
-<h2 id="org4fdd197"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orga97367a" class="outline-2">
+<h2 id="orga97367a"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -535,8 +508,8 @@ The codepack for the HW contains the following files:
 </div>
 </div>
 
-<div id="outline-container-org4947d64" class="outline-2">
-<h2 id="org4947d64"><span class="section-number-2">3</span> Overview and Background</h2>
+<div id="outline-container-org9fba3d7" class="outline-2">
+<h2 id="org9fba3d7"><span class="section-number-2">3</span> Overview and Background</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 This HW deals with matrices and vectors. In C these are typically 2D
@@ -563,8 +536,8 @@ hierarchy.
 </div>
 </div>
 
-<div id="outline-container-org7fdd6db" class="outline-2">
-<h2 id="org7fdd6db"><span class="section-number-2">4</span> What to Understand</h2>
+<div id="outline-container-org328bc40" class="outline-2">
+<h2 id="org328bc40"><span class="section-number-2">4</span> What to Understand</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Ensure that you understand
@@ -578,8 +551,8 @@ pattern can dramatically improve performance</li>
 </div>
 </div>
 
-<div id="outline-container-orgfb5b79b" class="outline-2">
-<h2 id="orgfb5b79b"><span class="section-number-2">5</span> Questions</h2>
+<div id="outline-container-org1901217" class="outline-2">
+<h2 id="org1901217"><span class="section-number-2">5</span> Questions</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Analyze the files in the provided codepack and answer the questions
@@ -685,7 +658,7 @@ PROBLEM 3: opt_col_sums()
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-04-08 Fri 11:44 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-11-15 Tue 15:45 <br/> </i>
 </div>
 </body>
 </html>
