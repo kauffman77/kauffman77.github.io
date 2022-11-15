@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-04-06 Wed 10:02 -->
+<!-- 2022-11-15 Tue 15:40 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Lab11: Timing Strides</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -190,8 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
+  .org-svg { }
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -248,6 +248,7 @@ pre {
 }
 #content, #preamble, #postamble {
 margin-left:300px;
+max-width: 100%;
 }
 .tag {
 background-color: inherit; font-family: inherit;
@@ -340,68 +341,46 @@ text-align: justify;
 }
 }
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-04-06 Wed 10:02</i>
+<i>Last Updated: 2022-11-15 Tue 15:40</i>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">CSCI 2021 Lab11: Timing Strides</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 4/12/2022</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm Tue 22-Nov-2022</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-org3f1235b" class="outline-4">
-<h4 id="org3f1235b">CODE DISTRIBUTION: <a href="lab11-code.zip">lab11-code.zip</a></h4>
+<div id="outline-container-org0edf8d8" class="outline-4">
+<h4 id="org0edf8d8">CODE DISTRIBUTION: <a href="lab11-code.zip">lab11-code.zip</a></h4>
 </div>
 
-<div id="outline-container-orgf253027" class="outline-4">
-<h4 id="orgf253027">CHANGELOG: Empty</h4>
+<div id="outline-container-orgc4f9321" class="outline-4">
+<h4 id="orgc4f9321">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-orge60f945" class="outline-4">
-<h4 id="orge60f945"></h4>
-<div class="outline-text-4" id="text-orge60f945">
-<div id="table-of-contents">
+<div id="outline-container-org702f697" class="outline-4">
+<h4 id="org702f697"></h4>
+<div class="outline-text-4" id="text-org702f697">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org0f1f02f">1. Rationale</a></li>
-<li><a href="#org13797c5">2. Codepack</a></li>
-<li><a href="#org8aeed6e">3. Using the <code>clock()</code> Function</a></li>
-<li><a href="#orgd536538">4. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org855fd83">5. Submission</a></li>
+<li><a href="#org16adc19">1. Rationale</a></li>
+<li><a href="#orgc81afd6">2. Codepack</a></li>
+<li><a href="#orgeb2ae59">3. Using the <code>clock()</code> Function</a></li>
+<li><a href="#orgd148405">4. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org10d2cdd">5. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org0f1f02f" class="outline-2">
-<h2 id="org0f1f02f"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org16adc19" class="outline-2">
+<h2 id="org16adc19"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 While command line utilities like <code>time</code> can provide overall
@@ -431,9 +410,9 @@ patterns.
 </p>
 </div>
 
-<div id="outline-container-org0327805" class="outline-4">
-<h4 id="org0327805">Grading Policy</h4>
-<div class="outline-text-4" id="text-org0327805">
+<div id="outline-container-org61d13de" class="outline-4">
+<h4 id="org61d13de">Grading Policy</h4>
+<div class="outline-text-4" id="text-org61d13de">
 <p>
 Credit for this Lab is earned by completing the exercises here and
 submitting a Zip of the work to Gradescope. Students are responsible
@@ -444,7 +423,7 @@ Zip. Successful completion earns 1 Engagement Point.
 
 <p>
 Lab Exercises are open resource/open collaboration and <b>students are
-encouraged to coopearte on labs.</b> Students may submit work as groups
+encouraged to cooperate on labs.</b> Students may submit work as groups
 of up to 5 to Gradescope: one person submits then adds the names of
 their group members to the submission.
 </p>
@@ -456,8 +435,8 @@ See the <a href="../syllabus.html">full policies in the course syllabus</a>.
 </div>
 </div>
 
-<div id="outline-container-org13797c5" class="outline-2">
-<h2 id="org13797c5"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orgc81afd6" class="outline-2">
+<h2 id="orgc81afd6"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -540,8 +519,8 @@ The codepack for the HW contains the following files:
 </div>
 </div>
 
-<div id="outline-container-org8aeed6e" class="outline-2">
-<h2 id="org8aeed6e"><span class="section-number-2">3</span> Using the <code>clock()</code> Function</h2>
+<div id="outline-container-orgeb2ae59" class="outline-2">
+<h2 id="orgeb2ae59"><span class="section-number-2">3</span> Using the <code>clock()</code> Function</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 The code block below illustrates the basic usage pattern for the
@@ -595,11 +574,21 @@ reported times are at least 1e-03 seconds.</b> Ideally times should be
 larger, in the 1e-01 second range to be trustworthy.
 </p></li>
 </ul>
+
+<p>
+<b>Time your code on the machine login01.cselabs.umn.edu.</b> 
+</p>
+
+<p>
+While other machines may reflect the same speeds, login01 is known to
+show the intended behavior.
+</p>
 </div>
 </div>
 
-<div id="outline-container-orgd536538" class="outline-2">
-<h2 id="orgd536538"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
+
+<div id="outline-container-orgd148405" class="outline-2">
+<h2 id="orgd148405"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -669,6 +658,12 @@ CODE: `struct_stride.c' Program
 
 QUIZ: Timing `struct_stride.c' Runs
 ===================================
+
+  *Time your code on the machine login01.cselabs.umn.edu.*
+
+  While other machines may reflect the same speeds, login01 is known to
+  show the intended behavior.
+
 
 Relative Speed of Struct Layouts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -747,8 +742,8 @@ BASE vs OPTM versions
 </div>
 
 
-<div id="outline-container-org855fd83" class="outline-2">
-<h2 id="org855fd83"><span class="section-number-2">5</span> Submission</h2>
+<div id="outline-container-org10d2cdd" class="outline-2">
+<h2 id="org10d2cdd"><span class="section-number-2">5</span> Submission</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -758,7 +753,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-04-06 Wed 10:02 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-11-15 Tue 15:40 <br/> </i>
 </div>
 </body>
 </html>
