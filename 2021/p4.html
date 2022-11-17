@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-04-25 Mon 09:40 -->
+<!-- 2022-11-16 Wed 23:00 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Project 4: Performance Optimization and Timing</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -190,8 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
+  .org-svg { }
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -248,6 +248,7 @@ pre {
 }
 #content, #preamble, #postamble {
 margin-left:300px;
+max-width: 100%;
 }
 .tag {
 background-color: inherit; font-family: inherit;
@@ -340,127 +341,63 @@ text-align: justify;
 }
 }
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-04-25 Mon 09:40</i>
+<i>Last Updated: 2022-11-16 Wed 23:00</i>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">CSCI 2021 Project 4: Performance Optimization and Timing</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 4/19/2022</b> <del>Mon 4/18/2022</del></li>
+<li><b>Due: 11:59pm Wed 30-Nov-2022</b></li>
 <li><i>Approximately 3.0-4.0% of total grade</i></li>
 <li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a></li>
 <li>Projects are <b>individual work</b>: no collaboration with other students
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-orgc0d3120" class="outline-4">
-<h4 id="orgc0d3120">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
+<div id="outline-container-org9624b96" class="outline-4">
+<h4 id="org9624b96">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
 </div>
-<div id="outline-container-org9688282" class="outline-4">
-<h4 id="org9688282">Video Overview: <a href="https://canvas.umn.edu/courses/290363/pages/week-11-videos/edit">Wed 4/6/2022 Lecture</a></h4>
+<div id="outline-container-orgf79a6b7" class="outline-4">
+<h4 id="orgf79a6b7">Video Overview: <i>Not Yet Available</i></h4>
 </div>
-
-<div id="outline-container-orgf6ad129" class="outline-4">
-<h4 id="orgf6ad129">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-orgf6ad129">
-<dl class="org-dl">
-<dt>Fri Apr 15 10:56:10 AM CDT 2022</dt><dd><p>
-CSE Labs will doing maintenance on Sunday, April 17th, 2022 4:00
-a.m. - 12:00 p.m. This will likely make the home directory space for
-students inaccessible and interfere with work on P4, particularly
-benchmarking on atlas.cselabs.umn.edu.
-</p>
-
-<p>
-For that reason, the deadline for P4 is being extended to Tue 4/19
-11:59pm.  Late submission may be made up to 2 days later through Thu
-4/21 11:59pm.
-</p></dd>
-
-<dt>Wed Apr 13 04:56:08 PM CDT 2022</dt><dd>A student reported during lecture some minor bugs in the <a href="#org541904c">Problem 2
-section on handling commandline arguments to <code>search_benchmark</code>.</a>
-These errors were left over from a previous version of the program
-and have been corrected to reflect the present conventions for
-command line arguments.</dd>
-<dt>Fri Apr  8 09:03:47 AM CDT 2022</dt><dd>One of the <code>P4-WRITEUP.txt</code> questions mistakenly mentioned reporting
-times from the wrong machine. This has been corrected: all
-benchmarks should be run on <code>csel-atlas.cselabs.umn.ed</code>.</dd>
-<dt>Thu Apr  7 02:05:27 PM CDT 2022</dt><dd><p>
-The <code>P4-WRITEUP.txt</code> file was missing from the codepack but has now
-been added in.
-</p>
-
-<p>
-A minor bug in the tests for Problem 2 <code>search_benchmark</code> were
-identified. You can either download a fresh version of the
-<a href="test_search_benchmark.org">test_search_benchmark.org</a> file or manually fix this by
-adjusting line 71 (change 1000 to 150):
-</p>
-
-<div id="org4b26775" class="figure">
-<p><img src="test-bug-fix.png" alt="test-bug-fix.png" style="max-width:100%;" />
-</p>
-</div></dd>
-</dl>
-</div>
+<div id="outline-container-orgc2d1263" class="outline-4">
+<h4 id="orgc2d1263">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-org9cf82db" class="outline-4">
-<h4 id="org9cf82db"></h4>
-<div class="outline-text-4" id="text-org9cf82db">
-<div id="table-of-contents">
+<div id="outline-container-org368b551" class="outline-4">
+<h4 id="org368b551"></h4>
+<div class="outline-text-4" id="text-org368b551">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org0b71952">1. Introduction</a></li>
-<li><a href="#org6f6504b">2. Download Code and Setup</a></li>
-<li><a href="#org4b932a5">3. <b>Problem 1</b>: A<sup>T</sup> × A Matrix Operation</a>
+<li><a href="#orgf46c905">1. Introduction</a></li>
+<li><a href="#orgc2a6191">2. Download Code and Setup</a></li>
+<li><a href="#org220ac44">3. <b>Problem 1</b>: Matrix Diagonal Sums</a>
 <ul>
-<li><a href="#orgb3ef902">3.1. Overview</a></li>
-<li><a href="#orgfefedbf">3.2. Optimize Matata</a></li>
-<li><a href="#org64c20de">3.3. Evaluation on <code>csel-atlas</code></a></li>
-<li><a href="#org6260f8a">3.4. <code>matata_print.c</code> Testing Program</a></li>
-<li><a href="#orgf09b911">3.5. Optimization Suggestions and Documentation</a></li>
-<li><a href="#orgdbbb6ad">3.6. Grading Criteria for Problem 1 (55%)</a></li>
+<li><a href="#org2d155f7">3.1. Overview</a></li>
+<li><a href="#org85253e5">3.2. Optimize Diagonal Sums</a></li>
+<li><a href="#org3a51b94">3.3. Evaluation on <code>loginNN</code></a></li>
+<li><a href="#org4c9daed">3.4. <code>sumdiag_print.c</code> Testing Program</a></li>
+<li><a href="#orgdfbdfef">3.5. Optimization Suggestions and Documentation</a></li>
+<li><a href="#orga562cf6">3.6. Grading Criteria for Problem 1 (50%)</a></li>
 </ul>
 </li>
-<li><a href="#org5d237ab">4. <b>Problem 2</b>: Timing Search Algorithms</a>
+<li><a href="#orgca29ee5">4. <b>Problem 2</b>: Timing Search Algorithms</a>
 <ul>
-<li><a href="#orgfe1e5a9">4.1. Overview</a></li>
-<li><a href="#orgaa1e38d">4.2. <code>main()</code> in <code>search_benchmark.c</code></a></li>
-<li><a href="#org368f4f1">4.3. Running Algorithms based on Command Line Arguments</a></li>
-<li><a href="#org5413551">4.4. Sample <code>main()</code> Runs</a></li>
-<li><a href="#org03bb5a6">4.5. Proper Setup and Cleanup for Searches</a></li>
-<li><a href="#orga7f8ff7">4.6. What to Measure</a></li>
-<li><a href="#org1f7e201">4.7. MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></a></li>
-<li><a href="#org09947dc">4.8. Grading Criteria for Problem 2 (45%)</a></li>
+<li><a href="#orga4ccad2">4.1. Overview</a></li>
+<li><a href="#org3ef8d4c">4.2. <code>main()</code> in <code>search_benchmark.c</code></a></li>
+<li><a href="#orgad09a74">4.3. Sample Runs</a></li>
+<li><a href="#org2351c42">4.4. Running Algorithms based on Command Line Arguments</a></li>
+<li><a href="#org7d83dc2">4.5. Proper Setup and Cleanup for Searches</a></li>
+<li><a href="#orgc29c2ae">4.6. What to Measure</a></li>
+<li><a href="#org4145d61">4.7. MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></a></li>
+<li><a href="#org7cab15d">4.8. Grading Criteria for Problem 2 (45%)</a></li>
 </ul>
 </li>
-<li><a href="#org11794ca">5. Writeup</a></li>
+<li><a href="#org2042cb2">5. Writeup</a></li>
 </ul>
 </div>
 </div>
@@ -468,8 +405,8 @@ adjusting line 71 (change 1000 to 150):
 </div>
 
 
-<div id="outline-container-org0b71952" class="outline-2">
-<h2 id="org0b71952"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orgf46c905" class="outline-2">
+<h2 id="orgf46c905"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This assignment focuses on aspects of optimizing and measuring
@@ -487,8 +424,8 @@ benchmark the performance of those functions.</li>
 </div>
 </div>
 
-<div id="outline-container-org6f6504b" class="outline-2">
-<h2 id="org6f6504b"><span class="section-number-2">2</span> <a id="org5aab736"></a> Download Code and Setup</h2>
+<div id="outline-container-orgc2a6191" class="outline-2">
+<h2 id="orgc2a6191"><span class="section-number-2">2</span> <a id="org80abc9c"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -528,15 +465,27 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tbody>
 <tbody>
 <tr>
-<td class="org-left"><code>matata_benchmark.c</code></td>
+<td class="org-left"><code>sumdiag_optm.c</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 1 create and fill in optimized function definition</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>sumdiag_benchmark.c</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Problem 1 main benchmark</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>matata_print.c</code></td>
+<td class="org-left"><code>sumdiag_print.c</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Problem 1 testing program</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>sumdiag_base.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 baseline function to beat</td>
 </tr>
 
 <tr>
@@ -552,15 +501,9 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tr>
 
 <tr>
-<td class="org-left"><code>matata_base.c</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Problem 1 baseline function to beat</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>matata_optm.c</code></td>
-<td class="org-left">EDIT/COMPLETE</td>
-<td class="org-left">Problem 1 create and fill in optimized function definition</td>
+<td class="org-left"><code>test_sumdiag.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests to check for memory issues in problem 1</td>
 </tr>
 </tbody>
 <tbody>
@@ -606,115 +549,94 @@ folder. Ultimately you will re-zip this folder to submit it.
 </div>
 
 
-<div id="outline-container-org4b932a5" class="outline-2">
-<h2 id="org4b932a5"><span class="section-number-2">3</span> <b>Problem 1</b>: A<sup>T</sup> × A Matrix Operation</h2>
+<div id="outline-container-org220ac44" class="outline-2">
+<h2 id="org220ac44"><span class="section-number-2">3</span> <b>Problem 1</b>: Matrix Diagonal Sums</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgb3ef902" class="outline-3">
-<h3 id="orgb3ef902"><span class="section-number-3">3.1</span> Overview</h3>
+<div id="outline-container-org2d155f7" class="outline-3">
+<h3 id="org2d155f7"><span class="section-number-3">3.1</span> Overview</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 A problem that occasionally arises in numerical computing when working
-with Matrices (2D Arrays) is to multiply the transpose of a matrix by
-itself, notated <b>A<sup>T</sup> × A</b>. This is a special case of general <a href="https://en.wikipedia.org/wiki/Matrix_multiplication">matrix
-multiplication</a> and students unfamiliar with this operation should
-study it to get some context for the present work.
-</p>
-
-<p>
-This operation is often done when the Matrix A is square (it has an
-equal number of rows and columns).  The diagram below illustrates the
-result of computing A<sup>T</sup> × A.
+with Matrices (2D Arrays) is to compute the sums of the <b>Diagonals</b> of
+a matrix.  The main diagonal of a matrix is comprised of all elements
+at indices (0,0), (1,1), (2,2), and so forth.  There are several
+numbering schemes for diagonals but we will use the one represented in
+the following diagram which also shows the sums of the diagonals.
 </p>
 
 <div class="org-center">
 
-<div id="org4c5bb4f" class="figure">
-<p><img src="matata.png" alt="matata.png" style="max-width:100%;" />
+<div id="orga7c70d0" class="figure">
+<p><img src="sumdiag.png" alt="sumdiag.png" style="max-width:100%;" />
 </p>
-<p><span class="figure-number">Figure 2: </span>3 by 3 matrix <code>A</code> with colored elements along with result of multiplying its transpose by itself as <code>At*A</code>.</p>
+<p><span class="figure-number">Figure 1: </span>5 by 5 matrix with diagonals colored. The diagram shows our numbering scheme for diagonals and the corresponding diagonal sums. Diagonal numbers start at 0 and progress counter-clockwise around the bottom and right of the matrix. For square matrices, the main diagonal is always numbered as the #rows-1 or #cols-1 which are equal.</p>
 </div>
 </div>
 
 <p>
-Note that that for each of the elements of the result matrix, the
-elements are the result of a row in the transpose multiplied by a
-column in the original matrix:
-</p>
-<div class="org-src-container">
-<pre class="src src-text">Ans[i][j] = 0;
-for(k = 0 to Ans.cols){
-  Ans[i][j] += At[i][k] * A[k][j];
-}
-</pre>
-</div>
-<p>
-The file <code>matata_base.c</code> provides a baseline function that performs
-this computation in a direct fashion as the above definition indicates
-The algorithm uses the most "natural" approach of multiplying each row
-of the transpose by each column of the original to produce the result
-in the for each part of the squared result. The transposed matrix is
-formed via a <code>malloc()</code>, copying elements, then performing the
-multiply.  As you survey the code, note the use of various convenience
-macros such as <code>MGET(mat,i,j)</code> interact with the matrix type used.
+A code is provided in the file <code>sumdiag_base.c</code> which computes the
+sums of diagonals and stores them in a vector. The algorithm does so
+using the most "natural" approach of walking down each diagonal and
+totaling its elements then storing the result in the associated vector
+element.  As you survey the code, note the use of various convenience
+functions such as <code>mget(mat,i,j)</code> and <code>vset(vec,i,x)</code> to interact with
+the matrix and vector types used.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-c">// Baseline version from matata_base.c
-int matata_BASE_NORMAL(matrix_t mat, matrix_t ans) {
-  matrix_t tra;
-  matrix_init(&amp;tra, mat.rows, mat.cols);
+<pre class="src src-c">int sumdiag_BASE_NORMAL(matrix_t *mat, vector_t *vec) {
+  if(vec-&gt;len != (mat-&gt;rows + mat-&gt;cols -1)){
+    printf("sumdiag_base: bad sizes\n");
+    return 1;
+  }
+  for(int i=0; i&lt;vec-&gt;len; i++){                     // initialize vector of diagonal sums
+    vset(vec,i,0);                                   // to all 0s
+  }
 
-  for(int i=0; i&lt;mat.rows; i++){                // form transpose mat
-    for(int j=0; j&lt;mat.cols; j++){
-      int mij = MGET(mat, i, j);
-      MSET(tra, j, i, mij);
+  for(int d=0; d &lt; mat-&gt;rows; d++){                  // iterate over lower diagonals
+    int c = 0;                                       // col always starts at 0 in lower diags
+    for(int r=mat-&gt;rows-d-1; r&lt;mat-&gt;rows; r++,c++){  // work down rows, right cols for same diag
+      int el_rc = mget(mat, r, c);                   // get matrix element on diagonal
+      int vec_d = vget(vec, d);                      // retrieve current sum for diag
+      vset(vec, d, el_rc+vec_d);                     // add on back to the diagonal sum
     }
   }
 
-  for(int i=0; i&lt;mat.rows; i++){                // compute ans = A^T * A
-    for(int j=0; j&lt;mat.cols; j++){
-      MSET(ans,i,j,0);                          // initial sum 0's
-      for(int k=0; k&lt;mat.rows; k++){            // sum over dot(row, col)
-        int tik = MGET(tra, i, k);
-        int mkj = MGET(mat, k, j);
-        int cur = MGET(ans, i, j);
-        int new = cur + tik*mkj;
-        MSET(ans, i, j, new);
-      }
+  int maxdiag = (mat-&gt;rows+mat-&gt;cols)-1;             // calculate last diagonal
+  for(int d=mat-&gt;rows; d &lt; maxdiag ; d++){           // iterate starting at first upper diag
+    int r = 0;                                       // row always starts at 0 in upper diags
+    for(int c=d-mat-&gt;cols+1; c&lt;mat-&gt;cols; r++,c++){  // work down rows, right cols for same diag
+      int el_rc = mget(mat, r, c);                   // matrix element
+      int vec_d = vget(vec, d);                      // diagonal sum from vector
+      vset(vec, d, el_rc+vec_d);                     // add on to sum
     }
   }
-
-  matrix_free_data(&amp;tra);                       // de-allocate transpose mat
-
-  return 0;                                     // return success
+  return 0;                                          // return success
 }
 </pre>
 </div>
-<p>
-Note that the original matrix comes in as the parameter <code>mat</code> and the
-result of squaring the matrix is stored in the parameter <code>ans</code>.
-</p>
 
 <p>
 While this algorithm is a direct translation of how humans would
-visually calculate the square of small matrices, it is unfortunately
-fairly slow when executing on most modern computing systems.
+visually calculate the sums of diagonals for small matrices, it is
+unfortunately fairly slow when executing on most modern computing
+systems.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgfefedbf" class="outline-3">
-<h3 id="orgfefedbf"><span class="section-number-3">3.2</span> Optimize Matata</h3>
+<div id="outline-container-org85253e5" class="outline-3">
+<h3 id="org85253e5"><span class="section-number-3">3.2</span> Optimize Diagonal Sums</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
-The purpose of this problem is to write <code>matata_OPTM()</code> which is a
-faster version of the provided <code>matata_BASE()</code> to calculate the
-results.
+The purpose of this problem is to write <code>sumdiag_OPTM()</code> which is a
+faster version of the provided <code>sumdiag_BASE()</code> to calculate the sums
+of diagonals.
 </p>
 
 <p>
-Write your code in the file <code>matata_optm.c</code>.
+Write your code in the file <code>sumdiag_optm.c</code>.
 </p>
 
 <p>
@@ -725,16 +647,16 @@ Keep the following things in mind.
 related to matrices and vectors provided in the <code>matvec.h</code> and
 demonstrated in the baseline function. Understanding the layout of
 the matrix in memory is essential to unlocking performance.</li>
-<li>The goal of <code>matata_OPTM()</code> is to exceed the performance of
-<code>matata_BASE()</code> by as much as possible.</li>
+<li>The goal of <code>sumdiag_OPTM()</code> is to exceed the performance of
+<code>sumdiag_BASE()</code> by as much as possible.</li>
 <li>To achieve this goal, several optimizations must be implemented and
 suggestions are given in a later section.</li>
 <li>You will need to document your optimizations in the file
 <code>P4-WRITEUP.txt</code> and provide timing results of running the
 optimized version.</li>
 <li>Part of your grade will be based on the speed of the optimized code
-on the machine <code>csel-atlas.cselabs.umn.edu</code>. The main routine
-<code>matata_benchmark.c</code> will be used for this.</li>
+on the machines <code>loginNN.cselabs.umn.edu</code>. The main routine
+<code>sumdiag_benchmark.c</code> will be used for this.</li>
 </ol>
 
 <p>
@@ -743,112 +665,124 @@ Some details are provided in subsequent sections.
 </div>
 </div>
 
-
-<div id="outline-container-org64c20de" class="outline-3">
-<h3 id="org64c20de"><span class="section-number-3">3.3</span> Evaluation on <code>csel-atlas</code></h3>
+<div id="outline-container-org3a51b94" class="outline-3">
+<h3 id="org3a51b94"><span class="section-number-3">3.3</span> Evaluation on <code>loginNN</code></h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
-The provided file <code>matata_benchmark.c</code> provides a benchmark for the
-speed of squaring a matrix. It will be used by graders to evaluate the
+The provided file <code>sumdiag_benchmark.c</code> provides a benchmark for the
+speed of diagonal summing. It will be used by graders to evaluate the
 submitted code and should be used during development to gauge
 performance improvements.
 </p>
 
 <p>
-The machine <code>csel-atlas.cselabs.umn.edu</code> will be used for evaluation
-and the scoring present in <code>matata_benchmark.c</code> is "tuned" to the
-CPU/Memory on these machines.  That means that codes should be <b>tested
-on csel-atlas</b> so that no unexpected results occur after
-submission. Results reported should be from <code>csel-atlas</code>.
+The following machines may be used to evaluate the benchmark:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">login01.cselabs.umn.edu  OR  csel-remote-lnx-01.cselabs.umn.edu
+login02.cselabs.umn.edu  OR  csel-remote-lnx-02.cselabs.umn.edu
+login03.cselabs.umn.edu  OR  csel-remote-lnx-03.cselabs.umn.edu
+login04.cselabs.umn.edu  OR  csel-remote-lnx-04.cselabs.umn.edu
+login05.cselabs.umn.edu  OR  csel-remote-lnx-05.cselabs.umn.edu
+login06.cselabs.umn.edu  OR  csel-remote-lnx-06.cselabs.umn.edu
+</pre>
+</div>
+<p>
+These are newer server machines with quite a few processors and are
+not virtualized making them ideal for performance benchmarks.
 </p>
 
 <p>
-The output of the <code>matata_benchmark</code> is shown below.
+The scoring present in <code>sumdiag_benchmark.c</code> is "tuned" to these
+machines and will likely report incorrect results on other machines.
+That means that codes should be <b>tested on loginNN machines</b> so that
+no unexpected results occur after submission. Results reported should
+be from one of <code>loginNN</code>.
+</p>
+
+<p>
+The output of the <code>sumdiag_benchmark</code> is shown below.
 </p>
 <ul class="org-ul">
 <li>SIZE: the size of the matrix being used. The benchmark always
 uses square matrices</li>
 <li>Runtimes for the 2 functions
 <ul class="org-ul">
-<li>BASE: the time it takes for <code>matata_BASE()</code> to complete.</li>
-<li>OPTM: the time it takes for <code>matata_OPTM()</code> to complete.</li>
+<li><code>BASE</code>: the time it takes for <code>sumdiag_BASE()</code> to complete.</li>
+<li><code>OPTM</code>: the time it takes for <code>sumdiag_OPTM()</code> to complete.</li>
 </ul></li>
-<li>SPDUP: the speedup of <code>matata_OPTM()</code> over <code>matata_BASE()</code> which
+<li>SPDUP: the speedup of <code>sumdiag_OPTM()</code> over <code>sumdiag_BASE()</code> which
 is <code>BASE / OPTM</code>.</li>
 <li><p>
 POINTS: which are earned according to the following code:
 </p>
 <div class="org-src-container">
-<pre class="src src-c">    double factor =                               // scale based on size: speedup on 
-      (( ((double) size) / ((double) sizes[0]))); // larger matrix worth more points
-
-    double log2spdup = log2(speedup_OPTM);        // log_2 so equal speed is 0 points, 2X is 1pt, etc
-    if(log2spdup &lt; 0){                            // no negative scores
-      log2spdup = 0.0;
-    }
-    double points = log2spdup * factor;           // scale speedup by size factor
+<pre class="src src-c">    double points = log(speedup_OPTM) / log(2.0) * size / 2048;
 </pre>
 </div>
 <p>
-This scheme, while a little involved, means that unless actual
-optimizations are implemented, 0 points will be scored. It is also
-weighted towards earning more points on for larger size matrices.
+This scheme means that unless actual optimizations are implemented,
+0 points will be scored. Roughly this scores according to a
+logarithmic scale that is weighted towards more points if speedups
+at larger sized inputs is achieved.
 </p></li>
 </ul>
 
 <p>
-Below are several demonstration runs of <code>matata_benchmark</code>.
+Below are several demonstration runs of <code>sumdiag_benchmark</code>.
 </p>
 <div class="org-src-container">
-<pre class="src src-sh"># BUILD/RUN ON NON-ATLAS MACHINE: NOTE WARNINGS
-homeputer&gt;&gt; make
-gcc -Wall -Werror -g -Og -c matata_print.c
-gcc -Wall -Werror -g -Og -c matvec_util.c
-gcc -Wall -Werror -g -Og -c matata_base.c
-gcc -Wall -Werror -g -Og -c matata_optm.c
-...
-homeputer&gt;&gt; ./matata_benchmark
-WARNING: expected host 'csel-atlas' but got host 'homeputer'
+<pre class="src src-sh"># RUN ON INCORRECT MACHINE (NOT loginNN): NOTE WARNINGS
+homeputer&gt; ./sumdiag_benchmark 
+WARNING: expected host 'csel-remote-lnx-01' but got host 'val'
 WARNING: timing results / scoring will not reflect actual scoring
-WARNING: run on host 'csel-atlas' for accurate results
-==== Matrix A^T*A Benchmark Version 1 ====
-  SIZE       BASE       OPTM  SPDUP   LOG2 FACTOR POINTS 
-   171 2.6778e-02 6.0280e-03   4.44   2.15   1.00   2.15 
-   196 1.4976e-02 6.4580e-03   2.32   1.21   1.15   1.39 
-   256 3.8301e-02 1.2818e-02   2.99   1.58   1.50   2.36 
-   320 6.4765e-02 2.5887e-02   2.50   1.32   1.87   2.48 
-   801 1.1916e+00 4.0796e-01   2.92   1.55   4.68   7.24 
-  1024 7.8590e+00 8.8310e-01   8.90   3.15   5.99  18.89 
-RAW POINTS: 34.51
-TOTAL POINTS: 35 / 35
-WARNING: expected host 'csel-atlas' but got host 'val'
+WARNING: run on host 'csel-remote-lnx-01' for accurate results
+==== Matrix Diagonal Sum Benchmark Version 3 ====
+------ Tuned for csel-remote-lnx-NN machines --------
+  SIZE       BASE       OPTM  SPDUP POINTS 
+   512 3.1570e-02 4.0520e-03   7.79   0.76 
+  1024 7.6512e-02 1.4715e-02   5.20   1.22 
+  1101 8.7841e-02 1.8098e-02   4.85   1.25 
+  2048 3.8762e-01 6.0538e-02   6.40   2.74 
+  4099 1.5315e+00 2.3139e-01   6.62   5.59 
+  6001 3.7776e+00 4.8399e-01   7.81   8.89 
+  8192 7.1925e+00 8.9518e-01   8.03  12.31 
+RAW POINTS: 32.77
+TOTAL POINTS: 33 / 35
+WARNING: expected host 'csel-remote-lnx-01' but got host 'val'
 WARNING: timing results / scoring will not reflect actual scoring
-WARNING: run on host 'csel-atlas' for accurate results
+WARNING: run on host 'csel-remote-lnx-01' for accurate results
 
 # PARTIAL CREDIT RUN
-atlas&gt;&gt; ./matata_benchmark
-==== Matrix A^T*A Benchmark Version 1 ====
-  SIZE       BASE       OPTM  SPDUP   LOG2 FACTOR POINTS 
-   171 3.1978e-02 2.6232e-02   1.22   0.29   1.00   0.29 
-   196 4.7283e-02 4.1769e-02   1.13   0.18   1.15   0.21 
-   256 1.3549e-01 1.1288e-01   1.20   0.26   1.50   0.39 
-   320 2.5207e-01 2.0147e-01   1.25   0.32   1.87   0.60 
-   801 5.1340e+00 3.5704e+00   1.44   0.52   4.68   2.45 
-  1024 2.3474e+01 2.6712e+01   0.88   0.00   5.99   0.00 
-RAW POINTS: 3.94
-TOTAL POINTS: 4 / 35
+&gt;&gt; ssh ssh login01.cselabs.umn.edu
+...
+login01&gt; ./sumdiag_benchmark
+==== Matrix Diagonal Sum Benchmark Version 3 ====
+------ Tuned for csel-remote-lnx-NN machines --------
+  SIZE       BASE       OPTM  SPDUP POINTS 
+   512 1.2573e-02 3.8700e-03   3.25   0.44 
+  1024 5.3862e-02 1.5494e-02   3.48   0.92 
+  1101 6.0651e-02 1.8055e-02   3.36   0.96 
+  2048 3.1395e-01 6.2855e-02   4.99   2.38 
+  4099 1.5505e+00 2.5374e-01   6.11   5.35 
+  6001 3.4942e+00 5.4745e-01   6.38   8.02 
+  8192 6.6624e+00 1.0128e+00   6.58  11.13 
+RAW POINTS: 29.20
+TOTAL POINTS: 29 / 35
 
 # FULL CREDIT RUN
-atlas&gt;&gt; ./matata_benchmark
-==== Matrix A^T*A Benchmark Version 1 ====
-  SIZE       BASE       OPTM  SPDUP   LOG2 FACTOR POINTS 
-   171 3.3137e-02 1.1389e-02   2.91   1.54   1.00   1.54 
-   196 4.7676e-02 1.7190e-02   2.77   1.47   1.15   1.69 
-   256 1.3586e-01 3.9148e-02   3.47   1.80   1.50   2.69 
-   320 2.5219e-01 7.4042e-02   3.41   1.77   1.87   3.31 
-   801 5.1388e+00 1.1710e+00   4.39   2.13   4.68   9.99 
-  1024 2.4306e+01 2.5422e+00   9.56   3.26   5.99  19.50 
-RAW POINTS: 38.72
+login01&gt; ./sumdiag_benchmark
+==== Matrix Diagonal Sum Benchmark Version 3 ====
+------ Tuned for csel-remote-lnx-NN machines --------
+  SIZE       BASE       OPTM  SPDUP POINTS 
+   512 1.3784e-02 2.4550e-03   5.61   0.64 
+  1024 5.5067e-02 9.7000e-03   5.68   1.28 
+  1101 6.2697e-02 1.1165e-02   5.62   1.37 
+  2048 3.2443e-01 4.0681e-02   7.97   3.07 
+  4099 1.5905e+00 1.6463e-01   9.66   6.71 
+  6001 3.5678e+00 3.5394e-01  10.08  10.00 
+  8192 6.8017e+00 6.5771e-01  10.34  13.81 
+RAW POINTS: 36.87
 TOTAL POINTS: 35 / 35
 </pre>
 </div>
@@ -857,129 +791,112 @@ TOTAL POINTS: 35 / 35
 Note that it is possible to exceed the score associated with maximal
 performance (as seen in the RAW POINTS reported) but no more than the
 final reported points will be given for the performance portion of the
-problem. <i>There may be Makeup Credit associate with sufficient
-speedups;</i> <i>if this occurs, output for the program will make this
-obvious.</i>
+problem.
 </p>
+
+<blockquote>
+<p>
+Achieving very high speedup and significantly exceeding the max score
+may garner some MAKEUP credit: you'll know you earned this as the
+benchmark will report as much
+</p>
+</blockquote>
 </div>
 </div>
 
-<div id="outline-container-org6260f8a" class="outline-3">
-<h3 id="org6260f8a"><span class="section-number-3">3.4</span> <code>matata_print.c</code> Testing Program</h3>
+
+<div id="outline-container-org4c9daed" class="outline-3">
+<h3 id="org4c9daed"><span class="section-number-3">3.4</span> <code>sumdiag_print.c</code> Testing Program</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
-As one works on implementing optimizations in <code>matata_OPTM()</code>, bugs
+As one works on implementing optimizations in <code>sumdiag_OPTM()</code>, bugs
 which compute incorrect results are often introduced.  To aid in
-testing, the <code>matata_print()</code> program runs both the BASE and OPTM
+testing, the <code>sumdiag_print()</code> program runs both the BASE and OPTM
 versions on the same matrix and shows all results. The matrix size is
 determined from the command line and is printed on the screen to
 enable hand verification. Examples are below.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; matata_print 3                # run on 3 by 3 matrix
-==== Matrix A^T*A Print ====   
-Original Matrix:                 # original test matrix
-3 x 3 matrix                   
-   0:      0      1      2     
-   1:      3      4      5     
-   2:      6      7      8     
-                               
-BASE Matrix A^T*A :              # results for matata_BASE()
-3 x 3 matrix                   
-   0:     45     54     63     
-   1:     54     66     78     
-   2:     63     78     93     
-                               
-OPTM Matrix A^T*A :              # results for matata_OPTM()
-3 x 3 matrix                   
-   0:     45     54      0     
-   1:     54     66      0     
-   2:     63     78      0     
-                               
-BASE/OPTM Element Comparison:  
-[  i][  j]:   BASE   OPTM        # elemnent by element comparison
-[  0][  0]:     45     45        # to help spot errors in results
-[  0][  1]:     54     54        # for matata_OPTM()
-[  0][  2]:     63      0 ***    # NON-matching
-[  1][  0]:     54     54      
-[  1][  1]:     66     66        
-[  1][  2]:     78      0 ***    # NON-matching
-[  2][  0]:     63     63      
-[  2][  1]:     78     78        
-[  2][  2]:     93      0 ***    # NON-matching
+<pre class="src src-sh">&gt; ./sumdiag_print 5                    # run on a size 5 by 5 matrix; 
+==== Matrix Diagonal Sum Print ====
+Matrix:
+5 x 5 matrix                           # shows the matrix
+   0:    0    1    2    3    4 
+   1:    5    6    7    8    9 
+   2:   10   11   12   13   14 
+   3:   15   16   17   18   19 
+   4:   20   21   22   23   24 
+
+Diagnonal Sums:                        # prints diag sums for BASE/OPTM
+[ i]: BASE OPTM
+[ 0]:   20   20                        # matching
+[ 1]:   36   36 
+[ 2]:   48   48 
+[ 3]:   56   56 
+[ 4]:   60   36 ***                    # not matching: OPTM is buggy
+[ 5]:   40   21 ***
+[ 6]:   24   10 ***
+[ 7]:   12    3 ***
+[ 8]:    4    0 ***
+
 </pre>
 </div>
 </div>
 </div>
 
 
-<div id="outline-container-orgf09b911" class="outline-3">
-<h3 id="orgf09b911"><span class="section-number-3">3.5</span> <a id="org4ebc67e"></a> Optimization Suggestions and Documentation</h3>
+<div id="outline-container-orgdfbdfef" class="outline-3">
+<h3 id="orgdfbdfef"><span class="section-number-3">3.5</span> <a id="orgb3a79e0"></a> Optimization Suggestions and Documentation</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
-Labs and lectures have covered several kinds of optimizations which
-are useful to improve the speed of <code>matata_OPTM()</code>.  These techniques
-include:
+Labs and lectures will cover several kinds of optimizations which are
+useful to improve the speed of <code>sumdiag_OPTM()</code>.  These techniques
+include any or all of the following:
 </p>
-<ul class="org-ul">
+<ol class="org-ol">
+<li>Replacing repeated memory references with local non-pointer data
+which will likely be assigned to registers to alleviate slow-down
+from memory accesses.</li>
+<li>Eliminating barriers to natural compiler optimizations such as by
+replacing short function calls with equivalent inline code or Macro
+invocations. <i>Hint: in <code>matvec.h</code> there is both <code>vget()</code> function
+and a <code>VGET()</code> macro;</i> <i>use the that is likely to be faster in your
+own code.</i></li>
 <li>Re-ordering memory accesses to be as sequential as possible which
-favors cache (<b>very important</b>)</li>
-<li>Potentially reducing the overall memory usage of the program. Note
-that in <code>matata_base()</code>, additional memory is allocated to
-explicitly create the transpose matrix. This puts additional memory
-pressure on the computing system which may interfere with
-performance.</li>
+favors cache. <b>Unless memory accesses favor cache, it is unlikely
+that many optimizations will have much effect.</b></li>
 <li>Increasing potential processor pipelining by adjusting the
 destinations of arithmetic operations.</li>
-<li>Consider user of functions that perform bulk changes to
-memory. If matrices need to be "zeroed out", it is possible that
-functions like <code>memset()</code> can perform faster than iteration.</li>
 <li>Decreasing any unnecessary work such as memory accesses or
-arithmetic operations. It may be worth it to examine how matrix
-indices are computed in the <code>MGET() / MSET()</code> macros.  These use
-arithmetic operations which must be performed to find elements.</li>
-</ul>
-
+arithmetic operations.</li>
+</ol>
 <p>
 These should be sufficient to gain full credit though you are free to
 explore additional optimizations.
 </p>
 
 <p>
-A useful avenue to pursue is finding a way to re-order the memory
-access pattern to favor cache. Recall that the most favorable access
-pattern for most matrix computations in a row-major programming
-environment like C is to work across rows.  Below is a diagram which
-suggests one possible way to do this in the context of computing <code>A^T
-× A</code>.  It favors repeated walking across a matrix in a row-wise
-fashion to avoid the stride required for column-wise access.  Study
-this diagram carefully and consider implementing the approach
-illustrated as your first optimization. As discussed in lecture, if
-data is not getting to the processor, other optimizations that favor
-pipelining/superscalar execution will have no effect so focusing first
-on the memory access pattern is crucial.
+One handy realization most folks will reach is that it is useful to be
+able to compute the Diagonal of an individual matrix element belongs to
+based on its row/col indices.  The following formula is useful for
+that:
 </p>
-
-<div class="org-center">
-
-<div id="org6ab79e5" class="figure">
-<p><img src="matata-order.png" alt="matata-order.png" style="max-width:100%;" />
-</p>
-<p><span class="figure-number">Figure 3: </span>Illustration of how to favor row-wise access to compute squared matrix. Computation of first row results are shown with the beginnings of the second row.</p>
-</div>
+<div class="org-src-container">
+<pre class="src src-c">mat_elem = MGET(mat, col_num, row_num);         // retrive an element based on row/col
+diag_num = col_num - row_num + mat.cols - 1;    // calculate the diagonal number for it
+</pre>
 </div>
 </div>
 </div>
 
-
-<div id="outline-container-orgdbbb6ad" class="outline-3 grading 55">
-<h3 id="orgdbbb6ad"><span class="section-number-3">3.6</span> Grading Criteria for Problem 1 (55%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="55">55</span></span></h3>
+<div id="outline-container-orga562cf6" class="outline-3 grading 50">
+<h3 id="orga562cf6"><span class="section-number-3">3.6</span> Grading Criteria for Problem 1 (50%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 The file <code>P4-WRITEUP.txt</code> has several questions that should be
 answered in a similar fashion to lab write-ups. These document the
-optimizations used in <code>matata_OPTM()</code> require a justification for
+optimizations used in <code>sumdiag_OPTM()</code> require a justification for
 their use.
 </p>
 
@@ -1005,7 +922,7 @@ their use.
 
 <tr>
 <td class="org-right">5</td>
-<td class="org-left">No memory errors reported by Valgrind via <code>make test-prob1</code></td>
+<td class="org-left">No output/memory errors reported  <code>make test-prob1</code></td>
 </tr>
 
 <tr>
@@ -1015,27 +932,17 @@ their use.
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">MANUAL INSPECTION of <code>matata_optm.c</code></td>
+<td class="org-left">MANUAL INSPECTION of <code>sumdiag_optm.c</code></td>
 </tr>
 
 <tr>
 <td class="org-right">35</td>
-<td class="org-left">Performance of <code>matata_OPTM()</code> on <code>csel-atlas.cselabs.umn.edu</code></td>
+<td class="org-left">Performance of <code>sumdiag_OPTM()</code> on <code>loginNN.cselabs.umn.edu</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">As measured by the provided <code>matata_benchmark</code></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">+5 MAKEUP CREDIT points are available for getting a benchmark score of 40 or more</td>
-</tr>
-
-<tr>
-<td class="org-right">5</td>
-<td class="org-left">Clean and well-documented code for <code>matata_OPTM()</code></td>
+<td class="org-left">As measured by the provided <code>sumdiag_benchmark</code></td>
 </tr>
 </tbody>
 <tbody>
@@ -1064,12 +971,13 @@ their use.
 </div>
 </div>
 
-<div id="outline-container-org5d237ab" class="outline-2">
-<h2 id="org5d237ab"><span class="section-number-2">4</span> <b>Problem 2</b>: Timing Search Algorithms</h2>
+
+<div id="outline-container-orgca29ee5" class="outline-2">
+<h2 id="orgca29ee5"><span class="section-number-2">4</span> <b>Problem 2</b>: Timing Search Algorithms</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgfe1e5a9" class="outline-3">
-<h3 id="orgfe1e5a9"><span class="section-number-3">4.1</span> Overview</h3>
+<div id="outline-container-orga4ccad2" class="outline-3">
+<h3 id="orga4ccad2"><span class="section-number-3">4.1</span> Overview</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 This problem centers on timing several algorithms to measure their
@@ -1105,15 +1013,15 @@ into your analysis of the timings of the algorithms.
 
 <p>
 As was the case for problem 1, you can develop your timing program on
-any platform but the analysis should be conducted on
-<code>csel-atlas.cselabs.umn.edu</code> to ensure comparability.
+any platform but *analyze and report results on the
+<code>loginNN.cselabs.umn.edu</code> machines to ensure comparability.
 </p>
 </div>
 </div>
 
 
-<div id="outline-container-orgaa1e38d" class="outline-3">
-<h3 id="orgaa1e38d"><span class="section-number-3">4.2</span> <code>main()</code> in <code>search_benchmark.c</code></h3>
+<div id="outline-container-org3ef8d4c" class="outline-3">
+<h3 id="org3ef8d4c"><span class="section-number-3">4.2</span> <code>main()</code> in <code>search_benchmark.c</code></h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 The requirements from this problem is that you provide a <code>main()</code>
@@ -1217,9 +1125,75 @@ and cleanup for the searches.</li>
 </div>
 </div>
 
-<div id="outline-container-org368f4f1" class="outline-3">
-<h3 id="org368f4f1"><span class="section-number-3">4.3</span> Running Algorithms based on Command Line Arguments</h3>
+<div id="outline-container-orgad09a74" class="outline-3">
+<h3 id="orgad09a74"><span class="section-number-3">4.3</span> Sample Runs</h3>
 <div class="outline-text-3" id="text-4-3">
+<p>
+Below are some sample runs of the search benchmark. You do not need to
+match all aspects of the output exactly but tests will check for basic
+output like printing the first line with correct data structures. Some
+aspects of <code>search_benchmark</code> behavior are discussed later in more
+detail. 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">homeputer&gt; ssh login01.cselabs.umn.edu
+
+&gt;&gt; ./search_benchmark
+usage: ./search_benchmark &lt;minpow&gt; &lt;maxpow&gt; &lt;repeats&gt; [alg1 alg2 ...]
+  minpow:  first data structure size is 2^minpow
+  maxpow:  last data structure size is 2^maxpow
+  repeats: number of times to loop search sequence to scale time
+with alg1 alg2 as a combination of:
+  la : Linear Array Search
+  ll : Linked List Search
+  ba : Binary Array Search
+  bt : Binary Tree Search
+  (default all)
+
+# NOTE: the usage message is optional and only shown here to give a
+# summary of how command line arguments control the program
+
+&gt;&gt; ./search_benchmark 1 5 1 ll    # Run only Linked List "ll" searches on lists 2^1 to 2^5 in size
+    SIZE  NSEARCH       list 
+       2        4 3.0000e-06      # size 2^1 list with [0,2], search sequence 0,1,2,3 with 1 repeat
+       4        8 2.0000e-06      # size 2^2 list with [0,2,4,6], search sequence 0,1,2,3,..,7 with 1 repeat
+       8       16 3.0000e-06      # size 2^3 list with [0,2,4,6,...14], search sequence 0,1,2,3,..,15 with 1 repeat
+      16       32 4.0000e-06 
+      32       64 8.0000e-06 
+
+# NOTE: these times are below 1.0e-03, too short to trust; increase
+# &lt;repeats&gt; parameter to scale time up to be more reliable
+
+&gt;&gt; ./search_benchmark 4 8 10 ba bt      # Run only the Binary Array "ba" and Binary Tree "bt" searches
+    SIZE  NSEARCH     binary       tree 
+      16      320 1.2000e-05 1.0000e-05 # size 16 array/tree with elements [0,2,4,...30], search sequence 0,1,2,...31 with 10 repeats
+      32      640 2.4000e-05 2.0000e-05 # size 32 array/tree with elements [0,2,4,...62], search sequence 0,1,2,...63 with 10 repeats
+      64     1280 6.5000e-05 5.0000e-05 # ...
+     128     2560 2.0900e-04 1.7700e-04 
+     256     5120 5.0500e-04 4.4400e-04 
+
+# NOTE: these times are below 1.0e-03, too short to trust; increase
+# &lt;repeats&gt; parameter to scale time up to be more reliable
+
+&gt;&gt; ./search_benchmark 3 6 5                                   # Run ALL algorithms (no alg params)
+    SIZE  NSEARCH      array       list     binary       tree 
+       8       80 4.0000e-06 4.0000e-06 5.0000e-06 4.0000e-06 # search seq 0,1,2...15 with 5 repeats
+      16      160 7.0000e-06 7.0000e-06 7.0000e-06 8.0000e-06 # search seq 0,1,2...32 with 5 repeats
+      32      320 1.8000e-05 2.7000e-05 1.6000e-05 1.6000e-05 # search seq 0,1,2...63 with 5 repeats
+      64      640 5.7000e-05 9.3000e-05 3.5000e-05 4.0000e-05 # search seq 0,1,2...127 with 5 repeats
+
+# NOTE: these times are below 1.0e-03, too short to trust; increase
+# &lt;repeats&gt; parameter to scale time up to be more reliable
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org2351c42" class="outline-3">
+<h3 id="org2351c42"><span class="section-number-3">4.4</span> Running Algorithms based on Command Line Arguments</h3>
+<div class="outline-text-3" id="text-4-4">
 <p>
 Many folks who have not had to handle command line arguments struggle
 some what with the style of <code>search_benchmark</code> so here is some
@@ -1228,121 +1202,9 @@ additional guidance on handling this aspect of the program.
 </div>
 
 
-<div id="outline-container-org4951e98" class="outline-4">
-<h4 id="org4951e98">Run the algorithms in a fixed order</h4>
-<div class="outline-text-4" id="text-org4951e98">
-<p>
-An invocation like
-</p>
-<pre class="example">
-./search_benchmark 5 10 10 la ll
-</pre>
-
-<p>
-should run the linear array search (<code>a</code>) and linear linked list search
-(<code>l</code>).  So should the invocation
-</p>
-<pre class="example">
-./search_benchmark 5 10 10 ll la
-</pre>
-
-<p>
-Since we are interested <b>only</b> in comparing timing for these
-algorithms, the order of which is run first and printed first does not
-matter so <b>run the algorithms and print results in a fixed order.</b>
-That is, both of the above will run the array search first and linked
-list search second giving identical ordering results:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">&gt; ./search_benchmark 5 10 10 la ll
-  LENGTH SEARCHES      array       list 
-      32      640 1.2345e+06 1.2345e+06 
-      64     1280 1.2345e+06 1.2345e+06 
-     128     2560 1.2345e+06 1.2345e+06 
-     256     5120 1.2345e+06 1.2345e+06 
-     512    10240 1.2345e+06 1.2345e+06 
-    1024    20480 1.2345e+06 1.2345e+06 
-
-&gt; ./search_benchmark 5 10 10 ll la         # still running linear array search first
-  LENGTH SEARCHES      array       list 
-      32      640 1.2345e+06 1.2345e+06 
-      64     1280 1.2345e+06 1.2345e+06 
-     128     2560 1.2345e+06 1.2345e+06 
-     256     5120 1.2345e+06 1.2345e+06 
-     512    10240 1.2345e+06 1.2345e+06 
-    1024    20480 1.2345e+06 1.2345e+06 
-
-</pre>
-</div>
-
-<p>
-Search times above are intentionally left out so you will need to
-trust your own code to get an idea of how long things are
-running. However, very short run times are generally unreliable. Aim
-for a <b>minimum time of 1e-03 seconds</b> in order to make sure your
-results are reliable.  Shorter times like 1e-05 will vary too much to
-trust. 
-</p>
-</div>
-</div>
-
-<div id="outline-container-orgd99da69" class="outline-4">
-<h4 id="orgd99da69">Use Boolean-like variables to track which algorithms to run</h4>
-<div class="outline-text-4" id="text-orgd99da69">
-<p>
-If following the advice of the previous section, to run the 4
-algorithms in a fixed order, one can simple assign variables in
-<code>main()</code> which indicate which algorithms to run as in the following.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">  int run_linear_array = 0;
-  int run_linear_list  = 0;
-  ...
-</pre>
-</div>
-<p>
-Later, these variables are checked in a conditional as in:
-</p>
-<div class="org-src-container">
-<pre class="src src-c">  if(run_linear_array){
-    // run loops to time linear search in an array
-  }
-  if(run_linear_list){
-    // run loops to time linear search in a list
-  }
-  ...
-</pre>
-</div>
-
-<p>
-<a id="org541904c"></a> <i>Updated Wed Apr 13 04:56:08 PM CDT 2022</i>
-</p>
-
-<p>
-When processing the command line argument
-associated with which algorithms to run, one can 'turn on' the
-algorithm if the associated string is present on the command line
-according to the following pseudo-code
-</p>
-<div class="org-src-container">
-<pre class="src src-c">turn on all algorithms as this is the default;
-if(#arguments &gt; 4){
-  turn off all algorithms since command line arguments dictate which to run;
-  for(each argument in argv[] at index 4 or above){
-    if( argv[i] is equal to "la" ){
-      run_linear_array = 1;
-    }
-    ...
-  }
-</pre>
-</div>
-<p>
-While the above approach does not allow one to run algorithms in an
-arbitrary order, it does allow any combination of algorithms to be run
-and compared which is all that is needed to complete the timing.
-</p>
-
+<div id="outline-container-org2f1d3a1" class="outline-4">
+<h4 id="org2f1d3a1">C Command Line Arguments Handling</h4>
+<div class="outline-text-4" id="text-org2f1d3a1">
 <p>
 Keep in mind that C uses the following conventions for command line
 arguments based on the parameters to <code>main(int argc, char *argv[])</code>.
@@ -1375,13 +1237,135 @@ possible runs of <code>search_benchmark</code>.
 # argv[3] = "bt"
 </pre>
 </div>
+
+<p>
+Handling numeric arguments is often eased with <code>atoi(), atol(),
+atof()</code> and related functions. If these are not familiar, look up
+documentation associated with them.
+</p>
 </div>
 </div>
 
+<div id="outline-container-org0c9abdc" class="outline-4">
+<h4 id="org0c9abdc">Run the algorithms in a fixed order</h4>
+<div class="outline-text-4" id="text-org0c9abdc">
+<p>
+An invocation like
+</p>
+<pre class="example">
+./search_benchmark 5 10 10 la ll
+</pre>
 
-<div id="outline-container-org69a325b" class="outline-4">
-<h4 id="org69a325b">Free and Re-allocate Memory for Different Sizes</h4>
-<div class="outline-text-4" id="text-org69a325b">
+<p>
+should run the linear array search (<code>a</code>) and linear linked list search
+(<code>l</code>).  So should the invocation
+</p>
+<pre class="example">
+./search_benchmark 5 10 10 ll la
+</pre>
+
+<p>
+Since we are interested <b>only</b> in comparing timing for these
+algorithms, the order of which is run first and printed first does not
+matter so <b>run the algorithms and print results in a fixed order.</b>
+That is, both of the above will run the array search first and linked
+list search second giving identical ordering results:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt; ./search_benchmark 5 10 10 la ll
+    SIZE  NSEARCH      array       list 
+      32      640 1.2345e+06 1.2345e+06 
+      64     1280 1.2345e+06 1.2345e+06 
+     128     2560 1.2345e+06 1.2345e+06 
+     256     5120 1.2345e+06 1.2345e+06 
+     512    10240 1.2345e+06 1.2345e+06 
+    1024    20480 1.2345e+06 1.2345e+06 
+
+&gt; ./search_benchmark 5 10 10 ll la         # still running linear array search first
+    SIZE  NSEARCH      array       list 
+      32      640 1.2345e+06 1.2345e+06 
+      64     1280 1.2345e+06 1.2345e+06 
+     128     2560 1.2345e+06 1.2345e+06 
+     256     5120 1.2345e+06 1.2345e+06 
+     512    10240 1.2345e+06 1.2345e+06 
+    1024    20480 1.2345e+06 1.2345e+06 
+
+</pre>
+</div>
+
+<p>
+Search times above are intentionally left out so you will need to
+trust your own code to get an idea of how long things are
+running. However, very short run times are generally unreliable. Aim
+for a <b>minimum time of 1e-03 seconds</b> in order to make sure your
+results are reliable.  Shorter times like 1e-05 will vary too much to
+trust. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5bad6b8" class="outline-4">
+<h4 id="org5bad6b8">Use Boolean-like variables to track which algorithms to run</h4>
+<div class="outline-text-4" id="text-org5bad6b8">
+<p>
+If following the advice of the previous section, to run the 4
+algorithms in a fixed order, one can simple assign variables in
+<code>main()</code> which indicate which algorithms to run as in the following.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">  int run_linear_array = 0;
+  int run_linear_list  = 0;
+  ...
+</pre>
+</div>
+<p>
+Later, these variables are checked in a conditional as in:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">  if(run_linear_array){
+    // run loops to time linear search in an array
+  }
+  if(run_linear_list){
+    // run loops to time linear search in a list
+  }
+  ...
+</pre>
+</div>
+
+<p>
+<a id="org7232bc8"></a> <i>Updated Wed Apr 13 04:56:08 PM CDT 2022</i>
+</p>
+
+<p>
+When processing the command line argument
+associated with which algorithms to run, one can 'turn on' the
+algorithm if the associated string is present on the command line
+according to the following pseudo-code
+</p>
+<div class="org-src-container">
+<pre class="src src-c">turn on all algorithms as this is the default;
+if(#arguments &gt; 4){
+  turn off all algorithms since command line arguments dictate which to run;
+  for(each argument in argv[] at index 4 or above){
+    if( argv[i] is equal to "la" ){
+      run_linear_array = 1;
+    }
+    ...
+  }
+</pre>
+</div>
+<p>
+While the above approach does not allow one to run algorithms in an
+arbitrary order, it does allow any combination of algorithms to be run
+and compared which is all that is needed to complete the timing.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc0c56a7" class="outline-4">
+<h4 id="orgc0c56a7">Free and Re-allocate Memory for Different Sizes</h4>
+<div class="outline-text-4" id="text-orgc0c56a7">
 <p>
 While the search functions for Linked Lists and Binary Search Trees
 both take size arguments, these are ignored in the searches.  Instead,
@@ -1399,74 +1383,8 @@ timings for the linked structures.
 </div>
 
 
-<div id="outline-container-org5413551" class="outline-3">
-<h3 id="org5413551"><span class="section-number-3">4.4</span> Sample <code>main()</code> Runs</h3>
-<div class="outline-text-3" id="text-4-4">
-<p>
-Below are some sample runs of the <code>main()</code> function and output that is
-produced.  Note that the times have intentionally been set to all
-identical times.  Your exact output may vary some but <code>main()</code> must
-use the command line options as indicated below. These arguments are
-</p>
-<ol class="org-ol">
-<li>Minimum data size (power of 2)</li>
-<li>Maximum data size (power of 2)</li>
-<li>Number of repeats</li>
-<li>(Optional) Characters specifying which search algorithms to run. If
-this is omitted, run all algorithms.</li>
-</ol>
-
-<div class="org-src-container">
-<pre class="src src-sh">&gt; ./search_benchmark 
-usage: ./search_benchmark &lt;minpow&gt; &lt;maxpow&gt; &lt;repeats&gt; [alg1 alg2 ...]
- with alg1 alg2 as a combination of:
-  la : Linear Array Search
-  ll : Linked List Search
-  ba : Binary Array Search
-  bt : Binary Tree Search
-  (default all)
-
-# run all algorithms, single repetition of searches
-&gt; ./search_benchmark 9 14 1 
-  LENGTH SEARCHES      array       list     binary       tree 
-     512     1024 1.2345e+06 1.2345e+06 1.2345e+06 1.2345e+06 
-    1024     2048 1.2345e+06 1.2345e+06 1.2345e+06 1.2345e+06
-    2048     4096 1.2345e+06 1.2345e+06 1.2345e+06 1.2345e+06
-    4096     8192 1.2345e+06 1.2345e+06 1.2345e+06 1.2345e+06
-    8192    16384 1.2345e+06 1.2345e+06 1.2345e+06 1.2345e+06
-   16384    32768 1.2345e+06 1.2345e+06 1.2345e+06 1.2345e+06
-
-# Note that SEARCHES is 2*LENGTH as 1 successful and 1 unsuccessful
-# search is run for each element in the data structure
-
-# run linear array, linked list, binary array search algorithms, 10 repetition of searches
-&gt; ./search_benchmark 5 10 10 la ll ba
-  LENGTH SEARCHES      array       list     binary 
-      32      640 1.2345e+06 1.2345e+06 1.2345e+06
-      64     1280 1.2345e+06 1.2345e+06 1.2345e+06
-     128     2560 1.2345e+06 1.2345e+06 1.2345e+06
-     256     5120 1.2345e+06 1.2345e+06 1.2345e+06
-     512    10240 1.2345e+06 1.2345e+06 1.2345e+06
-    1024    20480 1.2345e+06 1.2345e+06 1.2345e+06
-
-# run linear binary array and tree search algorithms, 2 repetition of searches
-&gt; ./search_benchmark 14 19 2 ba bt
-  LENGTH SEARCHES     binary       tree 
-   16384    65536 1.2345e+06 1.2345e+06
-   32768   131072 1.2345e+06 1.2345e+06
-   65536   262144 1.2345e+06 1.2345e+06
-  131072   524288 1.2345e+06 1.2345e+06
-  262144  1048576 1.2345e+06 1.2345e+06
-  524288  2097152 1.2345e+06 1.2345e+06
-
-</pre>
-</div>
-</div>
-</div>
-
-
-<div id="outline-container-org03bb5a6" class="outline-3">
-<h3 id="org03bb5a6"><span class="section-number-3">4.5</span> Proper Setup and Cleanup for Searches</h3>
+<div id="outline-container-org7d83dc2" class="outline-3">
+<h3 id="org7d83dc2"><span class="section-number-3">4.5</span> Proper Setup and Cleanup for Searches</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 Each search algorithm requires setup and cleanup which is described
@@ -1476,9 +1394,9 @@ bonus credit.
 </p>
 </div>
 
-<div id="outline-container-org16a51ef" class="outline-4">
-<h4 id="org16a51ef">Linear and Binary Array Search</h4>
-<div class="outline-text-4" id="text-org16a51ef">
+<div id="outline-container-org99cfaca" class="outline-4">
+<h4 id="org99cfaca">Linear and Binary Array Search</h4>
+<div class="outline-text-4" id="text-org99cfaca">
 <p>
 Use the function <code>make_evens_array()</code> to create an appropriately
 sized <code>int</code> array for these functions.  Call <code>free()</code> on this array
@@ -1487,9 +1405,9 @@ when finished with it.
 </div>
 </div>
 
-<div id="outline-container-org6f78bc8" class="outline-4">
-<h4 id="org6f78bc8">Linked List Search</h4>
-<div class="outline-text-4" id="text-org6f78bc8">
+<div id="outline-container-orga0724ef" class="outline-4">
+<h4 id="orga0724ef">Linked List Search</h4>
+<div class="outline-text-4" id="text-orga0724ef">
 <p>
 Use the function <code>make_evens_list()</code> to create an appropriately
 sized <code>list_t</code>.  Call <code>list_free()</code> on this list when finished with
@@ -1498,9 +1416,9 @@ it.
 </div>
 </div>
 
-<div id="outline-container-org93b1818" class="outline-4">
-<h4 id="org93b1818">Binary Tree Search</h4>
-<div class="outline-text-4" id="text-org93b1818">
+<div id="outline-container-orgdd3b058" class="outline-4">
+<h4 id="orgdd3b058">Binary Tree Search</h4>
+<div class="outline-text-4" id="text-orgdd3b058">
 <p>
 Use the function <code>make_evens_tree()</code> to create an appropriately
 sized <code>bst_t</code>.  Call <code>bst_free()</code> on this list when finished with
@@ -1510,8 +1428,8 @@ it.
 </div>
 </div>
 
-<div id="outline-container-orga7f8ff7" class="outline-3">
-<h3 id="orga7f8ff7"><span class="section-number-3">4.6</span> What to Measure</h3>
+<div id="outline-container-orgc29c2ae" class="outline-3">
+<h3 id="orgc29c2ae"><span class="section-number-3">4.6</span> What to Measure</h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
 The reason for the requirements mentioned above is to study the
@@ -1533,8 +1451,8 @@ provided.
 </div>
 </div>
 
-<div id="outline-container-org1f7e201" class="outline-3">
-<h3 id="org1f7e201"><span class="section-number-3">4.7</span> MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></h3>
+<div id="outline-container-org4145d61" class="outline-3">
+<h3 id="org4145d61"><span class="section-number-3">4.7</span> MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></h3>
 <div class="outline-text-3" id="text-4-7">
 <p>
 "Makeup" credit will allow the score on this assignment to exceed 100%
@@ -1639,8 +1557,8 @@ on this topic is here:
 </div>
 </div>
 
-<div id="outline-container-org09947dc" class="outline-3 grading 45">
-<h3 id="org09947dc"><span class="section-number-3">4.8</span> Grading Criteria for Problem 2 (45%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="45">45</span></span></h3>
+<div id="outline-container-org7cab15d" class="outline-3 grading 45">
+<h3 id="org7cab15d"><span class="section-number-3">4.8</span> Grading Criteria for Problem 2 (45%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="45">45</span></span></h3>
 <div class="outline-text-3" id="text-4-8">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1770,8 +1688,8 @@ on this topic is here:
 </div>
 
 
-<div id="outline-container-org11794ca" class="outline-2">
-<h2 id="org11794ca"><span class="section-number-2">5</span> Writeup</h2>
+<div id="outline-container-org2042cb2" class="outline-2">
+<h2 id="org2042cb2"><span class="section-number-2">5</span> Writeup</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 This assignment involves answering questions in the file
@@ -1793,28 +1711,29 @@ your answers directly in this text file and submit it along with your
 code.
 
 
-PROBLEM 1: matata_OPTM()
-========================
+PROBLEM 1: sumdiag_OPTM()
+=========================
 
-  Do your timing study on csel-atlas.cselabs.umn.edu
+  Do your timing study on loginNN.cselabs.umn.edu
 
 
 (A) Paste Source Code
 ~~~~~~~~~~~~~~~~~~~~~
 
-  Paste a copy of your source code for the function `matata_OPTM()'
+  Paste a copy of your source code for the function `sumdiag_OPTM()'
 
   ####################### YOUR ANSWER HERE #########################
 
   ##################################################################
 
 
-(B) Timing on csel-atlas
-~~~~~~~~~~~~~~~~~~~~~~~~
+(B) Timing on loginNN.cselabs.umn.edu
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  Paste a copy of the results of running `matata_benchmark' on
-  csel-atlas.cselabs.umn.edu in the space below which shows how your
-  performance optimizations improved on the baseline codes.
+  Paste a copy of the results of running `sumdiag_benchmark' on
+  loginNN.cselabs.umn.edu (like login01, login02, ..., login06) in the
+  space below which shows how your performance optimizations improved on
+  the baseline codes.
 
   ####################### YOUR ANSWER HERE #########################
 
@@ -1837,8 +1756,9 @@ PROBLEM 1: matata_OPTM()
 
         ...  Optimization N: Blah bla blah... This should make run
         faster because yakkety yakeety yak.
-  Full credit solutions will have a least two optimizations and describe
-  WHY these improved performance in at least a couple sentences.
+  Full credit solutions will have a least THREE optimizations and
+  describe WHY these improved performance in at least a couple
+  sentences.
 
   ####################### YOUR ANSWER HERE #########################
 
@@ -1848,8 +1768,8 @@ PROBLEM 1: matata_OPTM()
 PROBLEM 2: Timing Search Algorithms
 ===================================
 
-  Do your timing study on csel-atlas.cselabs.umn.edu. In most cases,
-  report times larger than 1e-03 seconds as times shorter than this are
+  Do your timing study on loginNN.cselabs.umn.edu. In most cases, report
+  times larger than 1e-03 seconds as times shorter than this are
   unreliable. Run searches for more repetitions to lengthen run times.
 
 
@@ -1861,8 +1781,10 @@ PROBLEM 2: Timing Search Algorithms
   algorithms.  Produce a timing table which includes all algorithms
   which clearly demonstrates an uptick in the times associated with some
   while others remain much lower.  Identify what size this appears to be
-  a occur. SHOW A TIMING TABLE to support your conclusions and ensure
-  that the times reported are larger that 1e-03.
+  a occur.
+
+  SHOW A TIMING TABLE to support your conclusions and ensure that the
+  times reported are larger that 1e-03.
 
   ####################### YOUR ANSWER HERE #########################
 
@@ -1876,9 +1798,11 @@ PROBLEM 2: Timing Search Algorithms
   approximately at the same performance level as size increases to large
   data or whether one begins to become favorable over other. Determine
   the approximate size at which this divergence becomes obvious. Discuss
-  reasons WHY this difference arises.  SHOW A TIMING TABLE to support
-  your conclusions and ensure that the times reported are larger that
-  1e-03.
+  reasons WHY this difference arises.
+
+  SHOW A TIMING TABLE to support your conclusions and ensure that the
+  times reported are larger that 1e-03.
+
 
   ####################### YOUR ANSWER HERE #########################
 
@@ -1893,9 +1817,10 @@ PROBLEM 2: Timing Search Algorithms
   performance of these two begins to diverge. If so, describe why this
   might be happening based on your understanding of the data structures
   and the memory system. If not, describe why you believe there is
-  little performance difference between the two. SHOW A TIMING TABLE to
-  support your conclusions and ensure that the times reported are larger
-  that 1e-03.
+  little performance difference between the two.
+
+  SHOW A TIMING TABLE to support your conclusions and ensure that the
+  times reported are larger that 1e-03.
 
   ####################### YOUR ANSWER HERE #########################
 
@@ -1936,7 +1861,7 @@ PROBLEM 2: Timing Search Algorithms
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-04-25 Mon 09:40 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-11-16 Wed 23:00 <br/> </i>
 </div>
 </body>
 </html>
