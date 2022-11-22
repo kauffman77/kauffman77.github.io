@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-04-12 Tue 15:47 -->
+<!-- 2022-11-22 Tue 08:54 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CSCI 2021 Lab12: Functions and Macros</title>
-<meta name="generator" content="Org mode" />
+<title>CSCI 2021 Lab12: Functions and Macros and Optimization</title>
 <meta name="author" content="Chris Kauffman" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -190,8 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
+  .org-svg { }
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -248,6 +248,7 @@ pre {
 }
 #content, #preamble, #postamble {
 margin-left:300px;
+max-width: 100%;
 }
 .tag {
 background-color: inherit; font-family: inherit;
@@ -340,90 +341,81 @@ text-align: justify;
 }
 }
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-04-12 Tue 15:47</i>
+<i>Last Updated: 2022-11-22 Tue 08:54</i>
 </div>
-<div id="content">
-<h1 class="title">CSCI 2021 Lab12: Functions and Macros</h1>
+<div id="content" class="content">
+<h1 class="title">CSCI 2021 Lab12: Functions and Macros and Optimization</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 4/19/2022</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm Wed 30-Nov-2022</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-orgc7740a5" class="outline-4">
-<h4 id="orgc7740a5">CODE DISTRIBUTION: <a href="lab12-code.zip">lab12-code.zip</a></h4>
+<div id="outline-container-org03c89cb" class="outline-4">
+<h4 id="org03c89cb">CODE DISTRIBUTION: <a href="lab12-code.zip">lab12-code.zip</a></h4>
 </div>
 
-<div id="outline-container-orgec4c929" class="outline-4">
-<h4 id="orgec4c929">CHANGELOG: Empty</h4>
+<div id="outline-container-org140ccab" class="outline-4">
+<h4 id="org140ccab">VIDEO WALKTHROUGH:</h4>
 </div>
 
-<div id="outline-container-org3bf8e25" class="outline-4">
-<h4 id="org3bf8e25"></h4>
-<div class="outline-text-4" id="text-org3bf8e25">
-<div id="table-of-contents">
+<div id="outline-container-orgcc6a29f" class="outline-4">
+<h4 id="orgcc6a29f">CHANGELOG: Empty</h4>
+</div>
+
+<div id="outline-container-orgc2c7bc8" class="outline-4">
+<h4 id="orgc2c7bc8"></h4>
+<div class="outline-text-4" id="text-orgc2c7bc8">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org316c1b7">1. Rationale</a></li>
-<li><a href="#orgb4dd52c">2. Codepack</a></li>
-<li><a href="#orgd7cc2ae">3. QUESTIONS.txt File Contents</a></li>
-<li><a href="#orga471d4d">4. Submission</a></li>
+<li><a href="#org9b5722f">1. Rationale</a></li>
+<li><a href="#orgecdabeb">2. Codepack</a></li>
+<li><a href="#org314b2aa">3. QUESTIONS.txt File Contents</a></li>
+<li><a href="#orgb5b2c71">4. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org316c1b7" class="outline-2">
-<h2 id="org316c1b7"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org9b5722f" class="outline-2">
+<h2 id="org9b5722f"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-C as a language provides a form of "macros" usually introduced through
-the <code>#define</code> syntax. This <b>preprocessing</b> facility is used to perform
-textural transformations on C source files such as inserting the
-contents of another source file (using header files via <code>#include</code>) or
-define a sort of global variable as in <code>#define MAX 123</code>.  The other
-common use is to define "parameterized" Macros which look like
-functions but are in fact just a programmatic form of the
-"replace-all" text operation. This raises the question of what would
-motivate the use of Macros vs standard Functions. This lab analyzes
-what the Preprocessor phase of compilation does to a C source file to
-transform it according to the <code>#include</code> and <code>#define</code> directives.  It
-also shows that the use of function-like Parameterized Macros, in the
-absence of other compiler optimizations, may improve performance in
-tight computational loops by avoiding some of the optimization
-barriers created by standard Function Calls.
+Optimization of programs must often happen in a sequence that
+"unlocks" performance. That is certain optimizations will have no or
+even detrimental performance effects on their own but only provide
+benefit once other optimizations have been performed.  This lab guides
+students to write one such series of optimizations that is common and
+useful for the current project. It involves the following sequence of
+changes:
+</p>
+<ol class="org-ol">
+<li>Replace repeated memory references with local variables</li>
+<li>Replace repeated function calls with inlined Macro versions</li>
+<li>Unroll an inner loop to exploit the processor pipeline</li>
+</ol>
+
+<p>
+The 2nd optimization allows some exploration of C's Macro system,
+programmatic "copy-paste" facility that is used for a variety of
+purposes such as inserting the contents of another source file (using
+header files via <code>#include</code>) or define a sort of global variable as in
+<code>#define MAX 123</code>. Here it is used to ensure that short fragments of
+complex code are presented in a readable fashion that attains high
+performance. While it may look like a function call, the underpinnings
+are different and akin to the Function Inlining optimization performed
+by compilers.
 </p>
 </div>
 
-<div id="outline-container-org6a76a92" class="outline-4">
-<h4 id="org6a76a92">Grading Policy</h4>
-<div class="outline-text-4" id="text-org6a76a92">
+<div id="outline-container-org7c6aab9" class="outline-4">
+<h4 id="org7c6aab9">Grading Policy</h4>
+<div class="outline-text-4" id="text-org7c6aab9">
 <p>
 Credit for this Lab is earned by completing the exercises here and
 submitting a Zip of the work to Gradescope. Students are responsible
@@ -434,7 +426,7 @@ Zip. Successful completion earns 1 Engagement Point.
 
 <p>
 Lab Exercises are open resource/open collaboration and <b>students are
-encouraged to coopearte on labs.</b> Students may submit work as groups
+encouraged to cooperate on labs.</b> Students may submit work as groups
 of up to 5 to Gradescope: one person submits then adds the names of
 their group members to the submission.
 </p>
@@ -446,8 +438,8 @@ See the <a href="../syllabus.html">full policies in the course syllabus</a>.
 </div>
 </div>
 
-<div id="outline-container-orgb4dd52c" class="outline-2">
-<h2 id="orgb4dd52c"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orgecdabeb" class="outline-2">
+<h2 id="orgecdabeb"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -530,8 +522,8 @@ The codepack for the HW contains the following files:
 </div>
 </div>
 
-<div id="outline-container-orgd7cc2ae" class="outline-2">
-<h2 id="orgd7cc2ae"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org314b2aa" class="outline-2">
+<h2 id="org314b2aa"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -571,19 +563,34 @@ Lab Instructions
     the names of their group.
 
 
+NOTE: Time on loginNN.cselabs.umn.edu
+=====================================
+
+  Timing comparisons below reflect the behavior of the benchmark on the
+  machines
+  ,----
+  | login01.cselabs.umn.edu  OR  csel-remote-lnx-01.cselabs.umn.edu
+  | ...
+  | login06.cselabs.umn.edu  OR  csel-remote-lnx-06.cselabs.umn.edu
+  `----
+  Run the benchmark there so that your timing allows you to answer quiz
+  questions correctly.
+
+
 CODE: `function_v_macro.c' Program
 ==================================
 
   There is nearly complete code provided in the `function_v_macro.c'
-  file which implements 3 variants of a `row_sums_XXX()' function.
+  file which implements 4 variants of a `row_sums_XXX()' function.
   Complete the TODO items for each of the 3 functions so that it
   compiles and reports run times for the 3 variants.  Correct execution
   will produce output that looks like the following:
   ,----
   | &gt; ./func_v_macro 100 100000
-  |  row_sums_function: 1.2345e+00 secs
-  |     row_sums_macro: 1.2345e+00 secs
-  |    row_sums_direct: 1.2345e+00 secs
+  | 1.2345e+00 secs : V1 row_sums_func_p
+  | 1.2345e+00 secs : V2 row_sums_func_s
+  | 1.2345e+00 secs : V3 row_sums_macro
+  | 1.2345e+00 secs : V4 row_sums_unroll4
   `----
   NOTE: the times above are not accurate but reflect the format of the
   output.
@@ -596,7 +603,7 @@ QUIZ: Analyzing `function_v_macro.c' Runs
 =========================================
 
   After completing the code in `func_v_macro.c', compile it via `make'
-  and then examine the timing results for the 3 variants by running on
+  and then examine the timing results for the 4 variants by running on
   the following parameters.
   ,----
   | # RUN ON csel-kh1250-NN machines like in project 4
@@ -605,15 +612,41 @@ QUIZ: Analyzing `function_v_macro.c' Runs
   `----
 
 
+ORDERING
+~~~~~~~~
+
   Which of the following indicates the relative speed ordering of the 3
   variants (slowest to fastest).
   ,----
-  |       SLOWEST .................................... FASTEST
-  | - ( ) row_sums_direct / row_sums_function / row_sums_macro
-  | - ( ) row_sums_macro / row_sums_direct / row_sums_function
-  | - ( ) row_sums_function / row_sums_direct / row_sums_macro
-  | - ( ) row_sums_function / row_sums_macro / row_sums_direct
+  |       SLOWEST .................................... ..............................FASTEST
+  | - ( ) V4 row_sums_unroll4 / V3 row_sums_macro / V2 row_sums_func_s / V1 row_sums_func_p
+  | - ( ) V4 row_sums_unroll4 / V1 row_sums_func_p / V3 row_sums_macro / V2 row_sums_func_s
+  | - ( ) V1 row_sums_func_p / V3 row_sums_macro / V2 row_sums_func_s / V4 row_sums_unroll4
+  | - ( ) V1 row_sums_func_p / V2 row_sums_func_s / V3 row_sums_macro / V4 row_sums_unroll4
   `----
+
+
+V1 to V2
+~~~~~~~~
+
+  Examine the V1 and V2 versions of the `row_sums_XXX()'
+  functions. Which of the following best describes the difference
+  between these and its affect on performance.
+  - ( ) V1 uses pointers to structs while V2 deference's to have local
+    copies of the struct; V2 runs slightly SLOWER due to requiring more
+    overall memory to store a 2nd copy of the struct
+  - ( ) V1 uses pointers to structs while V2 deference's to have local
+    copies of the struct; V2 runs slightly FASTER due to some data being
+    cached in registers rather than main memory
+  - ( ) V1 uses a Function call while V2 uses a Macro call. Since macro
+    calls inline code, V2 runs modestly FASTER.
+  - ( ) Trick question: these two versions are identical as they both
+    use structs and there is no difference in behavior between pointers
+    to structs and local / actual structs. They run at the SAME speed.
+
+
+Preprocessor Macro Expansion
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   Examine the results of running ONLY the compiler's preprocessor on the
   program which can be done via the command:
@@ -637,7 +670,7 @@ QUIZ: Analyzing `function_v_macro.c' Runs
 
   Examine the code near the end of the `preprocessed.c' file.
 
-  Which of the following best describes how the `row_sums_function()'
+  Which of the following best describes how the V2 `row_sums_func_s()'
   code has changed?
   - ( ) It has not changed much; only comments have been removed.
   - ( ) The body of the `mget() / vset()' functions have been inserted
@@ -650,6 +683,10 @@ QUIZ: Analyzing `function_v_macro.c' Runs
   - ( ) The body of the `MGET() / VSET()' functions have been inserted
     at the point they were called.
   - ( ) An optimized assembly code version of these functions appears.
+
+
+Function vs Macros Calls and Performance
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   Which of the following are valid reasons that calling a function in a
   tight computational loop might interfere with the compiler's ability
@@ -666,27 +703,58 @@ QUIZ: Analyzing `function_v_macro.c' Runs
     perform better as they force inlining of the function body enabling
     further optimizations by the compiler.
 
-  Which of the following might explain the timing differences between
-  the Macro and Direct variants?
-  - ( ) The Macro inlines the computation of matrix / vector data
-    indices so it allows better speedup than the Direct variant.
-  - ( ) The Direct variant uses a simpler iteration pattern through the
-    data in the matrix / vector thus avoiding the need to do
-    multiply+add to index variables while calculating positions in the
-    array and running faster.
-  - ( ) The Direct method utilizes a loop unrolling technique to improve
-    processor pipelining thereby preforming faster than the Macro
-    variant.
-  - ( ) The Macro method utilizes a loop unrolling technique to improve
-    processor pipelining thereby preforming faster than the Direct
-    variant.
+
+Loop Unrolling
+~~~~~~~~~~~~~~
+
+  Which of the following best describes the differences between the code
+  in the V3 `row_sums_macro()' and V4 `V4 row_sums_unroll4()' functions?
+
+  - ( ) V3 iterates through each matrix row by 1 element at time while
+    V4 iterates 4 elements at a time
+  - ( ) V3 adds on single row element to a single sum per iteration
+    while V4 adds 4 different elements to 4 different sums
+  - ( ) Because of the looping pattern in V4, it requires a second loop
+    to "finish" elements at the ends of rows when the length is not
+    evenly divisible by 4
+  - ( ) All of these items are true
+  - ( ) None of these apply but there are other differences
+
+  Which of the following best explains the speed differences between V3
+  and V4?
+  - ( ) V4 is FASTER than V3 because its looping pattern favors cache
+    more effectively thereby improving throughput: the processor has
+    more available data to work on in V4 than in V3
+  - ( ) V4 is FASTER than V3 because each loop iteration has more
+    independent arithmetic operations that can be executed; this favors
+    efficient execution in pipelined / superscalar processors
+  - ( ) V4 is SLOWER than V3 because it must add a second loop which
+    creates more operations leading to worse performance
+  - ( ) V4 is SLOWER than V3 because the additional complexities and
+    conditionals in its code create hazards in the processor pipeline
+    while P3 has more straight-forward code for the architecture
+
+
+OPTIONAL: more_macros.c
+~~~~~~~~~~~~~~~~~~~~~~~
+
+  You can observe some other uses for `#define' macros in the file
+  `more_macros.c'. Again, one can preprocess the C file and observer the
+  results using a compiler invocation like
+  ,----
+  | &gt;&gt; gcc -E more_macros.c &gt; preprocessed.c
+  `----
+  Examining `preprocessed.c' will show where various capitalized macros
+  have been substituted for their definitions. This includes the useful
+  `__FILE__' and `__LINE__' macros that are provided in the C standard
+  to help print useful debugging information during program runs.
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orga471d4d" class="outline-2">
-<h2 id="orga471d4d"><span class="section-number-2">4</span> Submission</h2>
+<div id="outline-container-orgb5b2c71" class="outline-2">
+<h2 id="orgb5b2c71"><span class="section-number-2">4</span> Submission</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -696,7 +764,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-04-12 Tue 15:47 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-11-22 Tue 08:54 <br/> </i>
 </div>
 </body>
 </html>
