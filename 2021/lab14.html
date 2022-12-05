@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-04-26 Tue 21:03 -->
+<!-- 2022-12-05 Mon 10:33 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Lab14: Memory Mapped Files</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -190,8 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
+  .org-svg { }
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -248,6 +248,7 @@ pre {
 }
 #content, #preamble, #postamble {
 margin-left:300px;
+max-width: 100%;
 }
 .tag {
 background-color: inherit; font-family: inherit;
@@ -340,80 +341,57 @@ text-align: justify;
 }
 }
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-04-26 Tue 21:03</i>
+<i>Last Updated: 2022-12-05 Mon 10:33</i>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">CSCI 2021 Lab14: Memory Mapped Files</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 5/03/2022</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm 13-Dec-2022</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-org7f466e7" class="outline-4">
-<h4 id="org7f466e7">CODE DISTRIBUTION: <a href="lab14-code.zip">lab14-code.zip</a></h4>
+<div id="outline-container-org31a15b2" class="outline-4">
+<h4 id="org31a15b2">CODE DISTRIBUTION: <a href="lab14-code.zip">lab14-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org9508409" class="outline-4">
-<h4 id="org9508409">CHANGELOG: Empty</h4>
+<div id="outline-container-org85c044e" class="outline-4">
+<h4 id="org85c044e">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-org3eb4570" class="outline-4">
-<h4 id="org3eb4570"></h4>
-<div class="outline-text-4" id="text-org3eb4570">
-<div id="table-of-contents">
+<div id="outline-container-org4190299" class="outline-4">
+<h4 id="org4190299"></h4>
+<div class="outline-text-4" id="text-org4190299">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org4c75159">1. Rationale</a></li>
-<li><a href="#org5a377d1">2. Codepack</a></li>
-<li><a href="#org64ad010">3. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org984ef4c">4. Submission</a></li>
+<li><a href="#org421ae32">1. Rationale</a></li>
+<li><a href="#org81e62ee">2. Codepack</a></li>
+<li><a href="#orga2097c8">3. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org6cb8133">4. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org4c75159" class="outline-2">
-<h2 id="org4c75159"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org421ae32" class="outline-2">
+<h2 id="org421ae32"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Memory Mapping files via the <code>mmap()</code> function provides a powerful way
 to treat the contents of a file as an in-memory data structure. This
 is particularly useful for binary data comprised of structs. The
-techniques to handle such binary files are explored in this lab which
-builds on a previous HW.
+techniques to handle such binary files are explored in this lab.
 </p>
 </div>
 
-<div id="outline-container-orgbd1832e" class="outline-4">
-<h4 id="orgbd1832e">Grading Policy</h4>
-<div class="outline-text-4" id="text-orgbd1832e">
+<div id="outline-container-org3340b09" class="outline-4">
+<h4 id="org3340b09">Grading Policy</h4>
+<div class="outline-text-4" id="text-org3340b09">
 <p>
 Credit for this Lab is earned by completing the exercises here and
 submitting a Zip of the work to Gradescope. Students are responsible
@@ -424,7 +402,7 @@ Zip. Successful completion earns 1 Engagement Point.
 
 <p>
 Lab Exercises are open resource/open collaboration and <b>students are
-encouraged to coopearte on labs.</b> Students may submit work as groups
+encouraged to cooperate on labs.</b> Students may submit work as groups
 of up to 5 to Gradescope: one person submits then adds the names of
 their group members to the submission.
 </p>
@@ -436,13 +414,12 @@ See the <a href="../syllabus.html">full policies in the course syllabus</a>.
 </div>
 </div>
 
-<div id="outline-container-org5a377d1" class="outline-2">
-<h2 id="org5a377d1"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org81e62ee" class="outline-2">
+<h2 id="org81e62ee"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-The codepack for the HW contains the following files:
+The codepack for this lab contains the following files.
 </p>
-
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -526,8 +503,8 @@ The codepack for the HW contains the following files:
 </div>
 </div>
 
-<div id="outline-container-org64ad010" class="outline-2">
-<h2 id="org64ad010"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-orga2097c8" class="outline-2">
+<h2 id="orga2097c8"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -570,12 +547,37 @@ Lab Instructions
 QUIZ: print_department.c
 ========================
 
-  The print_department.c code is copied over from a previous HW which
-  discussed its use of `mmap()' to memory map a file with binary data in
+  The print_department.c code is provided as an example of how to use
+  the `mmap()' function to memory map a file with binary data in
   it. Review this code as many of the techniques demonstrated in it will
   be used to complete the CODE portion of this lab.
 
-  Near the top of the program `print_department.c', code like the
+  At the top of `print_department.c' there are a series of structs
+  defined and associated documentation of them and an example of a
+  binary file which contains these structs. Which of the following best
+  conveys the arrangement of these structs in the binary file described.
+  - ( ) Files start with an array of file_header_t structs followed by
+    one dept_offest_t struct and then an array of contact_t structs
+  - ( ) Files start with one file_header_t struct, are followed by an
+    array of dept_offset_t structs, and then an array of contact_t
+    structs
+  - ( ) Files start with one dept_offset_t structs, then an array of
+    file_header_t struts, then an array of contact_t structs
+  - ( ) Files start with an array of contact_t structs and then have an
+    array of dept_offset_t structs without any file_header_t
+
+  Examine the call to `mmap()' in the `main()' function of
+  `print_department.c'.  One of its arguments is `PROT_READ'. Do an
+  internet search to determine what this argument means.
+  - ( ) PROT_READ means all permissions to read/write/execute the memory
+    are granted
+  - ( ) PROT_READ means the memory is protected from reading so cannot
+    be read
+  - ( ) PROT_READ means that the memory is protected so cannot be
+    accessed except with supervisor permission
+  - ( ) PROT_READ means that the mapped memory may be read / accessed
+
+  Near beginning of `main()' in `print_department.c', code like the
   following appears.
   ,----
   | file_header_t *header = (file_header_t *) file_bytes;
@@ -615,15 +617,43 @@ QUIZ: print_department.c
     treated as contact_t data.
 
 
+  Compile and run the `print_department' program as shown below.
+  ,----
+  | &gt;&gt; make print_department
+  | gcc -Wall -Werror -g -Og -c print_department.c
+  | gcc -Wall -Werror -g -Og -o print_department print_department.o
+  | 
+  | &gt;&gt; ./print_department
+  | usage: ./print_department ...
+  | ...
+  | 
+  | &gt;&gt; ./print_department cse_depts.dat ???
+  | ...
+  `----
+  Fill in the `...' with appropriate text. Which of the following best
+  describes the usage and effect of the `print_department' program.
+  - ( ) It accepts a binary file and prints out all contacts from all
+    departments in the binary file.
+  - ( ) It accepts binary file and a department name and prints a short
+    description of that department
+  - ( ) It accepts a binary file to process and the name of a department
+    like CS or EE and prints out all of the contacts in that department
+    only.
+  - ( ) It allows one to search for a name in the binary file and prints
+    out contact information for the person with that name.
+
+
 CODE: Complete `email_lookup.c'
 ===============================
 
-  Complete the code in the `email_lookup.c' file which is intended to
-  accept an email address on the command line and lookup the Department
-  / Name of the person to which it belongs.  Much of the code is
-  provided but some lines are marked with ??? and need code filled
-  in. Many of the techniques required have analogs in
-  `print_department.c' so adapt the code provided there as appropriate.
+  Once you feel confident about the flow of code in
+  `print_department.c', work to complete the code in the
+  `email_lookup.c'. This file which is intended to accept an email
+  address on the command line and lookup the Department / Name of the
+  person to which it belongs.  Much of the code is provided but some
+  lines are marked with ??? and need code filled in. Many of the
+  techniques required have analogs in `print_department.c' so adapt the
+  code provided there as appropriate.
 
   When complete, the `email_lookup' program will run as follows.
   ,----
@@ -644,8 +674,8 @@ CODE: Complete `email_lookup.c'
 </div>
 </div>
 
-<div id="outline-container-org984ef4c" class="outline-2">
-<h2 id="org984ef4c"><span class="section-number-2">4</span> Submission</h2>
+<div id="outline-container-org6cb8133" class="outline-2">
+<h2 id="org6cb8133"><span class="section-number-2">4</span> Submission</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -655,7 +685,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-04-26 Tue 21:03 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-12-05 Mon 10:33 <br/> </i>
 </div>
 </body>
 </html>
