@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-12-09 Fri 09:17 -->
+<!-- 2022-12-09 Fri 09:18 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Project 5: Binary ELF File Parsing</title>
@@ -344,7 +344,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-12-09 Fri 09:17</i>
+<i>Last Updated: 2022-12-09 Fri 09:18</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CSCI 2021 Project 5: Binary ELF File Parsing</h1>
@@ -356,44 +356,47 @@ text-align: justify;
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-orgd4b7f14" class="outline-4">
-<h4 id="orgd4b7f14">CODE DISTRIBUTION: <a href="p5-code.zip">p5-code.zip</a></h4>
+<div id="outline-container-org1398602" class="outline-4">
+<h4 id="org1398602">CODE DISTRIBUTION: <a href="p5-code.zip">p5-code.zip</a></h4>
+</div>
+<div id="outline-container-orgf315e18" class="outline-4">
+<h4 id="orgf315e18">VIDEO WALKTHROUGH: <a href="https://canvas.umn.edu/courses/333075/pages/p5-walkthrough">https://canvas.umn.edu/courses/333075/pages/p5-walkthrough</a></h4>
 </div>
 
-<div id="outline-container-orga884a02" class="outline-4">
-<h4 id="orga884a02">CHANGELOG: Empty</h4>
+<div id="outline-container-org3627975" class="outline-4">
+<h4 id="org3627975">CHANGELOG: Empty</h4>
 </div>
-<div id="outline-container-orgc918dc6" class="outline-4">
-<h4 id="orgc918dc6"></h4>
-<div class="outline-text-4" id="text-orgc918dc6">
+<div id="outline-container-org78fcae9" class="outline-4">
+<h4 id="org78fcae9"></h4>
+<div class="outline-text-4" id="text-org78fcae9">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgdd9fe85">1. Overview</a></li>
-<li><a href="#org84fec43">2. Download Code and Setup</a></li>
-<li><a href="#org833e652">3. <b>findfunc</b>: Finding functions in ELF Files</a>
+<li><a href="#org1531cd5">1. Overview</a></li>
+<li><a href="#org6a8b8a3">2. Download Code and Setup</a></li>
+<li><a href="#orgc4d9016">3. <b>findfunc</b>: Finding functions in ELF Files</a>
 <ul>
-<li><a href="#orgfdc6f9c">3.1. ELF File References</a></li>
-<li><a href="#org367793b">3.2. Overall Approach</a></li>
-<li><a href="#org8f506a8">3.3. Setting up the Memory Map</a></li>
-<li><a href="#org7ceab51">3.4. ELF Header and Section Header Array</a></li>
-<li><a href="#org2ce38f2">3.5. String Tables, Names, Section Headers</a></li>
-<li><a href="#org5be7a1f">3.6. The <code>.text</code> Section and its Address</a></li>
-<li><a href="#orge2075f2">3.7. Symbol Table and <code>.strtab</code></a></li>
-<li><a href="#org118dade">3.8. Checking that a Symbol is a Function</a></li>
-<li><a href="#org31bf604">3.9. Printing the Opcodes of the Function</a></li>
-<li><a href="#orgdcddbbe">3.10. Behavior in Error Cases</a></li>
-<li><a href="#org445b054">3.11. <code>findfunc</code> Template</a></li>
-<li><a href="#orgc33979a">3.12. Grading Criteria for <code>findfunc</code></a></li>
-<li><a href="#org96c51f0">3.13. Automated Tests</a></li>
+<li><a href="#org3e7d333">3.1. ELF File References</a></li>
+<li><a href="#org9b5d346">3.2. Overall Approach</a></li>
+<li><a href="#org8f2d479">3.3. Setting up the Memory Map</a></li>
+<li><a href="#org9ce395b">3.4. ELF Header and Section Header Array</a></li>
+<li><a href="#orgcffcd7e">3.5. String Tables, Names, Section Headers</a></li>
+<li><a href="#org1c78717">3.6. The <code>.text</code> Section and its Address</a></li>
+<li><a href="#org434c225">3.7. Symbol Table and <code>.strtab</code></a></li>
+<li><a href="#orgaead151">3.8. Checking that a Symbol is a Function</a></li>
+<li><a href="#orgf465e1e">3.9. Printing the Opcodes of the Function</a></li>
+<li><a href="#org2ac8647">3.10. Behavior in Error Cases</a></li>
+<li><a href="#org1b2bfdb">3.11. <code>findfunc</code> Template</a></li>
+<li><a href="#orge60a5bd">3.12. Grading Criteria for <code>findfunc</code></a></li>
+<li><a href="#orgf5895b6">3.13. Automated Tests</a></li>
 </ul>
 </li>
-<li><a href="#orgd1c1766">4. OPTIONAL: Engagement Points</a></li>
-<li><a href="#orgb8c8752">5. Project Submission</a>
+<li><a href="#orgda582d3">4. OPTIONAL: Engagement Points</a></li>
+<li><a href="#orgfb82422">5. Project Submission</a>
 <ul>
-<li><a href="#orga3de3ba">5.1. Submit to Gradescope</a></li>
-<li><a href="#org1252a6e">5.2. Late Policies</a></li>
+<li><a href="#org37e77dc">5.1. Submit to Gradescope</a></li>
+<li><a href="#org689a6d3">5.2. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -403,8 +406,8 @@ is allowed. Seek help from course staff if you get stuck for too long.</li>
 </div>
 
 
-<div id="outline-container-orgdd9fe85" class="outline-2">
-<h2 id="orgdd9fe85"><span class="section-number-2">1</span> Overview</h2>
+<div id="outline-container-org1531cd5" class="outline-2">
+<h2 id="org1531cd5"><span class="section-number-2">1</span> Overview</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This project features a single problem pertaining to the most recent
@@ -434,8 +437,8 @@ given on the command line.</li>
 </div>
 </div>
 
-<div id="outline-container-org84fec43" class="outline-2">
-<h2 id="org84fec43"><span class="section-number-2">2</span> <a id="org102e8e9"></a> Download Code and Setup</h2>
+<div id="outline-container-org6a8b8a3" class="outline-2">
+<h2 id="org6a8b8a3"><span class="section-number-2">2</span> <a id="org09ca6b7"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -510,8 +513,8 @@ folder. Ultimately you will re-zip this folder to submit it.
 </div>
 
 
-<div id="outline-container-org833e652" class="outline-2">
-<h2 id="org833e652"><span class="section-number-2">3</span> <b>findfunc</b>: Finding functions in ELF Files</h2>
+<div id="outline-container-orgc4d9016" class="outline-2">
+<h2 id="orgc4d9016"><span class="section-number-2">3</span> <b>findfunc</b>: Finding functions in ELF Files</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 The <a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format">Executable and Linkable (ELF) File Format</a> is the Unix standard for
@@ -742,8 +745,8 @@ returned: 5                                        # return value is shown
 </div>
 </div>
 
-<div id="outline-container-orgfdc6f9c" class="outline-3">
-<h3 id="orgfdc6f9c"><span class="section-number-3">3.1</span> ELF File References</h3>
+<div id="outline-container-org3e7d333" class="outline-3">
+<h3 id="org3e7d333"><span class="section-number-3">3.1</span> ELF File References</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 It is recommended to do some reading on the structure of the ELF
@@ -773,8 +776,8 @@ use of 32-bit integers may still apply via <code>uint32_t</code>.
 </div>
 </div>
 
-<div id="outline-container-org367793b" class="outline-3">
-<h3 id="org367793b"><span class="section-number-3">3.2</span> Overall Approach</h3>
+<div id="outline-container-org9b5d346" class="outline-3">
+<h3 id="org9b5d346"><span class="section-number-3">3.2</span> Overall Approach</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 ELF files are divided into sections. Our main interest is to identify
@@ -819,8 +822,8 @@ while filling in this template.
 </div>
 </div>
 
-<div id="outline-container-org8f506a8" class="outline-3">
-<h3 id="org8f506a8"><span class="section-number-3">3.3</span> Setting up the Memory Map</h3>
+<div id="outline-container-org8f2d479" class="outline-3">
+<h3 id="org8f2d479"><span class="section-number-3">3.3</span> Setting up the Memory Map</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 Make use of the <code>mmap()</code> function create a memory map for the file
@@ -831,8 +834,8 @@ with mmap() to make its contents Readbale AND Executable</b>.
 </div>
 </div>
 
-<div id="outline-container-org7ceab51" class="outline-3">
-<h3 id="org7ceab51"><span class="section-number-3">3.4</span> ELF Header and Section Header Array</h3>
+<div id="outline-container-org9ce395b" class="outline-3">
+<h3 id="org9ce395b"><span class="section-number-3">3.4</span> ELF Header and Section Header Array</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 The initial bytes in an ELF file always have a fixed structure which
@@ -842,7 +845,7 @@ is the <code>ELF64_Ehdr</code> type.  Of primary interest are the following
 <li>Identification bytes and types in the field <code>e_ident[]</code>. These
 initial bytes identify the file as ELF format or not.  If they
 match the expected values, proceed. If incorrect, consult the later
-section on <a href="#orgd2154b6">Error Conditions</a> on what error message to print.</li>
+section on <a href="#org4057862">Error Conditions</a> on what error message to print.</li>
 <li>The Section Header Array byte position in the field <code>e_shoff</code>.  The
 Section Header Array is like a table of contents for a book giving
 positions of most other sections in the file. It usually occurs near
@@ -860,7 +863,7 @@ parts of an ELF file.
 
 <div class="org-center">
 
-<div id="orgdc92671" class="figure">
+<div id="orgda93884" class="figure">
 <p><img src="elf-format-text1.png" alt="elf-format-text1.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>ELF File Header with Section Header Array and Section Header String Table.</p>
@@ -869,8 +872,8 @@ parts of an ELF file.
 </div>
 </div>
 
-<div id="outline-container-org2ce38f2" class="outline-3">
-<h3 id="org2ce38f2"><span class="section-number-3">3.5</span> String Tables, Names, Section Headers</h3>
+<div id="outline-container-orgcffcd7e" class="outline-3">
+<h3 id="orgcffcd7e"><span class="section-number-3">3.5</span> String Tables, Names, Section Headers</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 To keep the sizes of structures fixed while still allowing variable
@@ -920,8 +923,8 @@ of symbol table entries.
 </div>
 </div>
 
-<div id="outline-container-org5be7a1f" class="outline-3">
-<h3 id="org5be7a1f"><span class="section-number-3">3.6</span> <a id="org1d01abf"></a> The <code>.text</code> Section and its Address</h3>
+<div id="outline-container-org1c78717" class="outline-3">
+<h3 id="org1c78717"><span class="section-number-3">3.6</span> <a id="orge08a7c6"></a> The <code>.text</code> Section and its Address</h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 In addition to identifying the <code>.symtab</code> and <code>.strtab</code> sections in the
@@ -949,8 +952,8 @@ data about it in the following format.
 </div>
 </div>
 
-<div id="outline-container-orge2075f2" class="outline-3">
-<h3 id="orge2075f2"><span class="section-number-3">3.7</span> Symbol Table and <code>.strtab</code></h3>
+<div id="outline-container-org434c225" class="outline-3">
+<h3 id="org434c225"><span class="section-number-3">3.7</span> Symbol Table and <code>.strtab</code></h3>
 <div class="outline-text-3" id="text-3-7">
 <p>
 Similar to the Section Header Array, the Symbol Table is comprised of
@@ -961,7 +964,7 @@ symbol's name resides. The following diagram shows this relationship.
 
 <div class="org-center">
 
-<div id="org3c0d830" class="figure">
+<div id="org8e2d086" class="figure">
 <p><img src="elf-format-text2.png" alt="elf-format-text2.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 2: </span>ELF Symbol Table, associated String Table, and locations of function symbols in <code>.text</code> section. The entry location of symbol <code>my_pow</code> is bolded along with the location of its name "my<sub>pow</sub>" and location of its opcodes in the <code>.text</code> section.</p>
@@ -1002,20 +1005,20 @@ by calculating its address as an offset from the address of the
     11</code> from the start of the <code>.data</code> section</li>
 </ul></li>
 <li>Add 11 to the offset of <code>.text</code> from the beginning of the file
-(found in earlier when <a href="#org1d01abf">locating the <code>.text</code> section</a>) to get the
+(found in earlier when <a href="#orge08a7c6">locating the <code>.text</code> section</a>) to get the
 address of opcodes for <code>my_pow</code></li>
 </ul>
 
 <p>
 If the function symbol that is requested is not found in the symbol
-table, refer to the <a href="#orgd2154b6">Error Conditions</a> section for the appropriate error
+table, refer to the <a href="#org4057862">Error Conditions</a> section for the appropriate error
 message to print.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org118dade" class="outline-3">
-<h3 id="org118dade"><span class="section-number-3">3.8</span> Checking that a Symbol is a Function</h3>
+<div id="outline-container-orgaead151" class="outline-3">
+<h3 id="orgaead151"><span class="section-number-3">3.8</span> Checking that a Symbol is a Function</h3>
 <div class="outline-text-3" id="text-3-8">
 <p>
 Symbol table entries have a field called <code>st_info</code> which indicates
@@ -1036,8 +1039,8 @@ indicated in the template.
 </div>
 </div>
 
-<div id="outline-container-org31bf604" class="outline-3">
-<h3 id="org31bf604"><span class="section-number-3">3.9</span> <a id="org1b7c48f"></a> Printing the Opcodes of the Function</h3>
+<div id="outline-container-orgf465e1e" class="outline-3">
+<h3 id="orgf465e1e"><span class="section-number-3">3.9</span> <a id="org6972973"></a> Printing the Opcodes of the Function</h3>
 <div class="outline-text-3" id="text-3-9">
 <p>
 Treat the address for the function opcodes above as though it were a
@@ -1069,8 +1072,8 @@ leading 0s in a space of 2 characters. Use a format specifier of
 </div>
 </div>
 
-<div id="outline-container-orgdcddbbe" class="outline-3">
-<h3 id="orgdcddbbe"><span class="section-number-3">3.10</span> <a id="orgd2154b6"></a> Behavior in Error Cases</h3>
+<div id="outline-container-org2ac8647" class="outline-3">
+<h3 id="org2ac8647"><span class="section-number-3">3.10</span> <a id="org4057862"></a> Behavior in Error Cases</h3>
 <div class="outline-text-3" id="text-3-10">
 <p>
 The template provides a number situations in which errors should be
@@ -1094,8 +1097,8 @@ flow.
 </div>
 </div>
 
-<div id="outline-container-org445b054" class="outline-3">
-<h3 id="org445b054"><span class="section-number-3">3.11</span> <code>findfunc</code> Template</h3>
+<div id="outline-container-org1b2bfdb" class="outline-3">
+<h3 id="org1b2bfdb"><span class="section-number-3">3.11</span> <code>findfunc</code> Template</h3>
 <div class="outline-text-3" id="text-3-11">
 <p>
 A basic template for <code>findfunc.c</code> is provided in the code pack which
@@ -1106,8 +1109,8 @@ sure that your code complies with tests when the become available.
 </div>
 </div>
 
-<div id="outline-container-orgc33979a" class="outline-3 grading">
-<h3 id="orgc33979a"><span class="section-number-3">3.12</span> Grading Criteria for <code>findfunc</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span></span></h3>
+<div id="outline-container-orge60a5bd" class="outline-3 grading">
+<h3 id="orge60a5bd"><span class="section-number-3">3.12</span> Grading Criteria for <code>findfunc</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span></span></h3>
 <div class="outline-text-3" id="text-3-12">
 <p>
 Both binary and shell tests can be run with <code>make test</code>
@@ -1248,8 +1251,8 @@ Both binary and shell tests can be run with <code>make test</code>
 </div>
 </div>
 
-<div id="outline-container-org96c51f0" class="outline-3">
-<h3 id="org96c51f0"><span class="section-number-3">3.13</span> Automated Tests</h3>
+<div id="outline-container-orgf5895b6" class="outline-3">
+<h3 id="orgf5895b6"><span class="section-number-3">3.13</span> Automated Tests</h3>
 <div class="outline-text-3" id="text-3-13">
 <p>
 Automated tests will be released in a few days. Instructions on what
@@ -1260,8 +1263,8 @@ release.
 </div>
 </div>
 
-<div id="outline-container-orgd1c1766" class="outline-2">
-<h2 id="orgd1c1766"><span class="section-number-2">4</span> OPTIONAL: Engagement Points</h2>
+<div id="outline-container-orgda582d3" class="outline-2">
+<h2 id="orgda582d3"><span class="section-number-2">4</span> OPTIONAL: Engagement Points</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 One interesting aspect of dealing with functions in Binaries is that
@@ -1375,9 +1378,9 @@ Below are some notes on how to complete this portion of the project.
 </p>
 </div>
 
-<div id="outline-container-org1749962" class="outline-4">
-<h4 id="org1749962">Functions Must Be Executable</h4>
-<div class="outline-text-4" id="text-org1749962">
+<div id="outline-container-org8a0b78f" class="outline-4">
+<h4 id="org8a0b78f">Functions Must Be Executable</h4>
+<div class="outline-text-4" id="text-org8a0b78f">
 <p>
 In order to execute instructions, they must have the "execute" (<code>x</code>)
 permission associated with the memory page on which they are loaded.
@@ -1389,9 +1392,9 @@ mmap</code>) or on the internet to find such an option to pass to <code>mmap()</
 </div>
 </div>
 
-<div id="outline-container-org246b450" class="outline-4">
-<h4 id="org246b450">Types of functions Supported</h4>
-<div class="outline-text-4" id="text-org246b450">
+<div id="outline-container-org63cd6ac" class="outline-4">
+<h4 id="org63cd6ac">Types of functions Supported</h4>
+<div class="outline-text-4" id="text-org63cd6ac">
 <p>
 There are 3 types of functions that are supported. These are indicated
 on the command line via an option along some additional arguments to
@@ -1447,9 +1450,9 @@ and take appropriate actions.
 </div>
 </div>
 
-<div id="outline-container-orgb377fa5" class="outline-4">
-<h4 id="orgb377fa5">Casting to Functions</h4>
-<div class="outline-text-4" id="text-orgb377fa5">
+<div id="outline-container-org94b35bf" class="outline-4">
+<h4 id="org94b35bf">Casting to Functions</h4>
+<div class="outline-text-4" id="text-org94b35bf">
 <p>
 Printing out the opcodes as bytes is relatively easy: one calculates a
 pointer to its location and iterates over the bytes as an array.  In
@@ -1489,9 +1492,9 @@ int ret = func(arg1,arg2);
 </div>
 </div>
 
-<div id="outline-container-org37644c3" class="outline-4">
-<h4 id="org37644c3"><a id="org1347183"></a> Automated Tests for Engagement Points</h4>
-<div class="outline-text-4" id="text-org37644c3">
+<div id="outline-container-orge7ea1a0" class="outline-4">
+<h4 id="orge7ea1a0"><a id="org58414e3"></a> Automated Tests for Engagement Points</h4>
+<div class="outline-text-4" id="text-orge7ea1a0">
 <p>
 The file <code>test_findfunc_engagement.org</code> contains tests for the
 engagement points. It will call <code>load_func</code> on certain ELF files and
@@ -1512,12 +1515,12 @@ passed one or more of these tests to credit engagement points.
 </div>
 </div>
 
-<div id="outline-container-orgb8c8752" class="outline-2">
-<h2 id="orgb8c8752"><span class="section-number-2">5</span> Project Submission</h2>
+<div id="outline-container-orgfb82422" class="outline-2">
+<h2 id="orgfb82422"><span class="section-number-2">5</span> Project Submission</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-orga3de3ba" class="outline-3">
-<h3 id="orga3de3ba"><span class="section-number-3">5.1</span> <a id="org16bd78d"></a> Submit to Gradescope</h3>
+<div id="outline-container-org37e77dc" class="outline-3">
+<h3 id="org37e77dc"><span class="section-number-3">5.1</span> <a id="org4025677"></a> Submit to Gradescope</h3>
 <div class="outline-text-3" id="text-5-1">
 <ol class="org-ol">
 <li><p>
@@ -1568,8 +1571,8 @@ pictures.</li>
 </div>
 </div>
 
-<div id="outline-container-org1252a6e" class="outline-3">
-<h3 id="org1252a6e"><span class="section-number-3">5.2</span> Late Policies</h3>
+<div id="outline-container-org689a6d3" class="outline-3">
+<h3 id="org689a6d3"><span class="section-number-3">5.2</span> Late Policies</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 You may wish to review the policy on late project submission which
@@ -1586,7 +1589,7 @@ deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-12-09 Fri 09:17 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-12-09 Fri 09:18 <br/> </i>
 </div>
 </body>
 </html>
