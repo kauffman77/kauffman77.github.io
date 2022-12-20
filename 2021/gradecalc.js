@@ -11,7 +11,7 @@ var model = [
     Assignment("Project 2", 100, 20/5, false),
     Assignment("Project 3", 100, 20/5, false),
     Assignment("Project 4", 100, 20/5, false),
-    Assignment("Project 5", 100, 20/5, false),
+    Assignment("Project 5", 50, 20/5, false),
     // Assignment("Project Total (450 max)", 450, 20, false),
     Assignment("Exam 1", 60, 15, false),
     Assignment("Exam 2", 60, 15, false),
