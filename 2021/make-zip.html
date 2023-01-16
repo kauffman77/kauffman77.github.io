@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Making Zips</title>
+<!-- 2018-02-23 Fri 15:13 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Chris Kauffman" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2018-02-23 Fri 15:13</i>
+</div>
+<div id="content">
+<h1 class="title">Making Zips</h1>
+
+<div id="outline-container-sec-0-0-1" class="outline-4">
+<h4 id="sec-0-0-1">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-0-0-1">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Rationale</a></li>
+<li><a href="#sec-2">2. Graphically On Linux</a></li>
+<li><a href="#sec-3">3. Unix Command Line Zip Utility</a></li>
+<li><a href="#sec-4">4. Using Windows GUI</a></li>
+<li><a href="#sec-5">5. Using Mac OS X GUI</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+For class assignments, one must frequently turn in an entire working
+directory of code which may have many files, sub-folders, or other
+elaborate structures.  A <b>Zip File</b> is a convenient way to do this: it
+will condense the entire folder hierarchy into a single file and
+perform compression on it to decrease the size.  This single file can
+then be uploaded/turned in and graders can "unzip" the file to create
+the entire directory setup.
+</p>
+
+<p>
+This guide gives a few of the most common ways to create Zips.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Graphically On Linux</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Most GUI desktops on Linux distributions have an "archive manager" program
+installed which can create zips by dragging an dropping.
+</p>
+
+<p>
+In some cases, right-clicking on a folder may bring up a "Create
+Archive" context menu which makes this easy.  
+</p>
+
+<p>
+One can usually start the archive manager to do this as well. Below
+are detailed steps using the UMN's <a href="https://vole.cse.umn.edu">Vole</a> installation.
+</p>
+</div>
+
+<div id="outline-container-sec-2-0-1" class="outline-4">
+<h4 id="sec-2-0-1">Find the folder/directory you want to Zip</h4>
+<div class="outline-text-4" id="text-2-0-1">
+<p>
+Do so in a graphical file browser.
+</p>
+<div class="center">
+
+<div class="figure">
+<p><img src="make-zip-linux-gui1.png" alt="make-zip-linux-gui1.png" style="max-width:100%;" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-0-2" class="outline-4">
+<h4 id="sec-2-0-2">Open the Archive Manager</h4>
+<div class="outline-text-4" id="text-2-0-2">
+<p>
+It is usually present under the main menu buried under "Accessories"
+or "Utilities".
+</p>
+
+<div class="center">
+
+<div class="figure">
+<p><img src="make-zip-linux-gui2.png" alt="make-zip-linux-gui2.png" style="max-width:100%;" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-0-3" class="outline-4">
+<h4 id="sec-2-0-3">Drag the Folder onto the Archive Manager Program Window</h4>
+<div class="outline-text-4" id="text-2-0-3">
+<p>
+This will prompt for whether you want to create a new archive (yes).
+</p>
+<div class="center">
+
+<div class="figure">
+<p><img src="make-zip-linux-gui3.png" alt="make-zip-linux-gui3.png" style="max-width:100%;" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-0-4" class="outline-4">
+<h4 id="sec-2-0-4">Select Zip Format</h4>
+<div class="outline-text-4" id="text-2-0-4">
+<p>
+Next to the file name is a context menu of the many types of
+archives. Select <code>.zip</code>.
+</p>
+<div class="center">
+
+<div class="figure">
+<p><img src="make-zip-linux-gui4.png" alt="make-zip-linux-gui4.png" style="max-width:100%;" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-0-5" class="outline-4">
+<h4 id="sec-2-0-5">Press Save</h4>
+<div class="outline-text-4" id="text-2-0-5">
+<p>
+This should create the zip file with the <code>.zip</code> extension in the same
+directory. You can close the Archive Manager program now. 
+</p>
+<div class="center">
+
+<div class="figure">
+<p><img src="make-zip-linux-gui5.png" alt="make-zip-linux-gui5.png" style="max-width:100%;" />
+</p>
+</div>
+</div>
+
+<div class="center">
+
+<div class="figure">
+<p><img src="make-zip-linux-gui6.png" alt="make-zip-linux-gui6.png" style="max-width:100%;" />
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Unix Command Line Zip Utility</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Most Unix machines (Linux/Mac OSX) have the command line <code>zip</code> and
+<code>unzip</code> utilities installed which can create and manipulate zip archives.
+</p>
+
+<p>
+To zip a whole folder, navigate to the directory where the folder
+exists and use the command
+</p>
+<pre class="example">
+zip zip-file-name -r directory-name
+</pre>
+<p>
+Below is terminal session of zipping up the <code>first-program</code> directory which
+is done using the command
+</p>
+<pre class="example">
+zip first-program.zip -r first-program
+</pre>
+<p>
+The subsequent commands verify that the zip was created and show its
+contents (with the <code>unzip -l first-program.zip</code> command). To the right
+is a picture of the visual view of the same directory which shows the
+folder and highlights the zip file that was created from it.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"># change to the correct directory/folder
+&gt; cd my-work                  
+
+# list the contents of the folder
+&gt; ls
+first-program/
+# contains a folder named first-program to be zipped up
+
+# Create the zip file first-program.zip from the folder
+&gt; zip -r first-program.zip first-program
+  adding: first-program/ (stored 0%)
+  adding: first-program/data-folder/ (stored 0%)
+  adding: first-program/data-folder/data2.dat (stored 0%)
+  adding: first-program/data-folder/data1.dat (stored 0%)
+  adding: first-program/assignment-notes.txt (stored 0%)
+  adding: first-program/hello.c (deflated 23%)
+
+# show the entire contents of the first-program.zip file
+&gt; unzip -l first-program.zip
+Archive:  first-program.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+        0  2018-02-23 14:35   first-program/
+        0  2018-02-23 14:35   first-program/data-folder/
+        5  2018-02-23 14:35   first-program/data-folder/data2.dat
+        5  2018-02-23 14:35   first-program/data-folder/data1.dat
+       21  2018-02-23 14:35   first-program/assignment-notes.txt
+      157  2013-05-28 13:05   first-program/hello.c
+---------                     -------
+      188                     6 files
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Using Windows GUI</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Windows 7, 8, 10 come with built-in support for creating and dealing
+with ZIP files.  You can use the Windows GUI with to create an
+archive using the following steps.
+</p>
+<ul class="org-ul">
+<li>Find the folder containing your programming assignment 
+</li>
+<li>Right click on the directory
+</li>
+<li>Pick <i>Send To -&gt; Compressed Folder (.zip)</i>
+</li>
+</ul>
+<p>
+You should now have a compressed version of your folder.
+</p>
+
+
+<div class="figure">
+<p><img src="compress1.png" alt="compress1.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="compress2.png" alt="compress2.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Using Mac OS X GUI</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Mac OS X users should also be able to create a zip using the their
+GUI. 
+</p>
+<ul class="org-ul">
+<li>Right click (or hold the control key and click) on a folder in
+Finder. 
+</li>
+<li>From the context menu, select Compress "Folder name" (may be called
+"Create Archive of &#x2026;" instead)
+</li>
+<li>A zip archive of your folder should appear alongside the original
+folder
+</li>
+</ul>
+
+
+<div class="figure">
+<p><img src="zip-file-folder-on-Mac.png" alt="zip-file-folder-on-Mac.png" />
+</p>
+</div>
+
+<p>
+The following link contains additional instructions and a video of
+this process: <a href="http://www.hacktrix.com/zip-file-folder-on-mac-os-x">http://www.hacktrix.com/zip-file-folder-on-mac-os-x</a>
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2018-02-23 Fri 15:13 <br/> </i>
+</div>
+</body>
+</html>
