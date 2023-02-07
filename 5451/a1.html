@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-01-24 Tue 16:27 -->
+<!-- 2023-02-06 Mon 21:40 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 5451 Assignment 1: Parallel Architecture and Communication</title>
@@ -368,7 +368,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2023-01-24 Tue 16:27</i>
+<i>Last Updated: 2023-02-06 Mon 21:40</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CSCI 5451 Assignment 1: Parallel Architecture and Communication</h1>
@@ -388,41 +388,41 @@ Prof Kauffman via email if it does not render properly.
 </p>
 </blockquote>
 
-<div id="outline-container-orge614cfe" class="outline-4">
-<h4 id="orge614cfe">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-orge614cfe">
+<div id="outline-container-org81032e4" class="outline-4">
+<h4 id="org81032e4">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org81032e4">
 </div>
 </div>
 
-<div id="outline-container-org2ba3426" class="outline-4">
-<h4 id="org2ba3426"></h4>
-<div class="outline-text-4" id="text-org2ba3426">
+<div id="outline-container-org816ee8c" class="outline-4">
+<h4 id="org816ee8c"></h4>
+<div class="outline-text-4" id="text-org816ee8c">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org0a20bcb">1. (15pts) <b>Problem 1</b>: Store-and-forward Routing (Grama 2.26)</a></li>
-<li><a href="#orgc4c6932">2. (10pts) <b>Problem 2</b>: Embedding a Ring Network in a Tree Network</a></li>
-<li><a href="#org8d3bb8d">3. (10pts) <b>Problem 3</b>: Task-dependence Graphs (Grama 3.2)</a></li>
-<li><a href="#org88a2856">4. (15pts) <b>Problem 4</b>: Parallel Histogram</a></li>
-<li><a href="#orgd7d8e55">5. (15pts) <b>Problem 5</b>: Parallel One-to-All Broadcast in 2D Torus</a></li>
-<li><a href="#orgf7537ea">6. (15pts) <b>Problem 6</b>: Bring the Heat</a></li>
-<li><a href="#org358629f">7. (15pts) <b>Problem 7</b>: C Proficiency / K-Means Preparation</a>
+<li><a href="#org693cea4">1. (15pts) <b>Problem 1</b>: Store-and-forward Routing (Grama 2.26)</a></li>
+<li><a href="#orga9bfbd8">2. (10pts) <b>Problem 2</b>: Embedding a Ring Network in a Tree Network</a></li>
+<li><a href="#org9e33a90">3. (10pts) <b>Problem 3</b>: Task-dependence Graphs (Grama 3.2)</a></li>
+<li><a href="#org5f396c7">4. (15pts) <b>Problem 4</b>: Parallel Histogram</a></li>
+<li><a href="#org2f16f5c">5. (15pts) <b>Problem 5</b>: Parallel One-to-All Broadcast in 2D Torus</a></li>
+<li><a href="#orgcd56000">6. (15pts) <b>Problem 6</b>: Bring the Heat</a></li>
+<li><a href="#org58d3284">7. (15pts) <b>Problem 7</b>: C Proficiency / K-Means Preparation</a>
 <ul>
-<li><a href="#org7a757cc">Brief Overview of K-Means Clustering</a></li>
-<li><a href="#orgd3f38b5">Notes On Implementation</a></li>
-<li><a href="#org6c0984f">Python Code</a></li>
-<li><a href="#org6c43921">Sample Runs of kmeans.py</a></li>
-<li><a href="#orgc8032d7">Timing Results to Provide</a></li>
-<li><a href="#org2ced831">Submission Notes</a></li>
+<li><a href="#orgbe6f1eb">Brief Overview of K-Means Clustering</a></li>
+<li><a href="#org66c134f">Notes On Implementation</a></li>
+<li><a href="#org7b6c87e">Python Code</a></li>
+<li><a href="#org44b4094">Sample Runs of kmeans.py</a></li>
+<li><a href="#orgdd9baa4">Timing Results to Provide</a></li>
+<li><a href="#orgd805289">Submission Notes</a></li>
 </ul>
 </li>
-<li><a href="#org2376ab3">8. (5pts) <b>Statement of Effort</b></a></li>
-<li><a href="#orgde6ffde">9. Submission Instructions</a>
+<li><a href="#orgfd7f6d8">8. (5pts) <b>Statement of Effort</b></a></li>
+<li><a href="#orga151468">9. Submission Instructions</a>
 <ul>
-<li><a href="#orgab0fa77">Picture Sequence of Uploading an Assignment</a></li>
-<li><a href="#orga412656">Adding a Group Member on Gradescope</a></li>
-<li><a href="#org6f0e178">Late Submission</a></li>
+<li><a href="#org1e49780">Picture Sequence of Uploading an Assignment</a></li>
+<li><a href="#org1199477">Adding a Group Member on Gradescope</a></li>
+<li><a href="#org4186b54">Late Submission</a></li>
 </ul>
 </li>
 </ul>
@@ -433,8 +433,8 @@ Prof Kauffman via email if it does not render properly.
 
 
 
-<div id="outline-container-org0a20bcb" class="outline-2">
-<h2 id="org0a20bcb"><span class="section-number-2">1</span> (15pts) <b>Problem 1</b>: Store-and-forward Routing (Grama 2.26)</h2>
+<div id="outline-container-org693cea4" class="outline-2">
+<h2 id="org693cea4"><span class="section-number-2">1</span> (15pts) <b>Problem 1</b>: Store-and-forward Routing (Grama 2.26)</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Consider the routing of messages in a parallel computer that uses
@@ -472,9 +472,9 @@ if the sending does not overlap.
 </p>
 </div>
 
-<div id="outline-container-org24c7c0b" class="outline-4">
-<h4 id="org24c7c0b"><a id="org8c4552f"></a> Example</h4>
-<div class="outline-text-4" id="text-org24c7c0b">
+<div id="outline-container-org7bfa68b" class="outline-4">
+<h4 id="org7bfa68b"><a id="org33c9ac8"></a> Example</h4>
+<div class="outline-text-4" id="text-org7bfa68b">
 <p>
 To increase the clarity, below is a concrete example of the problem
 setting with communication according to both sets of
@@ -556,8 +556,8 @@ S:0 ---- 1 ---- 2 ---- D:3
 </div>
 </div>
 
-<div id="outline-container-orgc4c6932" class="outline-2">
-<h2 id="orgc4c6932"><span class="section-number-2">2</span> (10pts) <b>Problem 2</b>: Embedding a Ring Network in a Tree Network</h2>
+<div id="outline-container-orga9bfbd8" class="outline-2">
+<h2 id="orga9bfbd8"><span class="section-number-2">2</span> (10pts) <b>Problem 2</b>: Embedding a Ring Network in a Tree Network</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Section 2.7 of Grama discusses a number techniques to evaluate how
@@ -590,7 +590,7 @@ switches as squares).
 
 <div class="org-center">
 
-<div id="org2146955" class="figure">
+<div id="org3df246a" class="figure">
 <p><img src="ring-tree.png" alt="ring-tree.png" style="max-width: 100%;" />
 </p>
 </div>
@@ -612,9 +612,8 @@ proof).
 </div>
 
 
-
-<div id="outline-container-org8d3bb8d" class="outline-2">
-<h2 id="org8d3bb8d"><span class="section-number-2">3</span> (10pts) <b>Problem 3</b>: Task-dependence Graphs (Grama 3.2)</h2>
+<div id="outline-container-org9e33a90" class="outline-2">
+<h2 id="org9e33a90"><span class="section-number-2">3</span> (10pts) <b>Problem 3</b>: Task-dependence Graphs (Grama 3.2)</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 For the task graphs given in Figure 3.42 (below), determine the following:
@@ -638,7 +637,7 @@ Assume that each task node takes an equal amount of time to execute.
 </p>
 
 
-<div id="org198d051" class="figure">
+<div id="org5a2b16b" class="figure">
 <p><img src="task-graphs.png" alt="task-graphs.png" style="max-width: 100%;" />
 </p>
 </div>
@@ -646,8 +645,8 @@ Assume that each task node takes an equal amount of time to execute.
 </div>
 </div>
 
-<div id="outline-container-org88a2856" class="outline-2">
-<h2 id="org88a2856"><span class="section-number-2">4</span> (15pts) <b>Problem 4</b>: Parallel Histogram</h2>
+<div id="outline-container-org5f396c7" class="outline-2">
+<h2 id="org5f396c7"><span class="section-number-2">4</span> (15pts) <b>Problem 4</b>: Parallel Histogram</h2>
 <div class="outline-text-2" id="text-4">
 <blockquote>
 <p>
@@ -713,8 +712,8 @@ preferred. Such circumstances should consider
 </div>
 </div>
 
-<div id="outline-container-orgd7d8e55" class="outline-2">
-<h2 id="orgd7d8e55"><span class="section-number-2">5</span> (15pts) <b>Problem 5</b>: Parallel One-to-All Broadcast in 2D Torus</h2>
+<div id="outline-container-org2f16f5c" class="outline-2">
+<h2 id="org2f16f5c"><span class="section-number-2">5</span> (15pts) <b>Problem 5</b>: Parallel One-to-All Broadcast in 2D Torus</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Assume processor 0 has a message that must be sent to all other
@@ -745,8 +744,8 @@ total communication time \(t_{comm}\).</li>
 </div>
 </div>
 
-<div id="outline-container-orgf7537ea" class="outline-2">
-<h2 id="orgf7537ea"><span class="section-number-2">6</span> (15pts) <b>Problem 6</b>: Bring the Heat</h2>
+<div id="outline-container-orgcd56000" class="outline-2">
+<h2 id="orgcd56000"><span class="section-number-2">6</span> (15pts) <b>Problem 6</b>: Bring the Heat</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Consider a simple physical simulation of heat transfer.  A rod of
@@ -756,7 +755,7 @@ constant sources of heat/cold.
 
 <div class="org-center">
 
-<div id="org60f4c47" class="figure">
+<div id="orgba160a6" class="figure">
 <p><img src="heat-model.png" alt="heat-model.png" style="max-width: 100%;" />
 </p>
 </div>
@@ -898,8 +897,8 @@ problem well and balances the cost of the network well.</li>
 </div>
 </div>
 
-<div id="outline-container-org358629f" class="outline-2">
-<h2 id="org358629f"><span class="section-number-2">7</span> (15pts) <b>Problem 7</b>: C Proficiency / K-Means Preparation</h2>
+<div id="outline-container-org58d3284" class="outline-2">
+<h2 id="org58d3284"><span class="section-number-2">7</span> (15pts) <b>Problem 7</b>: C Proficiency / K-Means Preparation</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 CODEPACK: <a href="kmeans-code.zip">kmeans-code.zip</a>
@@ -957,9 +956,9 @@ top of this problem.
 </p>
 </div>
 
-<div id="outline-container-org7a757cc" class="outline-3">
-<h3 id="org7a757cc">Brief Overview of K-Means Clustering</h3>
-<div class="outline-text-3" id="text-org7a757cc">
+<div id="outline-container-orgbe6f1eb" class="outline-3">
+<h3 id="orgbe6f1eb">Brief Overview of K-Means Clustering</h3>
+<div class="outline-text-3" id="text-orgbe6f1eb">
 <p>
 K-Means clustering will be discussed in lecture several times to
 introduce it and later to discuss various approaches to parallelizing
@@ -991,7 +990,7 @@ clusters, then recomputing cluster centers, then assigning, etc.
 
 <div class="org-center">
 
-<div id="org7e3c4eb" class="figure">
+<div id="org4f6a06d" class="figure">
 <p><img src="kmeansViz.png" alt="kmeansViz.png" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Example of progression of K-means clustering algorithm. <a href="https://stanford.edu/~cpiech/cs221/handouts/kmeans.html">Source: K-Means by Chris Piech. Based on a handout by Andrew Ng.</a></p>
@@ -1024,7 +1023,7 @@ the image. A small image file like this one:
 </p>
 <div class="org-center">
 
-<div id="org3ad1e8b" class="figure">
+<div id="org5a940da" class="figure">
 <p><img src="five.png" alt="five.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Sample of a small hand-written digit in graymap</p>
@@ -1078,9 +1077,9 @@ interpretability and to processing.
 </div>
 </div>
 
-<div id="outline-container-orgd3f38b5" class="outline-3">
-<h3 id="orgd3f38b5">Notes On Implementation</h3>
-<div class="outline-text-3" id="text-orgd3f38b5">
+<div id="outline-container-org66c134f" class="outline-3">
+<h3 id="org66c134f">Notes On Implementation</h3>
+<div class="outline-text-3" id="text-org66c134f">
 <ul class="org-ul">
 <li>The Python version has 2 "classes" at the top which represent the 
 main datatype associated with the problem. These should become C
@@ -1167,9 +1166,9 @@ int filestats(char *filename, ssize_t *tot_tokens, ssize_t *tot_lines){
 </div>
 
 
-<div id="outline-container-org6c0984f" class="outline-3">
-<h3 id="org6c0984f">Python Code</h3>
-<div class="outline-text-3" id="text-org6c0984f">
+<div id="outline-container-org7b6c87e" class="outline-3">
+<h3 id="org7b6c87e">Python Code</h3>
+<div class="outline-text-3" id="text-org7b6c87e">
 <p>
 The Python code version is provided below but is also in the codepack.
 </p>
@@ -1424,9 +1423,9 @@ main()
 </div>
 
 
-<div id="outline-container-org6c43921" class="outline-3">
-<h3 id="org6c43921">Sample Runs of kmeans.py</h3>
-<div class="outline-text-3" id="text-org6c43921">
+<div id="outline-container-org44b4094" class="outline-3">
+<h3 id="org44b4094">Sample Runs of kmeans.py</h3>
+<div class="outline-text-3" id="text-org44b4094">
 <p>
 A demo of the Python version is shown below. 
 </p>
@@ -1538,9 +1537,9 @@ cent_0000.pgm  cent_0001.pgm  cent_0002.pgm  cent_0003.pgm  labels.txt
 </div>
 </div>
 
-<div id="outline-container-orgc8032d7" class="outline-3">
-<h3 id="orgc8032d7">Timing Results to Provide</h3>
-<div class="outline-text-3" id="text-orgc8032d7">
+<div id="outline-container-orgdd9baa4" class="outline-3">
+<h3 id="orgdd9baa4">Timing Results to Provide</h3>
+<div class="outline-text-3" id="text-orgdd9baa4">
 <p>
 Time your both the provided Python version and your C version of the
 K-means clustering. Provide timing on any Linux/Unix machine using the
@@ -1608,9 +1607,9 @@ should be substantial in most cases.
 </div>
 
 
-<div id="outline-container-org2ced831" class="outline-3">
-<h3 id="org2ced831">Submission Notes</h3>
-<div class="outline-text-3" id="text-org2ced831">
+<div id="outline-container-orgd805289" class="outline-3">
+<h3 id="orgd805289">Submission Notes</h3>
+<div class="outline-text-3" id="text-orgd805289">
 <ul class="org-ul">
 <li>Paste the entirety of your C code into the document that you have
 written your other answers in. If your code is spread across several
@@ -1629,8 +1628,8 @@ only the Python version.</li>
 </div>
 </div>
 
-<div id="outline-container-org2376ab3" class="outline-2">
-<h2 id="org2376ab3"><span class="section-number-2">8</span> (5pts) <b>Statement of Effort</b></h2>
+<div id="outline-container-orgfd7f6d8" class="outline-2">
+<h2 id="orgfd7f6d8"><span class="section-number-2">8</span> (5pts) <b>Statement of Effort</b></h2>
 <div class="outline-text-2" id="text-8">
 <p>
 Include the following Statement of Effort at the end of your document.
@@ -1662,8 +1661,8 @@ loss of points indicated.
 </div>
 </div>
 
-<div id="outline-container-orgde6ffde" class="outline-2">
-<h2 id="orgde6ffde"><span class="section-number-2">9</span> Submission Instructions</h2>
+<div id="outline-container-orga151468" class="outline-2">
+<h2 id="orga151468"><span class="section-number-2">9</span> Submission Instructions</h2>
 <div class="outline-text-2" id="text-9">
 <ul class="org-ul">
 <li>Complete the problems in each section labelled <b>Problem</b></li>
@@ -1701,27 +1700,27 @@ one.</li>
 </ul>
 </div>
 
-<div id="outline-container-orgab0fa77" class="outline-3">
-<h3 id="orgab0fa77">Picture Sequence of Uploading an Assignment</h3>
-<div class="outline-text-3" id="text-orgab0fa77">
+<div id="outline-container-org1e49780" class="outline-3">
+<h3 id="org1e49780">Picture Sequence of Uploading an Assignment</h3>
+<div class="outline-text-3" id="text-org1e49780">
 <div class="org-center">
 <p>
 <b>Selecting a PDF to upload</b>
 </p>
 
-<div id="org9259cb0" class="figure">
+<div id="org6cd1768" class="figure">
 <p><img src="gradescope-submit-1.png" alt="gradescope-submit-1.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org1ea742f" class="figure">
+<div id="orgfc71f82" class="figure">
 <p><img src="gradescope-submit-2.png" alt="gradescope-submit-2.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org44d4c20" class="figure">
+<div id="org339b57d" class="figure">
 <p><img src="gradescope-submit-3.png" alt="gradescope-submit-3.png" style="max-width:100%;" />
 </p>
 </div>
@@ -1730,7 +1729,7 @@ one.</li>
 <b>Indicate problem answers on each page</b>
 </p>
 
-<div id="org3c5e669" class="figure">
+<div id="org98f2969" class="figure">
 <p><img src="gradescope-submit-4.png" alt="gradescope-submit-4.png" style="max-width:100%;" />
 </p>
 </div>
@@ -1738,15 +1737,15 @@ one.</li>
 </div>
 </div>
 
-<div id="outline-container-orga412656" class="outline-3">
-<h3 id="orga412656">Adding a Group Member on Gradescope</h3>
-<div class="outline-text-3" id="text-orga412656">
+<div id="outline-container-org1199477" class="outline-3">
+<h3 id="org1199477">Adding a Group Member on Gradescope</h3>
+<div class="outline-text-3" id="text-org1199477">
 <div class="org-center">
 <p>
 <b>Submitter should edit the group associated with the submission</b>
 </p>
 
-<div id="org0e7cc68" class="figure">
+<div id="org7f86ef7" class="figure">
 <p><img src="gradescope-submit-5.png" alt="gradescope-submit-5.png" style="max-width:100%;" />
 </p>
 </div>
@@ -1755,7 +1754,7 @@ one.</li>
 <b>Find your partner in the search box</b>
 </p>
 
-<div id="orgaf69001" class="figure">
+<div id="org4a7cd5e" class="figure">
 <p><img src="gradescope-submit-6.png" alt="gradescope-submit-6.png" style="max-width:100%;" />
 </p>
 </div>
@@ -1764,7 +1763,7 @@ one.</li>
 <b>Ensure your partner is listed</b>
 </p>
 
-<div id="org2f67bb4" class="figure">
+<div id="org6dba190" class="figure">
 <p><img src="gradescope-submit-7.png" alt="gradescope-submit-7.png" style="max-width:100%;" />
 </p>
 </div>
@@ -1773,9 +1772,9 @@ one.</li>
 </div>
 
 
-<div id="outline-container-org6f0e178" class="outline-3">
-<h3 id="org6f0e178">Late Submission</h3>
-<div class="outline-text-3" id="text-org6f0e178">
+<div id="outline-container-org4186b54" class="outline-3">
+<h3 id="org4186b54">Late Submission</h3>
+<div class="outline-text-3" id="text-org4186b54">
 <p>
 As described in the <a href="syllabus.html">Course Syllabus</a>, late submissions are penalized as
 follows.
@@ -1792,7 +1791,7 @@ credit</li>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-01-24 Tue 16:27 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-02-06 Mon 21:40 <br/> </i>
 </div>
 </body>
 </html>
