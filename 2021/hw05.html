@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-10-11 Tue 10:36 -->
+<!-- 2023-02-14 Tue 09:40 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 HW05: Float Layout, Unions, Debugging</title>
@@ -191,7 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
+  .org-svg { }
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -344,50 +344,50 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-10-11 Tue 10:36</i>
+<i>Last Updated: 2023-02-14 Tue 09:40</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CSCI 2021 HW05: Float Layout, Unions, Debugging</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Tue 11-Oct-2022</b></li>
+<li><b>Due: 11:59pm Tue 21-Feb-2023</b></li>
 <li><i>Approximately 0.83% of total grade</i></li>
 <li>Homework and Quizzes are open resource/open collaboration. You must
 submit your own work but you may freely discuss HW topics with other
 members of the class.</li>
 </ul>
 
-<div id="outline-container-orgcc54819" class="outline-4">
-<h4 id="orgcc54819">CODE DISTRIBUTION: <a href="hw05-code.zip">hw05-code.zip</a></h4>
+<div id="outline-container-orgec8073d" class="outline-4">
+<h4 id="orgec8073d">CODE DISTRIBUTION: <a href="hw05-code.zip">hw05-code.zip</a></h4>
 </div>
 
-<div id="outline-container-orgd15770b" class="outline-4">
-<h4 id="orgd15770b">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-orgd15770b">
+<div id="outline-container-org8ebcac8" class="outline-4">
+<h4 id="org8ebcac8">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org8ebcac8">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org7d8af12">1. Rationale</a>
+<li><a href="#orgc4203ef">1. Rationale</a>
 <ul>
-<li><a href="#org6538bc6">Associated Reading / Preparation</a></li>
-<li><a href="#org70efe7d">Grading Policy</a></li>
+<li><a href="#org500f873">Associated Reading / Preparation</a></li>
+<li><a href="#org4a868cd">Grading Policy</a></li>
 </ul>
 </li>
-<li><a href="#org5e9864b">2. Codepack</a></li>
-<li><a href="#org809089c">3. Bitwise Operations</a></li>
-<li><a href="#org9010c54">4. C Unions</a></li>
-<li><a href="#org3b6aa22">5. <code>gdb</code> The GNU Debugger</a></li>
-<li><a href="#org5cf8175">6. What to Understand</a></li>
-<li><a href="#orge994571">7. Questions</a></li>
-<li><a href="#org1c9ad39">8. Again, What to Understand</a></li>
+<li><a href="#org830fa42">2. Codepack</a></li>
+<li><a href="#org19a7968">3. Bitwise Operations</a></li>
+<li><a href="#org17542a4">4. C Unions</a></li>
+<li><a href="#org42a478d">5. <code>gdb</code> The GNU Debugger</a></li>
+<li><a href="#orgd037c30">6. What to Understand</a></li>
+<li><a href="#org4cba40f">7. Questions</a></li>
+<li><a href="#org9dd3721">8. Again, What to Understand</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org7d8af12" class="outline-2">
-<h2 id="org7d8af12"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orgc4203ef" class="outline-2">
+<h2 id="orgc4203ef"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This HW introduces bit-level representations of quantities in C. It
@@ -400,9 +400,9 @@ debugger and instructions are given to motivate its use.
 </p>
 </div>
 
-<div id="outline-container-org6538bc6" class="outline-3">
-<h3 id="org6538bc6">Associated Reading / Preparation</h3>
-<div class="outline-text-3" id="text-org6538bc6">
+<div id="outline-container-org500f873" class="outline-3">
+<h3 id="org500f873">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-org500f873">
 <ul class="org-ul">
 <li>Bryant and O'Hallaron: Ch 2.1-2.3 on binary representations of
 integers in unsigned and two's complement signed format.</li>
@@ -417,9 +417,9 @@ overview of the most common commands.</li>
 </div>
 
 
-<div id="outline-container-org70efe7d" class="outline-3">
-<h3 id="org70efe7d">Grading Policy</h3>
-<div class="outline-text-3" id="text-org70efe7d">
+<div id="outline-container-org4a868cd" class="outline-3">
+<h3 id="org4a868cd">Grading Policy</h3>
+<div class="outline-text-3" id="text-org4a868cd">
 <p>
 Credit for this HW is earned by taking the associated HW Quiz which is
 linked under <code>Gradescope</code>.  The quiz will ask similar questions as
@@ -441,8 +441,8 @@ See the <a href="../2021/syllabus.html">full policies in the course syllabus</a>
 </div>
 </div>
 
-<div id="outline-container-org5e9864b" class="outline-2">
-<h2 id="org5e9864b"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org830fa42" class="outline-2">
+<h2 id="org830fa42"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -492,8 +492,8 @@ The codepack for the HW contains the following files:
 </div>
 </div>
 
-<div id="outline-container-org809089c" class="outline-2">
-<h2 id="org809089c"><span class="section-number-2">3</span> Bitwise Operations</h2>
+<div id="outline-container-org19a7968" class="outline-2">
+<h2 id="org19a7968"><span class="section-number-2">3</span> Bitwise Operations</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Ensure that you get acquainted with C bitwise operators
@@ -510,8 +510,8 @@ typically used with integers and other integral kinds. These include
 </div>
 </div>
 
-<div id="outline-container-org9010c54" class="outline-2">
-<h2 id="org9010c54"><span class="section-number-2">4</span> C Unions</h2>
+<div id="outline-container-org17542a4" class="outline-2">
+<h2 id="org17542a4"><span class="section-number-2">4</span> C Unions</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 C unions are a relative of structs.  You may wish to examine a slide
@@ -535,8 +535,8 @@ Problem 2.
 </div>
 </div>
 
-<div id="outline-container-org3b6aa22" class="outline-2">
-<h2 id="org3b6aa22"><span class="section-number-2">5</span> <code>gdb</code> The GNU Debugger</h2>
+<div id="outline-container-org42a478d" class="outline-2">
+<h2 id="org42a478d"><span class="section-number-2">5</span> <code>gdb</code> The GNU Debugger</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 You should use a debugger to study the code in Problem 2 and <code>gdb</code> is
@@ -562,8 +562,8 @@ TUI mode</li>
 </div>
 </div>
 
-<div id="outline-container-org5cf8175" class="outline-2">
-<h2 id="org5cf8175"><span class="section-number-2">6</span> What to Understand</h2>
+<div id="outline-container-orgd037c30" class="outline-2">
+<h2 id="orgd037c30"><span class="section-number-2">6</span> What to Understand</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Ensure that you understand
@@ -580,8 +580,8 @@ determine what is happening in a running program</li>
 </div>
 
 
-<div id="outline-container-orge994571" class="outline-2">
-<h2 id="orge994571"><span class="section-number-2">7</span> Questions</h2>
+<div id="outline-container-org4cba40f" class="outline-2">
+<h2 id="org4cba40f"><span class="section-number-2">7</span> Questions</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 Analyze the files in the provided codepack and answer the questions
@@ -748,8 +748,8 @@ B debug_long.c
 </div>
 </div>
 
-<div id="outline-container-org1c9ad39" class="outline-2">
-<h2 id="org1c9ad39"><span class="section-number-2">8</span> Again, What to Understand</h2>
+<div id="outline-container-org9dd3721" class="outline-2">
+<h2 id="org9dd3721"><span class="section-number-2">8</span> Again, What to Understand</h2>
 <div class="outline-text-2" id="text-8">
 <p>
 Ensure that you understand
@@ -766,7 +766,7 @@ determine what is happening in a running program</li>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-10-11 Tue 10:36 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-02-14 Tue 09:40 <br/> </i>
 </div>
 </body>
 </html>
