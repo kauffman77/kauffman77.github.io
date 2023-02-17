@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-10-07 Fri 11:24 -->
+<!-- 2023-02-17 Fri 11:44 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Project 2: Bit Ops and Debugging</title>
@@ -191,7 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
+  .org-svg { }
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -344,80 +344,62 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-10-07 Fri 11:24</i>
+<i>Last Updated: 2023-02-17 Fri 11:44</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CSCI 2021 Project 2: Bit Ops and Debugging</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Thu 13-Oct-2022</b></li>
+<li><b>Due: 11:59pm Mon 27-Feb-2023</b></li>
 <li><i>Approximately 3.0-4.0% of total grade</i></li>
 <li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a></li>
 <li>Projects are <b>individual work</b>: no collaboration with other students
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-org4d78bbf" class="outline-4">
-<h4 id="org4d78bbf">CODE/TEST DISTRIBUTION: <a href="p2-code.zip">p2-code.zip</a></h4>
+<div id="outline-container-orga0b2485" class="outline-4">
+<h4 id="orga0b2485">CODE/TEST DISTRIBUTION: <a href="p2-code.zip">p2-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org1d3c614" class="outline-4">
-<h4 id="org1d3c614">VIDEO OVERVIEW: <a href="https://youtu.be/LKROcqlCxAA">https://youtu.be/LKROcqlCxAA</a></h4>
+<div id="outline-container-orgd5cf6c0" class="outline-4">
+<h4 id="orgd5cf6c0">VIDEO OVERVIEW: <i>Not Yet Available</i></h4>
 </div>
-<div id="outline-container-orge0348e9" class="outline-4">
-<h4 id="orge0348e9">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-orge0348e9">
-<dl class="org-dl">
-<dt>Fri Oct  7 11:21:48 AM CDT 2022</dt><dd>Test 16 <code>set_display_from_batt()
-  3.507 V</code> has a misleading comment as reported in <a href="https://piazza.com/class/l7f66mqaea7550/post/341">Post 341</a>: this test
-expects the voltage to be displayed as <code>3.51</code> by rounding up but the
-test comment indicates the opposite. The test code has been updated
-in the codepack to correct the erroneous comment. You can update you
-your test files from a fresh codepack if you like but this will have
-no functional affect on the project: correctly written code will
-pass the old or new version of the test so long as it displays
-<code>3.51</code> volts by rounding up.</dd>
-<dt>Thu Oct  6 02:55:21 PM CDT 2022</dt><dd>An overview video has bee added
-for Project 2. It is linked at the top of the <a href="https://www-users.cse.umn.edu/~kauffman/2021/p2.html">project specification</a>
-and is available at the following location:
-<a href="https://youtu.be/LKROcqlCxAA">https://youtu.be/LKROcqlCxAA</a></dd>
-<dt>Wed Oct  5 10:45:35 PM CDT 2022</dt><dd>Fixed broken links to figures
-that were not displaying.</dd>
-</dl>
+<div id="outline-container-org47c0dbc" class="outline-4">
+<h4 id="org47c0dbc">CHANGELOG: <i>Empty</i></h4>
 </div>
-</div>
-
-<div id="outline-container-org35ad563" class="outline-4">
-<h4 id="org35ad563"></h4>
-<div class="outline-text-4" id="text-org35ad563">
+<div id="outline-container-orgd602015" class="outline-4">
+<h4 id="orgd602015"></h4>
+<div class="outline-text-4" id="text-orgd602015">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org10d125b">1. Introduction</a></li>
-<li><a href="#org2a7043a">2. Download Code and Setup</a></li>
-<li><a href="#org27fa26b">3. <b>Problem 1</b>: Battery Meter Simulation</a>
+<li><a href="#org0f17bdb">1. Introduction</a></li>
+<li><a href="#orgf6f8a8e">2. Download Code and Setup</a></li>
+<li><a href="#org807d664">3. <b>Problem 1</b>: Digital Clock Simulation</a>
 <ul>
-<li><a href="#orga07dbd9">3.1. Overview</a></li>
-<li><a href="#org0b077e1">3.2. <code>batt_update.c</code>: Updating the Display with User Code</a></li>
-<li><a href="#org2738540">3.3. Battery Meter Simulator</a></li>
-<li><a href="#org96482de">3.4. Sample Runs of <code>batt_main</code></a></li>
-<li><a href="#org1566a19">3.5. Problem 1 Grading Criteria</a></li>
+<li><a href="#org7f42974">3.1. Overview</a></li>
+<li><a href="#org4297b39">3.2. Diagrams of Digits</a></li>
+<li><a href="#org6ef84af">3.3. Diagram of Time Display</a></li>
+<li><a href="#org8042a70">3.4. <code>clock_update.c</code>: Updating the Display with User Code</a></li>
+<li><a href="#org0db90b7">3.5. Clock Simulator</a></li>
+<li><a href="#org3f3c8e7">3.6. Sample Runs of <code>clock_main</code></a></li>
+<li><a href="#org8d1ef25">3.7. Problem 1 Grading Criteria</a></li>
 </ul>
 </li>
-<li><a href="#org90483ec">4. <b>Problem 2</b>: Debugging the Puzzlebox</a>
+<li><a href="#org6cbd4f8">4. <b>Problem 2</b>: Debugging the Puzzlebox</a>
 <ul>
-<li><a href="#orgb061fbd">4.1. Overview</a></li>
-<li><a href="#org0537aef">4.2. <code>input.txt</code> Input File</a></li>
-<li><a href="#org345a86f">4.3. <code>gdb</code> The GNU Debugger</a></li>
-<li><a href="#org65b6731">4.4. Typical Cycle</a></li>
-<li><a href="#org06f7a00">4.5. Kinds of Puzzles</a></li>
-<li><a href="#org51e8075">4.6. Tests for <code>puzzlebox.c</code></a></li>
+<li><a href="#org052826c">4.1. Overview</a></li>
+<li><a href="#orgaa0be99">4.2. <code>input.txt</code> Input File</a></li>
+<li><a href="#org22d8120">4.3. <code>gdb</code> The GNU Debugger</a></li>
+<li><a href="#org827cc60">4.4. Typical Cycle</a></li>
+<li><a href="#orgf1cde29">4.5. Kinds of Puzzles</a></li>
+<li><a href="#org2f904c5">4.6. Tests for <code>puzzlebox.c</code></a></li>
 </ul>
 </li>
-<li><a href="#org3caa1ab">5. Assignment Submission</a>
+<li><a href="#org2948e7f">5. Assignment Submission</a>
 <ul>
-<li><a href="#org8732751">5.1. Submit to Gradescope</a></li>
-<li><a href="#org1479278">5.2. Late Policies</a></li>
+<li><a href="#org990ff9c">5.1. Submit to Gradescope</a></li>
+<li><a href="#org4e560b8">5.2. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -426,8 +408,8 @@ that were not displaying.</dd>
 </div>
 </div>
 
-<div id="outline-container-org10d125b" class="outline-2">
-<h2 id="org10d125b"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-org0f17bdb" class="outline-2">
+<h2 id="org0f17bdb"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <b>Bit-level operations</b> are common in C and systems programming.  This
@@ -443,9 +425,9 @@ to work through a puzzle program requiring specific inputs to pass its
 </p>
 </div>
 
-<div id="outline-container-org518127d" class="outline-4">
-<h4 id="org518127d">Makefile</h4>
-<div class="outline-text-4" id="text-org518127d">
+<div id="outline-container-org5d70c9f" class="outline-4">
+<h4 id="org5d70c9f">Makefile</h4>
+<div class="outline-text-4" id="text-org5d70c9f">
 <p>
 As in the first assignment, a <code>Makefile</code> is provided as part of this
 project. The essential targets pertinent to each problem are described
@@ -468,9 +450,9 @@ Typical usage is:
 </div>
 
 
-<div id="outline-container-org6ba3cf3" class="outline-4">
-<h4 id="org6ba3cf3">Automated Tests</h4>
-<div class="outline-text-4" id="text-org6ba3cf3">
+<div id="outline-container-org7674431" class="outline-4">
+<h4 id="org7674431">Automated Tests</h4>
+<div class="outline-text-4" id="text-org7674431">
 <p>
 As in previous assignments, automated tests are provided and
 associated with problems. Each problem describes how to run tests
@@ -478,18 +460,18 @@ associated with it. Generally this is done as before:
 </p>
 <div class="org-src-container">
 <pre class="src src-sh">&gt; make test-prob1
-gcc -Wall -Wno-comment -Werror -g  -c batt_main.c
-gcc -Wall -Wno-comment -Werror -g  -c batt_update.c
+gcc -Wall -Wno-comment -Werror -g  -c clock_main.c
+gcc -Wall -Wno-comment -Werror -g  -c clock_sim.c
 ...
-./testy test_bat_update.org 
+./testy test_prob1.org 
 ============================================================
-== test_prob1.org : Problem 1 test_batt_update and batt_main tests
+== test_prob1.org : Problem 1 test_clock_update and clock_main tests
 == Running 35 / 35 tests
-1)  set_batt_from_ports() 0 V            : ok
-2)  set_batt_from_ports() 0 P            : ok
-3)  set_batt_from_ports() 7400 V         : ok
-4)  set_batt_from_ports() 7400 P         : ok
-5)  set_batt_from_ports() mixed STATUS V : ok
+1)  test_clock_update midnight-set           : ok
+2)  test_clock_update after-midnight-set     : ok
+3)  test_clock_update after-1am-set          : ok
+4)  test_clock_update nearly-noon-set        : ok
+5)  test_clock_update is-noon-set            : ok
 ...
 
 &gt; make test-prob2         # run "tests" associated with problem 2
@@ -501,8 +483,9 @@ gcc -Wall -Wno-comment -Werror -g  -c batt_update.c
 </div>
 </div>
 
-<div id="outline-container-org2a7043a" class="outline-2">
-<h2 id="org2a7043a"><span class="section-number-2">2</span> <a id="orgd9c3000"></a> Download Code and Setup</h2>
+
+<div id="outline-container-orgf6f8a8e" class="outline-2">
+<h2 id="orgf6f8a8e"><span class="section-number-2">2</span> <a id="orgbfea357"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -536,19 +519,19 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tbody>
 <tbody>
 <tr>
-<td class="org-left"><code>batt.h</code></td>
+<td class="org-left"><code>clock.h</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Problem 1 header file</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>batt_main.c</code></td>
+<td class="org-left"><code>clock_main.c</code></td>
 <td class="org-left">Provided</td>
-<td class="org-left">Problem 1 main() function for battmeter simulation</td>
+<td class="org-left">Problem 1 main() function for clockmeter simulation</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>batt_update.c</code></td>
+<td class="org-left"><code>clock_update.c</code></td>
 <td class="org-left">CREATE</td>
 <td class="org-left">Create this file and write required function in it to complete Problem 1</td>
 </tr>
@@ -560,25 +543,13 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tr>
 
 <tr>
-<td class="org-left"><code>batt_examples.sh</code></td>
-<td class="org-left">Sample</td>
-<td class="org-left">Prints a variety of sample runs of <code>batt_main</code></td>
-</tr>
-
-<tr>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>test_batt_update.c</code></td>
+<td class="org-left"><code>test_clock_update.c</code></td>
 <td class="org-left">Testing</td>
-<td class="org-left">Problem 1 functions tests for <code>batt_upate.c</code></td>
+<td class="org-left">Problem 1 functions tests for <code>clock_upate.c</code></td>
 </tr>
 
 <tr>
-<td class="org-left"><code>test_batt_update.org</code></td>
+<td class="org-left"><code>test_prob1.org</code></td>
 <td class="org-left">Testing</td>
 <td class="org-left">Problem 1 testing data file</td>
 </tr>
@@ -587,6 +558,18 @@ folder. Ultimately you will re-zip this folder to submit it.
 <td class="org-left"><code>testy</code></td>
 <td class="org-left">Testing</td>
 <td class="org-left">Problem 1 test running script</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>clock_examples.sh</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 script to produce a variety of clock examples</td>
 </tr>
 </tbody>
 <tbody>
@@ -606,28 +589,28 @@ folder. Ultimately you will re-zip this folder to submit it.
 </div>
 </div>
 
-<div id="outline-container-org27fa26b" class="outline-2">
-<h2 id="org27fa26b"><span class="section-number-2">3</span> <b>Problem 1</b>: Battery Meter Simulation</h2>
+
+<div id="outline-container-org807d664" class="outline-2">
+<h2 id="org807d664"><span class="section-number-2">3</span> <b>Problem 1</b>: Digital Clock Simulation</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orga07dbd9" class="outline-3">
-<h3 id="orga07dbd9"><span class="section-number-3">3.1</span> Overview</h3>
+<div id="outline-container-org7f42974" class="outline-3">
+<h3 id="org7f42974"><span class="section-number-3">3.1</span> Overview</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 You are tasked with writing code which will be run by a
-microcontroller in a digital battery meter.  The hardware has the
-following relevant features.
+microcontroller in a digital clock.  The hardware has the following
+relevant features.
 </p>
 <ul class="org-ul">
-<li>A voltage sensor whose value can be accessed via a memory mapped
-port. In C this is presented as a global variable. Another port
-indicates whether the voltage should be displayed in Volts or
-Percentage of total battery capacity.</li>
-<li>A digital display with a port control port; setting certain global
+<li>An internal clock that increments 16 time per second. The value
+reported by the clock is stored in a special hardware location that
+is presented as a global variable.</li>
+<li>A digital display with a control port; setting certain global
 variable will change the display to show information to a user of
-the battery meter.</li>
+the clock.</li>
 <li>User code that you will need to write to update the display based on
-the sensor value.</li>
+the value reported by the internal clock.</li>
 <li>A simulator program with <code>Makefile</code> to test your code</li>
 </ul>
 <p>
@@ -635,214 +618,201 @@ Each feature is discussed in subsequent sections.
 </p>
 </div>
 
-<div id="outline-container-org3e8cc35" class="outline-4">
-<h4 id="org3e8cc35">Voltage Sensor</h4>
-<div class="outline-text-4" id="text-org3e8cc35">
+<div id="outline-container-orgdf779f0" class="outline-4">
+<h4 id="orgdf779f0">Time of Day Register</h4>
+<div class="outline-text-4" id="text-orgdf779f0">
 <p>
-A voltage sensor is attached to the battery meter and can be
-accessed via a C global variable. This is declared in the <code>batt.h</code>
-header file as follows.
+A special register is periodically updated to contain an integer that
+reflects how much time has passed since the beginning of the day.
+This special hardware location is accessible in C programs via a
+global variable:
 </p>
 <div class="org-src-container">
-<pre class="src src-c">extern short BATT_VOLTAGE_PORT;
-// Sensor tied to the battery, provides a measure of voltage in units
-// of 0.0005 volts (half milli volts). The sensor can sense a wide
-// range of voltages including negatives but the batteries being
-// measured are Full when 3.8V (7600 sensor value) or above is read
-// and Empty when 3.0V (6000 sensor value) or lower is read.
+<pre class="src src-c">extern int TIME_OF_DAY_PORT;
+// Time of day in units of 1/16th of a second. Tied to a hardware
+// clock that automatically increments it 16 times per second starting
+// at midnight. The simulatator provides a C global variable to
+// emulate this part of the hardware. This variable is present when
+// #include "clock.h" is used and should not be declared in any user
+// code.
 </pre>
 </div>
 <p>
-You do not need to define this variable as it is already there. You do
-NOT need to set this variable as it is automatically changed by the
-hardware.  Instead, you will need to access its value to determine
-various the voltage level of the attached battery.
+You do not need to define this variable as it is already there. You
+do not need to set this variable as it is automatically changed by
+the hardware.  Instead, you will need to access its value to
+determine various aspects of the current time relevant to display.
 </p>
+<ul class="org-ul">
+<li>Calculate the total number of seconds since midnight and round this
+up if 8/16th or more of a second has passed. This can be done using
+bit shift and mask operations due to the power of 2 involved.</li>
+<li>Whether it is AM or PM (AM is hours 12midnight to 11:59am, PM if
+12noon to 11:59pm)</li>
+<li>The hour of the day (12-hour format so this is 1-12)</li>
+<li>The ones and tens digits in the hour (blank or 1 for tens, 0-9 for ones)</li>
+<li>The time in minutes (0-59)</li>
+<li>The ones and tens digits in the minutes (0-5 for tens, 0-9 for ones)</li>
+</ul>
+</div>
+</div>
 
+<div id="outline-container-org96db939" class="outline-4">
+<h4 id="org96db939">Clock Display Port Register</h4>
+<div class="outline-text-4" id="text-org96db939">
 <p>
-As indicated in the variable documentation, a common (though mildly
-unreliable) means of detecting how much charge is left in a battery is
-to read the voltage on the battery. The type of battery being measured
-in this case has a higher voltage when fully charged and its lower voltage
-continuously lowers as it discharges. Past certain low voltage, the
-battery is unsafe to discharge and other hardware will disable the
-meter.  The figure below shows the voltage range and corresponding
-Capacity Percentage for the battery.
+A special register controls the display of the LCD clock.  This
+register is accessible in C programs via a global variable.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">extern int CLOCK_DISPLAY_PORT;
+// Global variable used to control the LCD display on the
+// clock. Making changes to this variable will change the clock
+// time. Type ensures 32 bits.
+</pre>
+</div>
+<p>
+Your code can examine the current values of the register but this is
+not relevant to the present problem. More importantly you will need to
+set the bits of this variable to properly show the time.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4297b39" class="outline-3">
+<h3 id="org4297b39"><span class="section-number-3">3.2</span> Diagrams of Digits</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+The following diagram shows bit patterns for various digits and how
+they will be displayed in the ones digit of the minutes place.
+Digits are displayed by darkening certain <b>bars</b> in the display which
+correspond to certain bits in the <code>CLOCK_DISPLAY_PORT</code> register being
+set. 
 </p>
 
 <div class="org-center">
 
-<div id="org0dd33ab" class="figure">
-<p><img src="battery-voltage-v-percent2.png" alt="battery-voltage-v-percent2.png" style="max-width:80%;" />
+<div id="org904b674" class="figure">
+<p><img src="digital-digits-topdown.png" alt="digital-digits-topdown.png" style="max-width:100%;" />
 </p>
-<p><span class="figure-number">Figure 1: </span>Relationship between Voltage and Percent full for batteries being measured by the meter.</p>
+<p><span class="figure-number">Figure 1: </span>Bit to clock display bar correspondence for the ones digit of the minute.  The 0th bit controls the upper horizontal bar, the 1th bit controls the horizontal bar counter-clockwise from it, and so on around the 6 outer bars in a counter-clockwise fashion. The 6th bit controls the middle horizontal bar. When a bit is 1 (set), the bar will be darkened while when the bit is 0 (clear) the bar will not be displayed (shown as empty).  The combinations of bits shown are the only ones that arise when showing digits for times.</p>
 </div>
 </div>
 
-<p>
-Notice the relationship between the Voltage which can be read directly
-and the Percent full which needs to be calculated from the voltage
-using the given formula:
-</p>
-<div class="org-src-container">
-<pre class="src src-text">BattV = BattVoltPort / 2
-Batt% = (BattV - 3000) / 8
-</pre>
-</div>
-<p>
-Note the conversion is done in millivolts (0.001 volts) and the the
-voltage sensor is in units of half millivolts (0.0005 volts).
-</p>
-</div>
-</div>
-
-<div id="outline-container-org91c20c2" class="outline-4">
-<h4 id="org91c20c2">Voltage Display Mode</h4>
-<div class="outline-text-4" id="text-org91c20c2">
-<p>
-Another global variable exposes whether the user has pressed a button
-which toggles between displaying Volts or Percent full in the battery.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">extern unsigned char BATT_STATUS_PORT;
-// The bit at index 4 indicates whether display should be in Volts (0)
-// or Percent (1); the bit is tied to a user button which will toggle
-// it between modes. Other bits in this char may be set to indicate
-// the status of other parts of the meter and should be ignored: ONLY
-// BIT 4 BIT MATTERS. C code should only read this port. 
-</pre>
-</div>
-<p>
-As per the documentation, only the 4th bit should be used while other
-bits may be nonzero and should be ignored. Bitwise operations are
-useful for this.
-</p>
-</div>
-</div>
-
-<div id="outline-container-orgf822b92" class="outline-4">
-<h4 id="orgf822b92">Display Port</h4>
-<div class="outline-text-4" id="text-orgf822b92">
-<p>
-The battery meter has a digital display which shows the remaining
-battery capacity. This display is controlled by a special memory area
-exposed as another global variable in C.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">extern int BATT_DISPLAY_PORT;
-// Controls battery meter display. Readable and writable. C code
-// should mostly write this port with a sequence of bits which will
-// light up specific elements of the LCD panel.
-</pre>
-</div>
-<p>
-While listed as in <code>int</code>, each bit of the is actually tied to part of
-the LCD display screen. When bits are set to 1, part of the
-display is lit up while 0 means it is not lit.
-</p>
-
-<p>
-The following diagrams show how various bit patterns will light up
-parts of the LCD display. Some bits correspond to parts of digits like
-"9" and "4" while others light up portions for the decimal place,
-Volt/Percent indicator, and bars of the leftmost visual level
-indicator. Above the display is the bit string which results in the
-elements on the display being turned on with "1" and off with a "0".
-</p>
 
 <p>
 Notice the following.
 </p>
 <ul class="org-ul">
-<li>The <code>BATT_DISPLAY_PORT</code> is a 32-bit integer but only some bits
-control the display</li>
-<li>29 bits are used to control the full battery display (bits 0-28)</li>
-<li>Bit 0 controls whether the '%' Percent indicator is shown</li>
-<li>Bit 1 controls whether the 'V' Voltage indicator is shown</li>
-<li>Bit 2 controls whether the decimal place is on (for Volts) or off
-(for Percent)</li>
-<li>Bits 3-9 control the rightmost digit</li>
-<li>Bits 10-16 control the middle digit</li>
-<li>Bits 17-23 control the left digit</li>
-<li>Each digit follows the same pattern: lowest bit controls the upper
-right LCD digit bar with each higher bit going in a clockwise
-fashion and the middle bar being controlled by the highest order bit</li>
-<li>Bits 24-28 control the 5 'bars' in the visual level indicator</li>
-<li>Bits 29-31 are unused</li>
+<li>Bits that are set (equal to 1) will turn on (darken) one <b>bar</b> of
+the clock digit</li>
+<li>Bits that are clear (equal to 0) will turn off one bar of the digit</li>
+<li>7 bits are required to control the display of one digit</li>
+<li>The bits are arranged with the low order bit (bit 0) at the top and
+progress counter-clockwise around the digit.
+<ul class="org-ul">
+<li>Bit 0 top</li>
+<li>Bit 1 upper left</li>
+<li>Bit 2 upper right</li>
+<li>Bit 3 middle</li>
+<li>Bit 4 lower left</li>
+<li>Bit 5 lower right</li>
+<li>Bit 6 bottom</li>
+</ul></li>
+<li>The programmer can set bits to any pattern which will be displayed
+but only patterns shown in the figure correspond to digits of
+interest.</li>
 </ul>
+</div>
+</div>
+
+<div id="outline-container-org6ef84af" class="outline-3">
+<h3 id="org6ef84af"><span class="section-number-3">3.3</span> Diagram of Time Display</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+Time is displayed with several adjacent digits along with an AM/PM
+display.  The diagram below shows two full times along with the bits
+representing the digits.  The bits correspond to how the global
+variable <code>CLOCK_DISPLAY_PORT</code> should be set in order to make the clock
+appear as it does.
+</p>
 
 <div class="org-center">
 
-<div id="org534da72" class="figure">
-<p><img src="battery-meter-top-first-vp-right.png" alt="battery-meter-top-first-vp-right.png" style="max-width:100%;" />
+<div id="org768cbda" class="figure">
+<p><img src="digital-clock-topdown.png" alt="digital-clock-topdown.png" style="max-width:100%;" />
 </p>
-<p><span class="figure-number">Figure 2: </span>Full examples of how the 29 bits of the <code>BATT_DISPLAY_PORT</code> turns on/off parts of the LCD display.  Each digit follows the same pattern of bit to bar correspondence. The lowest order (rightmost) bits control the percent, voltage, and decimal place indicator. Middle bits control "bar" of each digit starting with the top bar and proceeding around the outside clockwise with the final bit for each digit controlling the middle bar.  This pattern is followed for all 3 digits. The uppermost bits control the level indicator bars.</p>
+<p><span class="figure-number">Figure 2: </span>Two full examples of how the 30 bits of the clock display state control which parts of the clock are shown.  Each digit follows the same pattern of bit to bar correspondence as the right-most with bits. The lowest order (rightmost) bit controls the top bar of each digit and proceed around the outside counter-clockwise with the final bit for each digit controlling the middle bar.  The highest order bits (28 and 29) control whether the "AM" or "PM" lights are shown. Note that both could be shown at the same time or neither shown but this should not be done for actual times.</p>
 </div>
 </div>
 
 <p>
-For reference, each number to be displayed in the LCD battery meter
-follows the same patter of bits which is shown in the below diagram
-with the rightmost digit bit positions.
+Notice the following.
 </p>
+<ul class="org-ul">
+<li>You may presume that the <code>CLOCK_DISPLAY_PORT</code> register is a 32-bit
+integer.</li>
+<li>30 bits are used to control the full clock display.</li>
+<li>Bits 0-6 control the ones place of the minutes</li>
+<li>Bits 7-13 control the tens place of the minutes</li>
+<li>Bits 14-20 control the ones place of the hours</li>
+<li>Bits 21-27 control the tens place of the hours</li>
+<li>Bit 28 controls whether AM is displayed</li>
+<li>Bit 29 controls whether PM is displayed</li>
+<li>Bits 30 and 31 are not used and should always be 0.</li>
+</ul>
+</div>
+</div>
 
-<div class="org-center">
 
-<div id="orga40501c" class="figure">
-<p><img src="digital-digits-top-first.png" alt="digital-digits-top-first.png" style="max-width:100%;" />
-</p>
-<p><span class="figure-number">Figure 3: </span>Pattern of bits for all 10 numerals and a few extra symbols</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-
-
-<div id="outline-container-org0b077e1" class="outline-3">
-<h3 id="org0b077e1"><span class="section-number-3">3.2</span> <code>batt_update.c</code>: Updating the Display with User Code</h3>
-<div class="outline-text-3" id="text-3-2">
+<div id="outline-container-org8042a70" class="outline-3">
+<h3 id="org8042a70"><span class="section-number-3">3.4</span> <code>clock_update.c</code>: Updating the Display with User Code</h3>
+<div class="outline-text-3" id="text-3-4">
 <p>
-Periodically the microcontroller will run code to adjust the battery
-display to show the current battery level.  This function is
+Periodically the microcontroller will run code to adjust the LCD
+display for the clock to show the current time.  This function is
+called:
 </p>
 <pre class="example">
-int batt_update();
+clock_update()
 </pre>
 
 <p>
-and it will be your job to write it.
+and it will be your job to write this function.
 </p>
 
 <p>
 Rather than write everything that needs to be done within
-<code>batt_update()</code>, several helper functions will be used to divide this
+<code>clock_update()</code>, several helper functions will be used to divide this
 task into several more manageable and testable chunks.
 </p>
 
 <p>
-These should all be written in <code>batt_update.c</code> and are as follows.
+These should all be written in <code>clock_update.c</code> and are as follows.
 </p>
 </div>
 
-<div id="outline-container-org4abb7db" class="outline-4">
-<h4 id="org4abb7db"><a id="org6aaf802"></a> Converting Voltage Values to a Struct</h4>
-<div class="outline-text-4" id="text-org4abb7db">
+
+
+<div id="outline-container-org68ad9f7" class="outline-4">
+<h4 id="org68ad9f7">Converting time of Day in Seconds to a Struct</h4>
+<div class="outline-text-4" id="text-org68ad9f7">
 <div class="org-src-container">
-<pre class="src src-c">int set_batt_from_ports(batt_t *batt);
-// Uses the two global variables (ports) BATT_VOLTAGE_PORT and
-// BATT_STATUS_PORT to set the fields of the parameter 'batt'.  If
-// BATT_VOLTAGE_PORT is negative, then battery has been wired wrong;
-// no fields of 'batt' are changed and 1 is returned to indicate an
-// error.  Otherwise, sets fields of batt based on reading the voltage
-// value and converting to precent using the provided formula. Returns
-// 0 on a successful execution with no errors. This function DOES NOT
-// modify any global variables but may access global variables.
-//
-// CONSTRAINT: Avoids the use of the division operation as much as
-// possible. Makes use of shift operations in place of division where
-// possible.
-//
+<pre class="src src-c">int set_tod_from_secs(tod_t *tod);
+// Reads the time of day from the TIME_OF_DAY_PORT global variable. If
+// the port's value is invalid (negative or larger than 16 times the
+// number of seconds in a day) does nothing to tod and returns 1 to
+// indicate an error. Otherwise, this function uses the port value to
+// calculate the number of seconds from start of day (port value is
+// 16*number of seconds from midnight). Rounds seconds up if there at
+// least 8/16 have passed. Uses shifts and masks for this calculation
+// to be efficient. Then uses division on the seconds since the
+// begining of the day to calculate the time of day broken into hours,
+// minutes, seconds, and sets the AM/PM designation with 1 for AM and
+// 2 for PM. By the end, all fields of the `tod` struct are filled in
+// and 0 is returned for success.
+ // 
 // CONSTRAINT: Uses only integer operations. No floating point
 // operations are used as the target machine does not have a FPU.
 // 
@@ -854,146 +824,126 @@ These should all be written in <code>batt_update.c</code> and are as follows.
 </div>
 
 <p>
-This function works with the <code>struct batt_t</code> defined in <code>batt.h</code> which
+This function works with the <code>struct tod_t</code> defined in <code>clock.h</code> which
 has the following layout.
 </p>
 <div class="org-src-container">
-<pre class="src src-c">// Breaks battery stats down into constituent parts
+<pre class="src src-c">// Breaks time down into 12-hour format
 typedef struct{
-  short mlvolts;        // voltage read from port, units of 0.001 Volts
-  char  percent;        // percent full converted from voltage
-  char  mode;           // 1 for volts, 2 for percent
-} batt_t;
+  int   day_secs;    // seconds from start of day
+  short time_secs;   // seconds in current hour
+  short time_mins;   // minutes in current hour
+  short time_hours;  // current hour of day
+  char ampm;         // 1 for am, 2 for pm
+} tod_t;
 </pre>
 </div>
 
 <p>
-The function <code>set_batt_from_ports()</code> will read the global variables
-mentioned above and fill in values for the struct fields of the
-parameter <code>batt</code>.  Keep the following in mind while implementing the
-function.
+Calculating <code>day_secs</code> should be done using bitwise operations: shifts
+and logical operations. Once the <code>day_secs</code> has been determined, the
+process of filling in values is simply a matter of doing some
+division/modulo and assigning field values.
 </p>
 
-<ol class="org-ol">
-<li>Read the <code>BATT_VOLTAGE_PORT</code> value directly into the <code>volt</code> field.</li>
-<li><p>
-Use the previously mentioned conversion formula to convert Volts to
-Percentage to fill in the <code>percent</code> field of the struct.
-</p>
-<div class="org-src-container">
-<pre class="src src-text">   BattV = BattVoltPort / 2
-   Batt% = (BattV - 3000) / 8
-</pre>
-</div>
 <p>
-Note the CONSTRAINT that <b>division should be avoided as much as
-possible</b>. Employ shift operations in place of division where
-appropriate.
-</p></li>
-<li><b>Note also the constraint:</b> make use only of integer
-operations. <b>Do not use float or double</b> variables. This is
-emulates the somewhat common situation where simple microprocessors
-cannot perform floating point operations as they lack a <i>Floating
-Point Unit (FPU)</i>.</li>
-</ol>
+<b>HINT</b>: Review the correspondence between right shift operations and
+division and note that any bits shifted off would be the remainder
+of a division.
+</p>
 </div>
 </div>
 
-<div id="outline-container-org2594c1b" class="outline-4">
-<h4 id="org2594c1b">Setting Display from a <code>batt_t</code></h4>
-<div class="outline-text-4" id="text-org2594c1b">
+<div id="outline-container-org8f924c3" class="outline-4">
+<h4 id="org8f924c3">Setting bits in an integer according to a <code>tod_t</code></h4>
+<div class="outline-text-4" id="text-org8f924c3">
 <div class="org-src-container">
-<pre class="src src-c">int set_display_from_batt(batt_t batt, int *display);
-// Alters the bits of integer pointed to by 'display' to reflect the
-// data in struct param 'batt'.  Does not assume any specific bit
-// pattern stored at 'display' and completely resets all bits in it on
-// successfully completing.  Selects either to show Volts (mode=1) or
-// Percent (mode=2). If Volts are displayed, only displays 3 digits
-// rounding the lowest digit up or down appropriate to the last digit.
-// Calculates each digit to display changes bits at 'display' to show
-// the volts/percent according to the pattern for each digit. Modifies
-// additional bits to show a decimal place for volts and a 'V' or '%'
-// indicator appropriate to the mode. In both modes, places bars in
-// the level display as indicated by percentage cutoffs in provided
-// diagrams. This function DOES NOT modify any global variables but
-// may access global variables. Always returns 0.
+<pre class="src src-c">int set_display_from_tod(tod_t tod, int *display);
+// Accepts a tod and alters the bits in the int pointed at by display
+// to reflect how the LCD clock should appear. If any time_** fields
+// of tod are negative or too large (e.g. bigger than 12 for hours,
+// bigger than 59 for min/sec) or if the AM/PM is not 1 or 2, no
+// change is made to display and 1 is returned to indicate an
+// error. The display pattern is constructed via shifting bit patterns
+// representing digits and using logical operations to combine them.
+// May make use of an array of bit masks corresponding to the pattern
+// for each digit of the clock to make the task easier.  Returns 0 to
+// indicate success. This function DOES NOT modify any global
+// variables
 // 
 // CONSTRAINT: Limit the complexity of code as much as possible. Do
 // not use deeply nested conditional structures. Seek to make the code
-// as short, and simple as possible. Code longer than 65 lines may be
+// as short, and simple as possible. Code longer than 85 lines may be
 // penalized for complexity.
 </pre>
 </div>
 
 <p>
-Importantly, this function sets the bits in the integer pointed to by
-<code>display</code> which may or MAY NOT BE the global display variable.
-</p>
-
-<p>
-To properly set the display bits, <code>set_display_from_batt()</code> will need
-to do bit shifting along with bitwise operations to construct the
-correct bit pattern for the display.
+This function will need to do bit shifting along with bitwise
+operations to construct the correct bit patter for the clock display.  
 </p>
 
 <p>
 A good trick to use is to create a series of bit patterns that
 correspond to the various digits. For example, according to the
-diagrams above, the bit pattern for <code>9</code> is <code>0b1110111</code>.  If a <code>9</code>
-should appear on the display somewhere, this bit pattern should be
+diagrams above, the bit patter for <code>9</code> is <code>0b1101111</code>.  If a <code>9</code>
+should appear on the clock somewhere, this bit pattern should be
 shifted and combined with the existing bits in <code>display</code> so that a 9
-will show.  Creating similar constant <i>mask</i> patterns for each digit,
-the decimal place, the positions of the Voltage/Percent indicator, and
-the bars for the visual level indicator is a good way to make this
-problem manageable.
+will show.  Creating similar constant <i>mask</i> patterns for each digit
+and AM/PM is a good way to simplify this problem. 
 </p>
 
 <p>
-A detailed explanation of one approach to the problem follows.
+A detailed explanation of one approach to the problem:
 </p>
 <ul class="org-ul">
 <li>Create an array of bit masks for each of the digits 0-9. The 0th
-element of the array contains a bit mask like <code>0b0111111</code> which
+element of the array contains a bit mask like <code>0b1110111</code> which
 represents the bits that should be set for a 0 digit, the 1th
-element of this array has a mask like <code>0b0000011</code> which are the bits
+element of this array has a mask like <code>0b0110000</code> which are the bits
 to be set for a 1. There should be ten entries in this array in
 indices 0-9.</li>
-<li>Use modulo to determine the integer value for right, middle, and
-left digits for the display from <code>volts</code> or <code>percent</code>. Each digit
-should have a value from 0-9 and be Stored in its own variable.</li>
-<li>Start with an integer variable of 0 (all 0 bits).</li>
-<li>Use left digit variable to index into your array of masks to
-determine the bits that should be set for it and shift them over an
-appropriate amount combining with the existin display bits.</li>
-<li>Combining bits here is a bitwise operation of setting all bits that
-are one in the mask to 1 in the display variable. Use an appropriate
-bitwise operation to combine the bits, likely a bitwise OR.</li>
-<li>Repeat this process for the middle and right digits shifting left by
-appropriate to where the digits should line up.</li>
-<li>There are several special cases to consider such as leading 0's in a
-percent should be blanks so nothing should be drawn.</li>
-<li>Don't forget to set the additional bits like the decimal place, the
-V/% indicator, and the level bars for the visual indicator. These
-are low order bits (rightmost).</li>
-<li>Importantly <b>make code as simple as possible</b> as the target CPU has
-a limited amount of RAM and longer codes will occupy more RAM.
-<b>Avoid nesting conditionals</b> very deeply: <code>if/else if/else</code>
-structures are fine but nesting a conditional within this will be
-penalized.</li>
+<li>Use modulo to determine the integer value for the ones and tens
+digits for both hours and minutes. Call these variables something
+like <code>min_ones</code> and <code>min_tens</code> and similarly for hours. Each
+variable should be in the range 0-9.</li>
+<li>Start with a state variable of 0 (all 0 bits).</li>
+<li>Use <code>min_ones</code> to index into your array of masks to determine the
+bits that should be set for it. Combine the state variable with
+<code>min_ones</code> mask.</li>
+<li>Combining bits here is a logical operation of setting all bits that
+are one in the mask to 1 in the state variable.</li>
+<li>Use <code>min_tens</code> to index into your array of masks for the right mask
+for that digit. The bits corresponding to the tens place of the
+minutes is shifted to the left by 7 bits so shift the mask to the
+left and combine it with the state variable.</li>
+<li>Repeat this process for the ones digit of the hours (shifted by 14
+to the left) and the tens digit of the hour (shifted by
+21).</li>
+<li>The tens digit of the hour is special in that it should be either 1
+or blank (don't show a 0 for hours 1-9) so adjust your mask
+appropriately before shifting.</li>
+<li>Set the 28th bit of the state if the time is in the AM or the 29th
+bit if time is in the PM.</li>
+<li>The state variable should now be populated.</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org3a69c8a" class="outline-4">
-<h4 id="org3a69c8a">Overall Update Function</h4>
-<div class="outline-text-4" id="text-org3a69c8a">
+
+<div id="outline-container-org18ac1e3" class="outline-4">
+<h4 id="org18ac1e3">Changing the clock display</h4>
+<div class="outline-text-4" id="text-org18ac1e3">
 <div class="org-src-container">
-<pre class="src src-c">int batt_update();
-// Called to update the battery meter display.  Makes use of
-// set_batt_from_ports() and set_display_from_batt() to access battery
-// voltage sensor then set the display. Checks these functions and if
-// they indicate an error, does NOT change the display.  If functions
-// succeed, modifies BATT_DISPLAY_PORT to show current battery level.
+<pre class="src src-c">int clock_update();
+// Examines the TIME_OF_DAY_PORT global variable to determine hour,
+// minute, and am/pm.  Sets the global variable CLOCK_DISPLAY_PORT bits
+// to show the proper time.  If TIME_OF_DAY_PORT appears to be in error
+// (to large/small) makes no change to CLOCK_DISPLAY_PORT and returns 1
+// to indicate an error. Otherwise returns 0 to indicate success.
+//
+// Makes use of the previous two functions: set_tod_from_ports() and
+// set_display_from_tod().
 // 
 // CONSTRAINT: Does not allocate any heap memory as malloc() is NOT
 // available on the target microcontroller.  Uses stack and global
@@ -1002,921 +952,529 @@ penalized.</li>
 </div>
 <p>
 This function makes use of the previous two functions and the global
-variables that correspond to the hardware to alter the display. It
-should be relatively short by making use of the previous functions.
+variables that correspond to the clock hardware to alter the
+display. It should be relatively short by making use of the previous
+functions. 
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org2738540" class="outline-3">
-<h3 id="org2738540"><span class="section-number-3">3.3</span> Battery Meter Simulator</h3>
-<div class="outline-text-3" id="text-3-3">
+<div id="outline-container-org0db90b7" class="outline-3">
+<h3 id="org0db90b7"><span class="section-number-3">3.5</span> Clock Simulator</h3>
+<div class="outline-text-3" id="text-3-5">
 <p>
 While we do not have actual hardware with the features mentioned, a
-simulator for the system is in the provided files <code>batt_main.c /
-batt_sim.c</code>.  You do not need to modify or understand code in either
-file to complete the assignment though it will certainly expand you C
+simulator for the clock system is in the provided files <code>clock_main.c</code>
+and <code>clock_sim.c</code>.  You do not need to modify or understand code in
+either file to complete the HW though it will certainly expand you C
 skills to spend some time examining them.
 </p>
 
 <p>
-The <code>main()</code> function in <code>batt_main.c</code> accepts two command line
-arguments which are the value for the voltage sensor and whether
-to show Voltage or Percent for the battery. It will call your
-functions for this problem and show results for it.  You are
-encouraged to use this <code>main()</code> to test your code incrementally.
+The <code>main()</code> function in <code>clock_main.c</code> accepts a command line argument
+which is a number of seconds since the beginning of the day and will
+call your functions for this problem and show results for it.  You are
+encouraged to use this function to test your code incrementally
 </p>
 <ul class="org-ul">
-<li>Examine whether <code>set_batt_from_ports()</code> is correct based on the first
-part of output in <code>batt_main.c</code></li>
-<li>Once <code>set_batt_from_ports()</code> is complete, examine whether the output
-of <code>set_display_from_batt()</code> is correct based on the latter part
+<li>Examine whether <code>set_tod_from_secs()</code> is correct based on the first
+part of output in <code>clock_main.c</code></li>
+<li>Once <code>set_tod_from_secs()</code> is complete, examine whether the output
+of <code>set_display_from_tod()</code> is correct based on the latter part
 of the output.</li>
 <li>Once both these functions are correct, examine whether
-<code>batt_update()</code> is correct based on the final part of the output
-of the <code>main()</code> function.</li>
+<code>cock_update()</code> is correct based on the final part of the output of
+the <code>main()</code> function.</li>
 </ul>
 
 <p>
-Note that there are a variety of functions in the <code>batt_sim.c</code>
-which are used to simulate how the battery meter will display. This is
-also where the global variables like <code>BATT_DISPLAY_PORT</code> are
-defined.  However, you do not need to modify or even understand the
-code; it is only used to show how the display would look when the
-<code>BATT_DISPLAY_PORT</code> bits are set.
+Note that there are a variety of functions in the file <code>clock_sim.c</code>
+which are used to simulate how the clock will display. This is also
+where the global variables <code>CLOCK_DISPLAY_PORT</code> and <code>TIME_OF_DAY_SEC</code>
+are defined.  However, you do not need to modify or even understand
+the code in <code>clock_sim.c</code>. It is only used to show how the clock would
+look when the <code>CLOCK_DISPLAY_PORT</code> bits are set.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org96482de" class="outline-3">
-<h3 id="org96482de"><span class="section-number-3">3.4</span> Sample Runs of <code>batt_main</code></h3>
-<div class="outline-text-3" id="text-3-4">
+<div id="outline-container-org3f3c8e7" class="outline-3">
+<h3 id="org3f3c8e7"><span class="section-number-3">3.6</span> Sample Runs of <code>clock_main</code></h3>
+<div class="outline-text-3" id="text-3-6">
+<p>
+You can build the <code>clock_main</code> executable via
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; make
+OR
+&gt; make clock_main
+</pre>
+</div>
 <p>
 Below are samples generated by compiling and running the <code>main()</code>
-function in the <code>batt_main.c</code> file.  The code is compiled by using
-the provided <code>Makefile</code> to create the <code>batt_main</code> program.  It
-compiles the the functions you write in the file <code>batt_update.c</code> and
-combines them with functions in <code>batt_main.c</code>.
+function in the <code>clock_main.c</code> file.  The code is compiled by using the
+provided <code>Makefile</code> to create the <code>clock_main</code> program.  It compiles the
+<code>clock_sim.c</code> library along with the functions you write in the file
+<code>clock_update.c</code> and the <code>main()</code> in <code>clock_main.c</code>.
 </p>
 
-<pre class="example" id="org3d806e2">
-&gt; make batt_main
-gcc -Wall -Wno-comment -Werror -g  -c batt_main.c
-gcc -Wall -Wno-comment -Werror -g  -c batt_update.c
-gcc -Wall -Wno-comment -Werror -g  -c batt_sim.c
-gcc -Wall -Wno-comment -Werror -g  -o batt_main batt_main.o batt_update.o batt_sim.o
+<pre class="example" id="org2d23abd">
+&gt; make clock_main
+make: 'clock_main' is up to date.
 
-==========Voltage FOR 7884==========
-&gt; ./batt_main 7884 V
-BATT_VOLTAGE_PORT set to: 7884
-BATT_STATUS_PORT  set to: 0x6F
-
-result = set_batt_from_ports( &amp;batt );
+&gt; ./clock_main 0
+TIME_OF_DAY_PORT set to: 0
+result = set_tod_from_ports(&amp;tod );
 result: 0
-batt = {
-  .mlvolts = 3942
-  .percent = 100
-  .mode    = 2
-}
-
-result = set_display_from_batt(batt, &amp;display);
+tod = {
+  .day_secs   = 0
+  .time_hours = 12
+  .time_mins  = 0
+  .time_secs  = 0
+  .ampm       = 1
+}              
+Simulated time is: 12 : 00 : 00 am
+result = set_display_from_tod(tod, &amp;display);
 result: 0
 display is
-bits:  000 11111 1001111 1101111 1100110 110
-index:  29    24      17      10       3   0
+bits:  00 01 0100100 1011101 1110111 1110111
+index: 30 28      21      14       7       0
 
-result = batt_update();
+result = clock_update();
 result: 0
-BATT_DISPLAY_PORT is
-bits:  000 11111 1001111 1101111 1100110 110
-index:  29    24      17      10       3   0
+CLOCK_DISPLAY_PORT is
+bits:  00 01 0100100 1011101 1110111 1110111
+index: 30 28      21      14       7       0
 
-Battery Meter Display:
-+-^^^-+  ####   ####  #  #     
-|#####|     #   #  #  #  #     
-|#####|     #   #  #  #  #     
-|#####|  ####   ####  ####  V  
-|#####|     #      #     #     
-|#####|     #      #     #     
-+-----+  #### o ####     #     
+Clock Display:
+   # ####   #### ####   
+   #    #   #  # #  #   
+   #    # o #  # #  #   
+   # ####   #  # #  #   
+   # #    o #  # #  #   
+   # #      #  # #  # AM
+   # ####   #### ####   
 
 
-==========Percent FOR 7884==========
-&gt; ./batt_main 7884 P
-BATT_VOLTAGE_PORT set to: 7884
-BATT_STATUS_PORT  set to: 0x91
-
-result = set_batt_from_ports( &amp;batt );
+&gt; ./clock_main 16
+TIME_OF_DAY_PORT set to: 16
+result = set_tod_from_ports(&amp;tod );
 result: 0
-batt = {
-  .mlvolts = 3942
-  .percent = 100
-  .mode    = 1
-}
-
-result = set_display_from_batt(batt, &amp;display);
-result: 0
-display is
-bits:  000 11111 0000110 0111111 0111111 001
-index:  29    24      17      10       3   0
-
-result = batt_update();
-result: 0
-BATT_DISPLAY_PORT is
-bits:  000 11111 0000110 0111111 0111111 001
-index:  29    24      17      10       3   0
-
-Battery Meter Display:
-+-^^^-+     #   ####  ####     
-|#####|     #   #  #  #  #     
-|#####|     #   #  #  #  #     
-|#####|     #   #  #  #  #     
-|#####|     #   #  #  #  #  %  
-|#####|     #   #  #  #  #     
-+-----+     #   ####  ####     
-
-
-==========Voltage FOR 7600==========
-&gt; ./batt_main 7600 V
-BATT_VOLTAGE_PORT set to: 7600
-BATT_STATUS_PORT  set to: 0x6F
-
-result = set_batt_from_ports( &amp;batt );
-result: 0
-batt = {
-  .mlvolts = 3800
-  .percent = 100
-  .mode    = 2
-}
-
-result = set_display_from_batt(batt, &amp;display);
+tod = {
+  .day_secs   = 1
+  .time_hours = 12
+  .time_mins  = 0
+  .time_secs  = 1
+  .ampm       = 1
+}              
+Simulated time is: 12 : 00 : 01 am
+result = set_display_from_tod(tod, &amp;display);
 result: 0
 display is
-bits:  000 11111 1001111 1111111 0111111 110
-index:  29    24      17      10       3   0
+bits:  00 01 0100100 1011101 1110111 1110111
+index: 30 28      21      14       7       0
 
-result = batt_update();
+result = clock_update();
 result: 0
-BATT_DISPLAY_PORT is
-bits:  000 11111 1001111 1111111 0111111 110
-index:  29    24      17      10       3   0
+CLOCK_DISPLAY_PORT is
+bits:  00 01 0100100 1011101 1110111 1110111
+index: 30 28      21      14       7       0
 
-Battery Meter Display:
-+-^^^-+  ####   ####  ####     
-|#####|     #   #  #  #  #     
-|#####|     #   #  #  #  #     
-|#####|  ####   ####  #  #  V  
-|#####|     #   #  #  #  #     
-|#####|     #   #  #  #  #     
-+-----+  #### o ####  ####     
+Clock Display:
+   # ####   #### ####   
+   #    #   #  # #  #   
+   #    # o #  # #  #   
+   # ####   #  # #  #   
+   # #    o #  # #  #   
+   # #      #  # #  # AM
+   # ####   #### ####   
 
 
-==========Percent FOR 7600==========
-&gt; ./batt_main 7600 P
-BATT_VOLTAGE_PORT set to: 7600
-BATT_STATUS_PORT  set to: 0x91
-
-result = set_batt_from_ports( &amp;batt );
+&gt; ./clock_main 89
+TIME_OF_DAY_PORT set to: 89
+result = set_tod_from_ports(&amp;tod );
 result: 0
-batt = {
-  .mlvolts = 3800
-  .percent = 100
-  .mode    = 1
-}
-
-result = set_display_from_batt(batt, &amp;display);
-result: 0
-display is
-bits:  000 11111 0000110 0111111 0111111 001
-index:  29    24      17      10       3   0
-
-result = batt_update();
-result: 0
-BATT_DISPLAY_PORT is
-bits:  000 11111 0000110 0111111 0111111 001
-index:  29    24      17      10       3   0
-
-Battery Meter Display:
-+-^^^-+     #   ####  ####     
-|#####|     #   #  #  #  #     
-|#####|     #   #  #  #  #     
-|#####|     #   #  #  #  #     
-|#####|     #   #  #  #  #  %  
-|#####|     #   #  #  #  #     
-+-----+     #   ####  ####     
-
-
-==========Voltage FOR 7530==========
-&gt; ./batt_main 7530 V
-BATT_VOLTAGE_PORT set to: 7530
-BATT_STATUS_PORT  set to: 0x6F
-
-result = set_batt_from_ports( &amp;batt );
-result: 0
-batt = {
-  .mlvolts = 3765
-  .percent = 95
-  .mode    = 2
-}
-
-result = set_display_from_batt(batt, &amp;display);
+tod = {
+  .day_secs   = 6
+  .time_hours = 12
+  .time_mins  = 0
+  .time_secs  = 6
+  .ampm       = 1
+}              
+Simulated time is: 12 : 00 : 06 am
+result = set_display_from_tod(tod, &amp;display);
 result: 0
 display is
-bits:  000 11111 1001111 0000111 0000111 110
-index:  29    24      17      10       3   0
+bits:  00 01 0100100 1011101 1110111 1110111
+index: 30 28      21      14       7       0
 
-result = batt_update();
+result = clock_update();
 result: 0
-BATT_DISPLAY_PORT is
-bits:  000 11111 1001111 0000111 0000111 110
-index:  29    24      17      10       3   0
+CLOCK_DISPLAY_PORT is
+bits:  00 01 0100100 1011101 1110111 1110111
+index: 30 28      21      14       7       0
 
-Battery Meter Display:
-+-^^^-+  ####   ####  ####     
-|#####|     #      #     #     
-|#####|     #      #     #     
-|#####|  ####      #     #  V  
-|#####|     #      #     #     
-|#####|     #      #     #     
-+-----+  #### o    #     #     
+Clock Display:
+   # ####   #### ####   
+   #    #   #  # #  #   
+   #    # o #  # #  #   
+   # ####   #  # #  #   
+   # #    o #  # #  #   
+   # #      #  # #  # AM
+   # ####   #### ####   
 
 
-==========Percent FOR 7530==========
-&gt; ./batt_main 7530 P
-BATT_VOLTAGE_PORT set to: 7530
-BATT_STATUS_PORT  set to: 0x91
-
-result = set_batt_from_ports( &amp;batt );
+&gt; ./clock_main 961
+TIME_OF_DAY_PORT set to: 961
+result = set_tod_from_ports(&amp;tod );
 result: 0
-batt = {
-  .mlvolts = 3765
-  .percent = 95
-  .mode    = 1
-}
-
-result = set_display_from_batt(batt, &amp;display);
-result: 0
-display is
-bits:  000 11111 0000000 1101111 1101101 001
-index:  29    24      17      10       3   0
-
-result = batt_update();
-result: 0
-BATT_DISPLAY_PORT is
-bits:  000 11111 0000000 1101111 1101101 001
-index:  29    24      17      10       3   0
-
-Battery Meter Display:
-+-^^^-+         ####  ####     
-|#####|         #  #  #        
-|#####|         #  #  #        
-|#####|         ####  ####     
-|#####|            #     #  %  
-|#####|            #     #     
-+-----+         ####  ####     
-
-
-==========Voltage FOR 7202==========
-&gt; ./batt_main 7202 V
-BATT_VOLTAGE_PORT set to: 7202
-BATT_STATUS_PORT  set to: 0x6F
-
-result = set_batt_from_ports( &amp;batt );
-result: 0
-batt = {
-  .mlvolts = 3601
-  .percent = 75
-  .mode    = 2
-}
-
-result = set_display_from_batt(batt, &amp;display);
+tod = {
+  .day_secs   = 60
+  .time_hours = 12
+  .time_mins  = 1
+  .time_secs  = 0
+  .ampm       = 1
+}              
+Simulated time is: 12 : 01 : 00 am
+result = set_display_from_tod(tod, &amp;display);
 result: 0
 display is
-bits:  000 01111 1001111 1111101 0111111 110
-index:  29    24      17      10       3   0
+bits:  00 01 0100100 1011101 1110111 0100100
+index: 30 28      21      14       7       0
 
-result = batt_update();
+result = clock_update();
 result: 0
-BATT_DISPLAY_PORT is
-bits:  000 01111 1001111 1111101 0111111 110
-index:  29    24      17      10       3   0
+CLOCK_DISPLAY_PORT is
+bits:  00 01 0100100 1011101 1110111 0100100
+index: 30 28      21      14       7       0
 
-Battery Meter Display:
-+-^^^-+  ####   ####  ####     
-|     |     #   #     #  #     
-|#####|     #   #     #  #     
-|#####|  ####   ####  #  #  V  
-|#####|     #   #  #  #  #     
-|#####|     #   #  #  #  #     
-+-----+  #### o ####  ####     
+Clock Display:
+   # ####   ####    #   
+   #    #   #  #    #   
+   #    # o #  #    #   
+   # ####   #  #    #   
+   # #    o #  #    #   
+   # #      #  #    # AM
+   # ####   ####    #   
 
 
-==========Percent FOR 7202==========
-&gt; ./batt_main 7202 P
-BATT_VOLTAGE_PORT set to: 7202
-BATT_STATUS_PORT  set to: 0x91
-
-result = set_batt_from_ports( &amp;batt );
+&gt; ./clock_main 72115
+TIME_OF_DAY_PORT set to: 72115
+result = set_tod_from_ports(&amp;tod );
 result: 0
-batt = {
-  .mlvolts = 3601
-  .percent = 75
-  .mode    = 1
-}
-
-result = set_display_from_batt(batt, &amp;display);
-result: 0
-display is
-bits:  000 01111 0000000 0000111 1101101 001
-index:  29    24      17      10       3   0
-
-result = batt_update();
-result: 0
-BATT_DISPLAY_PORT is
-bits:  000 01111 0000000 0000111 1101101 001
-index:  29    24      17      10       3   0
-
-Battery Meter Display:
-+-^^^-+         ####  ####     
-|     |            #  #        
-|#####|            #  #        
-|#####|            #  ####     
-|#####|            #     #  %  
-|#####|            #     #     
-+-----+            #  ####     
-
-
-==========Voltage FOR 7026==========
-&gt; ./batt_main 7026 V
-BATT_VOLTAGE_PORT set to: 7026
-BATT_STATUS_PORT  set to: 0x6F
-
-result = set_batt_from_ports( &amp;batt );
-result: 0
-batt = {
-  .mlvolts = 3513
-  .percent = 64
-  .mode    = 2
-}
-
-result = set_display_from_batt(batt, &amp;display);
+tod = {
+  .day_secs   = 4507
+  .time_hours = 1
+  .time_mins  = 15
+  .time_secs  = 7
+  .ampm       = 1
+}              
+Simulated time is: 01 : 15 : 07 am
+result = set_display_from_tod(tod, &amp;display);
 result: 0
 display is
-bits:  000 00111 1001111 1101101 0000110 110
-index:  29    24      17      10       3   0
+bits:  00 01 0000000 0100100 0100100 1101011
+index: 30 28      21      14       7       0
 
-result = batt_update();
+result = clock_update();
 result: 0
-BATT_DISPLAY_PORT is
-bits:  000 00111 1001111 1101101 0000110 110
-index:  29    24      17      10       3   0
+CLOCK_DISPLAY_PORT is
+bits:  00 01 0000000 0100100 0100100 1101011
+index: 30 28      21      14       7       0
 
-Battery Meter Display:
-+-^^^-+  ####   ####     #     
-|     |     #   #        #     
-|     |     #   #        #     
-|#####|  ####   ####     #  V  
-|#####|     #      #     #     
-|#####|     #      #     #     
-+-----+  #### o ####     #     
+Clock Display:
+        #      # ####   
+        #      # #      
+        # o    # #      
+        #      # ####   
+        # o    #    #   
+        #      #    # AM
+        #      # ####   
 
 
-==========Percent FOR 7026==========
-&gt; ./batt_main 7026 P
-BATT_VOLTAGE_PORT set to: 7026
-BATT_STATUS_PORT  set to: 0x91
-
-result = set_batt_from_ports( &amp;batt );
+&gt; ./clock_main 612199
+TIME_OF_DAY_PORT set to: 612199
+result = set_tod_from_ports(&amp;tod );
 result: 0
-batt = {
-  .mlvolts = 3513
-  .percent = 64
-  .mode    = 1
-}
-
-result = set_display_from_batt(batt, &amp;display);
-result: 0
-display is
-bits:  000 00111 0000000 1111101 1100110 001
-index:  29    24      17      10       3   0
-
-result = batt_update();
-result: 0
-BATT_DISPLAY_PORT is
-bits:  000 00111 0000000 1111101 1100110 001
-index:  29    24      17      10       3   0
-
-Battery Meter Display:
-+-^^^-+         ####  #  #     
-|     |         #     #  #     
-|     |         #     #  #     
-|#####|         ####  ####     
-|#####|         #  #     #  %  
-|#####|         #  #     #     
-+-----+         ####     #     
-
-
-==========Voltage FOR 6666==========
-&gt; ./batt_main 6666 V
-BATT_VOLTAGE_PORT set to: 6666
-BATT_STATUS_PORT  set to: 0x6F
-
-result = set_batt_from_ports( &amp;batt );
-result: 0
-batt = {
-  .mlvolts = 3333
-  .percent = 41
-  .mode    = 2
-}
-
-result = set_display_from_batt(batt, &amp;display);
+tod = {
+  .day_secs   = 38262
+  .time_hours = 10
+  .time_mins  = 37
+  .time_secs  = 42
+  .ampm       = 1
+}              
+Simulated time is: 10 : 37 : 42 am
+result = set_display_from_tod(tod, &amp;display);
 result: 0
 display is
-bits:  000 00011 1001111 1001111 1001111 110
-index:  29    24      17      10       3   0
+bits:  00 01 0100100 1110111 1101101 0100101
+index: 30 28      21      14       7       0
 
-result = batt_update();
+result = clock_update();
 result: 0
-BATT_DISPLAY_PORT is
-bits:  000 00011 1001111 1001111 1001111 110
-index:  29    24      17      10       3   0
+CLOCK_DISPLAY_PORT is
+bits:  00 01 0100100 1110111 1101101 0100101
+index: 30 28      21      14       7       0
 
-Battery Meter Display:
-+-^^^-+  ####   ####  ####     
-|     |     #      #     #     
-|     |     #      #     #     
-|     |  ####   ####  ####  V  
-|#####|     #      #     #     
-|#####|     #      #     #     
-+-----+  #### o ####  ####     
+Clock Display:
+   # ####   #### ####   
+   # #  #      #    #   
+   # #  # o    #    #   
+   # #  #   ####    #   
+   # #  # o    #    #   
+   # #  #      #    # AM
+   # ####   ####    #   
 
 
-==========Percent FOR 6666==========
-&gt; ./batt_main 6666 P
-BATT_VOLTAGE_PORT set to: 6666
-BATT_STATUS_PORT  set to: 0x91
-
-result = set_batt_from_ports( &amp;batt );
+&gt; ./clock_main 691191
+TIME_OF_DAY_PORT set to: 691191
+result = set_tod_from_ports(&amp;tod );
 result: 0
-batt = {
-  .mlvolts = 3333
-  .percent = 41
-  .mode    = 1
-}
-
-result = set_display_from_batt(batt, &amp;display);
-result: 0
-display is
-bits:  000 00011 0000000 1100110 0000110 001
-index:  29    24      17      10       3   0
-
-result = batt_update();
-result: 0
-BATT_DISPLAY_PORT is
-bits:  000 00011 0000000 1100110 0000110 001
-index:  29    24      17      10       3   0
-
-Battery Meter Display:
-+-^^^-+         #  #     #     
-|     |         #  #     #     
-|     |         #  #     #     
-|     |         ####     #     
-|#####|            #     #  %  
-|#####|            #     #     
-+-----+            #     #     
-
-
-==========Voltage FOR 6596==========
-&gt; ./batt_main 6596 V
-BATT_VOLTAGE_PORT set to: 6596
-BATT_STATUS_PORT  set to: 0x6F
-
-result = set_batt_from_ports( &amp;batt );
-result: 0
-batt = {
-  .mlvolts = 3298
-  .percent = 37
-  .mode    = 2
-}
-
-result = set_display_from_batt(batt, &amp;display);
+tod = {
+  .day_secs   = 43199
+  .time_hours = 11
+  .time_mins  = 59
+  .time_secs  = 59
+  .ampm       = 1
+}              
+Simulated time is: 11 : 59 : 59 am
+result = set_display_from_tod(tod, &amp;display);
 result: 0
 display is
-bits:  000 00011 1001111 1001111 0111111 110
-index:  29    24      17      10       3   0
+bits:  00 01 0100100 0100100 1101011 1101111
+index: 30 28      21      14       7       0
 
-result = batt_update();
+result = clock_update();
 result: 0
-BATT_DISPLAY_PORT is
-bits:  000 00011 1001111 1001111 0111111 110
-index:  29    24      17      10       3   0
+CLOCK_DISPLAY_PORT is
+bits:  00 01 0100100 0100100 1101011 1101111
+index: 30 28      21      14       7       0
 
-Battery Meter Display:
-+-^^^-+  ####   ####  ####     
-|     |     #      #  #  #     
-|     |     #      #  #  #     
-|     |  ####   ####  #  #  V  
-|#####|     #      #  #  #     
-|#####|     #      #  #  #     
-+-----+  #### o ####  ####     
+Clock Display:
+   #    #   #### ####   
+   #    #   #    #  #   
+   #    # o #    #  #   
+   #    #   #### ####   
+   #    # o    #    #   
+   #    #      #    # AM
+   #    #   #### ####   
 
 
-==========Percent FOR 6596==========
-&gt; ./batt_main 6596 P
-BATT_VOLTAGE_PORT set to: 6596
-BATT_STATUS_PORT  set to: 0x91
-
-result = set_batt_from_ports( &amp;batt );
+&gt; ./clock_main 691196
+TIME_OF_DAY_PORT set to: 691196
+result = set_tod_from_ports(&amp;tod );
 result: 0
-batt = {
-  .mlvolts = 3298
-  .percent = 37
-  .mode    = 1
-}
-
-result = set_display_from_batt(batt, &amp;display);
-result: 0
-display is
-bits:  000 00011 0000000 1001111 0000111 001
-index:  29    24      17      10       3   0
-
-result = batt_update();
-result: 0
-BATT_DISPLAY_PORT is
-bits:  000 00011 0000000 1001111 0000111 001
-index:  29    24      17      10       3   0
-
-Battery Meter Display:
-+-^^^-+         ####  ####     
-|     |            #     #     
-|     |            #     #     
-|     |         ####     #     
-|#####|            #     #  %  
-|#####|            #     #     
-+-----+         ####     #     
-
-
-==========Voltage FOR 6214==========
-&gt; ./batt_main 6214 V
-BATT_VOLTAGE_PORT set to: 6214
-BATT_STATUS_PORT  set to: 0x6F
-
-result = set_batt_from_ports( &amp;batt );
-result: 0
-batt = {
-  .mlvolts = 3107
-  .percent = 13
-  .mode    = 2
-}
-
-result = set_display_from_batt(batt, &amp;display);
+tod = {
+  .day_secs   = 43200
+  .time_hours = 12
+  .time_mins  = 0
+  .time_secs  = 0
+  .ampm       = 2
+}              
+Simulated time is: 12 : 00 : 00 pm
+result = set_display_from_tod(tod, &amp;display);
 result: 0
 display is
-bits:  000 00001 1001111 0000110 0000110 110
-index:  29    24      17      10       3   0
+bits:  00 10 0100100 1011101 1110111 1110111
+index: 30 28      21      14       7       0
 
-result = batt_update();
+result = clock_update();
 result: 0
-BATT_DISPLAY_PORT is
-bits:  000 00001 1001111 0000110 0000110 110
-index:  29    24      17      10       3   0
+CLOCK_DISPLAY_PORT is
+bits:  00 10 0100100 1011101 1110111 1110111
+index: 30 28      21      14       7       0
 
-Battery Meter Display:
-+-^^^-+  ####      #     #     
-|     |     #      #     #     
-|     |     #      #     #     
-|     |  ####      #     #  V  
-|     |     #      #     #     
-|#####|     #      #     #     
-+-----+  #### o    #     #     
+Clock Display:
+   # ####   #### ####   
+   #    #   #  # #  #   
+   #    # o #  # #  #   
+   # ####   #  # #  #   
+   # #    o #  # #  #   
+   # #      #  # #  #   
+   # ####   #### #### PM
 
 
-==========Percent FOR 6214==========
-&gt; ./batt_main 6214 P
-BATT_VOLTAGE_PORT set to: 6214
-BATT_STATUS_PORT  set to: 0x91
-
-result = set_batt_from_ports( &amp;batt );
+&gt; ./clock_main 852045
+TIME_OF_DAY_PORT set to: 852045
+result = set_tod_from_ports(&amp;tod );
 result: 0
-batt = {
-  .mlvolts = 3107
-  .percent = 13
-  .mode    = 1
-}
-
-result = set_display_from_batt(batt, &amp;display);
-result: 0
-display is
-bits:  000 00001 0000000 0000110 1001111 001
-index:  29    24      17      10       3   0
-
-result = batt_update();
-result: 0
-BATT_DISPLAY_PORT is
-bits:  000 00001 0000000 0000110 1001111 001
-index:  29    24      17      10       3   0
-
-Battery Meter Display:
-+-^^^-+            #  ####     
-|     |            #     #     
-|     |            #     #     
-|     |            #  ####     
-|     |            #     #  %  
-|#####|            #     #     
-+-----+            #  ####     
-
-
-==========Voltage FOR 6148==========
-&gt; ./batt_main 6148 V
-BATT_VOLTAGE_PORT set to: 6148
-BATT_STATUS_PORT  set to: 0x6F
-
-result = set_batt_from_ports( &amp;batt );
-result: 0
-batt = {
-  .mlvolts = 3074
-  .percent = 9
-  .mode    = 2
-}
-
-result = set_display_from_batt(batt, &amp;display);
+tod = {
+  .day_secs   = 53253
+  .time_hours = 2
+  .time_mins  = 47
+  .time_secs  = 33
+  .ampm       = 2
+}              
+Simulated time is: 02 : 47 : 33 pm
+result = set_display_from_tod(tod, &amp;display);
 result: 0
 display is
-bits:  000 00001 1001111 0111111 0000111 110
-index:  29    24      17      10       3   0
+bits:  00 10 0000000 1011101 0101110 0100101
+index: 30 28      21      14       7       0
 
-result = batt_update();
+result = clock_update();
 result: 0
-BATT_DISPLAY_PORT is
-bits:  000 00001 1001111 0111111 0000111 110
-index:  29    24      17      10       3   0
+CLOCK_DISPLAY_PORT is
+bits:  00 10 0000000 1011101 0101110 0100101
+index: 30 28      21      14       7       0
 
-Battery Meter Display:
-+-^^^-+  ####   ####  ####     
-|     |     #   #  #     #     
-|     |     #   #  #     #     
-|     |  ####   #  #     #  V  
-|     |     #   #  #     #     
-|#####|     #   #  #     #     
-+-----+  #### o ####     #     
+Clock Display:
+     ####   #  # ####   
+        #   #  #    #   
+        # o #  #    #   
+     ####   ####    #   
+     #    o    #    #   
+     #         #    #   
+     ####      #    # PM
 
 
-==========Percent FOR 6148==========
-&gt; ./batt_main 6148 P
-BATT_VOLTAGE_PORT set to: 6148
-BATT_STATUS_PORT  set to: 0x91
-
-result = set_batt_from_ports( &amp;batt );
+&gt; ./clock_main 1037010
+TIME_OF_DAY_PORT set to: 1037010
+result = set_tod_from_ports(&amp;tod );
 result: 0
-batt = {
-  .mlvolts = 3074
-  .percent = 9
-  .mode    = 1
-}
-
-result = set_display_from_batt(batt, &amp;display);
-result: 0
-display is
-bits:  000 00001 0000000 0000000 1101111 001
-index:  29    24      17      10       3   0
-
-result = batt_update();
-result: 0
-BATT_DISPLAY_PORT is
-bits:  000 00001 0000000 0000000 1101111 001
-index:  29    24      17      10       3   0
-
-Battery Meter Display:
-+-^^^-+               ####     
-|     |               #  #     
-|     |               #  #     
-|     |               ####     
-|     |                  #  %  
-|#####|                  #     
-+-----+               ####     
-
-
-==========Voltage FOR 6030==========
-&gt; ./batt_main 6030 V
-BATT_VOLTAGE_PORT set to: 6030
-BATT_STATUS_PORT  set to: 0x6F
-
-result = set_batt_from_ports( &amp;batt );
-result: 0
-batt = {
-  .mlvolts = 3015
-  .percent = 1
-  .mode    = 2
-}
-
-result = set_display_from_batt(batt, &amp;display);
+tod = {
+  .day_secs   = 64813
+  .time_hours = 6
+  .time_mins  = 0
+  .time_secs  = 13
+  .ampm       = 2
+}              
+Simulated time is: 06 : 00 : 13 pm
+result = set_display_from_tod(tod, &amp;display);
 result: 0
 display is
-bits:  000 00000 1001111 0111111 1011011 110
-index:  29    24      17      10       3   0
+bits:  00 10 0000000 1111011 1110111 1110111
+index: 30 28      21      14       7       0
 
-result = batt_update();
+result = clock_update();
 result: 0
-BATT_DISPLAY_PORT is
-bits:  000 00000 1001111 0111111 1011011 110
-index:  29    24      17      10       3   0
+CLOCK_DISPLAY_PORT is
+bits:  00 10 0000000 1111011 1110111 1110111
+index: 30 28      21      14       7       0
 
-Battery Meter Display:
-+-^^^-+  ####   ####  ####     
-|     |     #   #  #     #     
-|     |     #   #  #     #     
-|     |  ####   #  #  ####  V  
-|     |     #   #  #  #        
-|     |     #   #  #  #        
-+-----+  #### o ####  ####     
+Clock Display:
+     ####   #### ####   
+     #      #  # #  #   
+     #    o #  # #  #   
+     ####   #  # #  #   
+     #  # o #  # #  #   
+     #  #   #  # #  #   
+     ####   #### #### PM
 
 
-==========Percent FOR 6030==========
-&gt; ./batt_main 6030 P
-BATT_VOLTAGE_PORT set to: 6030
-BATT_STATUS_PORT  set to: 0x91
-
-result = set_batt_from_ports( &amp;batt );
+&gt; ./clock_main 1368626
+TIME_OF_DAY_PORT set to: 1368626
+result = set_tod_from_ports(&amp;tod );
 result: 0
-batt = {
-  .mlvolts = 3015
-  .percent = 1
-  .mode    = 1
-}
-
-result = set_display_from_batt(batt, &amp;display);
-result: 0
-display is
-bits:  000 00000 0000000 0000000 0000110 001
-index:  29    24      17      10       3   0
-
-result = batt_update();
-result: 0
-BATT_DISPLAY_PORT is
-bits:  000 00000 0000000 0000000 0000110 001
-index:  29    24      17      10       3   0
-
-Battery Meter Display:
-+-^^^-+                  #     
-|     |                  #     
-|     |                  #     
-|     |                  #     
-|     |                  #  %  
-|     |                  #     
-+-----+                  #     
-
-
-==========Voltage FOR 6000==========
-&gt; ./batt_main 6000 V
-BATT_VOLTAGE_PORT set to: 6000
-BATT_STATUS_PORT  set to: 0x6F
-
-result = set_batt_from_ports( &amp;batt );
-result: 0
-batt = {
-  .mlvolts = 3000
-  .percent = 0
-  .mode    = 2
-}
-
-result = set_display_from_batt(batt, &amp;display);
+tod = {
+  .day_secs   = 85539
+  .time_hours = 11
+  .time_mins  = 45
+  .time_secs  = 39
+  .ampm       = 2
+}              
+Simulated time is: 11 : 45 : 39 pm
+result = set_display_from_tod(tod, &amp;display);
 result: 0
 display is
-bits:  000 00000 1001111 0111111 0111111 110
-index:  29    24      17      10       3   0
+bits:  00 10 0100100 0100100 0101110 1101011
+index: 30 28      21      14       7       0
 
-result = batt_update();
+result = clock_update();
 result: 0
-BATT_DISPLAY_PORT is
-bits:  000 00000 1001111 0111111 0111111 110
-index:  29    24      17      10       3   0
+CLOCK_DISPLAY_PORT is
+bits:  00 10 0100100 0100100 0101110 1101011
+index: 30 28      21      14       7       0
 
-Battery Meter Display:
-+-^^^-+  ####   ####  ####     
-|     |     #   #  #  #  #     
-|     |     #   #  #  #  #     
-|     |  ####   #  #  #  #  V  
-|     |     #   #  #  #  #     
-|     |     #   #  #  #  #     
-+-----+  #### o ####  ####     
+Clock Display:
+   #    #   #  # ####   
+   #    #   #  # #      
+   #    # o #  # #      
+   #    #   #### ####   
+   #    # o    #    #   
+   #    #      #    #   
+   #    #      # #### PM
 
 
-==========Percent FOR 6000==========
-&gt; ./batt_main 6000 P
-BATT_VOLTAGE_PORT set to: 6000
-BATT_STATUS_PORT  set to: 0x91
-
-result = set_batt_from_ports( &amp;batt );
+&gt; ./clock_main 1382386
+TIME_OF_DAY_PORT set to: 1382386
+result = set_tod_from_ports(&amp;tod );
 result: 0
-batt = {
-  .mlvolts = 3000
-  .percent = 0
-  .mode    = 1
-}
-
-result = set_display_from_batt(batt, &amp;display);
-result: 0
-display is
-bits:  000 00000 0000000 0000000 0111111 001
-index:  29    24      17      10       3   0
-
-result = batt_update();
-result: 0
-BATT_DISPLAY_PORT is
-bits:  000 00000 0000000 0000000 0111111 001
-index:  29    24      17      10       3   0
-
-Battery Meter Display:
-+-^^^-+               ####     
-|     |               #  #     
-|     |               #  #     
-|     |               #  #     
-|     |               #  #  %  
-|     |               #  #     
-+-----+               ####     
-
-
-==========Voltage FOR 5964==========
-&gt; ./batt_main 5964 V
-BATT_VOLTAGE_PORT set to: 5964
-BATT_STATUS_PORT  set to: 0x6F
-
-result = set_batt_from_ports( &amp;batt );
-result: 0
-batt = {
-  .mlvolts = 2982
-  .percent = 0
-  .mode    = 2
-}
-
-result = set_display_from_batt(batt, &amp;display);
+tod = {
+  .day_secs   = 86399
+  .time_hours = 11
+  .time_mins  = 59
+  .time_secs  = 59
+  .ampm       = 2
+}              
+Simulated time is: 11 : 59 : 59 pm
+result = set_display_from_tod(tod, &amp;display);
 result: 0
 display is
-bits:  000 00000 1011011 1101111 1111111 110
-index:  29    24      17      10       3   0
+bits:  00 10 0100100 0100100 1101011 1101111
+index: 30 28      21      14       7       0
 
-result = batt_update();
+result = clock_update();
 result: 0
-BATT_DISPLAY_PORT is
-bits:  000 00000 1011011 1101111 1111111 110
-index:  29    24      17      10       3   0
+CLOCK_DISPLAY_PORT is
+bits:  00 10 0100100 0100100 1101011 1101111
+index: 30 28      21      14       7       0
 
-Battery Meter Display:
-+-^^^-+  ####   ####  ####     
-|     |     #   #  #  #  #     
-|     |     #   #  #  #  #     
-|     |  ####   ####  ####  V  
-|     |  #         #  #  #     
-|     |  #         #  #  #     
-+-----+  #### o ####  ####     
+Clock Display:
+   #    #   #### ####   
+   #    #   #    #  #   
+   #    # o #    #  #   
+   #    #   #### ####   
+   #    # o    #    #   
+   #    #      #    #   
+   #    #   #### #### PM
 
 
-==========Percent FOR 5964==========
-&gt; ./batt_main 5964 P
-BATT_VOLTAGE_PORT set to: 5964
-BATT_STATUS_PORT  set to: 0x91
-
-result = set_batt_from_ports( &amp;batt );
-result: 0
-batt = {
-  .mlvolts = 2982
-  .percent = 0
-  .mode    = 1
-}
-
-result = set_display_from_batt(batt, &amp;display);
-result: 0
+&gt; ./clock_main 1426225
+TIME_OF_DAY_PORT set to: 1426225
+result = set_tod_from_ports(&amp;tod );
+result: 1
+tod = {
+  .day_secs   = -1175372512
+  .time_hours = 0
+  .time_mins  = 0
+  .time_secs  = 32546
+  .ampm       = 0
+}              
+Simulated time is: 00 : 00 : 32546 pm
+WARNING: Non-zero value returned
+result = set_display_from_tod(tod, &amp;display);
+result: 1
 display is
-bits:  000 00000 0000000 0000000 0111111 001
-index:  29    24      17      10       3   0
+bits:  00 00 0000000 0000000 0000000 0000000
+index: 30 28      21      14       7       0
+WARNING: Non-zero value returned
 
-result = batt_update();
-result: 0
-BATT_DISPLAY_PORT is
-bits:  000 00000 0000000 0000000 0111111 001
-index:  29    24      17      10       3   0
+result = clock_update();
+result: 1
+CLOCK_DISPLAY_PORT is
+bits:  00 00 0000000 0000000 0000000 0000000
+index: 30 28      21      14       7       0
+WARNING: Non-zero value returned
 
-Battery Meter Display:
-+-^^^-+               ####     
-|     |               #  #     
-|     |               #  #     
-|     |               #  #     
-|     |               #  #  %  
-|     |               #  #     
-+-----+               ####     
+Clock Display:
+                        
+                        
+          o             
+                        
+          o             
+                        
+                        
 
 
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org1566a19" class="outline-3 grading">
-<h3 id="org1566a19"><span class="section-number-3">3.5</span> Problem 1 Grading Criteria&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span></span></h3>
-<div class="outline-text-3" id="text-3-5">
-<p>
-Both sets automated tests can be run with <code>make test-p1</code>
-</p>
+<div id="outline-container-org8d1ef25" class="outline-3 grading 50">
+<h3 id="org8d1ef25"><span class="section-number-3">3.7</span> Problem 1 Grading Criteria&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div class="outline-text-3" id="text-3-7">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -1939,48 +1497,28 @@ Both sets automated tests can be run with <code>make test-p1</code>
 
 <tr>
 <td class="org-right">35</td>
-<td class="org-left"><code>make test-prob1</code> runs 35 tests from <code>test_batt_update.org</code> for correctness</td>
+<td class="org-left"><code>make test-prob1</code> which uses programs <code>test_clock_update</code> and <code>clock_main</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
+<td class="org-left">Provides 35 tests for functions in <code>clock_update.c</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left"><code>test_batt_update.c</code> provides 30+ tests for functions in <code>batt_update.c</code></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">30 tests, 1 point per test passed</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Tests of the <code>batt_main</code> which uses functions from <code>batt_update.c</code></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">5 tests, 1 point per test passed</td>
+<td class="org-left">1 point per test passed</td>
 </tr>
 </tbody>
 <tbody>
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">MANUAL INSPECTION of <code>batt_update.c</code></td>
+<td class="org-left">MANUAL INSPECTION of <code>clock_update.c</code></td>
 </tr>
 
 <tr>
 <td class="org-right">5</td>
-<td class="org-left"><code>set_batt_from_ports()</code></td>
+<td class="org-left"><code>set_tod_from_secs()</code></td>
 </tr>
 
 <tr>
@@ -1990,37 +1528,22 @@ Both sets automated tests can be run with <code>make test-p1</code>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Clear flow to how each field of <code>batt</code> is calculated.</td>
+<td class="org-left">Clear flow to how each field of <code>tod</code> is calculated.</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Correctly setting fields of <code>batt</code> via pointer dereference or arrow operator.</td>
+<td class="org-left">Correctly setting fields of <code>tod</code> via pointer dereference or arrow operator.</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Uses shift operations in place of division wherever possible.</td>
+<td class="org-left">Makes use of shift / logical operations to convert port value to seconds</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left"><b>Adherence to constraints: no floats, no float math ops, no deeply nested conditionals</b></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Short, simple code that is no more than 40 lines long.</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Avoid nested conditionals wherever possible</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Make the code short as you will soon need to <b>translate it to assembly code</b></td>
+<td class="org-left">Adherence to constraints: no floats, no float math ops, no deeply nested conditionals</td>
 </tr>
 
 <tr>
@@ -2030,7 +1553,12 @@ Both sets automated tests can be run with <code>make test-p1</code>
 
 <tr>
 <td class="org-right">5</td>
-<td class="org-left"><code>set_display_from_batt()</code></td>
+<td class="org-left"><code>set_display_from_tod()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear effort to do error checking for out of bounds values in <code>tod</code> parameter</td>
 </tr>
 
 <tr>
@@ -2055,32 +1583,12 @@ Both sets automated tests can be run with <code>make test-p1</code>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Clear code to turn on decimal place, V/% indicator, and level indicators</td>
+<td class="org-left">Clear derference/set of the integer pointed to by the <code>display</code> parameter</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Clear dereference/set of the integer pointed to by the <code>display</code> parameter</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><b>Adherence to constraints: no floats, no math float ops, no deeply nested conditionals</b></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Short, simple code that is no more than 65 lines long.</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Avoid nested conditionals wherever possible</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Make the code short as you will soon need to <b>translate it to assembly code</b></td>
+<td class="org-left">Adherence to constraints: no floats, no math float ops, no deeply nested conditionals</td>
 </tr>
 
 <tr>
@@ -2090,12 +1598,12 @@ Both sets automated tests can be run with <code>make test-p1</code>
 
 <tr>
 <td class="org-right">5</td>
-<td class="org-left"><code>batt_update()</code></td>
+<td class="org-left"><code>clock_update()</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Use of the global variables like <code>BATT_DISPLAY_PORT</code></td>
+<td class="org-left">Use of the global variables <code>TIME_OF_DAY_SEC / CLOCK_DISPLAY_PORT</code></td>
 </tr>
 
 <tr>
@@ -2110,17 +1618,12 @@ Both sets automated tests can be run with <code>make test-p1</code>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Error checking on sensor values</td>
+<td class="org-left">Error checking on function return values</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
 <td class="org-left">No use of <code>malloc()</code></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Short, simple code.</td>
 </tr>
 </tbody>
 </table>
@@ -2128,12 +1631,12 @@ Both sets automated tests can be run with <code>make test-p1</code>
 </div>
 </div>
 
-<div id="outline-container-org90483ec" class="outline-2">
-<h2 id="org90483ec"><span class="section-number-2">4</span> <b>Problem 2</b>: Debugging the Puzzlebox</h2>
+<div id="outline-container-org6cbd4f8" class="outline-2">
+<h2 id="org6cbd4f8"><span class="section-number-2">4</span> <b>Problem 2</b>: Debugging the Puzzlebox</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgb061fbd" class="outline-3">
-<h3 id="orgb061fbd"><span class="section-number-3">4.1</span> Overview</h3>
+<div id="outline-container-org052826c" class="outline-3">
+<h3 id="org052826c"><span class="section-number-3">4.1</span> Overview</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 The file <code>puzzlebox.c</code> contains source code that reads inputs from a
@@ -2168,8 +1671,8 @@ at various points make it <b>much easier</b> to solve the puzzles.
 </div>
 </div>
 
-<div id="outline-container-org0537aef" class="outline-3">
-<h3 id="org0537aef"><span class="section-number-3">4.2</span> <code>input.txt</code> Input File</h3>
+<div id="outline-container-orgaa0be99" class="outline-3">
+<h3 id="orgaa0be99"><span class="section-number-3">4.2</span> <code>input.txt</code> Input File</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 Name your input file <code>input.txt</code> and put your internet ID in it along
@@ -2221,8 +1724,8 @@ inputs for <code>input.txt</code>.
 </div>
 </div>
 
-<div id="outline-container-org345a86f" class="outline-3">
-<h3 id="org345a86f"><span class="section-number-3">4.3</span> <code>gdb</code> The GNU Debugger</h3>
+<div id="outline-container-org22d8120" class="outline-3">
+<h3 id="org22d8120"><span class="section-number-3">4.3</span> <code>gdb</code> The GNU Debugger</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 You will definitely need to use a debugger to solve the puzzlebox and
@@ -2238,18 +1741,18 @@ For a quick overview of GDB, here are some resources
 <li><a href="http://www-users.cs.umn.edu/~kauffman/tutorials/gdb.html">CSCI 2021 Quick Guide to gdb: The GNU Debugger</a>: Page describing how
 to start the debugger, a sample session using <code>puzzlebox</code>, an
 overview of the most common commands.</li>
-<li><a href="https://www.youtube.com/watch?v%3DPorfLSr3DDI">CppCon 2015: Greg Law " Give me 15 minutes &amp; I'll change your view
+<li><a href="https://www.youtube.com/watch?v%3DPorfLSr3DDI">CppCon 2015: Greg Law "Give me 15 minutes &amp; I'll change your view
 of GDB"</a>: Video giving basic overview of hope to run <code>gdb</code> on simple
 programs with an emphasis on differences between "normal" mode and
 TUI mode</li>
 <li><a href="http://www.yolinux.com/TUTORIALS/GDB-Commands.html">GNU GDB Debugger Command Cheat Sheet</a>: Extensive list of commands</li>
-<li><a href="https://sourceware.org/gdb/current/onlinedocs/gdb/">Debugging with GDB</a>: Official manual for <code>gdb</code></li>
+<li><a href="https://sourceware.org/gdb/current/onlinedocs/gdb">Debugging with GDB</a>: Official manual for <code>gdb</code></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org65b6731" class="outline-3">
-<h3 id="org65b6731"><span class="section-number-3">4.4</span> Typical Cycle</h3>
+<div id="outline-container-org827cc60" class="outline-3">
+<h3 id="org827cc60"><span class="section-number-3">4.4</span> Typical Cycle</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 A typical cycle of working on <code>puzzlebox</code> will be the following.
@@ -2305,8 +1808,8 @@ run
 </div>
 </div>
 
-<div id="outline-container-org06f7a00" class="outline-3">
-<h3 id="org06f7a00"><span class="section-number-3">4.5</span> Kinds of Puzzles</h3>
+<div id="outline-container-orgf1cde29" class="outline-3">
+<h3 id="orgf1cde29"><span class="section-number-3">4.5</span> Kinds of Puzzles</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 The puzzles presented in the different phases make use of a variety of
@@ -2322,8 +1825,8 @@ character) through pointers and unions</li>
 </div>
 </div>
 
-<div id="outline-container-org51e8075" class="outline-3 grading 50">
-<h3 id="org51e8075"><span class="section-number-3">4.6</span> Tests for <code>puzzlebox.c</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div id="outline-container-org2f904c5" class="outline-3 grading 50">
+<h3 id="org2f904c5"><span class="section-number-3">4.6</span> Tests for <code>puzzlebox.c</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
 <code>puzzlebox.c</code> itself reports how many points one can earn at the end
@@ -2352,12 +1855,12 @@ make test-prob2
 </div>
 </div>
 
-<div id="outline-container-org3caa1ab" class="outline-2">
-<h2 id="org3caa1ab"><span class="section-number-2">5</span> Assignment Submission</h2>
+<div id="outline-container-org2948e7f" class="outline-2">
+<h2 id="org2948e7f"><span class="section-number-2">5</span> Assignment Submission</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org8732751" class="outline-3">
-<h3 id="org8732751"><span class="section-number-3">5.1</span> <a id="orgc2c9191"></a> Submit to Gradescope</h3>
+<div id="outline-container-org990ff9c" class="outline-3">
+<h3 id="org990ff9c"><span class="section-number-3">5.1</span> <a id="org9d4d274"></a> Submit to Gradescope</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 Refer to the Project 1 instructions and adapt them for details of how
@@ -2371,8 +1874,8 @@ to submit to Gradescope. In summary they are
 </div>
 </div>
 
-<div id="outline-container-org1479278" class="outline-3">
-<h3 id="org1479278"><span class="section-number-3">5.2</span> Late Policies</h3>
+<div id="outline-container-org4e560b8" class="outline-3">
+<h3 id="org4e560b8"><span class="section-number-3">5.2</span> Late Policies</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 You may wish to review the policy on late project submission which
@@ -2388,7 +1891,7 @@ accepted more than 48 hours after the deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-10-07 Fri 11:24 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-02-17 Fri 11:44 <br/> </i>
 </div>
 </body>
 </html>
