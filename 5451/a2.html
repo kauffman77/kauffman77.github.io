@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-12-14 Tue 15:16 -->
+<!-- 2023-03-27 Mon 15:18 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 5451 Assignment 2: Distributed and Shared Memory Programming</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Chris Kauffman" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -190,8 +191,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
+  .org-svg { }
 </style>
 <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
@@ -248,6 +248,7 @@ pre {
 }
 #content, #preamble, #postamble {
 margin-left:300px;
+max-width: 100%;
 }
 .tag {
 background-color: inherit; font-family: inherit;
@@ -340,198 +341,79 @@ text-align: justify;
 }
 }
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2021-12-14 Tue 15:16</i>
+<i>Last Updated: 2023-03-27 Mon 15:18</i>
 </div>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">CSCI 5451 Assignment 2: Distributed and Shared Memory Programming</h1>
 <ul class="org-ul">
-<li><b>Due: Wed 12/15/2021 by 11:59 pm</b></li>
+<li><b>Due: Tue 11-Apr by 11:59 pm</b></li>
 <li><i>Approximately 30% of total grade</i></li>
 <li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a></li>
 <li>You may work in groups of 2 and submit one assignment per group.</li>
 </ul>
 
-<div id="outline-container-org134e46e" class="outline-4">
-<h4 id="org134e46e">CODE DISTRIBUTION: <a href="a2-code.zip">a2-code.zip</a></h4>
-</div>
-<div id="outline-container-orgfcadecf" class="outline-4">
-<h4 id="orgfcadecf">TESTFILE UPDATE: <a href="a2-tests-update.zip">a2-tests-update.zip</a></h4>
-</div>
-
-<div id="outline-container-org4356651" class="outline-4">
-<h4 id="org4356651">PROBLEM 4 UPDATE: <a href="a2-prob4.zip">a2-prob4.zip</a></h4>
-</div>
-
-
-<div id="outline-container-org627e2d6" class="outline-4">
-<h4 id="org627e2d6">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org627e2d6">
-<dl class="org-dl">
-<dt>Tue Dec 14 03:13:08 PM CST 2021</dt><dd>A <a href="#org95a201f">demonstration of the commands</a> to run to set up SSH keys for MPI
-runs on the veggie cluster is now available in the
-specification. Most students are beyond this stage but if you are
-getting stalls in your runs of the timing script for heat or
-pagerank, then you may need to run the commands described in this
-section.</dd>
-
-<dt>Tue Dec  7 04:41:22 PM CST 2021</dt><dd>The Optional <a href="#org56a5250">Problem 4</a> has been posted which is worth 15% assignment
-MAKEUP credit (will add to overall credit earned in the Assignment
-category for the course). As promised, the problem reimplemnts
-<code>dense_pagerank_serial</code> to utilize BLAS routines. See its
-description for details. There are two additional files for
-testing/timing which have been added to assignment codepack or can
-be downloaded individually here: <a href="a2-prob4.zip">a2-prob4.zip</a>.</dd>
-
-<dt>Sun Dec  5 10:42:40 PM CST 2021</dt><dd><p>
-Several updates to files to correct for issues raised on Piazza.
-</p>
-
-<p>
-Updated test files can be downloaded from the top of the spec or
-directly here: <a href="a2-tests-update.zip">a2-tests-update.zip</a> 
-</p>
-
-<p>
-<code>test_mpi.supp</code> has been updated to suppress Valgrind errors that
-originate from the OpenMPI library and limit errors to those that
-appear to come from student code. This is only (partially)
-guaranteed to work on the CSEL veggie cluster and Gradescope.
-</p>
-
-<p>
-Testing files have been updated and added for Problems 2 &amp; 3. This
-includes <code>testy, Makefile, test_dense_pagerank_mpi.org,
-  test_dense_pagerank_omp.org</code>.
-</p>
-
-<p>
-The job running shell scripts have been updated to correct some
-minor inconsistencies.
-</p>
-<ul class="org-ul">
-<li><code>dense-pagerank-mpi-jobs.sh</code>: added the some proc numbers for job
-runs so that all proc numbers in the timing table in
-<code>A2-WRITEUP.txt</code> are run with the script.</li>
-
-<li><code>dense-pagerank-omp-same.sh</code>: same as for
-<code>dense-pagerank-mpi-jobs.sh</code>.</li>
-</ul>
-
-<p>
-Submission on Gradescope is now open and should reflect the
-automated test results on the Veggie cluster.
-</p></dd>
-
-<dt>Tue Nov 30 02:31:43 PM CST 2021</dt><dd><p>
-A minor bug was reported in
-<code>heat_serial.c</code> and has been corrected. During initial memory
-allocation the wrong type was used in a <code>malloc()</code> but this has been
-corrected as shown below.
-</p>
-<div class="org-src-container">
-<pre class="src src-c"><span class="linenr">49: </span>    // Allocate memory 
-<span class="linenr">50: </span>    H = malloc(sizeof(double*)*max_time); 
-<span class="linenr">51: </span>    int t,p;
-<span class="linenr">52: </span>    for(t=0;t&lt;max_time;t++){
-<span class="linenr">53: </span>      H[t] = malloc(sizeof(double)*width); // was sizeof(double*), now fixed
-<span class="linenr">54: </span>    }
-</pre>
-</div>
-<p>
-Luckily this mistake had no impact as the size of <code>double</code> and
-<code>double*</code> on most 64-bit systems is the same, 8 bytes. You may wish
-to correct this in your <code>heat_mpi.c</code> version of the code if you used
-a similar allocation.
-</p></dd>
-</dl>
+<div id="outline-container-orgab0662d" class="outline-4">
+<h4 id="orgab0662d">CODE DISTRIBUTION: <a href="a2-code.zip">a2-code.zip</a></h4>
+<div class="outline-text-4" id="text-orgab0662d">
 </div>
 </div>
 
 
-<div id="outline-container-org8ee88c7" class="outline-4">
-<h4 id="org8ee88c7"></h4>
-<div class="outline-text-4" id="text-org8ee88c7">
-<div id="table-of-contents">
+<div id="outline-container-orgbf4a76a" class="outline-4">
+<h4 id="orgbf4a76a">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orgbf4a76a">
+</div>
+</div>
+
+
+<div id="outline-container-orge47943e" class="outline-4">
+<h4 id="orge47943e"></h4>
+<div class="outline-text-4" id="text-orge47943e">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgcc48ba9">1. Overview</a></li>
-<li><a href="#org74fa0a8">2. Download Code and Setup</a></li>
-<li><a href="#orgeffd943">3. <code>A2-WRITEUP.txt</code> Writeup File</a></li>
-<li><a href="#org067235e">4. <code>mpi_hello.c</code>: A Sample MPI Program</a></li>
-<li><a href="#orge75d713">5. <b>Problem 1</b>: Parallel Heat (25%)</a>
+<li><a href="#orgb4e447c">1. Overview</a></li>
+<li><a href="#orgf88c2f0">2. Download Code and Setup</a></li>
+<li><a href="#orgd154b40">3. <code>A2-WRITEUP.txt</code> Writeup File</a></li>
+<li><a href="#orgfe3c42a">4. <code>mpi_hello.c</code>: A Sample MPI Program</a></li>
+<li><a href="#orgf0e3d3e">5. MPI Jobs on MSI Machines</a>
 <ul>
-<li><a href="#org3b5ed81">5.1. The Heat Problem</a></li>
-<li><a href="#orgef89c75">5.2. MPI Heat</a></li>
-<li><a href="#orgdcb63c5">5.3. Features of <code>heat_mpi</code></a></li>
-<li><a href="#org4274a11">5.4. Written Summary of the <code>heat_mpi</code> Results</a></li>
-<li><a href="#org76d0d3d">5.5. Automated Tests for <code>heat_mpi</code></a></li>
-<li><a href="#org2ee8cb4">5.6. Grading Criteria for Problem 1</a></li>
-<li><a href="#orgee6ebfc">5.7. MPI Setup on CSE Labs</a></li>
+<li><a href="#org307d665">5.1. Software Modules on MSI</a></li>
+<li><a href="#org1b2f6d5">5.2. Batch Jobs on MSI</a></li>
 </ul>
 </li>
-<li><a href="#org4a571f3">6. Page Rank</a>
+<li><a href="#org0d8518e">6. Testing MPI Codes</a>
 <ul>
-<li><a href="#org037f922">6.1. Overview of Computing Pageranks</a></li>
-<li><a href="#org2768664">6.2. Sample Runs of <code>dense_pagerank_serial.c</code></a></li>
+<li><a href="#orgb9eabe2">6.1. On MSI Machines</a></li>
+<li><a href="#org133d993">6.2. On CSE Labs Machines</a></li>
+<li><a href="#orgd12fe90">6.3. On Home Machines</a></li>
 </ul>
 </li>
-<li><a href="#org8bcdfa1">7. <b>Problem 2</b>: MPI PageRank (50%)</a>
+<li><a href="#org509a7ac">7. <b>Problem 1</b>: MPI Heat</a>
 <ul>
-<li><a href="#orgc7b7591">7.1. Reading Data Files</a></li>
-<li><a href="#orgd871c4d">7.2. Row Partitioning Woes</a></li>
-<li><a href="#org1b00484">7.3. Parallelizing Column Normalization and Damping</a></li>
-<li><a href="#org4aa8fd1">7.4. Parallelizing the Repeated Matrix-vector Multiplication</a></li>
-<li><a href="#orgc7f8c43">7.5. Written Summary of <code>dense_pagerank_mpi</code> Results</a></li>
-<li><a href="#orgd715edd">7.6. Automated Tests for <code>dense_pagerank_mpi</code></a></li>
-<li><a href="#orga402221">7.7. Grading Criteria for Problem 2</a></li>
+<li><a href="#orgbdc8575">7.1. The Heat Problem</a></li>
+<li><a href="#org901fd68">7.2. MPI Heat</a></li>
+<li><a href="#orgd68195d">7.3. Features of <code>heat_mpi</code></a></li>
+<li><a href="#orgb4c8a09">7.4. Written Summary of the <code>heat_mpi</code> Results</a></li>
+<li><a href="#org0ab4254">7.5. Automated Tests for <code>heat_mpi</code></a></li>
+<li><a href="#org7623846">7.6. Grading Criteria for Problem 1</a></li>
 </ul>
 </li>
-<li><a href="#orgeedde1a">8. <b>Problem 3</b>: OpenMP PageRank (25%)</a>
+<li><a href="#org83fd023">8. <b>Problem 2</b>: Serial K-Means Clustering</a></li>
+<li><a href="#org1f56443">9. <b>Problem 3</b>: MPI K-Means Clustering</a>
 <ul>
-<li><a href="#orgc2a1881">8.1. Shared Memory Implementation</a></li>
-<li><a href="#org1663bdb">8.2. Written Summary of <code>dense_pagerank_omp</code> Results</a></li>
-<li><a href="#orgdf71b7a">8.3. Automated Tests for <code>dense_pagerank_omp</code></a></li>
-<li><a href="#orgcbc353e">8.4. Grading Criteria for Problem 3</a></li>
+<li><a href="#orgb2e5033">9.1. Implementation Requirements</a></li>
+<li><a href="#org1bc6fcf">9.2. Grading Criteria for Problem 3</a></li>
 </ul>
 </li>
-<li><a href="#orgcfe96b6">9. Optional MAKEUP Problem 4 (15%)</a>
+<li><a href="#org9497a6e">10. Project Submission on Gradescope</a>
 <ul>
-<li><a href="#org9d8cc9d">9.1. BLAS Functions to Consider</a></li>
-<li><a href="#org9f42e58">9.2. Building the Code</a></li>
-<li><a href="#org4f41fc2">9.3. Testing and Timing</a></li>
-<li><a href="#org24b4b60">9.4. Grading Criteria for Problem 4</a></li>
-</ul>
-</li>
-<li><a href="#org7fce424">10. Project Submission on Gradescope</a>
-<ul>
-<li><a href="#orged0d582">10.1. Submit to Gradescope</a></li>
-<li><a href="#orgf9d817b">10.2. Late Policies</a></li>
+<li><a href="#org5d21385">10.1. Submit to Gradescope</a></li>
+<li><a href="#orgaeedfaf">10.2. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -541,18 +423,17 @@ a similar allocation.
 </div>
 
 
-<div id="outline-container-orgcc48ba9" class="outline-2">
-<h2 id="orgcc48ba9"><span class="section-number-2">1</span> Overview</h2>
+<div id="outline-container-orgb4e447c" class="outline-2">
+<h2 id="orgb4e447c"><span class="section-number-2">1</span> Overview</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-The assignment involves programming in MPI and OpenMP then describing
-the results of running your programs with several different parameter
-sets.  It is a programming assignment so dust off your C skills.  We
-have to spent some class discussing issues related to the assignment
-but it may be a good idea to review the lecture videos for when this
-took place earlier in the semester. It will pay to start early to get
-oriented as debugging parallel programs can be difficult and requires
-time.
+The assignment involves programming in MPI and describing the results
+of running your programs with several different parameter sets.  It is
+a programming assignment so dust off your C skills.  We have to spent
+some class discussing issues related to the assignment but it may be a
+good idea to review the lecture videos for when this took place
+earlier in the semester. It will pay to start early to get oriented as
+debugging parallel programs can be difficult and requires time.
 </p>
 
 <p>
@@ -560,19 +441,20 @@ There are 3 problems to solve.
 </p>
 <ol class="org-ol">
 <li>Parallelize the heat program from A1 using MPI</li>
-<li>Parallelize a provided Pagerank algorithm using MPI</li>
-<li>Parallelize a provided Pagerank algorithm using OpenMP</li>
+<li>Ensure your serial version of K-Means is intact.</li>
+<li>Parallelize K-Means clustering using MPI.</li>
 </ol>
 
 <p>
-For all 3 problems, after finishing your code, you will need to run
-some timing experiments and describe the results in a short text file.
+For all several of the problems, after finishing your code, you will
+need to run some timing experiments and describe the results in a
+short text file.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org74fa0a8" class="outline-2">
-<h2 id="org74fa0a8"><span class="section-number-2">2</span> Download Code and Setup</h2>
+<div id="outline-container-orgf88c2f0" class="outline-2">
+<h2 id="orgf88c2f0"><span class="section-number-2">2</span> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -629,6 +511,12 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tr>
 
 <tr>
+<td class="org-left"><code>msi-setup.sh</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Source this to set path for MPI on MSI machines</td>
+</tr>
+
+<tr>
 <td class="org-left"><code>mpi_hello.c</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Demo MPI program along with debug printing function</td>
@@ -654,9 +542,9 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tr>
 
 <tr>
-<td class="org-left"><code>heat-run-jobs.sh</code></td>
+<td class="org-left"><code>heat-slurm.sh</code></td>
 <td class="org-left">Provided</td>
-<td class="org-left">Problem 2 script to generate timing for heat</td>
+<td class="org-left">Problem 2 script to generate timing for heat on MSI</td>
 </tr>
 
 <tr>
@@ -667,88 +555,27 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tbody>
 <tbody>
 <tr>
-<td class="org-left">PROBLEMS 2/3 Support</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>densemat.c</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Utility functions for dense matrices used in pagerank</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>densemat.h</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Header for dense matrix utilities</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>graphs/tiny-20.txt</code></td>
-<td class="org-left">Data</td>
-<td class="org-left">Very small graph file for pagerank testing</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>graphs/notredame-100.txt</code></td>
-<td class="org-left">Data</td>
-<td class="org-left">Small graph file for pagerank testing</td>
-</tr>
-
-<tr>
-<td class="org-left">&#x2026;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>graphs/notredame-8000.txt</code></td>
-<td class="org-left">Data</td>
-<td class="org-left">Large graph file for pagerank testing</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>hostfile-veggie-ip.txt</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Hostfile for MPI runs on CSE Labs veggie cluster</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>mpiopts.sh</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Script to set <code>MPIOPTS</code> environment variable</td>
-</tr>
-</tbody>
-<tbody>
-<tr>
 <td class="org-left">PROBLEM 2</td>
 <td class="org-left">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>dense_pagerank_mpi.c</code></td>
+<td class="org-left"><code>kmeans_serial.c</code></td>
 <td class="org-left">CREATE</td>
-<td class="org-left">Problem 2 parallel version of pagerank</td>
+<td class="org-left">Problem 2 serial version of K-means clustering to write in C</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>dense_pagerank_serial.c</code></td>
+<td class="org-left"><code>kmeans.py</code></td>
 <td class="org-left">Provided</td>
-<td class="org-left">Problem 2 serial version of pagerank</td>
+<td class="org-left">Problem 2 serial version of K-means clustering in Python</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>dense-pagerank-mpi-jobs.sh</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Problem 2 script to generate timing for pagerank</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>test_pagerank_mpi.org</code></td>
+<td class="org-left"><code>test_kmeans_serial.org</code></td>
 <td class="org-left">Testing</td>
-<td class="org-left">Problem 2 tests for pagerank</td>
+<td class="org-left">Problem 2 tests for K-means clustering</td>
 </tr>
 </tbody>
 <tbody>
@@ -759,66 +586,30 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tr>
 
 <tr>
-<td class="org-left"><code>dense_pagerank_omp.c</code></td>
+<td class="org-left"><code>kmeans_mpi.c</code></td>
 <td class="org-left">CREATE</td>
-<td class="org-left">Problem 3 parallel version of pagerank</td>
+<td class="org-left">Problem 2 serial version of K-means clustering</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>dense_pagerank_serial.c</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Problem 3 serial version of pagerank</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>dense-pagerank-omp-jobs.sh</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Problem 3 script to generate timing for pagerank</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>test_pagerank_omp.org</code></td>
+<td class="org-left"><code>test_kmeans_mpi.org</code></td>
 <td class="org-left">Testing</td>
-<td class="org-left">Problem 3 tests for pagerank</td>
+<td class="org-left">Problem 2 tests for K-means clustering</td>
 </tr>
-</tbody>
-<tbody>
+
 <tr>
-<td class="org-left">PROBLEM 4</td>
 <td class="org-left">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>dense_pagerank_blas.c</code></td>
-<td class="org-left">CREATE</td>
-<td class="org-left">Optional Problem 4 BLAS version of pagerank</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>dense_pagerank_serial.c</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Optional Problem 4 serial version of pagerank</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>dense-pagerank-blas-jobs.sh</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Optional Problem 4 script to generate timing for pagerank</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>test_pagerank_blas.org</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">Optional Problem 4 tests for pagerank</td>
+<td class="org-left"><i>NOTE: The <code>test_kmeans_mpi.org</code> file will be released later</i></td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 
-<div id="outline-container-orgeffd943" class="outline-2">
-<h2 id="orgeffd943"><span class="section-number-2">3</span> <code>A2-WRITEUP.txt</code> Writeup File</h2>
+
+<div id="outline-container-orgd154b40" class="outline-2">
+<h2 id="orgd154b40"><span class="section-number-2">3</span> <code>A2-WRITEUP.txt</code> Writeup File</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Below is a blank copy of the writeup document included in the code
@@ -843,9 +634,10 @@ GROUP MEMBERS
   - Member 2: &lt;NAME&gt; &lt;X500&gt;
 
   Up to 2 people may collaborate on this assignment. Write names/x.500
-  below. If working alone, leave off Member 2.
+  above. If working alone, leave off Member 2.
 
-  ONLY ONE GROUP MEMBER NEEDS TO SUBMIT TO GRADESCOPE.
+  ONLY ONE GROUP MEMBER SHOULD SUBMIT TO GRADESCOPE THEN ADD THEIR
+  PARTNER ACCORDING TO INSTRUCTIONS IN THE ASSIGNMENT WEB PAGE.
 
 
 Problem 1: heat_mpi
@@ -855,9 +647,10 @@ heat_mpi Timing Table
 ~~~~~~~~~~~~~~~~~~~~~
 
   Fill in the following table on measuring the performance of your
-  `heat_mpi' program on the Veggie cluster. Replace 00.00 entries with
-  your actual run times. You can use the provided `heat-run-jobs.sh'
-  script to ease this task.
+  `heat_mpi' program on MSI's Mesabi machine. Replace 00.00 entries with
+  your actual run times. You can use the provided `heat-slurm.sh' script
+  to ease this task. Submit it using `sbatch heat-slurm.sh' and extract
+  the lines marked `runtime:'.
 
   -----------------------------
                  Width         
@@ -884,42 +677,54 @@ heat_mpi Discussion Questions
      speculate on their causes - e.g. was there are a steady increase in
      runtimes, steady decrease, or jagged changes in timing?
   3. Try to explain how number of processors and problem size seem to
-     affect runtimes/speedup in the problem. Consider what happens on an
-     MPI run when the original host does not have enough processors to
-     available to support running on the original machine and must start
-     communicating with a networked machine mentioned in the `hostfile'.
+     affect runtimes/speedup in the problem. Consider that most Mesabi
+     Nodes have 24 cores on them. Comment on whether this number seems
+     to affect the performance of the runs you see.
 
 
-Problem 2: dense_pagerank_mpi
-=============================
+Problem 2: kmeans_serial vs kmeans_mpi
+======================================
 
-dense_pagerank_mpi Timing Table
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Discuss how you chose to parallelize your serial version of K-means in
+  the program `kmeans_mpi.c'. Answer the following questions briefly.
+  1. How is the input and output data partitioned among the processors?
+  2. What communication is required throughout the algorithm?
+  3. Which MPI collective communication operations did you employ?
+
+
+Problem 3: kmeans_mpi
+=====================
+
+kmeans_mpi Timing Table
+~~~~~~~~~~~~~~~~~~~~~~~
 
   Fill in the following table on measuring the performance of your
-  `dense_pagerank_mpi' program on the Veggie cluster. Replace 00.00
-  entries with your actual run times. You can use the provided
-  `dense-pagerank-mpi-jobs.sh' script to ease this task.
+  `kmeans_mpi' program on MSI's Mesabi machine. Replace 00.00 entries
+  with your actual run times. You can use the provided `kmeans-slurm.sh'
+  script to ease this task.
 
-  The columns are for the notredame-XXXX.txt graphs
-  ----------------------------
-                  size        
-   Procs    501   8000  16000 
-  ----------------------------
-       1  00.00  00.00  00.00 
-       2  00.00  00.00  00.00 
-       4  00.00  00.00  00.00 
-       8  00.00  00.00  00.00 
-      10  00.00  00.00  00.00 
-      16  00.00  00.00  00.00 
-      32  00.00  00.00  00.00 
-      64  00.00  00.00  00.00 
-     128  00.00  00.00  00.00 
-  ----------------------------
+  The columns are for each of 3 data files that are provided and run in
+  the job script.
+
+  digits_all_5e3.txt digits_all_1e4.txt
+  -------------------------------------------------------------------
+                                       Data File                     
+   Procs  digits_all_5e3.txt  digits_all_1e4.txt  digits_all_3e4.txt 
+  -------------------------------------------------------------------
+       1               00.00               00.00               00.00 
+       2               00.00               00.00               00.00 
+       4               00.00               00.00               00.00 
+       8               00.00               00.00               00.00 
+      10               00.00               00.00               00.00 
+      16               00.00               00.00               00.00 
+      32               00.00               00.00               00.00 
+      64               00.00               00.00               00.00 
+     128               00.00               00.00               00.00 
+  -------------------------------------------------------------------
 
 
-dense_pagerank_mpi Discussion Questions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kmeans_mpi Discussion Questions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   Analyze your table of results and answer the following questions.
   1. Did using more processors result in speedups?
@@ -927,69 +732,16 @@ dense_pagerank_mpi Discussion Questions
      speculate on their causes - e.g. was there are a steady increase in
      runtimes, steady decrease, or jagged changes in timing?
   3. Try to explain how number of processors and problem size seem to
-     affect runtimes/speedup in the problem. Consider what happens on an
-     MPI run when the original host does not have enough processors to
-     available to support running on the original machine and must start
-     communicating with a networked machine mentioned in the `hostfile'.
-
-
-Problem 3: dense_pagerank_omp
-=============================
-
-dense_pagerank_omp Timing Table
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  Fill in the following table on measuring the performance of your
-  `dense_pagerank_omp' program on the Veggie cluster. Replace 00.00
-  entries with your actual run times. You can use the provided
-  `dense-pagerank-omp-jobs.sh' script to ease this task.
-
-  The columns are for the notredame-XXXX.txt graphs
-  ----------------------------
-                  size        
-   Procs    501   8000  16000 
-  ----------------------------
-       1  00.00  00.00  00.00 
-       2  00.00  00.00  00.00 
-       4  00.00  00.00  00.00 
-       8  00.00  00.00  00.00 
-      10  00.00  00.00  00.00 
-      16  00.00  00.00  00.00 
-      32  00.00  00.00  00.00 
-      64  00.00  00.00  00.00 
-     128  00.00  00.00  00.00 
-  ----------------------------
-
-
-dense_pagerank_omp Discussion Questions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  Analyze your table of results and answer the following questions.
-  1. Did using more processors result in speedups?
-  2. Describe any trends or anomalies you see in the timings and
-     speculate on their causes - e.g. was there are a steady increase in
-     runtimes, steady decrease, or jagged changes in timing?
-  3. Try to explain how number of processors and problem size seem to
-     affect runtimes/speedup in the problem. Consider the number of
-     physical cores which are on the Veggie machines (obtainable via
-     `lscpu').
-  4. Compare these timings to your MPI results (if available) and
-     indicate whether the distributed memory or shared memory seems
-     favorable according to your results.
-
-
-OPTIONAL MAKEUP Problem 4
-=========================
-
-  If working on the optional MAKEUP problem, add information described
-  in the assignment specification here.
+     affect runtimes/speedup in the problem. Consider that most Mesabi
+     Nodes have 24 cores on them. Comment on whether this number seems
+     to affect the performance of the runs you see.
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org067235e" class="outline-2">
-<h2 id="org067235e"><span class="section-number-2">4</span> <code>mpi_hello.c</code>: A Sample MPI Program</h2>
+<div id="outline-container-orgfe3c42a" class="outline-2">
+<h2 id="orgfe3c42a"><span class="section-number-2">4</span> <code>mpi_hello.c</code>: A Sample MPI Program</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 A simple sample program called <code>mpi_hello.c</code> is provided as part of
@@ -998,10 +750,11 @@ debugging purposes.
 </p>
 
 <ul class="org-ul">
-<li><code>dprintf(fmt,...)</code> is like <code>pprintf()</code> except that it only prints if
-the environment variable <code>DEBUG</code> is set as is shown in the run
-below. This enables debugging messages to be printed but disabled
-during normal runs.</li>
+<li><code>dprintf(fmt,...)</code> is like <code>printf()</code> except that it only prints if
+the environment variable <code>DEBUG</code> is set and displays processor
+information in the prefixed with <code>|DEBUG</code>. This enables debugging
+messages to be printed during development but are disabled during
+normal runs.</li>
 </ul>
 
 <p>
@@ -1066,13 +819,243 @@ techniques.
 </div>
 </div>
 
-<div id="outline-container-orge75d713" class="outline-2">
-<h2 id="orge75d713"><span class="section-number-2">5</span> <b>Problem 1</b>: Parallel Heat (25%)</h2>
+<div id="outline-container-orgf0e3d3e" class="outline-2">
+<h2 id="orgf0e3d3e"><span class="section-number-2">5</span> MPI Jobs on MSI Machines</h2>
 <div class="outline-text-2" id="text-5">
+<p>
+The Minnesota Supercomputing Institute has facilities to run parallel
+programs which we will use to evaluate our code. Jobs are handled in
+two ways
+</p>
+<ol class="org-ol">
+<li><b>Interactive Jobs</b> which can be run on <i>login</i> nodes. SSH to a
+machine, compile your code and run it. You may use a limited number
+of processors for this but it is extremely useful while developing
+and testing. Login nodes are shared among all users logged in so
+performance numbers are unreliable (e.g. affected by other activity
+by other users).</li>
+<li><b>Batch Jobs</b> which are submitted to a job queue to be run on  via
+the <code>sbatch job.sh</code> command. When a job is selected to be run, it
+is assigned to run exclusively on some compute nodes so that it may
+achieve reliable and maximal performance. This is where timing
+results will be reported.</li>
+</ol>
+
+<p>
+We will use the <code>mesabi</code> MSI system which can be reached via SSH
+connections:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; ssh kauffman@mesabi.msi.umn.edu
+password: ..........
+Duo two-factor login for kauffman
+
+Enter a passcode or select one of the following options:
+
+ 1. Duo Push to XXX-XXX-4971
+ 2. Phone call to XXX-XXX-4971
+
+Passcode or option (1-2): 1
+...
+
+ln0006 [~]% 
+</pre>
 </div>
-<div id="outline-container-org3b5ed81" class="outline-3">
-<h3 id="org3b5ed81"><span class="section-number-3">5.1</span> The Heat Problem</h3>
+<p>
+It is suggested that you  <a href="https://www-users.cse.umn.edu/~kauffman/tutorials/unix-environment.html#ssh-keys">set up SSH keys to ease login</a> to Mesabi
+though you will need to continue Duo-authenticating during login.
+</p>
+</div>
+
+<div id="outline-container-org307d665" class="outline-3">
+<h3 id="org307d665"><span class="section-number-3">5.1</span> Software Modules on MSI</h3>
 <div class="outline-text-3" id="text-5-1">
+<p>
+Additionally, MSI uses a <b>software modules system</b> to specify use of
+different libraries and code packages. To access the most current
+version of MPI, you will need to run the following command in your
+login shell.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"># load mpi software into path
+ln0006 [~]% module load ompi/4.0.0/gnu-8.2.0-centos7
+
+# alternative using script in code pack directory
+ln0006 [~]% source a2-code/msi-setup.sh
+
+# check version of MPI
+ln0006 [~]% which mpicc
+/panfs/roc/msisoft/openmpi/el6/4.0.0/gnu-8.2.0.CentOS7/bin/mpicc
+
+ln0006 [~]% which mpirun
+/panfs/roc/msisoft/openmpi/el6/4.0.0/gnu-8.2.0.CentOS7/bin/mpirun
+</pre>
+</div>
+<p>
+Note that the <code>msi-setup.sh</code> script is provided as an alternative and
+can be sourced.
+</p>
+
+<p>
+The list of all modules available is seen via <code>module avail</code>. Note
+that the version of MPI we will use is the most current but not the
+default. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1b2f6d5" class="outline-3">
+<h3 id="org1b2f6d5"><span class="section-number-3">5.2</span> Batch Jobs on MSI</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+Use the <code>sbatch job.sh</code> command to submit a job to the SLURM job
+queue.  To ease timing evaluations, a job script with required
+parameters has been provided for all of the problems. For instance,
+for the Heat problem, use the script <code>heat-slurm.sh</code>.  Checking 
+on the status of jobs in the queue is done via <code>squeue -u
+username</code>. The provided scripts have the following properties:
+</p>
+<ul class="org-ul">
+<li><p>
+Require you to <b>change the directory of your code</b> in it but
+otherwise do not need to be modified. Look for the line
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">  # ADJUST: location of executable
+  cd ~/mesabi-a2-5451/
+</pre>
+</div>
+<p>
+in the script and change the target directory to wherever you have
+placed your code. Ensure it is compiled ahead of time.
+</p></li>
+<li>Will run MPI jobs for the required programs on the required number
+of processors</li>
+<li>Output for the job will be left in a file like
+<code>heat-slurm.sh.job-156425531.out</code> which starts with the job script
+name</li>
+<li><p>
+Lines in the script that are marked <code>runtime:</code> report wall clock
+time along with the problem parameters in it these appear like
+</p>
+<pre class="example">
+runtime: procs 16 width 102400 realtime 5.15
+</pre>
+
+<p>
+and make it possible to use <code>grep</code> or other tools to quickly fish
+out the lines reporting runtimes for construction of the results.
+</p></li>
+<li>Will charge compute time to the CSCI 5451 class account via the
+<code>--account</code> option to SLURM</li>
+<li>The scripts have the correct MPI software module loaded at the
+beginning of them and will call <code>mpirun</code> on the program.</li>
+</ul>
+
+
+<p>
+The session below demonstrates use of <code>sbatch</code> and <code>squeue</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">ln0006 [mesabi-a2-5451]% sbatch heat-slurm.sh    # submit script to run for heat jobs
+Submitted batch job 156504577
+
+ln0006 [mesabi-a2-5451]% squeue -u kauffman      # check on the submitted jobs by user kauffman
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+         156504535     small kmeans-s kauffman PD       0:00      6 (Priority)
+         156504577     small heat-slu kauffman PD       0:00      6 (None)
+
+# jobs are PD - Pending but not being run yet
+
+
+# a useful command to "watch" the queue, press Ctl-c to kill the watch
+ln0006 [mesabi-a2-5451]% watch 'squeue -u kauffman'
+
+# later....
+ln0006 [mesabi-a2-5451]% squeue -u kauffman      # check on the submitted jobs by user kauffman
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+
+ln0006 [mesabi-a2-5451]%                         # no jobs listed, all jobs done with results
+
+ln0006 [mesabi-a2-5451]% ls *156504577*          # check for output job
+heat-slurm.sh.job-156504577.out
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org0d8518e" class="outline-2">
+<h2 id="org0d8518e"><span class="section-number-2">6</span> Testing MPI Codes</h2>
+<div class="outline-text-2" id="text-6">
+</div>
+<div id="outline-container-orgb9eabe2" class="outline-3">
+<h3 id="orgb9eabe2"><span class="section-number-3">6.1</span> On MSI Machines</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+Testing out codes on MSI machines is ideal as it is the same
+environment as what the timing evaluation will involve. The same
+commands can be used (load MPI module, compile, run with <code>mpirun -np
+4</code>), with the minor limitation that there is a cap on the number of
+processors that can be tested interactively.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org133d993" class="outline-3">
+<h3 id="org133d993"><span class="section-number-3">6.2</span> On CSE Labs Machines</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+CSE Labs machines have an MPI installation (sort of) set up on the
+machines <code>cuda01-cselabs.umn.edu</code> to <code>cuda05-cselabs.umn.edu</code>. By
+logging in, one will have access on those machines to <code>mpicc</code> and
+<code>mpirun</code> commands. However, the configuration is a bit unwieldly and
+requires some setup. Here are some gotchyas to keep in mind and move
+you towards the MSI machines.
+</p>
+<ol class="org-ol">
+<li>You must use a Hostfile via <code>mpirun -hostfile hf.txt</code> and due to
+the configuration problems on these systems, the hosts will need to
+be listed via their IP address rather than their symbolic name.</li>
+<li>You will need to have SSH keys setup up for password-free
+login. For details on how to do this see <a href="https://www-users.cse.umn.edu/~kauffman/tutorials/unix-environment.html#ssh-keys">this tutorial</a>.</li>
+<li>All of the <code>cuda-NN</code> machines will need to be in your authorized
+host file. The easiest way to do this is to log in to <code>cuda01</code>
+then, from that machine, SSH to <code>cuda02</code>, then <code>cuda03</code>, and so
+forth up to <code>cuda05</code>.  This only needs to be done once but if you
+fail to do so, MPI runs beyond the local number of processors will
+hang silently.</li>
+</ol>
+<p>
+Surmounting these factors is not difficult but creates enough friction
+that MSI is easier and preferred for testing.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd12fe90" class="outline-3">
+<h3 id="orgd12fe90"><span class="section-number-3">6.3</span> On Home Machines</h3>
+<div class="outline-text-3" id="text-6-3">
+<p>
+Setting up a home MPI installation is another option. In most cases a
+Linux or Unix system can install OpenMPI with a package manager and by
+using <code>mpirun --oversubscribe</code> one can test on a number of processors
+larger than available as physical cores on the system. Do not expect
+speedup in these cases but it is extremely useful for debugging.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org509a7ac" class="outline-2">
+<h2 id="org509a7ac"><span class="section-number-2">7</span> <b>Problem 1</b>: MPI Heat</h2>
+<div class="outline-text-2" id="text-7">
+</div>
+<div id="outline-container-orgbdc8575" class="outline-3">
+<h3 id="orgbdc8575"><span class="section-number-3">7.1</span> The Heat Problem</h3>
+<div class="outline-text-3" id="text-7-1">
 <p>
 A slightly modified version of the heat propagation simulation from
 HW1 and in-class discussion is in the code pack and called
@@ -1126,9 +1109,15 @@ usage: ./heat_serial max_time width print
 </div>
 </div>
 
-<div id="outline-container-orgef89c75" class="outline-3">
-<h3 id="orgef89c75"><span class="section-number-3">5.2</span> MPI Heat</h3>
-<div class="outline-text-3" id="text-5-2">
+<div id="outline-container-org901fd68" class="outline-3">
+<h3 id="org901fd68"><span class="section-number-3">7.2</span> MPI Heat</h3>
+<div class="outline-text-3" id="text-7-2">
+<p>
+In our <a href="https://canvas.umn.edu/courses/355247/pages/week-03-videos">Thu 02-Feb Lecture we discussed an MPI version of the heat
+transfer problem</a> and it may be worthwhile to review this lecture to
+recall some details of data distribution and communication.
+</p>
+
 <p>
 The central task of this problem is to create an MPI version of this
 program named <code>heat_mpi</code> which performs the same task but uses MPI
@@ -1176,9 +1165,9 @@ sys	0m0.073s
 </div>
 
 
-<div id="outline-container-orgdcb63c5" class="outline-3">
-<h3 id="orgdcb63c5"><span class="section-number-3">5.3</span> Features of <code>heat_mpi</code></h3>
-<div class="outline-text-3" id="text-5-3">
+<div id="outline-container-orgd68195d" class="outline-3">
+<h3 id="orgd68195d"><span class="section-number-3">7.3</span> Features of <code>heat_mpi</code></h3>
+<div class="outline-text-3" id="text-7-3">
 <ul class="org-ul">
 <li>Name your program <code>heat_mpi.c</code> to be compatible with the provided
 <code>Makefile</code>. It has a target to build both <code>heat_serial</code> and
@@ -1348,9 +1337,9 @@ an error and exit immediately, etc.).
 </div>
 </div>
 
-<div id="outline-container-org4274a11" class="outline-3">
-<h3 id="org4274a11"><span class="section-number-3">5.4</span> Written Summary of the <code>heat_mpi</code> Results</h3>
-<div class="outline-text-3" id="text-5-4">
+<div id="outline-container-orgb4c8a09" class="outline-3">
+<h3 id="orgb4c8a09"><span class="section-number-3">7.4</span> Written Summary of the <code>heat_mpi</code> Results</h3>
+<div class="outline-text-3" id="text-7-4">
 <p>
 Included with the project code is the file <code>A2-WRITEUP.txt</code> which has
 a timing table to fill in and a few discussion questions which should
@@ -1358,61 +1347,20 @@ be answered.
 </p>
 
 <p>
-<b>Time your runs on the Veggie Cluster</b>. You can SSH into any of the
-following machines to do the timing.
-</p>
-<div class="org-src-container">
-<pre class="src src-sh">csel-broccoli.cselabs.umn.edu
-csel-carrot.cselabs.umn.edu
-csel-potato.cselabs.umn.edu
-csel-radish.cselabs.umn.edu
-csel-spinach.cselabs.umn.edu
-</pre>
-</div>
-
-<p>
-Gathering data for the timing table is eased via the provided
-<code>heat-run-jobs.sh</code> program which will run jobs with each of the
-parameters in the timing table listed. A log file is created with
-output and times for each of the jobs. One can quickly extract the
-timings for each job with the <code>grep</code> command.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; ./heat-run-jobs.sh
-Output stored in the file 'heat-timings.Fri_19_Nov_2021_04:30:13_PM_CST.log'
-mpirun  --mca opal_warn_on_missing_libcuda 0  -np 1 ./heat_mpi 500 6400 0
-mpirun  --mca opal_warn_on_missing_libcuda 0  -np 2 ./heat_mpi 500 6400 0
-mpirun  --mca opal_warn_on_missing_libcuda 0  -np 4 ./heat_mpi 500 6400 0
-...
-Output stored in the file 'heat-timings.Fri_19_Nov_2021_04:30:13_PM_CST.log'
-
-&gt;&gt; grep runtime heat-timings.Fri_19_Nov_2021_04:30:13_PM_CST.log
-runtime: procs 1 width 6400 realtime 1.234
-runtime: procs 2 width 6400 realtime 1.234
-runtime: procs 4 width 6400 realtime 1.234
-runtime: procs 8 width 6400 realtime 1.234
-runtime: procs 10 width 6400 realtime 1.234
-runtime: procs 16 width 6400 realtime 1.234
-runtime: procs 32 width 6400 realtime 1.234
-runtime: procs 64 width 6400 realtime 1.234
-runtime: procs 128 width 6400 realtime 1.234
-runtime: procs 1 width 12800 realtime 1.234
-runtime: procs 2 width 12800 realtime 1.234
-runtime: procs 4 width 12800 realtime 1.234
-...
-</pre>
-</div>
-<p>
-The times above are intentionally listed all as <code>1.234</code> to prevent
-biasing your own investigations.
+<b>Time your runs on MSI's Mesabi Cluster</b>. You can SSH to it via <code>ssh
+myX500@mesabi.msi.umn.edu</code>.  Gathering data for the timing table is
+eased via the provided <code>heat-slurm.sh</code> job script which will run jobs
+with each of the parameters in the timing table listed. Timing results are
+printed with the string <code>runtime:</code> prepended to each line. See the
+Earlier examples of how to use <code>sbatch</code>, check the queue via <code>squeue</code>
+and find the output files for the completed jobs.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org76d0d3d" class="outline-3">
-<h3 id="org76d0d3d"><span class="section-number-3">5.5</span> Automated Tests for <code>heat_mpi</code></h3>
-<div class="outline-text-3" id="text-5-5">
+<div id="outline-container-org0ab4254" class="outline-3">
+<h3 id="org0ab4254"><span class="section-number-3">7.5</span> Automated Tests for <code>heat_mpi</code></h3>
+<div class="outline-text-3" id="text-7-5">
 <p>
 A battery of automated tests are provided to evaluate whether
 <code>heat_mpi</code> is producing correct results on some small examples. These
@@ -1458,560 +1406,9 @@ faults.
 </div>
 </div>
 
-<div id="outline-container-org2ee8cb4" class="outline-3 grading 25">
-<h3 id="org2ee8cb4"><span class="section-number-3">5.6</span> <a id="org8d119d0"></a> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="25">25</span></span></h3>
-<div class="outline-text-3" id="text-5-6">
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-right" />
-
-<col  class="org-left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="org-right">&#xa0;</th>
-<th scope="col" class="org-left">CRITERIA</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="org-right">10</td>
-<td class="org-left">Code compiles via <code>make heat_mpi</code> and passes automated tests via <code>make test-prob1</code></td>
-</tr>
-
-<tr>
-<td class="org-right">5</td>
-<td class="org-left">Cleanly written code with good documentation according to a Manual Inspection</td>
-</tr>
-
-<tr>
-<td class="org-right">5</td>
-<td class="org-left">Written report includes timings table described above</td>
-</tr>
-
-<tr>
-<td class="org-right">5</td>
-<td class="org-left">Written report includes answers to discussion questions written above.</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-
-<div id="outline-container-orgee6ebfc" class="outline-3">
-<h3 id="orgee6ebfc"><span class="section-number-3">5.7</span> <a id="org95a201f"></a> MPI Setup on CSE Labs</h3>
-<div class="outline-text-3" id="text-5-7">
-<p>
-Log into the Veggie Cluster and use the following commands to ensure
-that SSH + MPI is set up correctly for the timing scripts to run.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; ssh username@csel-carrot.cselabs.umn.edu                                # log into CSE Labs machine
-...
-&gt;&gt; cd 5451/a2-code                                                         # change to project directory
-
-&gt;&gt; ssh-keygen -t rsa                                                       # create a public private key pair
-Generating public/private rsa key pair.
-Enter file in which to save the key (/home/kauffman/.ssh/id_rsa):          # press ENTER to accept default
-Enter passphrase (empty for no passphrase):                                # press ENTER for no pass phrase
-Enter same passphrase again:                                               # press ENTER again
-Your identification has been saved in /home/kauffman/.ssh/id_rsa           # NOTE: If prompted with "want to overwrite file .ssh/id_rsa??"
-Your public key has been saved in /home/kauffman/.ssh/id_rsa.pub           #       you can cancel and proceed to the next command
-The key fingerprint is:
-...
-
-&gt;&gt; ssh-copy-id csel-radish.cselabs.umn.edu                                 # enable login based on key without password
-/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/kauffman/.ssh/id_rsa.pub"
-The authenticity of host 'csel-radish.cselabs.umn.edu (128.101.34.61)' cant be established.
-RSA key fingerprint is SHA256:UXK/o93Meuq5C0hMgkaZkRZi9otBOZWncDJrm46xA+Y.
-Are you sure you want to continue connecting (yes/no/[fingerprint])? yes   # type "yes" if prompted
-/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
-/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
-Password:                                                                  # Enter X500 password
-Duo two-factor login for kauffman
-Enter a passcode or select one of the following options:
- 1. Duo Push to XXX-XXX-XXXX
- 2. Phone call to XXX-XXX-XXXX
-Passcode or option (1-2): 1                                                # enter preferred option to Duo Authenticate
-
-Number of key(s) added: 1
-
-Now try logging into the machine, with:   "ssh 'csel-radish.cselabs.umn.edu'"
-and check to make sure that only the key(s) you wanted were added.
-
-&gt;&gt; ssh csel-radish.cselabs.umn.edu                                         # as indicated, try logging
-----------------------------------------------------------------------
-       COLLEGE OF SCIENCE AND ENGINEERING WORKSTATION
-...                                                                        # no password required: authenticated via public/private key
-csel-radish [~]% exit                                                      # exit this shell to return to carrot
-logout
-Connection to csel-radish.cselabs.umn.edu closed.
-
-&gt;&gt; chmod u+x host-add-veggie.sh                                            # ensure host-adding script is executable
-
-&gt;&gt; ./host-add-veggie.sh                                                    # run host-adding script
-Warning: Permanently added 'csel-broccoli.cselabs.umn.edu' (RSA) to the list of known hosts.
-Done : csel-broccoli.cselabs.umn.edu
-Warning: Permanently added 'csel-carrot.cselabs.umn.edu,128.101.34.62' (RSA) to the list of known hosts.
-Done : csel-carrot.cselabs.umn.edu
-Warning: Permanently added 'csel-potato.cselabs.umn.edu,128.101.34.64' (RSA) to the list of known hosts.
-Done : csel-potato.cselabs.umn.edu
-Done : csel-radish.cselabs.umn.edu
-Warning: Permanently added 'csel-spinach.cselabs.umn.edu,128.101.34.63' (RSA) to the list of known hosts.
-Done : csel-spinach.cselabs.umn.edu
-
-&gt;&gt; ./heat-run-jobs.sh                                                      # verify that timing script runs
-Output stored in the file 'heat-timings.Tue_14_Dec_2021_03:06:33_PM_CST.log'
-mpirun  --mca opal_warn_on_missing_libcuda 0 -hostfile hostfile-veggie-ip.txt -np 1 ./heat_mpi 500 6400 0
-mpirun  --mca opal_warn_on_missing_libcuda 0 -hostfile hostfile-veggie-ip.txt -np 2 ./heat_mpi 500 6400 0
-...
-</pre>
-</div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org4a571f3" class="outline-2">
-<h2 id="org4a571f3"><span class="section-number-2">6</span> Page Rank</h2>
-<div class="outline-text-2" id="text-6">
-</div>
-<div id="outline-container-org037f922" class="outline-3">
-<h3 id="org037f922"><span class="section-number-3">6.1</span> Overview of Computing Pageranks</h3>
-<div class="outline-text-3" id="text-6-1">
-<p>
-A key to Google's early success was its ability of its search engine
-to identify web pages which seemed important to user search queries.
-A key component of their engine was and remains an importance metric
-metric called <a href="https://en.wikipedia.org/wiki/PageRank">Pagerank</a>, so named due to its ranking a web page and the
-author of the algorithm is Larry Page (history is has a splendid sense
-of irony).  The pagerank has a beautiful theory behind it which
-involves modeling web users as random walkers through hyperlinked
-pages. On arriving at a page, a user randomly selects a link and
-visits it. This process is repeated on the next page, and the next
-page, and so forth. With a small probability, a user may randomly jump
-to some arbitrary other page which is not linked to the present one.
-According to this formalism, pagerank represents the probability of
-finding a user on a given page at a particular moment in time.  A page
-with many incoming links to it has a higher probability of being
-visited as many other pages have "voted" for its importance.  A page
-with many outgoing links contributes little to importance of any
-linked pages: its votes are spread very thin.  This rough sort of
-voting turned out to be a good measure of the importance of page, at
-least in the early 2000s before <a href="https://en.wikipedia.org/wiki/Google_bomb">web denizens learned to manipulate the
-algorithm</a>.
-</p>
-
-<p>
-It turns out that if the network of links web pages is represented as
-a certain matrix, the page ranks are identical to a particular
-eigenvector of that matrix.  There are several interesting facets to
-this relationship for the mathematically inclined and good reading on
-the subject comes from <a href="http://snap.stanford.edu/class/cs224w-readings/berkhin05pagerank.pdf">a survey by Bherkin</a>. The bottom line is that
-any algorithms for computing an eigenvector of a matrix can be used to
-compute page ranks.  A classical iterative technique to compute
-eigenvectors is the <a href="https://en.wikipedia.org/wiki/Power_iteration">Power Method</a> which involves repeatedly multiplying
-a vector by a matrix. Matrix-vector multiplication is a ripe operation
-for parallelization and your primary task will be to parallelize this
-process for the pagerank computation.
-</p>
-
-<p>
-A code is provided called <code>dense_pagerank_serial.c</code> which performs pagerank
-serial computations.  In high-level terms the computation breaks down
-as follows.
-</p>
-<ol class="org-ol">
-<li><b>Load data</b> for a matrix of web page links (<b>link matrix</b>).  Each
-page is numbered 0 to <code>N-1</code> where <code>N</code> is the total number of pages.
-The file format is simply pairs of numbers of one page pointing to
-another one.  Loading the file involves allocating memory for the
-entire matrix, zeroing each entry, then filling a 1 into each
-row/col entry indicated by the file.</li>
-<li><b>Normalize columns</b> by summing each column in the matrix, then
-dividing each entry in a column by the sum of the column.</li>
-<li><b>Apply a damping factor</b> which allows random warping from one page
-to another.  The math on this is a little funky, but the intent is
-to make each nonzero entry in the matrix a little smaller and each
-zero entry nonzero so there is a chance of jumping to an arbitrary
-page.  See the code for the specific math involved with the
-update. A typical damping factor is 0.85: 85% chance of visiting a
-link on the page and 15% change of jumping an arbitrary unlinked
-page. This modifies the initial Link matrix once at the beginning
-of the pagerank calculation.</li>
-<li><b>Initialize pageranks</b> to be equal for each page and so that the
-pageranks sum to 1.  If there are 10 pages, each page initially has
-a pagerank of 0.1; with 100 pages each has 0.01.  Only the relative
-size between ranks is important.</li>
-<li><b>Multiply the link matrix by the pageranks</b> according to the
-standard matrix-vector multiplication algorithm.  Store the results
-in a second array of numbers.  This second array of numbers is now
-the <b>new pageranks</b>.  Assign this back to the array of old
-pageranks after checking for convergence.</li>
-<li><b>Repeat step 5</b> of creating new pageranks by multiplying the link
-matrix by the old pageranks.  Continue repeating this until there
-is very little change between new and old pageranks.  At this
-point, the solution has converged.</li>
-</ol>
-
-<p>
-This algorithm is a good example of iterative algorithms: it is not
-known ahead of time how many steps will be required to converge but
-steady progress should be made as indicated by the old and new
-pagerank vectors being closer and closer together.
-</p>
-
-<p>
-Note that due to the columns of the link matrix and the vector of
-pageranks being positive and summing to 1, the results of their
-multiplication should also sum to 1 (e.g. the new pageranks also sum
-to 1).  The code presently reports the <b>norm</b> of the vector as this
-sum and it should remain 1 throughout the computation.
-</p>
-
-<p>
-It should be mentioned that the provided code is a <b>dense</b> version of
-the pagerank: every element of the link matrix has memory allocated to
-it.  Unsurprisingly, a production version of the code would use
-<b>sparse</b> matrices instead where the many zero entries of the matrix
-are represented implicitly to save a tremendous amount of memory.
-While the dense algorithm is easier to parallelize than the sparse,
-the dense version is woefully inappropriate for the enormous size of
-Google-scale pagerank computations involving 30,000,000,000,000+ web
-pages. It is a computation that necessitates parallelism at a
-sickening scale but is reasonably approximated by the present code.
-</p>
-
-<p>
-Take some time to examine the code provided carefully. 
-</p>
-</div>
-</div>
-
-<div id="outline-container-org2768664" class="outline-3">
-<h3 id="org2768664"><span class="section-number-3">6.2</span> Sample Runs of <code>dense_pagerank_serial.c</code></h3>
-<div class="outline-text-3" id="text-6-2">
-<p>
-Part of the code distribution includes some graph files which you can
-use for experimentation and timing analysis of your code.  Each graph
-is named after its size and content.  The <code>notredame</code> graphs are
-derived from a real dataset of web sites in the Notre Dame domain. The
-full set is <a href="http://snap.stanford.edu/data/#web">available here</a> though will require a bit of processing to
-be used with this code and is extremely large for a dense pagerank
-calculation.  
-</p>
-
-<p>
-Start by experimenting with the small graphs like <code>tiny-20.txt</code> which
-has only 20 nodes in it and 200 links between pages.
-</p>
-<div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; ls graphs/*.txt
-graphs/notredame-100.txt    graphs/notredame-2000.txt  graphs/notredame-8000.txt
-graphs/notredame-16000.txt  graphs/notredame-501.txt   graphs/tiny-20.txt
-
-&gt;&gt; make dense_pagerank_serial 
-gcc -g -Wall -o dense_pagerank_serial dense_pagerank_serial.c densemat.c -lm
-
-&gt;&gt; dense_pagerank_serial graphs/tiny-20.txt 0.85 
-Loaded graphs/tiny-20.txt: 20 rows, 200 nonzeros
-Beginning Computation
-
-ITER     DIFF     NORM
-  1: 1.78e-01 1.00e+00
-  2: 3.85e-02 1.00e+00
-  3: 7.27e-03 1.00e+00
-  4: 1.32e-03 1.00e+00
-  5: 2.12e-04 1.00e+00
-CONVERGED
-
-PAGE RANKS
-0.04779640
-0.04147775
-0.04912589
-0.03965692
-0.05845908
-0.04394957
-0.02513647
-0.04369224
-0.05522195
-0.07147504
-0.05889092
-0.06569723
-0.05264261
-0.03913282
-0.05423814
-0.05833793
-0.04308603
-0.06827848
-0.03697897
-0.04672553
-</pre>
-</div>
-
-<p>
-The progress at each iteration is reported: the <code>DIFF</code> column should
-get progressively smaller while the <code>NORM</code> column should remain 1
-throughout.  After convergence, the pageranks of the 20 pages are
-printed.
-</p>
-
-<p>
-The largest graph you should work with is <code>notredame-8000.txt</code>
-which has 8000 web sites involved in it leading to an 8000 by 8000
-link matrix.  Running this through the serial code looks like the
-following.  Note that the output will be long (8000+ lines) so it is
-put into the file <code>output.txt</code> and examined using the <code>head</code> command
-to display the first few lines.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; ls graphs/*.txt
-graphs/notredame-100.txt    graphs/notredame-2000.txt  graphs/notredame-8000.txt
-graphs/notredame-16000.txt  graphs/notredame-501.txt   graphs/tiny-20.txt
-
-&gt;&gt; dense_pagerank_serial graphs/notredame-8000.txt 0.85 &gt; output.txt
-&gt;&gt; head -50 output.txt
-Loaded graphs/notredame-8000.txt: 8000 rows, 27147 nonzeros
-Beginning Computation
-
-ITER     DIFF     NORM
-  1: 1.26e+00 1.00e+00
-  2: 7.92e-01 1.00e+00
-  3: 4.24e-01 1.00e+00
-  4: 2.48e-01 1.00e+00
-  5: 1.50e-01 1.00e+00
-  6: 9.45e-02 1.00e+00
-  7: 6.23e-02 1.00e+00
-  8: 4.11e-02 1.00e+00
-  9: 2.73e-02 1.00e+00
- 10: 1.91e-02 1.00e+00
- 11: 1.31e-02 1.00e+00
- 12: 9.24e-03 1.00e+00
- 13: 6.74e-03 1.00e+00
- 14: 4.91e-03 1.00e+00
- 15: 3.75e-03 1.00e+00
- 16: 2.81e-03 1.00e+00
- 17: 2.16e-03 1.00e+00
- 18: 1.64e-03 1.00e+00
- 19: 1.27e-03 1.00e+00
- 20: 9.79e-04 1.00e+00
-CONVERGED
-
-PAGE RANKS
-0.00227804
-0.00044506
-0.00001875
-0.00051994
-0.00156742
-0.00015092
-0.00087703
-0.00111392
-0.00123884
-0.00081005
-0.00252026
-0.00359624
-0.00007052
-...
-</pre>
-</div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org8bcdfa1" class="outline-2">
-<h2 id="org8bcdfa1"><span class="section-number-2">7</span> <b>Problem 2</b>: MPI PageRank (50%)</h2>
-<div class="outline-text-2" id="text-7">
-<p>
-Parallelize the provided <code>dense_pagerank_serial.c</code> code for
-distributed systems. Call your code <code>dense_pagerank_mpi.c</code> as this is
-the convention that is supported by provided <code>Makefile</code>.
-</p>
-</div>
-
-<div id="outline-container-orgc7b7591" class="outline-3">
-<h3 id="orgc7b7591"><span class="section-number-3">7.1</span> Reading Data Files</h3>
-<div class="outline-text-3" id="text-7-1">
-<p>
-The program starts with reading input from a file which should be done
-only on the root processor.  After reading the whole matrix into the
-root processor, send chunks of the matrix to each processor for
-the main part of the algorithm.
-</p>
-
-<p>
-The serial code uses a <code>densemat_t</code> structure to store the matrix.
-This structure uses a trick.
-</p>
-<ul class="org-ul">
-<li>All elements are stored in a linear array called <code>all</code>.  This allows
-linear index access via <code>mat-&gt;all[i]</code></li>
-<li>An array of pointers called <code>data</code> points to the beginning of each
-row in the matrix. This allows row/col access via <code>mat-&gt;data[r][c]</code>.</li>
-<li>As a consequence of the linear array, sequential rows are stored in
-adjacent memory. In a 10 by 10 matrix, rows 0, 1, and 2 are stored
-in elements 0-29 of <code>mat-&gt;all</code>.  This makes it possible to send
-multiple adjacent rows with single communications.</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-orgd871c4d" class="outline-3">
-<h3 id="orgd871c4d"><span class="section-number-3">7.2</span> Row Partitioning Woes</h3>
-<div class="outline-text-3" id="text-7-2">
-<p>
-The main source of parallelism is obtained by dividing up the link
-matrix so that each processor owns a collection of whole rows.  This
-is effective as matrix vector multiplication relies on multiplying a
-whole row by a column vector (the pageranks in this case).  
-</p>
-
-<p>
-<b>Do not assume</b> that the number of rows in the link matrix is evenly
-divisible by the number of processors.  Make your code more flexible
-than that.  This, unfortunately, means dealing with some minutia as
-not every processor will send or receive the same number of elements.
-As a suggested approach, do the following
-</p>
-<ul class="org-ul">
-<li>First, assume the number of rows is evenly divisible by the number
-of processors and use simple MPI calls like <code>MPI_Scatter</code> and
-<code>MPI_Allgather</code> which assume every processor will receive the same
-number of elements.  Make sure that this version works on some of
-the input graphs for numbers of processors that evenly divide the
-size.</li>
-<li>When you are confident in your code above, make a backup copy of it
-for safekeeping.</li>
-<li>Now take the plunge and switch to the MPI vector calls which allow
-one to specify then number of elements each processor will receive:
-functions like <code>MPI_Scatterv</code> and <code>MPI_Allgatherv</code> (notice the <code>v</code>
-at the end) take additional parameter arrays of the counts of
-elements for each processor and the offsets into storage arrays
-where those elements reside.  These more complex invocation may seem
-tedious, but all that is really required is to set up arrays
-indicating the counts elements on each processor and pass those in.
-Establish these arrays near the beginning of the program and use
-them throughout.</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-org1b00484" class="outline-3">
-<h3 id="org1b00484"><span class="section-number-3">7.3</span> Parallelizing Column Normalization and Damping</h3>
-<div class="outline-text-3" id="text-7-3">
-<p>
-It is suggested that you initially let the root processor read the
-whole matrix, normalize the rows, apply the damping factor, then
-scatter the matrix rows to each processor.  That way the serial code
-can be used to ensure normalization and damping is correct.
-</p>
-
-<p>
-Later, revisit the column normalization and damping to parallelize
-it. 
-</p>
-<ul class="org-ul">
-<li>Scatter the unnormalized link matrix rows to each process</li>
-<li>Have each process compute an array of its own column sums</li>
-<li>Use a all-to-all reduction so that every processor has the sums of
-all columns. Investigate a good MPI function for this all-to-all
-reduction and potentially use the <code>MPI_IN_PLACE</code> constant to save
-yourself some allocations of buffers (the manual pages for relevant
-MPI functions describe this option).</li>
-<li>Have each processor divide each of its elements by the appropriate
-column sum.</li>
-<li>Have each processor apply the damping factor adjustment to each of
-its elements.</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-org4aa8fd1" class="outline-3">
-<h3 id="org4aa8fd1"><span class="section-number-3">7.4</span> Parallelizing the Repeated Matrix-vector Multiplication</h3>
-<div class="outline-text-3" id="text-7-4">
-<p>
-The main computation loop involves repeatedly multiplying the link
-matrix by the vector or pageranks.  In the parallel version, each
-processor has some whole rows of the link matrix. Note the
-consequences of this decomposition.
-</p>
-<ul class="org-ul">
-<li>Each processor has some link matrix rows but must have the whole
-vector of old pageranks to do the multiplication</li>
-<li>After completing the multiplication, each processor will contain
-only part of the new pagerank vector and must communicate its
-portion of to all other processors for the next multiplication to
-occur.</li>
-<li>After each multiplication, each processor must also share how much
-its new pageranks differ from the equivalent portion of the old
-pagerank vector so that all processors can determine if the
-algorithm has converged.</li>
-</ul>
-<p>
-This will involve several collective communication operations at each
-iteration to share.
-</p>
-</div>
-</div>
-
-<div id="outline-container-orgc7f8c43" class="outline-3">
-<h3 id="orgc7f8c43"><span class="section-number-3">7.5</span> Written Summary of <code>dense_pagerank_mpi</code> Results</h3>
-<div class="outline-text-3" id="text-7-5">
-<p>
-Similar to the first problem, fill in the timing table in
-<code>A2-WRITEUP.txt</code> associated with this problem and answer the questions
-contained in that section.
-</p>
-
-<p>
-Perform your timing on the Veggie Cluster. To speed up your filling in
-the timing table, use the provided script <code>dense-pagerank-mpi-jobs.sh</code>
-which will run jobs for the parameters in the timing table. One can
-<code>grep</code> for the times amid the log file that is created as shown below.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; ./dense-pagerank-mpi-jobs.sh                                                                                                                                
-Output stored in the file 'dense-pagerank-mpi-timings.Fri_19_Nov_2021_04:16:25_PM_CST.log'                                                                                                    
-mpirun  --mca opal_warn_on_missing_libcuda 0 -hostfile hostfile-veggie-ip.txt -np 1 ./dense_pagerank_mpi graphs/notredame-501.txt 0.85                                                        
-mpirun  --mca opal_warn_on_missing_libcuda 0 -hostfile hostfile-veggie-ip.txt -np 4 ./dense_pagerank_mpi graphs/notredame-501.txt 0.85                                                        
-mpirun  --mca opal_warn_on_missing_libcuda 0 -hostfile hostfile-veggie-ip.txt -np 10 ./dense_pagerank_mpi graphs/notredame-501.txt 0.85
-...
-Output stored in the file 'dense-pagerank-mpi-timings.Fri_19_Nov_2021_04:16:25_PM_CST.log'
-
-&gt;&gt; grep runtime dense-pagerank-mpi-timings.Fri_19_Nov_2021_04:16:25_PM_CST.log
-runtime: procs 1 graph notredame-501.txt realtime 1.234
-runtime: procs 4 graph notredame-501.txt realtime 1.234
-runtime: procs 10 graph notredame-501.txt realtime 1.234
-...
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgd715edd" class="outline-3">
-<h3 id="orgd715edd"><span class="section-number-3">7.6</span> Automated Tests for <code>dense_pagerank_mpi</code></h3>
+<div id="outline-container-org7623846" class="outline-3 grading 40">
+<h3 id="org7623846"><span class="section-number-3">7.6</span> <a id="org9d57927"></a> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="40">40</span></span></h3>
 <div class="outline-text-3" id="text-7-6">
-<p>
-Automated tests will be released later.
-</p>
-
-<p>
-When the tests are released, you may run them with the provided
-<code>Makefile</code> via the following target:
-</p>
-<div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; make test-prob2
-...
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-orga402221" class="outline-3 grading 50">
-<h3 id="orga402221"><span class="section-number-3">7.7</span> Grading Criteria for Problem 2&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
-<div class="outline-text-3" id="text-7-7">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -2029,26 +1426,21 @@ When the tests are released, you may run them with the provided
 <tbody>
 <tr>
 <td class="org-right">10</td>
-<td class="org-left">Code compiles via <code>make dense_pagerank_mpi</code>, honors command line parameters on integrative runs.</td>
+<td class="org-left">Code compiles via <code>make prob1</code> and passes automated tests via <code>make test-prob1</code></td>
 </tr>
 
 <tr>
-<td class="org-right">10</td>
-<td class="org-left">Passes automated tests via <code>make test-prob2</code> which also checks for memory problems.</td>
-</tr>
-
-<tr>
-<td class="org-right">10</td>
+<td class="org-right">5</td>
 <td class="org-left">Cleanly written code with good documentation according to a Manual Inspection</td>
 </tr>
 
 <tr>
-<td class="org-right">10</td>
+<td class="org-right">5</td>
 <td class="org-left">Written report includes timings table described above</td>
 </tr>
 
 <tr>
-<td class="org-right">10</td>
+<td class="org-right">5</td>
 <td class="org-left">Written report includes answers to discussion questions written above.</td>
 </tr>
 </tbody>
@@ -2057,92 +1449,144 @@ When the tests are released, you may run them with the provided
 </div>
 </div>
 
-<div id="outline-container-orgeedde1a" class="outline-2">
-<h2 id="orgeedde1a"><span class="section-number-2">8</span> <b>Problem 3</b>: OpenMP PageRank (25%)</h2>
+<div id="outline-container-org83fd023" class="outline-2">
+<h2 id="org83fd023"><span class="section-number-2">8</span> <b>Problem 2</b>: Serial K-Means Clustering</h2>
 <div class="outline-text-2" id="text-8">
 <p>
-Similar to Problem 2, in this problem create a version of
-<code>dense_pagerank_serial.c</code> which is  parallelized for shared memory
-systems using <b>OpenMP</b>. Call this program <code>dense_pagerank_omp.c</code> as
-this will make it compatible with the provided <code>Makefile</code>.
+Assignment 1 introduced the K-Means clustering algorithm and provided
+a Python. If you did not finish your C port of this program, do so now
+as the MPI version should be based upon it.
+</p>
+
+<p>
+Make sure to name your program <code>kmeans_serial.c</code> to be compatible with
+the <code>Makefile</code> provided in the codepack. 
+</p>
+
+<p>
+Some automated tests are provided for the serial program which check
+that the output produced by the program and the clusters it generates
+match expectations. The tests also evaluate whether there any memory
+problems with the program.
 </p>
 </div>
 
-<div id="outline-container-orgc2a1881" class="outline-3">
-<h3 id="orgc2a1881"><span class="section-number-3">8.1</span> Shared Memory Implementation</h3>
-<div class="outline-text-3" id="text-8-1">
+
+
+<div id="outline-container-org302db54" class="outline-4 grading 10">
+<h4 id="org302db54"><a id="org913e34f"></a> Grading Criteria for Problem 2&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="10">10</span></span></h4>
+<div class="outline-text-4" id="text-org302db54">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">&#xa0;</th>
+<th scope="col" class="org-left">CRITERIA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Code compiles via <code>make prob2</code> and passes automated tests via <code>make test-prob2</code></td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Written report includes a description of how the serial code was parallelized</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1f56443" class="outline-2">
+<h2 id="org1f56443"><span class="section-number-2">9</span> <b>Problem 3</b>: MPI K-Means Clustering</h2>
+<div class="outline-text-2" id="text-9">
 <p>
-It is best to start with the Serial Pagerank code and begin augmenting
-loops via compiler directives.  This should prove fairly
-straight-forward to do for most loops but take the following into
-consideration.
+Implement parallel version of the K-means algorithm for distributed
+memory using MPI calls. Name your program <code>kmeans_mpi.c</code> to be
+compatible with the provided <code>Makefile</code>. We have discussed the basic
+strategy for parallelizing the code during lecture on Thu 16-Feb so
+review the discussion present there if you need guidance.
+</p>
+</div>
+
+<div id="outline-container-orgb2e5033" class="outline-3">
+<h3 id="orgb2e5033"><span class="section-number-3">9.1</span> Implementation Requirements</h3>
+<div class="outline-text-3" id="text-9-1">
+<ol class="org-ol">
+<li><p>
+<code>kmeans_mpi</code> will accept the same command line arguments as the
+Serial version. As all MPI programs, it will be launched via
+<code>mpirun</code> such as in
+</p>
+<pre class="example">
+mpirun -np 4 kmeans_mpi mnist-data/digits_all_1e2.txt 10 outdir1
+</pre></li>
+<li>The behavior and output of the MPI version will match the serial
+version in format; e.g. printed messages and produced output
+files.</li>
+<li><p>
+All I/O will be performed only by the root processor.  Only the
+root Processor 0 will read the data file specified for the
+program. It will send required information to other processors that
+are needed by them to contribute to the communication. At the end
+of the computation, the root processor will be sent all cluster
+assignments and cluster centers to be written to files by the root
+processor. 
 </p>
 
+<i>
+<p>
+This requirement is for learning purposes only: in a production
+setting, one would look to have each processor perform I/O
+operations in parallel if the system supported it. Such parallel
+I/O would be facilitated by a binary storage format rather than our
+text-based version. However, this assignment is designed to gain
+practice using MPI calls and distributing data then accumulating
+presents a good opportunity for this.
+</p>
+</i></li>
+<li>The algorithm implemented in the MPI version will follow an input
+partitioning approach as was discussed in lecture. Other
+possibilities exist but input partitioning is the most likely to be
+generally useful and lead to speedups.</li>
+</ol>
+</div>
+
+<div id="outline-container-org71c1768" class="outline-4">
+<h4 id="org71c1768">Implementation Notes</h4>
+<div class="outline-text-4" id="text-org71c1768">
 <ul class="org-ul">
-<li>Provide brief documentation comments for each loop that you will
-parallelize</li>
-<li>Pay special attention to any shared data that appears in the loops
-which one must use synchronization primitives to protect. Comment
-any atomic actions, critical regions, or reductions that are needed.</li>
-<li>If any loops seem unworthy of parallelizing, comment on this as
-well. For instance, if you are deciding to parallelize and Inner vs
-and Outer loop, describe in a few lines your rationale.</li>
-<li>EXCEPTION: Loops that must be serial as they produce output via
-<code>printf()</code> do not need to be commented.</li>
+<li>As before, follow the general flow provided in the Python
+implementation. The MPI version should produce identical results and
+hopefully faster.</li>
+<li>In our <a href="https://canvas.umn.edu/courses/355247/pages/week05-videos">Thu Feb-16 lecture</a> we had a class discussion on how to
+implement K-Means clustering for distributed memory machines. It may
+be worthwhile to review this discussion as it lays out some
+information of data distribution and communication required.</li>
 </ul>
 </div>
 </div>
+</div>
 
-<div id="outline-container-org1663bdb" class="outline-3">
-<h3 id="org1663bdb"><span class="section-number-3">8.2</span> Written Summary of <code>dense_pagerank_omp</code> Results</h3>
-<div class="outline-text-3" id="text-8-2">
+<div id="outline-container-org1bc6fcf" class="outline-3 grading 50">
+<h3 id="org1bc6fcf"><span class="section-number-3">9.2</span> <a id="orgc506cba"></a> Grading Criteria for Problem 3&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div class="outline-text-3" id="text-9-2">
 <p>
-As before, add fill in the timing table provided in <code>A2-WRITEUP.txt</code>
-in the section for Problem 3.  The script <code>dense-pagerank-omp.sh</code> is
-provided to ease this. Run your experiments on the Veggie cluster.
+Test cases will be provided for <code>kmeans_mpi.c</code> but will be released
+some time after the initial project is distributed. The <code>Makefile</code>
+contains a target for this, just requires the missing
+<code>test_kmeans_mpi.org</code> file which will have the tests.
 </p>
 
-<div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; ./dense-pagerank-omp-jobs.sh
-Output stored in the file 'dense-pagerank-omp-timings.Fri_19_Nov_2021_08:44:39_PM_CST.log'
-OMP_NUM_THREADS=1 ./dense_pagerank_omp graphs/notredame-501.txt 0.85
-OMP_NUM_THREADS=4 ./dense_pagerank_omp graphs/notredame-501.txt 0.85
-OMP_NUM_THREADS=10 ./dense_pagerank_omp graphs/notredame-501.txt 0.85
-...
-Output stored in the file 'dense-pagerank-omp-timings.Fri_19_Nov_2021_08:44:39_PM_CST.log'
-
-&gt;&gt; grep runtime dense-pagerank-omp-timings.Fri_19_Nov_2021_08:44:39_PM_CST.log
-runtime: procs 1 graph notredame-501.txt realtime 1.23
-runtime: procs 4 graph notredame-501.txt realtime 1.23
-runtime: procs 10 graph notredame-501.txt realtime 1.23
-...
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgdf71b7a" class="outline-3">
-<h3 id="orgdf71b7a"><span class="section-number-3">8.3</span> Automated Tests for <code>dense_pagerank_omp</code></h3>
-<div class="outline-text-3" id="text-8-3">
-<p>
-Automated tests will be released later.
-</p>
-
-<p>
-When the tests are released, you may run them with the provided
-<code>Makefile</code> via the following target:
-</p>
-<div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; make test-prob3
-...
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgcbc353e" class="outline-3 grading 25">
-<h3 id="orgcbc353e"><span class="section-number-3">8.4</span> Grading Criteria for Problem 3&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="25">25</span></span></h3>
-<div class="outline-text-3" id="text-8-4">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -2160,41 +1604,41 @@ When the tests are released, you may run them with the provided
 <tbody>
 <tr>
 <td class="org-right">10</td>
-<td class="org-left">Code compiles via <code>make dense_pagerank_omp</code> and passes automated tests via <code>make test-prob3</code></td>
+<td class="org-left">Code compiles via <code>make prob3</code>, honors command line parameters on interactive runs.</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Passes automated tests via <code>make test-prob3</code></td>
 </tr>
 
 <tr>
 <td class="org-right">5</td>
-<td class="org-left">Cleanly written code with good documentation according to a Manual Inspection</td>
+<td class="org-left">Cleanly written code with good documentation and demonstrates appropriate use of</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">IMPORTANT: Loop augmented with <code>#pragma</code> directives should have comments describing why</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">any special considerations such as race conditions, reductions, inner vs outer loop</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">parallelization, or other considerations. Serial Output <code>printf()</code> loops do not need to</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">be documented in this way.</td>
+<td class="org-left">MPI function calls to implement the algorithm such as Broadcast, Scatter, Reduction, Gather, etc.</td>
 </tr>
 
 <tr>
 <td class="org-right">5</td>
+<td class="org-left">Code handles data size that is not evenly divided by the number of processors by using appropriate</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">"vector" versions of MPI calls like <code>MPI_Scatterv()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
 <td class="org-left">Written report includes timings table described above</td>
 </tr>
 
 <tr>
-<td class="org-right">5</td>
+<td class="org-right">10</td>
 <td class="org-left">Written report includes answers to discussion questions written above.</td>
 </tr>
 </tbody>
@@ -2203,335 +1647,8 @@ When the tests are released, you may run them with the provided
 </div>
 </div>
 
-
-<div id="outline-container-orgcfe96b6" class="outline-2">
-<h2 id="orgcfe96b6"><span class="section-number-2">9</span> <a id="org56a5250"></a> Optional MAKEUP Problem 4 (15%)</h2>
-<div class="outline-text-2" id="text-9">
-<p>
-Earlier in the class we discussed how many linear algebra problems,
-from dot products to matrix factorization, have been studied for a
-long while and robust, fast libraries exist which solve these. BLAS is
-one of the oldest and most well-tested of these libraries and is
-widely available in several forms.
-</p>
-
-<p>
-For 15 points of MAKEUP credit, <b>re-implement serial dense pagerank
-computations using BLAS</b>. The primary computation done in
-<code>dense_pagerank_serial.c</code> is a repeated Matrix-Vector multiply which,
-along with several other computations within the serial program, can
-be converted to BLAS function calls rather than the hand-coded loops
-in the original version.
-</p>
-
-<p>
-You will need to do some reading on which functions are applicable and
-how to call them. In addition, BLAS was originally a Fortran library
-and it is recommended that you utilized the CBLAS interface for your
-calls which follows C-like conventions and provides some other options
-as well.  
-</p>
-
-<p>
-<b>ADVISEMENT:</b> You will NOT write a parallel program in this problem,
-just a faster, more optimized (and hopefully shorter) serial program
-that computes the same thing as <code>dense_pagerank_serial.c</code>.
-</p>
-</div>
-
-<div id="outline-container-org9d8cc9d" class="outline-3">
-<h3 id="org9d8cc9d"><span class="section-number-3">9.1</span> BLAS Functions to Consider</h3>
-<div class="outline-text-3" id="text-9-1">
-<p>
-Do some research on the following functions and consider if and where
-they may be applicable to the Page Rank computation.
-</p>
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-left" />
-
-<col  class="org-left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="org-left">BLAS Name</th>
-<th scope="col" class="org-left">CBLAS Name</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="org-left"><code>ddot()</code></td>
-<td class="org-left"><code>cblas_ddot()</code></td>
-</tr>
-
-<tr>
-<td class="org-left"><code>daxpy()</code></td>
-<td class="org-left"><code>cblas_daxpy()</code></td>
-</tr>
-
-<tr>
-<td class="org-left"><code>dscal()</code></td>
-<td class="org-left"><code>cblas_dscal()</code></td>
-</tr>
-
-<tr>
-<td class="org-left"><code>dnrm2()</code></td>
-<td class="org-left"><code>cblas_dnrm2()</code></td>
-</tr>
-
-<tr>
-<td class="org-left"><code>dasum()</code></td>
-<td class="org-left"><code>cblas_dasum()</code></td>
-</tr>
-
-<tr>
-<td class="org-left"><code>dgemv()</code></td>
-<td class="org-left"><code>cblas_dgemv()</code></td>
-</tr>
-
-<tr>
-<td class="org-left"><code>dsymv()</code></td>
-<td class="org-left"><code>cblas_dsymv()</code></td>
-</tr>
-
-<tr>
-<td class="org-left"><code>dgemm()</code></td>
-<td class="org-left"><code>cblas_dgemm()</code></td>
-</tr>
-
-<tr>
-<td class="org-left"><code>dsymm()</code></td>
-<td class="org-left"><code>cblas_dsymm()</code></td>
-</tr>
-</tbody>
-</table>
-<p>
-<b>Note</b>: I used some of these routines in my implementation but not all
-of them. You will want to do some reading to find the most applicable
-routines and how to use them.
-</p>
-
-<ul class="org-ul">
-<li>Good documentation of all BLAS functions in Fortran with selectable
-types, descriptions of arguments + functionality
-<a href="https://www.hpc.nec/documents/sdk/SDK_NLC/UsersGuide/blas/f/en/index.html">https://www.hpc.nec/documents/sdk/SDK_NLC/UsersGuide/blas/f/en/index.html</a></li>
-<li>List of all CBLAS functions with prototypes only
-<a href="http://manpages.ubuntu.com/manpages/xenial/man3/cblas.h.3.html">http://manpages.ubuntu.com/manpages/xenial/man3/cblas.h.3.html</a></li>
-</ul>
-
-<p>
-Part of score for the problem will be based on utilizing BLAS routines
-for as many parts of the computation as possible.  Replacing ONLY the
-matrix-vector multiply will NOT earn full credit so look for other
-opportunities to utilize BLAS routines such as column normalization.
-</p>
-
-<p>
-<b>Document your code</b> where you are using BLAS routines to perform
-computations. Your grader and <a href="http://www.catb.org/~esr/writings/unix-koans/prodigy.html">your future selves</a> will thank you.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org9f42e58" class="outline-3">
-<h3 id="org9f42e58"><span class="section-number-3">9.2</span> Building the Code</h3>
-<div class="outline-text-3" id="text-9-2">
-<p>
-Add the following targets to your <code>Makefile</code>
-</p>
-<div class="org-src-container">
-<pre class="src src-makefile">################################################################################
-# Problem 4 : pagerank blas
-prob4: dense_pagerank_blas
-
-# build using standard blas library common to Ubuntu Linux
-dense_pagerank_blas : dense_pagerank_blas.c densemat.c
-	$(GCC) -o $@ $^ -lm -lblas
-
-# build using optimized blas library on CSE Labs
-prob4-atlas : 			
-	rm -f dense_pagerank_blas
-	$(GCC) -o dense_pagerank_blas dense_pagerank_blas.c densemat.c -lm /usr/lib/x86_64-linux-gnu/libcblas.so.3.10.3 
-
-# build using cblas library common to Arch Linux
-prob4-cblas : 			
-	rm -f dense_pagerank_blas
-	$(GCC) -o dense_pagerank_blas dense_pagerank_blas.c densemat.c -lm -lcblas
-
-test-prob4: test-setup dense_pagerank_blas
-	./testy test_dense_pagerank_blas.org $(testnum)
-</pre>
-</div>
-
-<p>
-Note that you should name your source file <code>dense_pagerank_blas.c</code> and
-the resulting program will be named <code>dense_pagerank_blas</code>. However,
-there is some variance in libraries and linking procedures for BLAS
-libraries.
-</p>
-<ol class="org-ol">
-<li>The default <code>-lblas</code> for the first build target above will work on
-most Ubuntu Linux distributions presuming that the BLAS library is
-installed. <code>libblas</code> contains CBLAS functions in it but all the
-functions are reference implementations so may not run as fast as
-possible.</li>
-<li><p>
-CSE Labs machines has the <a href="http://math-atlas.sourceforge.net/">ATLAS</a> implementation of BLAS (partially)
-installed. This version is tuned to hardware and is therefore much
-faster than the untuned versions. To build this version on CSE Labs
-run
-</p>
-<pre class="example">
-&gt;&gt; make prob4-atlas
-</pre>
-
-<p>
-<b>Use <code>make prob4-atlas</code> before timing on the Veggie Cluster</b> with
-the provided timing script.
-</p></li>
-<li><p>
-Some Linux distributions have separate libraries for both BLAS and
-CBLAS and require linking <code>libcblas</code>. The final target is used for
-these cases and is invoked via
-</p>
-<pre class="example">
-&gt;&gt; make prob4-cblas
-</pre>
-
-<p>
-but should only be used for testing on local machines as it will
-not work on CSE Labs.
-</p></li>
-</ol>
-</div>
-</div>
-
-<div id="outline-container-org4f41fc2" class="outline-3">
-<h3 id="org4f41fc2"><span class="section-number-3">9.3</span> Testing and Timing</h3>
-<div class="outline-text-3" id="text-9-3">
-<p>
-A small set of test cases are provided which will verify that the BLAS
-version <code>dense_pagerank_blas</code> produces identical output to the
-standard serial version <code>dense_pagerank_serial</code>. These can be run with
-the target
-</p>
-<div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; make test-prob4
-</pre>
-</div>
-<p>
-which is NOT done on Gradescope but will be run manually.
-</p>
-
-<p>
-A timing script <code>dense-pagerank-blas-jobs.sh</code> is provided that will
-produce timing results for both the serial and BLAS versions of the
-code. These will be reported in <code>A2-WRITEUP.txt</code>.
-</p>
-
-<p>
-<b>When timing your code on CSE Labs</b> use the following commands to
-ensure that you compile with the fastest BLAS library and observe its
-behavior. 
-</p>
-<div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; ssh csel-carrot.cselabs.umn.edu
-...
-carrot [a2-code] % make prob4-atlas
-rm -f dense_pagerank_blas
-gcc -g -Wall  -o dense_pagerank_blas dense_pagerank_blas.c densemat.c -lm /usr/lib/x86_64-linux-gnu/libcblas.so.3.10.3 
-
-carrot [a2-code] % ./dense-pagerank-blas-jobs.sh 
-Output stored in the file 'dense-pagerank-blas-timings.Tue_07_Dec_2021_03:32:07_PM_CST.log'
-./dense_pagerank_serial graphs/notredame-501.txt 0.85
-./dense_pagerank_blas graphs/notredame-501.txt 0.85
-...
-
-carrot [a2-code] % grep runtime dense-pagerank-blas-timings.*.log
-./dense_pagerank_serial graph notredame-501.txt realtime ...
-./dense_pagerank_blas graph notredame-501.txt realtime ...
-</pre>
-</div>
-
-<p>
-Fill in the following timing table based on running the provided
-script <code>dense-pagerank-blas-jobs.sh</code>.
-</p>
-<div class="org-src-container">
-<pre class="src src-text">  -----------------------------
-                   size        
-   Procs     501   8000  16000 
-  -----------------------------
-   serial  00.00  00.00  00.00 
-   blas    00.00  00.00  00.00 
-  -----------------------------
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org24b4b60" class="outline-3 grading 15">
-<h3 id="org24b4b60"><span class="section-number-3">9.4</span> Grading Criteria for Problem 4&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="15">15</span></span></h3>
-<div class="outline-text-3" id="text-9-4">
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-right" />
-
-<col  class="org-left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="org-right">&#xa0;</th>
-<th scope="col" class="org-left">CRITERIA</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="org-right">5</td>
-<td class="org-left">Code compiles via <code>make dense_pagerank_blas</code> and passes automated tests via <code>make test-prob4</code></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">5</td>
-<td class="org-left">DOCUMENTATION of which parts of the computation have been converted to use BLAS routines.</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Points will be lost if BLAS has been used minimally to perform few parts of the computation.</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">5</td>
-<td class="org-left"><code>A2-WRITEUPT.xt</code> has the timing table for standard serial and BLAS from the job running script.</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Times seem to reflect use of the ATLAS BLAS implementation which is produced via <code>make prob4-atlas</code></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org7fce424" class="outline-2">
-<h2 id="org7fce424"><span class="section-number-2">10</span> Project Submission on Gradescope</h2>
+<div id="outline-container-org9497a6e" class="outline-2">
+<h2 id="org9497a6e"><span class="section-number-2">10</span> Project Submission on Gradescope</h2>
 <div class="outline-text-2" id="text-10">
 <p>
 NOTE 1: Submission to Gradescope is not yet open; follow the
@@ -2554,8 +1671,8 @@ the code.</li>
 </ol>
 </div>
 
-<div id="outline-container-orged0d582" class="outline-3">
-<h3 id="orged0d582"><span class="section-number-3">10.1</span> <a id="org8e027a6"></a> Submit to Gradescope</h3>
+<div id="outline-container-org5d21385" class="outline-3">
+<h3 id="org5d21385"><span class="section-number-3">10.1</span> <a id="org3e141bf"></a> Submit to Gradescope</h3>
 <div class="outline-text-3" id="text-10-1">
 <p>
 Some of the pictures below mention 'Assignment' which is now 'Project'
@@ -2596,7 +1713,7 @@ open up submission
 </p>
 <div class="org-center">
 
-<div id="org8e78405" class="figure">
+<div id="orgf090d29" class="figure">
 <p><img src="gradescope01.png" alt="gradescope01.png" style="max-width:100%;" />
 </p>
 </div>
@@ -2607,7 +1724,7 @@ dialog; locate and choose your <code>a2-code.zip</code> file
 </p>
 <div class="org-center">
 
-<div id="org09012b3" class="figure">
+<div id="orgf0dceeb" class="figure">
 <p><img src="gradescope02.png" alt="gradescope02.png" style="max-width:100%;" />
 </p>
 </div>
@@ -2618,7 +1735,7 @@ C source files along with testing files and directories.
 </p>
 <div class="org-center">
 
-<div id="org27540d8" class="figure">
+<div id="org8b63983" class="figure">
 <p><img src="gradescope03.png" alt="gradescope03.png" style="max-width:100%;" />
 </p>
 </div>
@@ -2641,7 +1758,7 @@ files in a zip.
 
 <div class="org-center">
 
-<div id="org10f07b4" class="figure">
+<div id="orge3c7988" class="figure">
 <p><img src="gradescope04.png" alt="gradescope04.png" style="max-width:100%;" />
 </p>
 </div>
@@ -2654,7 +1771,7 @@ the same tests that are run via <code>make test</code>.
 </p>
 <div class="org-center">
 
-<div id="org91754ec" class="figure">
+<div id="orgcbf9872" class="figure">
 <p><img src="gradescope05.png" alt="gradescope05.png" style="max-width:100%;" />
 </p>
 </div>
@@ -2665,7 +1782,7 @@ summarizing scores along with output for each batch of tests.
 </p>
 <div class="org-center">
 
-<div id="orgfbcc3d4" class="figure">
+<div id="orgd82cae1" class="figure">
 <p><img src="gradescope06.png" alt="gradescope06.png" style="max-width:100%;" />
 </p>
 </div>
@@ -2676,8 +1793,8 @@ uploading. Only one partner needs to submit the code.</li>
 </div>
 </div>
 
-<div id="outline-container-orgf9d817b" class="outline-3">
-<h3 id="orgf9d817b"><span class="section-number-3">10.2</span> Late Policies</h3>
+<div id="outline-container-orgaeedfaf" class="outline-3">
+<h3 id="orgaeedfaf"><span class="section-number-3">10.2</span> Late Policies</h3>
 <div class="outline-text-3" id="text-10-2">
 <p>
 You may wish to review the policy on late project submission which
@@ -2693,7 +1810,7 @@ accepted more than 48 hours after the deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2021-12-14 Tue 15:16 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-03-27 Mon 15:18 <br/> </i>
 </div>
 </body>
 </html>
