@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-28 Mon 11:52 -->
+<!-- 2023-04-17 Mon 10:12 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CSCI 2021 HW13: Review for Exam 3</title>
+<title>CSCI 2021 HW13: pmap and Linking</title>
 <meta name="author" content="Chris Kauffman" />
 <meta name="generator" content="Org Mode" />
 <style>
@@ -344,87 +344,81 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-11-28 Mon 11:52</i>
+<i>Last Updated: 2023-04-17 Mon 10:12</i>
 </div>
 <div id="content" class="content">
-<h1 class="title">CSCI 2021 HW13: Review for Exam 3</h1>
+<h1 class="title">CSCI 2021 HW13: pmap and Linking</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm 07-Dec-2022</b></li>
+<li><b>Due: 11:59pm Tue 13-Dec 2022</b></li>
 <li><i>Approximately 0.83% of total grade</i></li>
 <li>Homework and Quizzes are open resource/open collaboration. You must
 submit your own work but you may freely discuss HW topics with other
 members of the class.</li>
 </ul>
 
-<div id="outline-container-orgf2463c0" class="outline-4">
-<h4 id="orgf2463c0">CODE DISTRIBUTION: <a href="hw13-code.zip">hw13-code.zip</a></h4>
+<div id="outline-container-orgd0484f3" class="outline-4">
+<h4 id="orgd0484f3">CODE DISTRIBUTION: <a href="hw13-code.zip">hw13-code.zip</a></h4>
 </div>
 
-<div id="outline-container-orgfe6bf7a" class="outline-4">
-<h4 id="orgfe6bf7a">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-orgfe6bf7a">
+<div id="outline-container-orgc982ceb" class="outline-4">
+<h4 id="orgc982ceb">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orgc982ceb">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgfc8ac9a">1. Rationale</a>
+<li><a href="#org44cf755">1. Rationale</a>
 <ul>
-<li><a href="#orgb9d6d36">Associated Reading / Preparation</a></li>
-<li><a href="#orgf45ff2d">Grading Policy</a></li>
+<li><a href="#org4ce2af5">Associated Reading / Preparation</a></li>
+<li><a href="#org7f3351e">Grading Policy</a></li>
 </ul>
 </li>
-<li><a href="#org6149a0a">2. Codepack</a></li>
-<li><a href="#orgbad10a1">3. What to Understand</a></li>
-<li><a href="#org12e08bc">4. Questions</a></li>
+<li><a href="#org3df023c">2. Codepack</a></li>
+<li><a href="#org5038e8d">3. What to Understand</a></li>
+<li><a href="#orgcb54c26">4. Questions</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgfc8ac9a" class="outline-2">
-<h2 id="orgfc8ac9a"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org44cf755" class="outline-2">
+<h2 id="org44cf755"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-Program optimization is an important skill and basic familiarity with
-hand-coded optimization techniques is handy in some contexts. More
-importantly, good programs recognize which optimization techniques
-impact their programs most and usually focus their attention on
-optimizing in the following order:
+On modern computing systems, virtual memory creates the illusion that
+every program has a linear address space from 0 to some large
+address. Mostly this happens behind the scenes and is managed by the
+operating system but knowledge of presence of virtual addresses
+provides insight into many aspects of practical programming.  One can
+inspect some of the OS information on the virtual address space of a
+program using utilities such as <code>pmap</code>.
 </p>
-<ol class="org-ol">
-<li>Algorithms and Data Structure Selection</li>
-<li>Elimination of unneeded work/hidden costs</li>
-<li>Memory Utilization</li>
-<li>Micro-optimizations</li>
-</ol>
 
 <p>
-This HW explores several micro-optimization techniques and compares
-them to optimizing memory utilization. It also contains some problems
-reviewing concepts from earlier HWs and lecture to prepare for an
-exam.
+The linker is a little discussed portion of a typical compiler chain
+but it is a frequent source of frustrating compilation errors when
+dealing with code libraries. This lab covers the basics of linking to
+system libraries and how this affects the virtual memory image of the
+resulting program.
 </p>
 </div>
 
-<div id="outline-container-orgb9d6d36" class="outline-3">
-<h3 id="orgb9d6d36">Associated Reading / Preparation</h3>
-<div class="outline-text-3" id="text-orgb9d6d36">
+<div id="outline-container-org4ce2af5" class="outline-3">
+<h3 id="org4ce2af5">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-org4ce2af5">
 <p>
-Review the following sections from Bryant and O'Hallaron: 
+Bryant and O'Hallaron: Ch 9 on Virtual Memory is informative for this
+Problem 1. The <code>mmap()</code> function is discussed in section 9.8.4. Bryant
+and O'Hallaron Ch 7 on Linking and ELF formats is pertinent to the
+second problem.
 </p>
-<ul class="org-ul">
-<li>Ch 4 at a high level; processor architecture is covered but we are
-primary concerned with features that pertain to efficient code</li>
-<li>Ch 5 on code optimizations</li>
-<li>Ch 6 on the memory hierarchy especially writing cache friendly code</li>
-</ul>
 </div>
 </div>
 
-<div id="outline-container-orgf45ff2d" class="outline-3">
-<h3 id="orgf45ff2d">Grading Policy</h3>
-<div class="outline-text-3" id="text-orgf45ff2d">
+<div id="outline-container-org7f3351e" class="outline-3">
+<h3 id="org7f3351e">Grading Policy</h3>
+<div class="outline-text-3" id="text-org7f3351e">
 <p>
 Credit for this HW is earned by taking the associated HW Quiz which is
 linked under <code>Gradescope</code>.  The quiz will ask similar questions as
@@ -446,8 +440,8 @@ See the <a href="../2021/syllabus.html">full policies in the course syllabus</a>
 </div>
 </div>
 
-<div id="outline-container-org6149a0a" class="outline-2">
-<h2 id="org6149a0a"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org3df023c" class="outline-2">
+<h2 id="org3df023c"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -460,55 +454,78 @@ The codepack for the HW contains the following files:
 <col  class="org-left" />
 
 <col  class="org-left" />
+
+<col  class="org-left" />
 </colgroup>
 <thead>
 <tr>
 <th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">State</th>
 <th scope="col" class="org-left">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">EDIT</td>
 <td class="org-left">Questions to answer</td>
 </tr>
 
 <tr>
 <td class="org-left"><code>Makefile</code></td>
-<td class="org-left">Makefile to build the <code>colmins_main</code> program</td>
+<td class="org-left">Provided</td>
+<td class="org-left">Makefile to build programs for the HW</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>reversal_benchmark.c</code></td>
-<td class="org-left">Problem 2 C file for analysis and editing</td>
+<td class="org-left"><code>memory_parts.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 program to analyze</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>warsim/</code></td>
-<td class="org-left">Optional Problem 4 directory with application to profile</td>
+<td class="org-left"><code>gettysburg.txt</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 data file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>do_math.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2 program compile and link</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>do_pthreads.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2 program compile and link</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 
-<div id="outline-container-orgbad10a1" class="outline-2">
-<h2 id="orgbad10a1"><span class="section-number-2">3</span> What to Understand</h2>
+<div id="outline-container-org5038e8d" class="outline-2">
+<h2 id="org5038e8d"><span class="section-number-2">3</span> What to Understand</h2>
 <div class="outline-text-2" id="text-3">
+<p>
+Ensure that you understand
+</p>
 <ul class="org-ul">
-<li>Ensure you have a good understanding of how C programs can exploit
-features of the processor and memory hierarchy to improve program
-performance.</li>
-<li>Knowledge of basic optimizing code transformations and cache effects
-are a must.</li>
-<li>Know how to use basic timing functions like <code>clock()</code> to time
-specific portions of code and report run duration.</li>
+<li>That program regions like the stack and heap are comprised of
+virtual addresses that the OS maps to physical locations</li>
+<li>Basic compiler options to link against standard libraries like the
+math library</li>
+<li>How the <code>nm</code> command can show defined and undefined symbols in an
+executable</li>
+<li>How to use <code>ldd</code> to show what libraries an executable is dynamically
+dependent upon</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org12e08bc" class="outline-2">
-<h2 id="org12e08bc"><span class="section-number-2">4</span> Questions</h2>
+<div id="outline-container-orgcb54c26" class="outline-2">
+<h2 id="orgcb54c26"><span class="section-number-2">4</span> Questions</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Analyze the files in the provided codepack and answer the questions
@@ -518,334 +535,196 @@ given in <code>QUESTIONS.txt</code>.
 <div class="org-src-container">
 <pre class="src src-text">                           _________________
 
-                            HW 13 QUESTIONS
+                            HW 14 QUESTIONS
                            _________________
 
 
-Write your answers to the questions below directly in this text file to
-prepare for the associated quiz. Credit for the HW is earned by
-completing the associated online quiz on Gradescope.
+- Name: (FILL THIS in)
+- NetID: (THE kauf0095 IN kauf0095@umn.edu)
+
+Write your answers to the questions below directly in this text file.
+Submit the whole text file while taking the associated quiz.
 
 
-PROBLEM 1: Cache and Loop Iterations
-====================================
+PROBLEM 1: Virtual Memory and pmap
+==================================
 
-  Below are tables showing values in Main Memory and the state of a
-  small Cache.  Beneath this is a short code fragment that sums elements
-  from main memory. The code has a user parameter `stride'. For strides
-  of 1,2,3,4, work through the code changing cache and counting how many
-  cache hits/misses occur with the given stride. Show the final state of
-  cache in each case.
+(A) memory_parts memory areas
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Examine the source code for the provided `memory_parts.c'
+  program. Identify what region of program memory you expect the
+  following variables to be allocated into:
+  - global_arr[]
+  - stack_arr[]
+  - heap_arr
 
 
-Main Memory
-~~~~~~~~~~~
+(B) Running memory_parts and pmap
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+  Compile the `memory_parts' using the provided Makefile.
   ,----
-  | | Addr | Addr Bits      | Value |
-  | |------+----------------+-------|
-  | |   20 | 00  10  0000   |     9 |
-  | |   24 | 00  10  0100   |    10 |
-  | |   28 | 00  10  1000   |    11 |
-  | |   2C | 00  10  1100   |    12 |
-  | |   30 | 00  11  0000   |    13 |
-  | |   34 | 00  11  0100   |    14 |
-  | |   38 | 00  11  1000   |    15 |
-  | |   3C | 00  11  1100   |    16 |
-  | |   40 | 01  00  0000   |    17 |
-  | |   44 | 01  00  0100   |    18 |
-  | |   48 | 01  00  1000   |    19 |
-  | |   4C | 01  00  1100   |    20 |
-  | |   50 | 01  01  0000   |    21 |
-  | |   54 | 01  01  0100   |    22 |
-  | |   58 | 01  01  1000   |    23 |
-  | |   5C | 01  01  1100   |    24 |
-  | |   60 | 01  10  0000   |    25 |
-  | |   64 | 01  10  0100   |    26 |
-  | |   68 | 01  10  1000   |    27 |
-  | |   6C | 01  10  1100   |    28 |
-  | |------+----------------+-------|
-  | |      | Tag Set Offset |       |
+  | &gt; make memory_parts
+  `----
+  Run the program and note that it prints several pieces of information
+  - The addresses of several of the variables allocated
+  - Its Process ID (PID) which is a unique number used to identify the
+    running program. This is an integer.
+  For example, the output might be
+  ,----
+  | &gt; ./memory-parts
+  | 0x5605a7c271e9 : main()
+  | 0x5605a7c2a0c0 : global_arr
+  | 0x7ffe5ff7d600 : stack_arr
+  | 0x5605a92442a0 : heap_arr
+  | 0x7f1fa7303000 : mmap'd file
+  | 0x600000000000 : mmap'd block1
+  | 0x600000001000 : mmap'd block2
+  | my pid is 8406
+  | press any key to continue
+  `----
+  so the programs PID is 11160
+
+  The program will also stop at this point until a key is pressed. DO
+  NOT PRESS A KEY YET.
+
+  Open another terminal and type the following command in that new
+  terminal.
+  ,----
+  | &gt; pmap THE-PID-NUMBER-THAT-WAS-PRINTED-EARLIER
+  `----
+
+  Paste the output of pmap below.
+
+
+(C) Program Addresses vs Mapped Addresses
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  pmap prints out the virtual address space table for the program. The
+  leftmost column is a virtual address mapped by the OS for the program
+  to some physical location.  The next column is the size of the area of
+  memory associated with that starting address. The 3rd column contains
+  permissions of the program has for the memory area: r for read, w for
+  read, x for execute. The final column is contains any identifying
+  information about the memory area that pmap can discern.
+
+  Compare the addresses of variables and functions from the paused
+  program to the output. Try to determine the virtual address space in
+  which each variable resides and what region of program memory that
+  virtual address must belong to (stack, heap, globals, text).  In some
+  cases, the identifying information provided by pmap may make this
+  obvious.
+
+
+(D) Min Size of Mapped Areas
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  The minimum size of any virtual area of memory appears to be 4K. Why
+  is this the case?
+
+
+(E) Additional Observations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Notice that in addition to the "normal" variables that are mapped,
+  there is also an entry for the mmap()'d file 'gettysburg.txt' in the
+  virtual address table.  The mmap() function is explored in the next
+  problem but note its calling sequence which involves use of a couple
+  system calls:
+  1. `open()' which is a low level file opening call which returns a
+     numeric file descriptor.
+  2. `fstat()' which obtains information such as size for an open file
+     based on its numeric file descriptor. The `stat() / fstat()' system
+     calls are used to ask the Unix Operating System information about
+     files such as their size, modification times, and access
+     permissions.  This system call is studied more in Operating System
+     courses.
+
+  Finally there are additional calls to `mmap()' which allocate memory
+  to the program at a specific virtual address. Similar code to this is
+  often used to allocate and expand the heap area of memory for programs
+  in implementations of `malloc()'.
+
+
+PROBLEM 2: Linking to System Libraries
+======================================
+
+(A)
+~~~
+
+  The file `do_math.c' contains some basic usage of the C library math
+  functions like `pow()'.  Compile this program using the command line
+  ,----
+  | &gt; gcc do_math.c
+  `----
+
+  and show the results below which should be problematic. Describe why
+  the linker complains about functions like `cos' and `pow'.
+
+  *Note*: problems will arise on Linux systems with gcc: other
+  OS/compiler combinations may not cause any problems.
+
+
+(B)
+~~~
+
+  In order to fix this problem, one must link the program against the
+  math library typically called `libm'. This can be done with the option
+  `-l' for "library" and `m' for the math library as shown:
+  ,----
+  | &gt; gcc do_math.c -lm
   `----
 
 
-Cache
-~~~~~
+  Show a run of the resulting executable after a successful compile
+  below.
 
-  - Direct-mapped: 1 line per set
-  - 16-byte lines = 4-bit offset
-  - 4 Sets = 2-bit index
-  - 8-bit Address = 2-bit tag
-  - Total Cache Size = 64 bytes 4 sets * 16 bytes
-  - Mostly cold with some data from an earlier part of the code
 
+(C)
+~~~
+
+  After successfully compiling `do_math.c', use the `ldd' command to
+  examine which dynamically linked libraries it requires to
+  run. Assuming the executable is named `a.out', invoke the command like
+  this
   ,----
-  | |     |   |     | Blocks/Line           |
-  | | Set | V | Tag | 0-3  4-7  8-11  12-15 |
-  | |-----+---+-----+-----------------------|
-  | |  00 | 1 | 00  | 1    2    3     4     |
-  | |  01 | 0 | -   | -                     |
-  | |  10 | 0 | -   | -                     |
-  | |  11 | 0 | -   | -                     |
-  | |-----+---+-----+-----------------------|
-  | | Set | V | Tag | 0-3  4-7  8-11  12-15 |
+  | &gt; ldd a.out
   `----
 
-
-Code
-~~~~
-
-  ,----
-  | int *data = (int *) 0x20;           // address of start of the array
-  | int stride; scanf("%d", &amp;stride);   // user enters 1, 2, 3, or other values
-  | int sum = 0;
-  | for(int i=0; i&lt;20; i += stride){
-  |   sum += data[i];
-  | }
-  `----
+  Show the output for this command and note anything related to the math
+  library that is reported.
 
 
-Stats for Strides:
-~~~~~~~~~~~~~~~~~~
+(D)
+~~~
 
-  Show sum, number of hits/misses, and final cache state for strides of
-  1,2,3,4.
-  - Stride 1: sum, misses/hits, final cache state
-  - Stride 2: sum, misses/hits, final cache state
-  - Stride 3: sum, misses/hits, final cache state
-  - Stride 4: sum, misses/hits, final cache state
-
-
-PROBLEM 2: Timing Benchmarks
-============================
-
-  The code in `reversal_benchmark.c' implements two functions which
-  reverse the elements of an array. They take markedly different
-  approaches.
-  ,----
-  | void reverse_arr1(int *arr, long size){
-  |   int *tmp = malloc(sizeof(int)*size);
-  |   for(long i=0; i&lt;size; i++){
-  |     tmp[i] = arr[size-i-1];
-  |   }
-  |   for(long i=0; i&lt;size; i++){
-  |     arr[i] = tmp[i];
-  |   }
-  |   free(tmp);
-  | }
-  | 
-  | void reverse_arr2(int *arr, long size){
-  |   for(long i=0; i&lt;size/2; i++){
-  |     int tmp = arr[i];
-  |     arr[i] = arr[size-i-1];
-  |     arr[size-i-1] = tmp;
-  |   }
-  | }
-  `----
+  Run the program which should report its Process ID (pid) before
+  pausing.  In a separate terminal, while the program is still running,
+  execute the pmap command to see the virtual address space for the
+  program (command `pmap &lt;pid&gt;'). Paste the results below and describe
+  any relation to the math library that is apparent.
 
 
-(A) Predictions
-~~~~~~~~~~~~~~~
+(E)
+~~~
 
-  Predict which of these two functions will run faster based on their
-  code characteristics. Justify your answer by contrasting the features
-  of the two reversal functions.
+  Repeat the general steps above with the C file `do_pthreads.c' which
+  will require linking to the PThreads library with `-lpthread'.
+  - Compile to show error messages
+  - Compile successfully with proper linking and show output
+  - Call `ldd' on the executable
+  - While the program is paused, run `pmap' to see its virtual address
+    space
 
-
-(B) Timing
-~~~~~~~~~~
-
-  Modify the provided `reversal_benchmark.c' file to perform timing
-  calculations on the two functions as they are called on different
-  sizes of arrays.  Print runtimes in a tabular format.
-
-  Make sure to compile/run with a convention like the following:
-  ,----
-  | &gt; gcc -Og reversal_benchmark.c    # compile with minimal optimizations
-  | 
-  | &gt; ./a.out                         # show usage
-  | usage: ./a.out &lt;min_pow2&gt; &lt;max_pow2&gt; &lt;repeats&gt;
-  | 
-  | &gt; ./a.out 10 20 100               # run benchmark, size 2^10 to 2^20, 100 repeats per
-  |       SIZE       rev1       rev2
-  |       1024       ???        ???
-  |       2048       ???        ???
-  |       4096       ???        ???
-  |       8192       ???        ???
-  |      16384       ???        ???
-  |      32768       ???        ???
-  |      65536       ???        ???
-  |     131072       ???        ???
-  |     262144       ???        ???
-  |     524288       ???        ???
-  |    1048576       ???        ???
-  `----
-
-
-
-  Paste the C code you wrote below to show you how you timed the
-  function runs.
-
-
-(C) Analysis
-~~~~~~~~~~~~
-
-  Paste the table of numbers your code produced for timing the two
-  reversal functions. Describe if the one you predicted would be faster
-  actually was measured to be faster.
-
-
-(D) OPTIONAL: Optimized Reversal
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  After determining the faster reversal function, modify it further in
-  an attempt to further improve its performance.
-
-
-PROBLEM 3: ax then xpy VS axpy
-==============================
-
-  Examine the timing code in `axpy.c'. Consider the 3 functions `ax()',
-  `xpy()', and `axpy()'.  Note that these are timed in `main()' as
-  follows.
-  ,----
-  | // start timing 1
-  |     ax(a,x1,size);
-  |     xpy(x1,y,size);
-  | // stop timing
-  | 
-  | // start timing 2
-  |     axpy(a,x2,y,size);
-  | // stop timing
-  `----
-  This is because the first two functions together do what `axpy()'
-  does.
-
-  Note also that `axpy()' has two "fairness" loops which do affect the
-  results but compensate for the fact that the previous two functions
-  combined have two loops.
-
-  Time these functions using the provided code. Explain the results you
-  observe and if one appears to be faster than the other, describe what
-  features of the processor and memory architecture might be affecting
-  the timings.
-
-
-PROBLEM 4 (OPTIONAL): Profiler
-==============================
-
-  This problem demonstrates the utility of a performance *profiler* to
-  help locate "hot spots" in code which take most of the run time
-  associated with it.
-
-  Change into the directory `warsim' that is part of the HW code
-  distribution.  The code contained within it implements a simple
-  simulation of the card game War.  The details of the game are not
-  important except that the program simulates playing of the game then
-  reports statistics on it.
-
-  First compile the program by using the provided Makefile.
-  ,----
-  | &gt; make
-  | gcc -Og -g -pg -no-pie -c libwar.c
-  | gcc -Og -g -pg -no-pie -c libcardlist.c
-  | gcc -Og -g -pg -no-pie -o warsim warsim.c libwar.o libcardlist.o
-  `----
-  Notice that the option `-pg' is passed in which will enable
-  /profiling/ of the code. The `-no-pie' option is present in case a
-  buggy version of `gcc' is present and has no significant effect.
-
-  Run the resulting `warsim' program as follows.
-
-  ,----
-  | # show usage
-  | &gt; ./warsim
-  | usage: ./warsim cardfile ngames [logfile]
-  | 
-  | # simulate 10 games
-  | &gt; ./warsim full.deck 10
-  | ----------------------
-  | Final stats
-  |   0.60 P1 Win Ratio
-  | 408.50 Avg battles per game
-  |  30.30 Avg wars per game
-  | 
-  | # simulate 100 games
-  | &gt; ./warsim full.deck 100
-  | ----------------------
-  | Final stats
-  |   0.54 P1 Win Ratio
-  | 301.56 Avg battles per game
-  |  22.94 Avg wars per game
-  | 
-  | # simulate 2000 games
-  | &gt; ./warsim full.deck 2000
-  | ----------------------
-  | Final stats
-  |   0.54 P1 Win Ratio
-  | 298.48 Avg battles per game
-  |  22.79 Avg wars per game
-  `----
-
-  This last run might take a few seconds as 2000 games are simulated.
-
-  After the runs are finished, the file `gmon.out' appears. This is an
-  output file that is generated on running programs with profiling
-  enabled.
-  ,----
-  | &gt; ls gmon.out
-  | gmon.out
-  | &gt; file gmon.out
-  | gmon.out: GNU prof performance data - version 1
-  `----
-
-  The contents of the file are binary and must be interpreted by the
-  program `gprof'.  Use the `-b' option to show "brief" output and pass
-  in the name of the program that was run.
-  ,----
-  | &gt; gprof -b warsim
-  | Flat profile:
-  | 
-  | Each sample counts as 0.01 seconds.
-  |   %   cumulative   self              self     total           
-  |  time   seconds   seconds    calls  ms/call  ms/call  name    
-  |  50.11      0.06     0.06  2387860     0.00     0.00  print_list
-  |  25.06      0.09     0.03 32507650     0.00     0.00  card2str
-  |   8.35      0.10     0.01   596965     0.00     0.00  end_battle
-  |   8.35      0.11     0.01     4000     0.00     0.00  new_stack
-  |   8.35      0.12     0.01       52     0.19     0.19  str2card
-  |   0.00      0.12     0.00  8073378     0.00     0.00  stack_empty
-  |   0.00      0.12     0.00  6656812     0.00     0.00  queue_empty
-  |   0.00      0.12     0.00  3944508     0.00     0.00  stack_top
-  |   0.00      0.12     0.00  1675522     0.00     0.00  queue_add
-  |   0.00      0.12     0.00  1675522     0.00     0.00  queue_remove
-  |   0.00      0.12     0.00  1571470     0.00     0.00  queue_front
-  |   0.00      0.12     0.00  1465470     0.00     0.00  stack_pop
-  |   0.00      0.12     0.00  1465470     0.00     0.00  stack_push
-  |   0.00      0.12     0.00   596965     0.00     0.00  start_battle
-  |   0.00      0.12     0.00     6001     0.00     0.00  new_queue
-  |   0.00      0.12     0.00     6001     0.00     0.00  queue_free
-  |   0.00      0.12     0.00     4000     0.00     0.00  stack_free
-  |   0.00      0.12     0.00     2000     0.00     0.00  deal2
-  |   0.00      0.12     0.00     2000     0.00     0.06  playwar
-  |   0.00      0.12     0.00     2000     0.00     0.00  queue_copy
-  |   0.00      0.12     0.00     2000     0.00     0.00  queue_rotate
-  |   0.00      0.12     0.00        1     0.00    10.02  read_deck
-  | ...
-  `----
-
-  The first part of the output shows a breakdown of how much time was
-  spent in each function associated the most recent run of the program.
-
-  Analyze this breakdown and make suggestions as to where optimization
-  effort might best be spent to increase the speed of warsim.
+  Show the output of these commands below.
 </pre>
 </div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-11-28 Mon 11:52 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-04-17 Mon 10:12 <br/> </i>
 </div>
 </body>
 </html>
