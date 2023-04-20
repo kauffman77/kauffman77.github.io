@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-30 Wed 09:39 -->
+<!-- 2023-04-20 Thu 11:04 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Project 4: Performance Optimization and Timing</title>
@@ -344,7 +344,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-11-30 Wed 09:39</i>
+<i>Last Updated: 2023-04-20 Thu 11:04</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CSCI 2021 Project 4: Performance Optimization and Timing</h1>
@@ -356,60 +356,67 @@ text-align: justify;
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-org3990385" class="outline-4">
-<h4 id="org3990385">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
+<div id="outline-container-org10d05ab" class="outline-4">
+<h4 id="org10d05ab">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
 </div>
-<div id="outline-container-org248c159" class="outline-4">
-<h4 id="org248c159">Video Overview: <a href="https://youtu.be/bHYAIGX9sUM">https://youtu.be/bHYAIGX9sUM</a></h4>
+<div id="outline-container-org6acb607" class="outline-4">
+<h4 id="org6acb607">Video Overview: <i>Not yet available</i></h4>
 </div>
-<div id="outline-container-orgc744e3c" class="outline-4">
-<h4 id="orgc744e3c">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-orgc744e3c">
-<dl class="org-dl">
-<dt>Wed Nov 30 09:38:39 AM CST 2022</dt><dd>Fixed minor typo in discussion of
-<code>argv[]</code> array which had incorrect indices in the example.</dd>
-<dt>Tue Nov 29 09:17:05 AM CST 2022</dt><dd>Fixed minor typo in <code>MGET()</code>
-example where row/col index was inverted.</dd>
-<dt>Thu Nov 17 02:13:57 PM CST 2022</dt><dd>A Video Overview of Project 4 has
-been added. Several hints are offered in the video which may be
-worth your time to consider. The video is linked at the top of the
-P4 spec and directly here: <a href="https://youtu.be/bHYAIGX9sUM">https://youtu.be/bHYAIGX9sUM</a></dd>
-</dl>
+<div id="outline-container-org5cab491" class="outline-4">
+<h4 id="org5cab491">CHANGELOG: Empty</h4>
 </div>
-</div>
-
-<div id="outline-container-org3bdda57" class="outline-4">
-<h4 id="org3bdda57"></h4>
-<div class="outline-text-4" id="text-org3bdda57">
+<div id="outline-container-org5ab7c95" class="outline-4">
+<h4 id="org5ab7c95"></h4>
+<div class="outline-text-4" id="text-org5ab7c95">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org4779128">1. Introduction</a></li>
-<li><a href="#orge42888b">2. Download Code and Setup</a></li>
-<li><a href="#orgd694c53">3. <b>Problem 1</b>: Matrix Diagonal Sums</a>
+<li><a href="#orgb1d7c14">1. Introduction</a></li>
+<li><a href="#org6fbbe37">2. Download Code and Setup</a></li>
+<li><a href="#org2cfdc8c">3. <b>Problem 1</b>: Squaring a Matrix</a>
 <ul>
-<li><a href="#org3994160">3.1. Overview</a></li>
-<li><a href="#org58216a7">3.2. Optimize Diagonal Sums</a></li>
-<li><a href="#org34388fa">3.3. Evaluation on <code>loginNN</code></a></li>
-<li><a href="#org80ecf72">3.4. <code>sumdiag_print.c</code> Testing Program</a></li>
-<li><a href="#optimizations">3.5. Optimization Suggestions and Documentation</a></li>
-<li><a href="#org2894216">3.6. Grading Criteria for Problem 1 (50%)</a></li>
+<li><a href="#org6eb1ce8">3.1. Overview</a></li>
+<li><a href="#orgf745b81">3.2. Optimize Matrix Squaring</a></li>
+<li><a href="#org0ac058f">3.3. Evaluation on <code>loginNN</code></a></li>
+<li><a href="#org42b2c6e">3.4. <code>matsquare_print.c</code> Testing Program</a></li>
+<li><a href="#orgb863b82">3.5. Optimization Suggestions and Documentation</a></li>
+<li><a href="#org5ae59fc">3.6. Grading Criteria for Problem 1 (45%)</a></li>
 </ul>
 </li>
-<li><a href="#org599dbf6">4. <b>Problem 2</b>: Timing Search Algorithms</a>
+<li><a href="#org7320a63">4. <b>Problem 2</b>: showsym</a>
 <ul>
-<li><a href="#orgeefd115">4.1. Overview</a></li>
-<li><a href="#org642042c">4.2. <code>main()</code> in <code>search_benchmark.c</code></a></li>
-<li><a href="#search-benchmark-runs">4.3. Sample Runs</a></li>
-<li><a href="#orgbfccf70">4.4. Running Algorithms based on Command Line Arguments</a></li>
-<li><a href="#org3a8c6d6">4.5. Proper Setup and Cleanup for Searches</a></li>
-<li><a href="#org7ca200c">4.6. What to Measure</a></li>
-<li><a href="#orgeaf273b">4.7. MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></a></li>
-<li><a href="#org8d9cee3">4.8. Grading Criteria for Problem 2 (50%)</a></li>
+<li><a href="#org9719be4">4.1. ELF File References</a></li>
+<li><a href="#org40c2df1">4.2. Overall Approach</a></li>
+<li><a href="#orgc465f48">4.3. ELF Header and Section Header Array</a></li>
+<li><a href="#orgd41e37b">4.4. String Tables, Names, Section Headers</a></li>
+<li><a href="#org6b82a52">4.5. Symbol Table and .strtab</a></li>
+<li><a href="#orgeea8411">4.6. Behavior in Error Cases</a></li>
+<li><a href="#orgdb4359d">4.7. <code>showsym</code> Template</a></li>
+<li><a href="#org660047d">4.8. Grading Criteria for showsym</a></li>
 </ul>
 </li>
-<li><a href="#orgd707d5b">5. Writeup</a></li>
+<li><a href="#orgee60da5">5. <b>Problem 3</b>: EL Malloc</a>
+<ul>
+<li><a href="#org020f1de">5.1. EL Malloc Data Structures</a></li>
+<li><a href="#org8c77bd5">5.2. Block Header/Footer</a></li>
+<li><a href="#org81d3f83">5.3. Footers and Blocks Above/Below</a></li>
+<li><a href="#orgaf4f721">5.4. Block Lists and Global Control</a></li>
+<li><a href="#orga4c5b29">5.5. Pointers and "Actual" Space</a></li>
+<li><a href="#org39c3e4e">5.6. Doubly Linked List Operations</a></li>
+<li><a href="#orga8b3942">5.7. Allocation via Block Splitting</a></li>
+<li><a href="#org3f49d64">5.8. Freeing Blocks and Merging</a></li>
+<li><a href="#org0d2821f">5.9. Overall Code Structure of EL Malloc</a></li>
+<li><a href="#org3ba34c9">5.10. Demo Run using EL Malloc</a></li>
+<li><a href="#orgb745d99">5.11. Grading Criteria for El Malloc</a></li>
+</ul>
+</li>
+<li><a href="#orgb3bf13e">6. Project Submission</a>
+<ul>
+<li><a href="#org18d1c50">6.1. Submit to Gradescope</a></li>
+<li><a href="#org2a64ff3">6.2. Late Policies</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -417,8 +424,8 @@ P4 spec and directly here: <a href="https://youtu.be/bHYAIGX9sUM">https://youtu.
 </div>
 
 
-<div id="outline-container-org4779128" class="outline-2">
-<h2 id="org4779128"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orgb1d7c14" class="outline-2">
+<h2 id="orgb1d7c14"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This assignment focuses on aspects of optimizing and measuring
@@ -436,8 +443,8 @@ benchmark the performance of those functions.</li>
 </div>
 </div>
 
-<div id="outline-container-orge42888b" class="outline-2">
-<h2 id="orge42888b"><span class="section-number-2">2</span> <a id="org2b1b535"></a> Download Code and Setup</h2>
+<div id="outline-container-org6fbbe37" class="outline-2">
+<h2 id="org6fbbe37"><span class="section-number-2">2</span> <a id="org12e0970"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -470,34 +477,34 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tr>
 
 <tr>
-<td class="org-left"><code>P4-WRITEUP.txt</code></td>
-<td class="org-left">Edit</td>
-<td class="org-left">Fill in answers to assignment questions</td>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Testing script</td>
 </tr>
 </tbody>
 <tbody>
 <tr>
-<td class="org-left"><code>sumdiag_optm.c</code></td>
-<td class="org-left">EDIT</td>
+<td class="org-left"><code>matsquare_optm.c</code></td>
+<td class="org-left">EDIT/COMPLETE</td>
 <td class="org-left">Problem 1 create and fill in optimized function definition</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>sumdiag_benchmark.c</code></td>
+<td class="org-left"><code>matsquare_base.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 baseline function to beat</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>matsquare_benchmark.c</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Problem 1 main benchmark</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>sumdiag_print.c</code></td>
+<td class="org-left"><code>matsquare_print.c</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Problem 1 testing program</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>sumdiag_base.c</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Problem 1 baseline function to beat</td>
 </tr>
 
 <tr>
@@ -513,47 +520,41 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tr>
 
 <tr>
-<td class="org-left"><code>test_sumdiag.org</code></td>
+<td class="org-left"><code>test_matsquare.org</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Tests to check for memory issues in problem 1</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>showsym.c</code></td>
+<td class="org-left">COMPLETE</td>
+<td class="org-left">Problem 2 template to complete</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_showsym.org</code></td>
 <td class="org-left">Testing</td>
-<td class="org-left">Tests to check for memory issues in problem 1</td>
+<td class="org-left">Problem 2 Testing script for <code>showsym</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test-input/quote_data.o</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">Problem 2 ELF object file for input to showsym</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">Several other ELF and non-ELF files provided</td>
 </tr>
 </tbody>
 <tbody>
 <tr>
-<td class="org-left"><code>search.h</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Problem 2 header file</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>search_funcs.c</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Problem 2 search, setup, and cleanup functions</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>search_benchmark.c</code></td>
-<td class="org-left">EDIT/COMPLETE</td>
-<td class="org-left">Problem 2 timing <code>main()</code> to create</td>
-</tr>
-</tbody>
-<tbody>
-<tr>
-<td class="org-left"><code>testy</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Testing script</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>test_matata.org</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Tests to check for memory issues in problem 1</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>test_search_benchmark.org</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Tests to check for memory issues in problem 2</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
 </tr>
 </tbody>
 </table>
@@ -561,94 +562,111 @@ folder. Ultimately you will re-zip this folder to submit it.
 </div>
 
 
-<div id="outline-container-orgd694c53" class="outline-2">
-<h2 id="orgd694c53"><span class="section-number-2">3</span> <b>Problem 1</b>: Matrix Diagonal Sums</h2>
+<div id="outline-container-org2cfdc8c" class="outline-2">
+<h2 id="org2cfdc8c"><span class="section-number-2">3</span> <b>Problem 1</b>: Squaring a Matrix</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org3994160" class="outline-3">
-<h3 id="org3994160"><span class="section-number-3">3.1</span> Overview</h3>
+<div id="outline-container-org6eb1ce8" class="outline-3">
+<h3 id="org6eb1ce8"><span class="section-number-3">3.1</span> Overview</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 A problem that occasionally arises in numerical computing when working
-with Matrices (2D Arrays) is to compute the sums of the <b>Diagonals</b> of
-a matrix.  The main diagonal of a matrix is comprised of all elements
-at indices (0,0), (1,1), (2,2), and so forth.  There are several
-numbering schemes for diagonals but we will use the one represented in
-the following diagram which also shows the sums of the diagonals.
+with Matrices (2D Arrays) is to compute the <b>Square</b> of a matrix. This
+is a special case of general <a href="https://en.wikipedia.org/wiki/Matrix_multiplication">matrix multiplication</a> and students
+unfamiliar with this operation should study it to get some context for
+the present work.  
+</p>
+
+<p>
+Terminology can get a little confusing so keep the following in mind.
+</p>
+<ul class="org-ul">
+<li>A <b>Square Matrix</b> has equal numbers of rows and columns and can be
+multiplied by itself.</li>
+<li><b>Squaring</b> a matrix, sometimes notated <code>M*M = M^2</code> is multiplying a
+matrix by itself which can only be done if it is a square matrix
+(equal rows/columns).</li>
+</ul>
+
+<p>
+The diagram below illustrates the result of squaring a matrix by
+multiplying it by itself.  
 </p>
 
 <div class="org-center">
 
-<div id="orgbadb6f4" class="figure">
-<p><img src="sumdiag.png" alt="sumdiag.png" style="max-width:100%;" />
+<div id="orgc062fd9" class="figure">
+<p><img src="matsquare.png" alt="matsquare.png" style="max-width:100%;" />
 </p>
-<p><span class="figure-number">Figure 1: </span>5 by 5 matrix with diagonals colored. The diagram shows our numbering scheme for diagonals and the corresponding diagonal sums. Diagonal numbers start at 0 and progress counter-clockwise around the bottom and right of the matrix. For square matrices, the main diagonal is always numbered as the #rows-1 or #cols-1 which are equal.</p>
+<p><span class="figure-number">Figure 1: </span>3 by 3 matrix <code>M</code> with colored elements along with result of squaring the matrix as <code>M*M</code>.</p>
 </div>
 </div>
 
 <p>
-A code is provided in the file <code>sumdiag_base.c</code> which computes the
-sums of diagonals and stores them in a vector. The algorithm does so
-using the most "natural" approach of walking down each diagonal and
-totaling its elements then storing the result in the associated vector
-element.  As you survey the code, note the use of various convenience
-functions such as <code>mget(mat,i,j)</code> and <code>vset(vec,i,x)</code> to interact with
-the matrix and vector types used.
+Note that that for each of the elements of the squared matrix, the
+elements are the result of a row multiplied by a column from the
+original matrix:
 </p>
-
 <div class="org-src-container">
-<pre class="src src-c">int sumdiag_BASE_NORMAL(matrix_t *mat, vector_t *vec) {
-  if(vec-&gt;len != (mat-&gt;rows + mat-&gt;cols -1)){
-    printf("sumdiag_base: bad sizes\n");
-    return 1;
-  }
-  for(int i=0; i&lt;vec-&gt;len; i++){                     // initialize vector of diagonal sums
-    vset(vec,i,0);                                   // to all 0s
-  }
-
-  for(int d=0; d &lt; mat-&gt;rows; d++){                  // iterate over lower diagonals
-    int c = 0;                                       // col always starts at 0 in lower diags
-    for(int r=mat-&gt;rows-d-1; r&lt;mat-&gt;rows; r++,c++){  // work down rows, right cols for same diag
-      int el_rc = mget(mat, r, c);                   // get matrix element on diagonal
-      int vec_d = vget(vec, d);                      // retrieve current sum for diag
-      vset(vec, d, el_rc+vec_d);                     // add on back to the diagonal sum
-    }
-  }
-
-  int maxdiag = (mat-&gt;rows+mat-&gt;cols)-1;             // calculate last diagonal
-  for(int d=mat-&gt;rows; d &lt; maxdiag ; d++){           // iterate starting at first upper diag
-    int r = 0;                                       // row always starts at 0 in upper diags
-    for(int c=d-mat-&gt;cols+1; c&lt;mat-&gt;cols; r++,c++){  // work down rows, right cols for same diag
-      int el_rc = mget(mat, r, c);                   // matrix element
-      int vec_d = vget(vec, d);                      // diagonal sum from vector
-      vset(vec, d, el_rc+vec_d);                     // add on to sum
-    }
-  }
-  return 0;                                          // return success
+<pre class="src src-text">MatSq[i][j] = 0;
+for(k = 0 to Mat.rows){
+  MatSq[i][j] += Mat[i][k] * Mat[k][j];
 }
 </pre>
 </div>
+<p>
+The file <code>matsquare_base.c</code> provides a baseline function that performs
+this computation in a direct fashion as the above definition indicates
+The algorithm uses the most "natural" approach of multiplying each row
+by each column to produce the result in the for each part of the
+squared result.  As you survey the code, note the use of various
+convenience macros such as <code>MGET(mat,i,j)</code> interact with the matrix
+type used.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">// Baseline version
+int matsquare_BASE_NORMAL(matrix_t *mat, matrix_t *matsq) {
+  for(int i=0; i&lt;mat-&gt;rows; i++){
+    for(int j=0; j&lt;mat-&gt;cols; j++){
+      mset(matsq,i,j,0);                          // initialize to 0s
+      for(int k=0; k&lt;mat-&gt;rows; k++){
+        int mik = mget(mat, i, k);
+        int mkj = mget(mat, k, j);
+        int cur = mget(matsq, i, j);
+        int new = cur + mik*mkj;
+        mset(matsq, i, j, new);
+      }
+    }
+  }
+  return 0;                                       // return success
+}
+</pre>
+</div>
+<p>
+Note that the original matrix comes in as the parameter <code>mat</code> and the
+result of squaring the matrix is stored in the parameter <code>matsq</code>.
+</p>
 
 <p>
 While this algorithm is a direct translation of how humans would
-visually calculate the sums of diagonals for small matrices, it is
-unfortunately fairly slow when executing on most modern computing
-systems.
+visually calculate the square of small matrices, it is unfortunately
+fairly slow when executing on most modern computing systems.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org58216a7" class="outline-3">
-<h3 id="org58216a7"><span class="section-number-3">3.2</span> Optimize Diagonal Sums</h3>
+<div id="outline-container-orgf745b81" class="outline-3">
+<h3 id="orgf745b81"><span class="section-number-3">3.2</span> Optimize Matrix Squaring</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
-The purpose of this problem is to write <code>sumdiag_OPTM()</code> which is a
-faster version of the provided <code>sumdiag_BASE()</code> to calculate the sums
-of diagonals.
+The purpose of this problem is to write <code>matsquare_OPTM()</code> which is a
+faster version of the provided <code>matsquare_BASE()</code> to calculate the
+results.
 </p>
 
 <p>
-Write your code in the file <code>sumdiag_optm.c</code>.
+Write your code in the file <code>matsquare_optm.c</code>.
 </p>
 
 <p>
@@ -659,16 +677,16 @@ Keep the following things in mind.
 related to matrices and vectors provided in the <code>matvec.h</code> and
 demonstrated in the baseline function. Understanding the layout of
 the matrix in memory is essential to unlocking performance.</li>
-<li>The goal of <code>sumdiag_OPTM()</code> is to exceed the performance of
-<code>sumdiag_BASE()</code> by as much as possible.</li>
+<li>The goal of <code>matsquare_OPTM()</code> is to exceed the performance of
+<code>matsquare_BASE()</code> by as much as possible.</li>
 <li>To achieve this goal, several optimizations must be implemented and
 suggestions are given in a later section.</li>
-<li>You will need to document your optimizations in the file
-<code>P4-WRITEUP.txt</code> and provide timing results of running the
-optimized version.</li>
+<li>You will need to document your optimizations in comments included
+in the <code>matsquare_optm.c</code> file and provide timing results of
+running the optimized version.</li>
 <li>Part of your grade will be based on the speed of the optimized code
-on the machines <code>loginNN.cselabs.umn.edu</code>. The main routine
-<code>sumdiag_benchmark.c</code> will be used for this.</li>
+on the machine <code>loginNN.cselabs.umn.edu</code>. The main routine
+<code>matsquare_benchmark.c</code> will be used for this.</li>
 </ol>
 
 <p>
@@ -677,12 +695,12 @@ Some details are provided in subsequent sections.
 </div>
 </div>
 
-<div id="outline-container-org34388fa" class="outline-3">
-<h3 id="org34388fa"><span class="section-number-3">3.3</span> Evaluation on <code>loginNN</code></h3>
+<div id="outline-container-org0ac058f" class="outline-3">
+<h3 id="org0ac058f"><span class="section-number-3">3.3</span> Evaluation on <code>loginNN</code></h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
-The provided file <code>sumdiag_benchmark.c</code> provides a benchmark for the
-speed of diagonal summing. It will be used by graders to evaluate the
+The provided file <code>matsquare_benchmark.c</code> provides a benchmark for the
+speed of squaring a matrix. It will be used by graders to evaluate the
 submitted code and should be used during development to gauge
 performance improvements.
 </p>
@@ -697,6 +715,7 @@ login03.cselabs.umn.edu  OR  csel-remote-lnx-03.cselabs.umn.edu
 login04.cselabs.umn.edu  OR  csel-remote-lnx-04.cselabs.umn.edu
 login05.cselabs.umn.edu  OR  csel-remote-lnx-05.cselabs.umn.edu
 login06.cselabs.umn.edu  OR  csel-remote-lnx-06.cselabs.umn.edu
+login07.cselabs.umn.edu  OR  csel-remote-lnx-07.cselabs.umn.edu
 </pre>
 </div>
 <p>
@@ -705,7 +724,7 @@ not virtualized making them ideal for performance benchmarks.
 </p>
 
 <p>
-The scoring present in <code>sumdiag_benchmark.c</code> is "tuned" to these
+The scoring present in <code>matsquare_benchmark.c</code> is "tuned" to these
 machines and will likely report incorrect results on other machines.
 That means that codes should be <b>tested on loginNN machines</b> so that
 no unexpected results occur after submission. Results reported should
@@ -713,89 +732,91 @@ be from one of <code>loginNN</code>.
 </p>
 
 <p>
-The output of the <code>sumdiag_benchmark</code> is shown below.
+The output of the <code>matsquare_benchmark</code> is shown below.
 </p>
 <ul class="org-ul">
 <li>SIZE: the size of the matrix being used. The benchmark always
 uses square matrices</li>
 <li>Runtimes for the 2 functions
 <ul class="org-ul">
-<li><code>BASE</code>: the time it takes for <code>sumdiag_BASE()</code> to complete.</li>
-<li><code>OPTM</code>: the time it takes for <code>sumdiag_OPTM()</code> to complete.</li>
+<li>BASE: the time it takes for <code>matsquare_BASE()</code> to complete.</li>
+<li>OPTM: the time it takes for <code>matsquare_OPTM()</code> to complete.</li>
 </ul></li>
-<li>SPDUP: the speedup of <code>sumdiag_OPTM()</code> over <code>sumdiag_BASE()</code> which
+<li>SPDUP: the speedup of <code>matsquare_OPTM()</code> over <code>matsquare_BASE()</code> which
 is <code>BASE / OPTM</code>.</li>
 <li><p>
 POINTS: which are earned according to the following code:
 </p>
 <div class="org-src-container">
-<pre class="src src-c">    double points = log(speedup_OPTM) / log(2.0) * size / 2048;
+<pre class="src src-c">    double speedup_OPTM = (cpu_time_BASE / cpu_time_OPTM); // Scoring based on speedup
+    double log2_speedup = log(speedup_OPTM) / log(2.0);    // 2X speedup starts at 1 point
+    double scale =  size / SCALE_FACTOR;                   // Larger sizes give more points
+    double points = log2_speedup * scale;                  // 
+    points = points &lt; 0 ? 0.0 : points;                    // No negative points
 </pre>
 </div>
 <p>
-This scheme means that unless actual optimizations are implemented,
-0 points will be scored. Roughly this scores according to a
-logarithmic scale that is weighted towards more points if speedups
-at larger sized inputs is achieved.
+This scheme, while a little involved, means that unless actual
+optimizations are implemented, 0 points will be scored. It is also
+weighted towards earning more points on for larger size matrices.
 </p></li>
 </ul>
 
 <p>
-Below are several demonstration runs of <code>sumdiag_benchmark</code>.
+Below are several demonstration runs of <code>matsquare_benchmark</code>.
 </p>
 <div class="org-src-container">
-<pre class="src src-sh"># RUN ON INCORRECT MACHINE (NOT loginNN): NOTE WARNINGS
-homeputer&gt; ./sumdiag_benchmark 
-WARNING: expected host 'csel-remote-lnx-01' but got host 'val'
+<pre class="src src-sh"># BUILD/RUN ON NON-CSEL-KH1250-NN MACHINE: NOTE WARNINGS
+homeputer&gt; make
+gcc -Wall -Werror -g -Og -c matsquare_print.c
+gcc -Wall -Werror -g -Og -c matvec_util.c
+gcc -Wall -Werror -g -Og -c matsquare_base.c
+gcc -Wall -Werror -g -Og -c matsquare_optm.c
+gcc -Wall -Werror -g -Og -o matsquare_print matsquare_print.o matvec_util.o matsquare_base.o matsquare_optm.o
+gcc -Wall -Werror -g -Og -c matsquare_benchmark.c
+gcc -Wall -Werror -g -Og -o matsquare_benchmark matsquare_benchmark.o matvec_util.o matsquare_base.o matsquare_optm.o -lm
+...
+
+homeputer&gt; ./matsquare_benchmark 
+WARNING: expected host 'csel-remote-lnx-NN' but got host 'val'
 WARNING: timing results / scoring will not reflect actual scoring
-WARNING: run on host 'csel-remote-lnx-01' for accurate results
-==== Matrix Diagonal Sum Benchmark Version 3 ====
------- Tuned for csel-remote-lnx-NN machines --------
-  SIZE       BASE       OPTM  SPDUP POINTS 
-   512 3.1570e-02 4.0520e-03   7.79   0.76 
-  1024 7.6512e-02 1.4715e-02   5.20   1.22 
-  1101 8.7841e-02 1.8098e-02   4.85   1.25 
-  2048 3.8762e-01 6.0538e-02   6.40   2.74 
-  4099 1.5315e+00 2.3139e-01   6.62   5.59 
-  6001 3.7776e+00 4.8399e-01   7.81   8.89 
-  8192 7.1925e+00 8.9518e-01   8.03  12.31 
-RAW POINTS: 32.77
-TOTAL POINTS: 33 / 35
-WARNING: expected host 'csel-remote-lnx-01' but got host 'val'
+WARNING: run on host 'csel-remote-lnx-NN' for accurate results
+==== Matrix Square Benchmark Version 2 ====
+  SIZE       BASE       OPTM  SPDUP   LOG2  SCALE POINTS 
+   256 3.6133e-01 5.8248e-02   6.20   2.63   0.94   2.47 
+   273 3.7156e-01 7.0970e-02   5.24   2.39   1.00   2.39 
+   512 3.4430e+00 4.5978e-01   7.49   2.90   1.88   5.45 
+   801 9.7616e+00 1.7626e+00   5.54   2.47   2.93   7.25 
+  1024 4.3545e+01 3.6822e+00  11.83   3.56   3.75  13.37 
+RAW POINTS: 30.92
+TOTAL POINTS: 30 / 30
+WARNING: expected host 'csel-remote-lnx-NN' but got host 'val'
 WARNING: timing results / scoring will not reflect actual scoring
-WARNING: run on host 'csel-remote-lnx-01' for accurate results
+WARNING: run on host 'csel-remote-lnx-NN' for accurate results
 
 # PARTIAL CREDIT RUN
-&gt;&gt; ssh ssh login01.cselabs.umn.edu
-...
-login01&gt; ./sumdiag_benchmark
-==== Matrix Diagonal Sum Benchmark Version 3 ====
------- Tuned for csel-remote-lnx-NN machines --------
-  SIZE       BASE       OPTM  SPDUP POINTS 
-   512 1.2573e-02 3.8700e-03   3.25   0.44 
-  1024 5.3862e-02 1.5494e-02   3.48   0.92 
-  1101 6.0651e-02 1.8055e-02   3.36   0.96 
-  2048 3.1395e-01 6.2855e-02   4.99   2.38 
-  4099 1.5505e+00 2.5374e-01   6.11   5.35 
-  6001 3.4942e+00 5.4745e-01   6.38   8.02 
-  8192 6.6624e+00 1.0128e+00   6.58  11.13 
-RAW POINTS: 29.20
-TOTAL POINTS: 29 / 35
+csel-remote-lnx-06&gt; ./matsquare_benchmark 
+==== Matrix Square Benchmark Version 2 ====
+  SIZE       BASE       OPTM  SPDUP   LOG2  SCALE POINTS 
+   256 4.0254e-01 1.0640e-01   3.78   1.92   0.94   1.80 
+   273 3.8679e-01 1.0814e-01   3.58   1.84   1.00   1.84 
+   512 3.7187e+00 1.1006e+00   3.38   1.76   1.88   3.29 
+   801 1.2810e+01 2.9671e+00   4.32   2.11   2.93   6.19 
+  1024 3.3382e+01 1.1026e+01   3.03   1.60   3.75   5.99 
+RAW POINTS: 19.12
+TOTAL POINTS: 19 / 30
 
 # FULL CREDIT RUN
-login01&gt; ./sumdiag_benchmark
-==== Matrix Diagonal Sum Benchmark Version 3 ====
------- Tuned for csel-remote-lnx-NN machines --------
-  SIZE       BASE       OPTM  SPDUP POINTS 
-   512 1.3784e-02 2.4550e-03   5.61   0.64 
-  1024 5.5067e-02 9.7000e-03   5.68   1.28 
-  1101 6.2697e-02 1.1165e-02   5.62   1.37 
-  2048 3.2443e-01 4.0681e-02   7.97   3.07 
-  4099 1.5905e+00 1.6463e-01   9.66   6.71 
-  6001 3.5678e+00 3.5394e-01  10.08  10.00 
-  8192 6.8017e+00 6.5771e-01  10.34  13.81 
-RAW POINTS: 36.87
-TOTAL POINTS: 35 / 35
+csel-remote-lnx-06&gt; ./matsquare_benchmark 
+==== Matrix Square Benchmark Version 2 ====
+  SIZE       BASE       OPTM  SPDUP   LOG2  SCALE POINTS 
+   256 3.4854e-01 4.2761e-02   8.15   3.03   0.94   2.84 
+   273 3.5633e-01 5.2120e-02   6.84   2.77   1.00   2.77 
+   512 3.4802e+00 3.5176e-01   9.89   3.31   1.88   6.20 
+   801 1.1208e+01 1.3412e+00   8.36   3.06   2.93   8.99 
+  1024 3.3112e+01 2.8701e+00  11.54   3.53   3.75  13.23 
+RAW POINTS: 34.03
+TOTAL POINTS: 30 / 30
 </pre>
 </div>
 
@@ -803,54 +824,57 @@ TOTAL POINTS: 35 / 35
 Note that it is possible to exceed the score associated with maximal
 performance (as seen in the RAW POINTS reported) but no more than the
 final reported points will be given for the performance portion of the
-problem.
+problem. <i>There may be Makeup Credit associate with sufficient
+speedups;</i> <i>if this occurs, output for the program will make it
+obvious that bonus credit has been awarded.</i>
 </p>
-
-<blockquote>
-<p>
-Achieving very high speedup and significantly exceeding the max score
-may garner some MAKEUP credit: you'll know you earned this as the
-benchmark will report as much
-</p>
-</blockquote>
 </div>
 </div>
 
-
-<div id="outline-container-org80ecf72" class="outline-3">
-<h3 id="org80ecf72"><span class="section-number-3">3.4</span> <code>sumdiag_print.c</code> Testing Program</h3>
+<div id="outline-container-org42b2c6e" class="outline-3">
+<h3 id="org42b2c6e"><span class="section-number-3">3.4</span> <code>matsquare_print.c</code> Testing Program</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
-As one works on implementing optimizations in <code>sumdiag_OPTM()</code>, bugs
+As one works on implementing optimizations in <code>matsquare_OPTM()</code>, bugs
 which compute incorrect results are often introduced.  To aid in
-testing, the <code>sumdiag_print()</code> program runs both the BASE and OPTM
+testing, the <code>matsquare_print()</code> program runs both the BASE and OPTM
 versions on the same matrix and shows all results. The matrix size is
 determined from the command line and is printed on the screen to
 enable hand verification. Examples are below.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">&gt; ./sumdiag_print 5                    # run on a size 5 by 5 matrix; 
-==== Matrix Diagonal Sum Print ====
-Matrix:
-5 x 5 matrix                           # shows the matrix
-   0:    0    1    2    3    4 
-   1:    5    6    7    8    9 
-   2:   10   11   12   13   14 
-   3:   15   16   17   18   19 
-   4:   20   21   22   23   24 
+<pre class="src src-sh">./matsquare_print 3             # run on 3 by 3 matrix
+==== Matrix Square Print ====
+Original Matrix:                # original test matrix
+3 x 3 matrix
+   0:      0      1      2 
+   1:      3      4      5 
+   2:      6      7      8 
 
-Diagnonal Sums:                        # prints diag sums for BASE/OPTM
-[ i]: BASE OPTM
-[ 0]:   20   20                        # matching
-[ 1]:   36   36 
-[ 2]:   48   48 
-[ 3]:   56   56 
-[ 4]:   60   36 ***                    # not matching: OPTM is buggy
-[ 5]:   40   21 ***
-[ 6]:   24   10 ***
-[ 7]:   12    3 ***
-[ 8]:    4    0 ***
+BASE Matrix Squared :           # results for matsquare_BASE()
+3 x 3 matrix
+   0:     15     18     21 
+   1:     42     54     66 
+   2:     69     90    111 
+
+OPTM Matrix Squared :           # results for matsquare_OPTM()
+3 x 3 matrix
+   0:     15     18     21 
+   1:     42     59     66 
+   2:     69    103    111 
+
+BASE/OPTM Element Comparison:
+[  i][  j]:   BASE   OPTM       # elemnent by element comparison
+[  0][  0]:     15     15       # to help spot errors in results
+[  0][  1]:     18     18       # for matsquare_OPTM()
+[  0][  2]:     21     21 
+[  1][  0]:     42     42 
+[  1][  1]:     54     59 ***   # NON-matching
+[  1][  2]:     66     66 
+[  2][  0]:     69     69 
+[  2][  1]:     90    103 ***   # NON-matching
+[  2][  2]:    111    111 
 
 </pre>
 </div>
@@ -858,57 +882,61 @@ Diagnonal Sums:                        # prints diag sums for BASE/OPTM
 </div>
 
 
-<div id="outline-container-orgaebb624" class="outline-3">
-<h3 id="optimizations"><a id="orgaebb624"></a><span class="section-number-3">3.5</span> <a id="org8a39b88"></a> Optimization Suggestions and Documentation</h3>
-<div class="outline-text-3" id="text-optimizations">
+<div id="outline-container-orgb863b82" class="outline-3">
+<h3 id="orgb863b82"><span class="section-number-3">3.5</span> <a id="org48b4fa9"></a> Optimization Suggestions and Documentation</h3>
+<div class="outline-text-3" id="text-3-5">
 <p>
-Labs and lectures will cover several kinds of optimizations which are
-useful to improve the speed of <code>sumdiag_OPTM()</code>.  These techniques
-include any or all of the following:
+Labs and lectures have covered several kinds of optimizations which
+are useful to improve the speed of <code>matsquare_OPTM()</code>.  These techniques
+include:
 </p>
-<ol class="org-ol">
-<li>Replacing repeated memory references with local non-pointer data
-which will likely be assigned to registers to alleviate slow-down
-from memory accesses.</li>
-<li>Eliminating barriers to natural compiler optimizations such as by
-replacing short function calls with equivalent inline code or Macro
-invocations. <i>Hint: in <code>matvec.h</code> there is both <code>vget()</code> function
-and a <code>VGET()</code> macro;</i> <i>use the that is likely to be faster in your
-own code.</i></li>
+<ul class="org-ul">
 <li>Re-ordering memory accesses to be as sequential as possible which
-favors cache. <b>Unless memory accesses favor cache, it is unlikely
-that many optimizations will have much effect.</b></li>
+favors cache (<b>very important</b>)</li>
 <li>Increasing potential processor pipelining by adjusting the
 destinations of arithmetic operations.</li>
 <li>Decreasing any unnecessary work such as memory accesses or
 arithmetic operations.</li>
-</ol>
+</ul>
 <p>
 These should be sufficient to gain full credit though you are free to
 explore additional optimizations.
 </p>
 
 <p>
-One handy realization most folks will reach is that it is useful to be
-able to compute the Diagonal of an individual matrix element belongs to
-based on its row/col indices.  The following formula is useful for
-that:
+One handy realization most folks will reach is that it is useful to
+recognize a way to re-order the memory access pattern to favor
+cache. Recall that the most favorable access pattern for most matrix
+computations in a row-major programming environment like C is to work
+across rows.  Below is a diagram which suggests one possible way to do
+this in the context of squaring a matrix.  It favors repeated walking
+across a matrix in a row-wise fashion to avoid the stride required for
+column-wise access.  Study this diagram carefully and consider
+implementing the approach illustrated as your first optimization. As
+discussed in lecture, if data is not getting to the processor, other
+optimizations that favor pipelining/superscalar execution will have no
+effect so focusing first on the memory access pattern is crucial.
 </p>
-<div class="org-src-container">
-<pre class="src src-c">mat_elem = MGET(mat, row_num, col_num);         // retrive an element based on row/col
-diag_num = col_num - row_num + mat.cols - 1;    // calculate the diagonal number for it
-</pre>
+
+<div class="org-center">
+
+<div id="org5f5409d" class="figure">
+<p><img src="matsquare-order.png" alt="matsquare-order.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Illustration of how to favor row-wise access to compute squared matrix. Computation of first row results are shown with the beginnings of the second row.</p>
+</div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org2894216" class="outline-3 grading 50">
-<h3 id="org2894216"><span class="section-number-3">3.6</span> Grading Criteria for Problem 1 (50%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+
+<div id="outline-container-org5ae59fc" class="outline-3 grading">
+<h3 id="org5ae59fc"><span class="section-number-3">3.6</span> Grading Criteria for Problem 1 (45%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span></span></h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 The file <code>P4-WRITEUP.txt</code> has several questions that should be
 answered in a similar fashion to lab write-ups. These document the
-optimizations used in <code>sumdiag_OPTM()</code> require a justification for
+optimizations used in <code>matsquare_OPTM()</code> require a justification for
 their use.
 </p>
 
@@ -934,7 +962,7 @@ their use.
 
 <tr>
 <td class="org-right">5</td>
-<td class="org-left">No output/memory errors reported  <code>make test-prob1</code></td>
+<td class="org-left">No memory errors reported by Valgrind via <code>make test-prob1</code></td>
 </tr>
 
 <tr>
@@ -944,38 +972,32 @@ their use.
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">MANUAL INSPECTION of <code>sumdiag_optm.c</code></td>
+<td class="org-left">MANUAL INSPECTION of <code>matsquare_optm.c</code></td>
 </tr>
 
 <tr>
-<td class="org-right">35</td>
-<td class="org-left">Performance of <code>sumdiag_OPTM()</code> on <code>loginNN.cselabs.umn.edu</code></td>
+<td class="org-right">30</td>
+<td class="org-left">Performance of <code>matsquare_OPTM()</code> on <code>loginNN.cselabs.umn.edu</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">As measured by the provided <code>sumdiag_benchmark</code></td>
+<td class="org-left">As measured by the provided <code>matsquare_benchmark</code> during grading</td>
 </tr>
-</tbody>
-<tbody>
+
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left"><code>P4-WRITEUP.txt</code></td>
-</tr>
-
-<tr>
-<td class="org-right">2</td>
-<td class="org-left">Answer 1A <code>P4-WRITEUP.txt</code> (source code)</td>
-</tr>
-
-<tr>
-<td class="org-right">3</td>
-<td class="org-left">Answer 1B <code>P4-WRITEUP.txt</code> (timing table)</td>
+<td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
 <td class="org-right">5</td>
-<td class="org-left">Answer 1C <code>P4-WRITEUP.txt</code> (optimizations description)</td>
+<td class="org-left">Answer for (B) Timing Table in comments of <code>matsquare_optm.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Answer for (C) Optimizations in comments of <code>matsquare_optm.c</code></td>
 </tr>
 </tbody>
 </table>
@@ -984,594 +1006,399 @@ their use.
 </div>
 
 
-<div id="outline-container-org599dbf6" class="outline-2">
-<h2 id="org599dbf6"><span class="section-number-2">4</span> <b>Problem 2</b>: Timing Search Algorithms</h2>
+<div id="outline-container-org7320a63" class="outline-2">
+<h2 id="org7320a63"><span class="section-number-2">4</span> <b>Problem 2</b>: showsym</h2>
 <div class="outline-text-2" id="text-4">
+<p>
+The <a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format">Executable and Linkable (ELF) File Format</a> is the Unix standard for
+binary files with runnable code in them.  By default, any executable
+or <code>.o</code> file produced by Unix compilers such as GCC produce ELF
+files as evidenced by the <code>file</code> command.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; gcc -c code.c
+
+&gt;&gt; file code.o
+code.o: ELF 64-bit LSB relocatable, x86-64, version 1 (SYSV), not stripped
+
+&gt;&gt; gcc program.c
+
+&gt;&gt; file a.out
+a.out: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0
+</pre>
 </div>
-<div id="outline-container-orgeefd115" class="outline-3">
-<h3 id="orgeefd115"><span class="section-number-3">4.1</span> Overview</h3>
+
+<p>
+This problem explores the file format of ELF in order to show any
+<b>symbol table</b> present.  The symbol table contains information on
+publicly accessible items in the file such as functions and global
+data. The standard utility <code>readelf</code> shows human readable versions of
+ELF files and the <code>-s</code> option specifically prints out the symbol table
+section.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; readelf -s test-input/quote_data.o
+
+Symbol table '.symtab' contains 17 entries:
+   Num:    Value          Size Type    Bind   Vis      Ndx Name
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS quote_data.c
+     2: 0000000000000000     0 SECTION LOCAL  DEFAULT    1 
+     3: 0000000000000000     0 SECTION LOCAL  DEFAULT    3 
+     4: 0000000000000000     0 SECTION LOCAL  DEFAULT    4 
+     5: 0000000000000000     0 SECTION LOCAL  DEFAULT    5 
+     6: 0000000000000000     0 SECTION LOCAL  DEFAULT    6 
+     7: 0000000000000000     0 SECTION LOCAL  DEFAULT    9 
+     8: 0000000000000000     0 SECTION LOCAL  DEFAULT   10 
+     9: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT    5 .LC0
+    10: 0000000000000000     0 SECTION LOCAL  DEFAULT    8 
+    11: 0000000000000000    11 FUNC    GLOBAL DEFAULT    1 max_size
+    12: 0000000000000000     8 OBJECT  GLOBAL DEFAULT    6 choices
+    13: 000000000000000b    60 FUNC    GLOBAL DEFAULT    1 list_get
+    14: 0000000000000047    30 FUNC    GLOBAL DEFAULT    1 get_it
+    15: 0000000000000010    16 OBJECT  GLOBAL DEFAULT    6 choices_actual
+    16: 0000000000000020  3960 OBJECT  GLOBAL DEFAULT    6 nodes
+</pre>
+</div>
+
+<p>
+This problem re-implements this functionality in the <code>showsym</code> program
+to instruct on some the format of the ELF file. It has the following
+output.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; gcc -o showsym showsym.c                    # compile showsym
+
+&gt;&gt; ./showsym test-input/quote_data.o           # run on provided data file
+Symbol Table                                   # output of program
+- 4296 bytes offset from start of file         # location and size of symbol table 
+- 408 bytes total size
+- 24 bytes per entry
+- 17 entries
+[idx]      TYPE SIZE NAME                      # symbol table entries
+[  0]:   NOTYPE    0 &lt;NONE&gt;
+[  1]:     FILE    0 quote_data.c
+[  2]:  SECTION    0 &lt;NONE&gt;
+[  3]:  SECTION    0 &lt;NONE&gt;
+[  4]:  SECTION    0 &lt;NONE&gt;
+[  5]:  SECTION    0 &lt;NONE&gt;
+[  6]:  SECTION    0 &lt;NONE&gt;
+[  7]:  SECTION    0 &lt;NONE&gt;
+[  8]:  SECTION    0 &lt;NONE&gt;
+[  9]:   NOTYPE    0 .LC0
+[ 10]:  SECTION    0 &lt;NONE&gt;
+[ 11]:     FUNC   11 max_size
+[ 12]:   OBJECT    8 choices
+[ 13]:     FUNC   60 list_get
+[ 14]:     FUNC   30 get_it
+[ 15]:   OBJECT   16 choices_actual
+[ 16]:   OBJECT 3960 nodes
+
+&gt; showsym test-input/quote_main.c              # some files are not ELF file format
+Magic bytes wrong, this is not an ELF file
+
+&gt; showsym test-input/ls                        # some ELF files don't have symbol tables
+Couldn't find symbol table
+</pre>
+</div>
+
+<p>
+The output of <code>showsym</code> is a similar to <code>readelf -s</code> but abbreviated,
+showing only information on public symbols in the ELF file.
+</p>
+</div>
+
+<div id="outline-container-org9719be4" class="outline-3">
+<h3 id="org9719be4"><span class="section-number-3">4.1</span> ELF File References</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
-This problem centers on timing several algorithms to measure their
-performance. This will require use of C timing functions which have
-been demonstrated in various parts of the class including the previous
-problem.
+It is recommended to do some reading on the structure of the ELF
+format as it will assist in coming to grips with this problem. As you
+encounter parts of the below walk-through of how to find and print the
+symbol table, refer to the following resources.
 </p>
+<ul class="org-ul">
+<li>Diagrams shown below provide some information about the basics of
+what is provided in each portion of the file and how some of the
+records relate to each other.</li>
+<li><a href="http://man7.org/linux/man-pages/man5/elf.5.html">Manual Pages</a>: The manual page on ELF (found online or by typing <code>man
+  elf</code> in any terminal) gives <i>excellent</i> coverage of the structs and
+values in the file format. Essentially the entire format is covered
+here though there may be a few ambiguities.</li>
+<li><a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format">Wikipedia</a>: A good overview of the file format and has some
+extensive tables on the structs/values that comprise it.</li>
+<li><a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-43405.html#scrolltoc">Oracle Docs</a>: A somewhat more detailed and hyper-linked version of
+the manual pages.</li>
+</ul>
 
 <p>
-You will measure the performance of 4 search functions which simply
-determine whether an integer <code>query</code> is present in an associated data
-structure.  All of these along with associated setup functions are
-provided in the <code>search_funcs.c</code> file.  The search algorithms are as
-follows.
-</p>
-
-<dl class="org-dl">
-<dt>Linear Search in an Array</dt><dd>The array need not be sorted and is
-searched from beginning to end.</dd>
-<dt>Linear Search in a Linked List</dt><dd>Nodes are linked together and the
-list is searched for a query from beginning to end.</dd>
-<dt>Binary Search in a Sorted Array</dt><dd>The classic divide and conquer
-algorithm which repeatedly halves the search space.</dd>
-<dt>Binary Search in a Tree</dt><dd>A binary search tree enables searching
-for a query by following left/right branches.</dd>
-</dl>
-
-<p>
-If you do not have a sense of the relative computational complexities
-of these algorithms, you should review these as they should factor
-into your analysis of the timings of the algorithms.
-</p>
-
-<p>
-As was the case for problem 1, you can develop your timing program on
-any platform but *analyze and report results on the
-<code>loginNN.cselabs.umn.edu</code> machines to ensure comparability.
+Note that we will use the <b>64-bit ELF format only</b> which means most of
+the C types for variables should mention <code>ELF64_xxx</code> in them though
+use of 32-bit integers may still apply via <code>uint32_t</code>.
 </p>
 </div>
 </div>
 
-
-<div id="outline-container-org642042c" class="outline-3">
-<h3 id="org642042c"><span class="section-number-3">4.2</span> <code>main()</code> in <code>search_benchmark.c</code></h3>
+<div id="outline-container-org40c2df1" class="outline-3">
+<h3 id="org40c2df1"><span class="section-number-3">4.2</span> Overall Approach</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
-The requirements from this problem is that you provide a <code>main()</code>
-function in the file <code>search_benchmark.c</code> with the following features.
+ELF files are divided into sections. Our main interest is to identify
+the Symbol Table section but this is done in several steps.
+</p>
+<ol class="org-ol">
+<li>Parse the File Header to identify the positions of the Section
+Header Array and Section Header String Table</li>
+<li>Search the Section Header Array and associated string table to find
+the section named <code>.symtab</code> which is the symbol table and <code>.strtab</code>
+which contains the string names of the symbol table. Note the
+position in the file of these two</li>
+<li>Iterate through the Symbol Table section which is also an array of
+structs. Use the fields present there along with the associated
+string names in <code>.strtab</code> to print each symbol and some associated
+information.</li>
+</ol>
+
+<p>
+Since this is a binary file with a considerable amount of jumping and
+casting to structs, it makes sense to use <code>mmap()</code> to map the entire
+file into virtual memory. <b>It is a requirement to use mmap() for this
+problem</b>. Refer to lecture notes, textbook, and lab materials for
+details on how to set up a memory map and clean it up once
+finished. In particular <b>Lab 13 uses mmap() to parse binary files</b> in
+a way that is directly relevant to the present program.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc465f48" class="outline-3">
+<h3 id="orgc465f48"><span class="section-number-3">4.3</span> ELF Header and Section Header Array</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+The initial bytes in an ELF file always have a fixed structure which
+is the <code>ELF64_Ehdr</code> type.  Of primary interest are the following
+</p>
+<ol class="org-ol">
+<li><p>
+Identification bytes and types in the field <code>e_ident[]</code>. These
+initial bytes identify the file as ELF format or NOT (will check for
+this).
 </p>
 
-<ol class="org-ol">
-<li>Runs on a range of sizes that can be specified on the command
-line.  A typical approach is to allow one to specify a minimum and
-maximum size of the search data structures and repeatedly double
-starting at the minimum and ending at the max.</li>
-<li><p>
-Create "even" data in the structures using the provided
-functions. 
-</p>
-<ul class="org-ul">
-<li><code>make_even_array()</code> for arrays</li>
-<li><code>make_even_list()</code> for linked lists</li>
-<li><code>make_even_trees()</code> for  trees</li>
-</ul>
 <p>
-This will populate the data structure with the sequence
-<code>0,2,4,...,(len-1)*2</code>.  This data population allows searches
-for items that are known to be present (even numbers) and items
-that are known not to be present (odd numbers).
-</p></li>
-<li><p>
-Perform a variable number of searches on the data structures.  This
-should be done the following way.
-</p>
-<ul class="org-ul">
-<li>On the command line the number of repetitions of searches should
-be specified on the command line.</li>
-<li>Search for every element in the data structures the given number
-of repetitions.</li>
-<li>Search an equal number of times for elements NOT in the data
-structure.</li>
-</ul>
-<p>
-A typical example method for this is as follows. For a size 100
-data structure perform
-</p>
-<ul class="org-ul">
-<li>An outer loop over the number of repetitions</li>
-<li>An inner loop that searches for the numbers
-<code>0,1,2,3,4,...,(2*len)-1</code></li>
-</ul>
-<p>
-This pattern searches for an equal number of present/not-present
-items.
-</p></li>
-<li><p>
-Measure the <b>Total Time for the Entire Search Loop</b> for a given
-algorithm. Since individual searches will take a minuscule amount
-of time, the Total Time for the loop is the most robust measure to
-discuss. While such a time may include some artifacts such as
-incriminating loop variables, these will be "charged" to all
-algorithms equally so that the comparison remains fair. <b>Avoid use
-of functions like pow()</b> as these will introduce unnecessarily
-calculations inflating the measured times. Favor multiplications to
-increase size such as
+<code>showsym</code> should check these "magic bytes" (first elements of
+<code>e_ident[]</code> in header). If they match the expected values, proceed
+but if they are incorrect, print the message:
 </p>
 <pre class="example">
-cur_search_size = cur_search_size * 2;
-</pre></li>
-<li><p>
-Enable any combination of algorithms to be tested by specifying
-which are to be run on the command line.  The required way to do
-this is to accept optional 4th, 5th, etc. command line arguments
-which enable different search types.  The associated strings for
-each algorithm are
-</p>
-<ul class="org-ul">
-<li><code>la</code> for linear array search</li>
-<li><code>ll</code> for linked list search</li>
-<li><code>bl</code> for binary search</li>
-<li><code>bt</code> for tree search</li>
-</ul>
-<p>
-Specify additional command line arguments which enable the searches:
-</p>
-<ul class="org-ul">
-<li><code>ll</code>: run linked list search only</li>
-<li><code>la ba</code>: run linear array search and binary array search</li>
-<li><code>la ll bt</code>: run all but the binary array search</li>
-<li><code>ll bt la ba</code>: run all algorithms</li>
-<li>If no string is specified, run all algorithms; this is the
-default.</li>
-<li>The order of the additional command line arguments need not
-affect the output. For example specifying <code>la ll</code> can have the
-same output as <code>ll la</code> (both run linear search in arrays and
-linked lists).</li>
-</ul></li>
-<li>Ensure that an equal number of searches is done for each
-of the algorithms being benchmarked.</li>
-<li>Ensure that the timing that is done is ONLY for searching and not
-for setup and cleanup for the data structures.</li>
-<li>Ensure that there are no memory leaks or other problems in setup
-and cleanup for the searches.</li>
-</ol>
-</div>
-</div>
-
-<div id="outline-container-orgedce84a" class="outline-3">
-<h3 id="search-benchmark-runs"><a id="orgedce84a"></a><span class="section-number-3">4.3</span> Sample Runs</h3>
-<div class="outline-text-3" id="text-search-benchmark-runs">
-<p>
-Below are some sample runs of the search benchmark. You do not need to
-match all aspects of the output exactly but tests will check for basic
-output like printing the first line with correct data structures. Some
-aspects of <code>search_benchmark</code> behavior are discussed later in more
-detail. 
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">homeputer&gt; ssh login01.cselabs.umn.edu
-
-&gt;&gt; ./search_benchmark
-usage: ./search_benchmark &lt;minpow&gt; &lt;maxpow&gt; &lt;repeats&gt; [alg1 alg2 ...]
-  minpow:  first data structure size is 2^minpow
-  maxpow:  last data structure size is 2^maxpow
-  repeats: number of times to loop search sequence to scale time
-with alg1 alg2 as a combination of:
-  la : Linear Array Search
-  ll : Linked List Search
-  ba : Binary Array Search
-  bt : Binary Tree Search
-  (default all)
-
-# NOTE: the usage message is optional and only shown here to give a
-# summary of how command line arguments control the program
-
-&gt;&gt; ./search_benchmark 1 5 1 ll    # Run only Linked List "ll" searches on lists 2^1 to 2^5 in size
-    SIZE  NSEARCH       list 
-       2        4 3.0000e-06      # size 2^1 list with [0,2], search sequence 0,1,2,3 with 1 repeat
-       4        8 2.0000e-06      # size 2^2 list with [0,2,4,6], search sequence 0,1,2,3,..,7 with 1 repeat
-       8       16 3.0000e-06      # size 2^3 list with [0,2,4,6,...14], search sequence 0,1,2,3,..,15 with 1 repeat
-      16       32 4.0000e-06 
-      32       64 8.0000e-06 
-
-# NOTE: these times are below 1.0e-03, too short to trust; increase
-# &lt;repeats&gt; parameter to scale time up to be more reliable
-
-&gt;&gt; ./search_benchmark 4 8 10 ba bt      # Run only the Binary Array "ba" and Binary Tree "bt" searches
-    SIZE  NSEARCH     binary       tree 
-      16      320 1.2000e-05 1.0000e-05 # size 16 array/tree with elements [0,2,4,...30], search sequence 0,1,2,...31 with 10 repeats
-      32      640 2.4000e-05 2.0000e-05 # size 32 array/tree with elements [0,2,4,...62], search sequence 0,1,2,...63 with 10 repeats
-      64     1280 6.5000e-05 5.0000e-05 # ...
-     128     2560 2.0900e-04 1.7700e-04 
-     256     5120 5.0500e-04 4.4400e-04 
-
-# NOTE: these times are below 1.0e-03, too short to trust; increase
-# &lt;repeats&gt; parameter to scale time up to be more reliable
-
-&gt;&gt; ./search_benchmark 3 6 5                                   # Run ALL algorithms (no alg params)
-    SIZE  NSEARCH      array       list     binary       tree 
-       8       80 4.0000e-06 4.0000e-06 5.0000e-06 4.0000e-06 # search seq 0,1,2...15 with 5 repeats
-      16      160 7.0000e-06 7.0000e-06 7.0000e-06 8.0000e-06 # search seq 0,1,2...32 with 5 repeats
-      32      320 1.8000e-05 2.7000e-05 1.6000e-05 1.6000e-05 # search seq 0,1,2...63 with 5 repeats
-      64      640 5.7000e-05 9.3000e-05 3.5000e-05 4.0000e-05 # search seq 0,1,2...127 with 5 repeats
-
-# NOTE: these times are below 1.0e-03, too short to trust; increase
-# &lt;repeats&gt; parameter to scale time up to be more reliable
+ERROR: Magic bytes wrong, this is not an ELF file
 </pre>
+
+<p>
+and exit immediately.
+</p></li>
+
+<li>The Section Header Array byte position in the field <code>e_shoff</code>.  The
+Section Header Array is like a table of contents for a book giving
+positions of most other sections in the file. It usually occurs near
+the end of the file.</li>
+<li>The index of the Section Header String Table in field
+<code>e_shstrndx</code>. This integer gives an index into the Section Header
+Array where a string table can be found containing the names of
+headers.</li>
+</ol>
+
+<p>
+The following diagram shows the layout of these first few important
+parts of an ELF file. 
+</p>
+
+<div class="org-center">
+
+<div id="org98608f5" class="figure">
+<p><img src="elf1.png" alt="elf1.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 3: </span>ELF File Header with Section Header Array and Section Header String Table.</p>
+</div>
 </div>
 </div>
 </div>
 
-
-<div id="outline-container-orgbfccf70" class="outline-3">
-<h3 id="orgbfccf70"><span class="section-number-3">4.4</span> Running Algorithms based on Command Line Arguments</h3>
+<div id="outline-container-orgd41e37b" class="outline-3">
+<h3 id="orgd41e37b"><span class="section-number-3">4.4</span> String Tables, Names, Section Headers</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
-Many folks who have not had to handle command line arguments struggle
-some what with the style of <code>search_benchmark</code> so here is some
-additional guidance on handling this aspect of the program.
+To keep the sizes of structures fixed while still allowing variable
+length names for things, all the names that are stored in ELF files
+are in <b>string tables</b>.  You can see one of these laid in the middle
+purple section of the diagram above starting at byte offset 1000. It
+is simply a sequence of multiple null-terminated strings laid out
+adjacent to one another in the file.
 </p>
-</div>
 
-
-<div id="outline-container-orge5ed651" class="outline-4">
-<h4 id="orge5ed651">C Command Line Arguments Handling</h4>
-<div class="outline-text-4" id="text-orge5ed651">
 <p>
-Keep in mind that C uses the following conventions for command line
-arguments based on the parameters to <code>main(int argc, char *argv[])</code>.
+When a name is required, a field will give an offset into a specific
+string table.  For example, each entry of the Section Header Array has
+an <code>sh_name</code> field which is an offset into the <code>.shstrtab</code> (the <code>sh</code>
+is for "section header").. The offset indicates how far from the start
+of the string table to find the require name.
 </p>
 <ul class="org-ul">
-<li><code>int argc</code> is the total number of strings appearing on the command
-including the program name</li>
-<li><code>char *argv[]</code> is an array of strings which are the command lines</li>
+<li>The <code>.shstrtab</code> section begins at byte 1000 so all name positions
+are <code>1000 + sh_name</code></li>
+<li>The 0th <code>.text</code> section has <code>sh_name = 0</code>; the string <code>.text\0</code>
+appears at position 1000.</li>
+<li>The 1th <code>.symtab</code> section has <code>sh_name = 6</code>; the string <code>.symtab\0</code>
+appears at byte position 1006.</li>
+<li>The 4th <code>.bss</code> section has <code>sh_name = 32</code>; the string <code>.bss\0</code>
+appears at byte position 1032.</li>
 </ul>
 
 <p>
-For example, here are a couple command line configurations based on
-possible runs of <code>search_benchmark</code>.
-</p>
-<div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; ./search_benchmark 5 10 20 
-# argc = 4
-# argv[0] = "search_benchmark"
-# argv[1] = "5"
-# argv[2] = "10"
-# argv[3] = "20"
-
-&gt;&gt; ./search_benchmark 5 10 20 la bt
-# argc = 6
-# argv[0] = "search_benchmark"
-# argv[1] = "5"
-# argv[2] = "10"
-# argv[4] = "20"
-# argv[5] = "la"
-# argv[6] = "bt"
-</pre>
-</div>
-
-<p>
-Handling numeric arguments is often eased with <code>atoi(), atol(),
-atof()</code> and related functions. If these are not familiar, look up
-documentation associated with them.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org3ca6ab7" class="outline-4">
-<h4 id="org3ca6ab7">Run the algorithms in a fixed order</h4>
-<div class="outline-text-4" id="text-org3ca6ab7">
-<p>
-An invocation like
-</p>
-<pre class="example">
-./search_benchmark 5 10 10 la ll
-</pre>
-
-<p>
-should run the linear array search (<code>a</code>) and linear linked list search
-(<code>l</code>).  So should the invocation
-</p>
-<pre class="example">
-./search_benchmark 5 10 10 ll la
-</pre>
-
-<p>
-Since we are interested <b>only</b> in comparing timing for these
-algorithms, the order of which is run first and printed first does not
-matter so <b>run the algorithms and print results in a fixed order.</b>
-That is, both of the above will run the array search first and linked
-list search second giving identical ordering results:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">&gt; ./search_benchmark 5 10 10 la ll
-    SIZE  NSEARCH      array       list 
-      32      640 1.2345e+06 1.2345e+06 
-      64     1280 1.2345e+06 1.2345e+06 
-     128     2560 1.2345e+06 1.2345e+06 
-     256     5120 1.2345e+06 1.2345e+06 
-     512    10240 1.2345e+06 1.2345e+06 
-    1024    20480 1.2345e+06 1.2345e+06 
-
-&gt; ./search_benchmark 5 10 10 ll la         # still running linear array search first
-    SIZE  NSEARCH      array       list 
-      32      640 1.2345e+06 1.2345e+06 
-      64     1280 1.2345e+06 1.2345e+06 
-     128     2560 1.2345e+06 1.2345e+06 
-     256     5120 1.2345e+06 1.2345e+06 
-     512    10240 1.2345e+06 1.2345e+06 
-    1024    20480 1.2345e+06 1.2345e+06 
-
-</pre>
-</div>
-
-<p>
-Search times above are intentionally left out so you will need to
-trust your own code to get an idea of how long things are
-running. However, very short run times are generally unreliable. Aim
-for a <b>minimum time of 1e-03 seconds</b> in order to make sure your
-results are reliable.  Shorter times like 1e-05 will vary too much to
-trust. 
-</p>
-</div>
-</div>
-
-<div id="outline-container-org535def1" class="outline-4">
-<h4 id="org535def1">Use Boolean-like variables to track which algorithms to run</h4>
-<div class="outline-text-4" id="text-org535def1">
-<p>
-If following the advice of the previous section, to run the 4
-algorithms in a fixed order, one can simple assign variables in
-<code>main()</code> which indicate which algorithms to run as in the following.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">  int run_linear_array = 0;
-  int run_linear_list  = 0;
-  ...
-</pre>
-</div>
-<p>
-Later, these variables are checked in a conditional as in:
-</p>
-<div class="org-src-container">
-<pre class="src src-c">  if(run_linear_array){
-    // run loops to time linear search in an array
-  }
-  if(run_linear_list){
-    // run loops to time linear search in a list
-  }
-  ...
-</pre>
-</div>
-
-<p>
-<a id="org69cdd6c"></a> <i>Updated Wed Apr 13 04:56:08 PM CDT 2022</i>
+The Section Header Array is an array of <code>Elf64_Shdr</code> structs.  By
+iterating over this array, fishing out the names from <code>.shstrtab</code>, and
+examining names using <code>strcmp()</code>, the positions for the two desired
+sections, <code>.symtab</code> and <code>.strtab</code> can be obtained via the associated
+<code>sh_offset</code> field.
 </p>
 
 <p>
-When processing the command line argument
-associated with which algorithms to run, one can 'turn on' the
-algorithm if the associated string is present on the command line
-according to the following pseudo-code
+Note that one will need to also determine length of the Section Header
+Array from the ELF File Header field <code>e_shnum</code>. 
 </p>
-<div class="org-src-container">
-<pre class="src src-c">turn on all algorithms as this is the default;
-if(#arguments &gt; 4){
-  turn off all algorithms since command line arguments dictate which to run;
-  for(each argument in argv[] at index 4 or above){
-    if( argv[i] is equal to "la" ){
-      run_linear_array = 1;
-    }
-    ...
-  }
-</pre>
-</div>
+
 <p>
-While the above approach does not allow one to run algorithms in an
-arbitrary order, it does allow any combination of algorithms to be run
-and compared which is all that is needed to complete the timing.
+Also, on finding the Symbol Table section, <b>note its size in bytes</b>
+from the <code>sh_size</code> field. This will allow you to determine the number
+of symbol table entries.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orga31be4d" class="outline-4">
-<h4 id="orga31be4d">Free and Re-allocate Memory for Different Sizes</h4>
-<div class="outline-text-4" id="text-orga31be4d">
-<p>
-While the search functions for Linked Lists and Binary Search Trees
-both take size arguments, these are ignored in the searches.  Instead,
-<code>NULL</code>'s in the data structures are used to find the bounds of them.
-This means if one is searching for data that is not in a small list,
-the end of the data structure will be reached sooner and <i>not found</i>
-will be determined faster than if searching in a large list.  To that
-end <b>allocate data structures that are sized specifically to the
-search size</b> each time. Do NOT allocate one large data structure and
-do all size searches on it as this will create artificially bad
-timings for the linked structures.
-</p>
-</div>
-</div>
-</div>
-
-
-<div id="outline-container-org3a8c6d6" class="outline-3">
-<h3 id="org3a8c6d6"><span class="section-number-3">4.5</span> Proper Setup and Cleanup for Searches</h3>
+<div id="outline-container-org6b82a52" class="outline-3">
+<h3 id="org6b82a52"><span class="section-number-3">4.5</span> Symbol Table and .strtab</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
-Each search algorithm requires setup and cleanup which is described
-below. All these follow the same patter which can enable somewhat more
-elegant setup/search/cleanup which is discussed in the section on
-bonus credit.
+Similar to the Section Header Array, the Symbol Table is comprised of
+an array of <code>Elf64_Sym</code> structs.  Each of these structs has a
+<code>st_name</code> field giving an offset into the <code>.symtab</code> section where a
+symbol's name resides. The following diagram shows this relationship.
 </p>
+
+<div class="org-center">
+
+<div id="org5d1a59e" class="figure">
+<p><img src="elf2.png" alt="elf2.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 4: </span>ELF Symbol Table and associated String Table</p>
+</div>
 </div>
 
-<div id="outline-container-orgcc57d4a" class="outline-4">
-<h4 id="orgcc57d4a">Linear and Binary Array Search</h4>
-<div class="outline-text-4" id="text-orgcc57d4a">
 <p>
-Use the function <code>make_evens_array()</code> to create an appropriately
-sized <code>int</code> array for these functions.  Call <code>free()</code> on this array
-when finished with it.
+While iterating over the table, print the following information.
 </p>
-</div>
-</div>
+<ul class="org-ul">
+<li>The index starting at 0 (note that index 0 will always contain a
+blank entry)</li>
+<li>The type of symbol which can be determined using the methods below</li>
+<li>The size from the <code>st_size</code> field. This corresponds to the number of
+bytes a variable will occupy or the number of bytes of instructions
+for a function.</li>
+<li>The name of the symbol or <code>&lt;NONE&gt;</code> if the symbol's name has
+length 0. Use the <code>st_name</code> field which is an offset into the
+<code>.strtab</code> where the name of the symbol is located.</li>
+</ul>
 
-<div id="outline-container-orge26baa3" class="outline-4">
-<h4 id="orge26baa3">Linked List Search</h4>
-<div class="outline-text-4" id="text-orge26baa3">
 <p>
-Use the function <code>make_evens_list()</code> to create an appropriately
-sized <code>list_t</code>.  Call <code>list_free()</code> on this list when finished with
-it.
+To determine the symbol's type, make use of the following code
 </p>
+<div class="org-src-container">
+<pre class="src src-c">unsigned char typec = ELF64_ST_TYPE(symtable_entry[i].st_info);
+</pre>
 </div>
-</div>
-
-<div id="outline-container-org5d1a9d3" class="outline-4">
-<h4 id="org5d1a9d3">Binary Tree Search</h4>
-<div class="outline-text-4" id="text-org5d1a9d3">
 <p>
-Use the function <code>make_evens_tree()</code> to create an appropriately
-sized <code>bst_t</code>.  Call <code>bst_free()</code> on this list when finished with
-it.
+This macro extracts bits from the <code>st_info</code> field and assigns them to
+<code>typec</code> which will be one of the following defined variables.
+</p>
+<div class="org-src-container">
+<pre class="src src-text">- STT_NOTYPE  : print type "NOTYPE"  
+- STT_OBJECT  : print type "OBJECT"  
+- STT_FUNC    : print type "FUNC"    
+- STT_FILE    : print type "FILE"    
+- STT_SECTION : print type "SECTION" 
+</pre>
+</div>
+<p>
+An <code>if/else</code> or <code>switch/case</code> block to determine the type is best here.
 </p>
 </div>
 </div>
-</div>
 
-<div id="outline-container-org7ca200c" class="outline-3">
-<h3 id="org7ca200c"><span class="section-number-3">4.6</span> What to Measure</h3>
+<div id="outline-container-orgeea8411" class="outline-3">
+<h3 id="orgeea8411"><span class="section-number-3">4.6</span> <a id="org2fd74e0"></a> Behavior in Error Cases</h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
-The reason for the requirements mentioned above is to study the
-performance of different search algorithms and answer associated
-questions in the <code>P4-WRITEUP.txt</code>.  The main goals of these questions
-are to elucidate.
+The following errors can occur during execution of <code>showsym</code> and
+should result in the given error messages being printed.
 </p>
-<ol class="org-ol">
-<li>To compare the linear and logarithmic search complexities to see if
-one or the other is superior at small and large input sizes</li>
-<li>To compare the contiguous memory (array) approaches to the linked
-memory (list/tree) approaches to see if one or the other is
-superior at small and large sizes.</li>
-</ol>
+</div>
+
+<div id="outline-container-orgc712bcc" class="outline-4">
+<h4 id="orgc712bcc">Wrong Magic Bytes</h4>
+<div class="outline-text-4" id="text-orgc712bcc">
 <p>
-To that end make sure to answer the thoroughly answer questions
-provided.
+<code>showsym</code> should check these "magic bytes" (first elements of
+<code>e_ident[]</code> in header). If they match the expected values, proceed but
+if they are incorrect, print the following example message
 </p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; ./showsym test-input/globals.c 
+ERROR: Magic bytes wrong, this is not an ELF file
+</pre>
+</div>
 </div>
 </div>
 
-<div id="outline-container-orgeaf273b" class="outline-3">
-<h3 id="orgeaf273b"><span class="section-number-3">4.7</span> MAKEUP CREDIT: Code Layout in <code>search_benchmark.c</code></h3>
+<div id="outline-container-orgf566f7d" class="outline-4">
+<h4 id="orgf566f7d">Missing Symbol Tables</h4>
+<div class="outline-text-4" id="text-orgf566f7d">
+<p>
+During the search for the symbol table, it is possible that it is not
+found. Such objects are usually executables that have been "stripped"
+of a symbol table. After iterating through all sections in the Section
+Header array and finding that no entry has the <code>.symtab</code> name print
+the message in the example below.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; ./showsym test-input/naked_globals
+ERROR: Couldn't find symbol table
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdb4359d" class="outline-3">
+<h3 id="orgdb4359d"><span class="section-number-3">4.7</span> <code>showsym</code> Template</h3>
 <div class="outline-text-3" id="text-4-7">
 <p>
-"Makeup" credit will allow the score on this assignment to exceed 100%
-but will not allow the overall score on the project portion of the
-grade to exceed the weight specified in the syllabus. It is designed
-to help "make up" for lost credit on previous assignments.
-</p>
-
-<p>
-Makeup credit is available in this assignment for implementing the
-selection of which search functions to run in an "elegant" fashion.
-Likely the best method for this is to use a table of function
-pointers. This style is demonstrated in Lab09 and Lab11 but must be
-expanded upon in this lab to reach its full potential.
-</p>
-
-<p>
-The main purpose to using such a table is to avoid a large <code>if/else</code>
-or <code>switch/case</code> block.  For example, a simple approach to doing
-different search types is something like the following.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">int main(...){
-  int do_linear_array = 1;
-  int do_linked_list  = 1;
-  ...;
-  for(all sizes){
-    if(do_linear_array){
-      // setup array
-      // start timer
-      // do searches
-      // stop timer
-      // print output
-      // free the array
-    }
-    if(do_linked_list){
-      // setup list
-      // start timer
-      // do searches
-      // stop timer
-      // print output
-      // free the list
-    }
-    ...;
-  }
-}
-</pre>
-</div>
-<p>
-This formulation obviously involves a much redundant code. A good way
-to avoid this is to parameterize the repeated parts as functions and
-iterate over the table invoking functions appropriate to the different
-types of searches.
-</p>
-
-<p>
-To get a sense of how this might work, here is an incomplete example
-setup used in one solution.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">// Table of search algorithms
-searchalg_t algs[] = {
-  {"Linear Array Search", "array",  'a', 1,
-   (search_t) linear_array_search, (setup_t) make_evens_array, (cleanup_t) free},
-  {"Linked List Search",  "list",   'l', 1,
-   (search_t) linkedlist_search,   (setup_t) make_evens_list,  (cleanup_t) list_free},
-  ...
-  {NULL}
-};
-</pre>
-</div>
-<p>
-None of the types are given in the above but several notable things
-are present.
-</p>
-<ol class="org-ol">
-<li>The types of searches are described in an array (table) of structs</li>
-<li>Each field pertains to a description or function for the search</li>
-<li>Some of the functions are for setup, others for cleanup, and the
-first is the actual search function.</li>
-<li>Casting is required to get the different function prototypes to
-"fit" into the same kind of struct.</li>
-<li>All of the searches are enabled by default but fields can changed
-to disable them.</li>
-<li>One only needs to iterate through the array invoking appropriate
-functions. This avoids the need for a large <code>if/else</code> style
-program.</li>
-</ol>
-
-<p>
-To complete this part, document your code with comments and also
-describe you design using function pointers/structs in
-<code>P4-WRITEUP.txt</code>.
-</p>
-
-<p>
-It may be worthwhile to study some examples of the use of function
-pointers which are useful for this type of situation. A short tutorial
-on this topic is here:
-<a href="https://www-users.cse.umn.edu/~kauffman/2021/function-pointers.html">https://www-users.cse.umn.edu/~kauffman/2021/function-pointers.html</a>
+A basic template for <code>showsym.c</code> is provided in the code pack which
+outlines the structure of the code along with some printing formats to
+make the output match examples. Follow this outline closely to make
+sure that your code complies with tests when the become available.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org8d9cee3" class="outline-3 grading 45">
-<h3 id="org8d9cee3"><span class="section-number-3">4.8</span> Grading Criteria for Problem 2 (50%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="45">45</span></span></h3>
+<div id="outline-container-org660047d" class="outline-3 grading25">
+<h3 id="org660047d"><span class="section-number-3">4.8</span> Grading Criteria for showsym&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading25">grading25</span></span></h3>
 <div class="outline-text-3" id="text-4-8">
+<p>
+Both binary and shell tests can be run with <code>make test-p2</code>
+</p>
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -1589,12 +1416,98 @@ on this topic is here:
 <tbody>
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">AUTOMATED TESTS</td>
+<td class="org-left"><b>Automated Tests</b></td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left"><code>make test-prob1</code> runs 10 tests with Valgrind checking for memory problems</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>make test-prob1 tesnum=5</code> to run individual tests</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><b>Manual Inspection</b></td>
 </tr>
 
 <tr>
 <td class="org-right">5</td>
-<td class="org-left">Passed tests associated with <code>make test-prob2</code></td>
+<td class="org-left">Correctly sets up a memory map using <code>open(), fstat(), mmap()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Correct unmap and close of file description at end of execution</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Sets a pointer to the ELF File Header properly</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Checks identifying bytes for sequence <code>{0x7f,'E','L','F'}</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Properly extracts the Section Header Array offset, length, string table index</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Sets up pointers to Section Header Array and associate String Table</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Loops over Section Header Array for sections named <code>.symtab / .strtab</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Properly uses SH String Table to look at names of each section while searching</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Extracts offsets and sizes of <code>.symtab / .strtab</code> sections</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Prints information on byte position of symbol table and its size</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Sets up pointer to Symbol Table and associated String Table</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Loops over entries in Symbol Table printing name, size, type</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Uses <code>ELF64_ST_TYPE()</code> to extract symbol type from <code>st_info</code> field</td>
 </tr>
 
 <tr>
@@ -1604,94 +1517,28 @@ on this topic is here:
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">MANUAL INSPECTION of <code>search_benchmark.c</code></td>
+<td class="org-left">PENALTIES if the following styles criteria are lacking</td>
 </tr>
 
 <tr>
-<td class="org-right">2</td>
-<td class="org-left">Accepts parameters that control the min/max data sizes and number of repeats</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clean, readable code</td>
 </tr>
 
 <tr>
-<td class="org-right">3</td>
-<td class="org-left">Proper searching for success and fail elements</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Good indentation</td>
 </tr>
 
 <tr>
-<td class="org-right">3</td>
-<td class="org-left">The Total Search Loop Time is measured for each algorithm and reported, not an average per search</td>
-</tr>
-
-<tr>
-<td class="org-right">2</td>
-<td class="org-left">Timing does not include memory allocationo/de-allocation</td>
-</tr>
-
-<tr>
-<td class="org-right">2</td>
-<td class="org-left">Allocates data that is exactly to search sizes to prevent handicapping lists and arrays</td>
-</tr>
-
-<tr>
-<td class="org-right">8</td>
-<td class="org-left">Clean and well-documented code for <code>main()</code> that uses simple approaches to run algorithms requested</td>
-</tr>
-
-<tr>
-<td class="org-right">20</td>
-<td class="org-left">SUBTOTAL</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Good selection of variable names</td>
 </tr>
 </tbody>
 <tbody>
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>P4-WRITEUP.txt</code></td>
-</tr>
-
-<tr>
-<td class="org-right">2</td>
-<td class="org-left">Timing results larger than 1e-03 seconds for most cases; smaller times are unreliable.</td>
-</tr>
-
-<tr>
-<td class="org-right">3</td>
-<td class="org-left">Answer 2A <code>P4-WRITEUP.txt</code> (min size for differences)</td>
-</tr>
-
-<tr>
-<td class="org-right">5</td>
-<td class="org-left">Answer 2B <code>P4-WRITEUP.txt</code> (list vs array)</td>
-</tr>
-
-<tr>
-<td class="org-right">5</td>
-<td class="org-left">Answer 2C <code>P4-WRITEUP.txt</code> (tree vs array))</td>
-</tr>
-
-<tr>
-<td class="org-right">10</td>
-<td class="org-left">Answer 2D <code>P4-WRITEUP.txt</code> (caching effects))</td>
-</tr>
-
 <tr>
 <td class="org-right">25</td>
-<td class="org-left">SUBTOTAL</td>
-</tr>
-</tbody>
-<tbody>
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">OPTIONAL MAKEUP CREDIT</td>
-</tr>
-
-<tr>
-<td class="org-right">10</td>
-<td class="org-left">Use a table of function pointers effectively in <code>search_benchmark.c</code></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Must describe this design in section 2E of <code>P4-WRITEUP.txt</code></td>
+<td class="org-left">Problem Total</td>
 </tr>
 </tbody>
 </table>
@@ -1699,181 +1546,1783 @@ on this topic is here:
 </div>
 </div>
 
-
-<div id="outline-container-orgd707d5b" class="outline-2">
-<h2 id="orgd707d5b"><span class="section-number-2">5</span> Writeup</h2>
+<div id="outline-container-orgee60da5" class="outline-2">
+<h2 id="orgee60da5"><span class="section-number-2">5</span> <b>Problem 3</b>: EL Malloc</h2>
 <div class="outline-text-2" id="text-5">
 <p>
-This assignment involves answering questions in the file
-<code>P4-WRITEUP.txt</code> which is included in the code pack and pasted below.
+A <b>memory allocator</b> is small system which manages heap memory,
+sometimes referred to as the "data" segment of a program.  This
+portion of program memory is a linear set of addresses that form a
+large block which an expand at runtime by making requests to the
+operating system.  Solving the allocation problem forms backbone of
+what <code>malloc()/free()</code> do by keeping track of the space used and
+released by a user program.  Allocators also see use in garbage
+collected languages like Java where there are no explicit <code>free()</code>
+calls but the allocator must still find available space for new
+objects.
+</p>
+
+<p>
+One simple way to implement an allocator is to overlay linked lists
+on the heap which track at a minimum the available chunks of memory
+and possibly also the used chunks.  This comes with a cost: some of
+the bytes of memory in the heap are no longer available for the user
+program but are instead used for the allocator's book-keeping.  
+</p>
+
+<p>
+In this problem, an <i>explicit list</i> allocator is developed, thus the
+name of the system <code>el_malloc</code>.  It uses two lists to track memory in
+the heap:
+</p>
+<ul class="org-ul">
+<li>The <b>Available List</b> of blocks of memory that can be used to answer
+calls to <code>malloc()</code></li>
+<li>The <b>Used List</b> of blocks that have been returned by <code>malloc()</code> and
+should not be returned again until they are <code>free()'d</code></li>
+</ul>
+<p>
+Most operations boil down to manipulating these two lists in some
+form.
+</p>
+<ul class="org-ul">
+<li>Allocating with <code>ptr = el_malloc(size);</code> searches the Available List for a
+block with sufficient size. That block is split into two blocks. One block
+answers the request and is given about <code>size</code> bytes; it is moved to
+the Used List. The second block comprises the remainder of the space
+and remains on the Available List.</li>
+<li>Deallocating with <code>el_free(ptr);</code> moves the block referenced by
+<code>ptr</code> from the Used List to the Available List.  To prevent
+fragmentation of memory, the newly available block is <b>merged</b> with
+adjacent available blocks if possible.</li>
+</ul>
+</div>
+
+<div id="outline-container-org020f1de" class="outline-3">
+<h3 id="org020f1de"><span class="section-number-3">5.1</span> EL Malloc Data Structures</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+Several data structures defined in <code>el_malloc.h</code> should be studied so
+that one is acquainted with their intent. The following sections
+outline many of these and show diagrams to indicate transformation
+the required functions should implement.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8c77bd5" class="outline-3">
+<h3 id="org8c77bd5"><span class="section-number-3">5.2</span> Block Header/Footer</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+Each block of memory tracked by EL Malloc is preceded and succeeded by
+some bytes of memory for book keeping.  These are referred to as the
+block "header" and "footer" and are encoded in the <code>el_blockhead_t</code>
+and <code>el_blockfoot_t</code> structs.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">                              ____________
+<pre class="src src-c">// type which is a "header" for a block of memory; containts info on
+// size, whether the block is available or in use, and links to the
+// next/prev blocks in a doubly linked list. This data structure
+// appears immediately before a block of memory that is tracked by the
+// allocator.
+typedef struct block {
+  size_t size;                  // number of bytes of memory in this block
+  char state;                   // either EL_AVAILABLE or EL_USED
+  struct block *next;           // pointer to next block in same list
+  struct block *prev;           // pointer to previous block in same list
+} el_blockhead_t;
 
-                               P4 WRITEUP
-                              ____________
+// Type for the "footer" of a block; indicates size of the preceding
+// block so that its header el_blockhead_t can be found with pointer
+// arithmetic. This data appears immediately after an area of memory
+// that may be used by a user or is free. Immediately after it is
+// either another header (el_blockhead_t) or the end of the heap.
+typedef struct {
+  size_t size;
+} el_blockfoot_t;
+</pre>
+</div>
 
+<p>
+As indicated, the blocks use <b>doubly linked nodes</b> in the header which
+will allow easy re-arrangement of the list.
+</p>
 
-- Name: (FILL THIS in)
-- NetID: (THE kauf0095 IN kauf0095@umn.edu)
+<p>
+A picture of a block with its header, footer, and user data area is
+shown below.
+</p>
+<div class="org-center">
 
-Answer the questions below according to the project specification. Write
-your answers directly in this text file and submit it along with your
-code.
-
-
-PROBLEM 1: sumdiag_OPTM()
-=========================
-
-  Do your timing study on loginNN.cselabs.umn.edu
-
-
-(A) Paste Source Code
-~~~~~~~~~~~~~~~~~~~~~
-
-  Paste a copy of your source code for the function `sumdiag_OPTM()'
-
-  ####################### YOUR ANSWER HERE #########################
-
-  ##################################################################
-
-
-(B) Timing on loginNN.cselabs.umn.edu
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  Paste a copy of the results of running `sumdiag_benchmark' on
-  loginNN.cselabs.umn.edu (like login01, login02, ..., login06) in the
-  space below which shows how your performance optimizations improved on
-  the baseline codes.
-
-  ####################### YOUR ANSWER HERE #########################
-
-  ##################################################################
-
-
-(C) Optimizations
-~~~~~~~~~~~~~~~~~
-
-  Describe in some detail the optimizations you used to speed the code
-  up.  THE CODE SHOULD CONTAIN SOME COMMENTS already to describe these
-  but in the section below, describe in English the techniques you used
-  to make the code run faster.  Format your descriptions into discrete
-  chunks such as.
-        Optimization 1: Blah bla blah... This should make run
-        faster because yakkety yakeety yak.
-
-        Optimization 2: Blah bla blah... This should make run
-        faster because yakkety yakeety yak.
-
-        ...  Optimization N: Blah bla blah... This should make run
-        faster because yakkety yakeety yak.
-  Full credit solutions will have a least THREE optimizations and
-  describe WHY these improved performance in at least a couple
-  sentences.
-
-  ####################### YOUR ANSWER HERE #########################
-
-  ##################################################################
+<div id="orga0e444c" class="figure">
+<p><img src="block.png" alt="block.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 5: </span>Block data preceded by a header (<code>el_blockhead_t</code>) and followed by a footer (<code>el_blockfoot_t</code>)._</p>
+</div>
+</div>
+</div>
+</div>
 
 
-PROBLEM 2: Timing Search Algorithms
-===================================
 
-  Do your timing study on loginNN.cselabs.umn.edu. In most cases, report
-  times larger than 1e-03 seconds as times shorter than this are
-  unreliable. Run searches for more repetitions to lengthen run times.
-
-
-(A) Min Size for Algorithmic Differences
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  Determine the size of input array where one starts to see a measurable
-  difference in the performance of the linear and logarithmic
-  algorithms.  Produce a timing table which includes all algorithms
-  which clearly demonstrates an uptick in the times associated with some
-  while others remain much lower.  Identify what size this appears to be
-  a occur.
-
-  SHOW A TIMING TABLE to support your conclusions and ensure that the
-  times reported are larger that 1e-03.
-
-  ####################### YOUR ANSWER HERE #########################
-
-  ##################################################################
+<div id="outline-container-org81d3f83" class="outline-3">
+<h3 id="org81d3f83"><span class="section-number-3">5.3</span> Footers and Blocks Above/Below</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+One might wonder why the footer appears.  In tracking blocks, there
+will arise the need to determine a block that is immediately before a
+given block in memory (not the previous in the linked list).  The
+footer enables this by tracking the size of the user block of memory
+immediately preceding it. 
+</p>
 
 
-(B) Linear Search in List vs Array
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<p>
+This is illustrated in the diagram below.
+</p>
+<div class="org-center">
 
-  Determine whether the linear array and linked list search remain
-  approximately at the same performance level as size increases to large
-  data or whether one begins to become favorable over other. Determine
-  the approximate size at which this divergence becomes obvious. Discuss
-  reasons WHY this difference arises.
+<div id="org3b00c43" class="figure">
+<p><img src="headfoot.png" alt="headfoot.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 6: </span>Finding preceding block header using footer (<code>el_block_decr(header)</code>)</p>
+</div>
+</div>
 
-  SHOW A TIMING TABLE to support your conclusions and ensure that the
-  times reported are larger that 1e-03.
+<p>
+This operation is implemented in the function <code>el_block_below(block)</code> and
+the similar operation <code>el_block_above(block)</code> finds the next header
+immediately following one in memory.
+</p>
+
+<p>
+The following functions use pointer arithmetic to determine block
+locations from a provided pointer.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">el_blockfoot_t *el_get_footer(el_blockhead_t *block);
+el_blockhead_t *el_get_header(el_blockfoot_t *foot);
+el_blockhead_t *el_block_above(el_blockhead_t *block);
+el_blockhead_t *el_block_below(el_blockhead_t *block);
+</pre>
+</div>
+
+<p>
+These functions benefit from macros defined in <code>el_malloc.h</code> that are
+useful for doing pointer operations involving bytes.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// macro to add a byte offset to a pointer, arguments are a pointer
+// and a # of bytes (usually size_t)
+#define PTR_PLUS_BYTES(ptr,off) ((void *) (((size_t) (ptr)) + ((size_t) (off))))
+
+// macro to add a byte offset to a pointer, arguments are a pointer
+// and a # of bytes (usually size_t)
+#define PTR_MINUS_BYTES(ptr,off) ((void *) (((size_t) (ptr)) - ((size_t) (off))))
+
+// macro to add a byte offset to a pointer, arguments are a pointer
+// and a # of bytes (usually size_t)
+#define PTR_MINUS_PTR(ptr,ptq) (((size_t) (ptr)) - ((size_t) (ptq)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaf4f721" class="outline-3">
+<h3 id="orgaf4f721"><span class="section-number-3">5.4</span> Block Lists and Global Control</h3>
+<div class="outline-text-3" id="text-5-4">
+<p>
+The main purpose of the memory allocator is to track the available and
+used blocks in explicit linked lists. This allows used and available
+memory to be distributed throughout the heap. Below are the data
+structures that track these lists and the global control data
+structure which houses information for the entire heap.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">// Type for a list of blocks; doubly linked with a fixed
+// "dummy" node at the beginning and end which do not contain any
+// data. List tracks its length and number of bytes in use.
+typedef struct {
+  el_blockhead_t beg_actual;    // fixed node at beginning of list; state is EL_BEGIN_BLOCK
+  el_blockhead_t end_actual;    // fixed node at end of list; state is EL_END_BLOCK
+  el_blockhead_t *beg;          // pointer to beg_actual
+  el_blockhead_t *end;          // pointer to end_actual
+  size_t length;                // length of the used block list (not counting beg/end)
+  size_t bytes;                 // total bytes in list used including overhead; 
+} el_blocklist_t;
+// NOTE: total available bytes for use/in-use in the list is (bytes - length*EL_BLOCK_OVERHEAD)
+
+// Type for the global control of the allocator. Tracks heap size,
+// start and end addresses, total size, and lists of available and
+// used blocks.
+typedef struct {
+  void *heap_start;             // pointer to where the heap starts
+  void *heap_end;               // pointer to where the heap ends; this memory address is out of bounds
+  size_t heap_bytes;            // number of bytes currently in the heap
+  el_blocklist_t avail_actual;  // space for the available list data
+  el_blocklist_t used_actual;   // space for the used list data
+  el_blocklist_t *avail;        // pointer to avail_actual
+  el_blocklist_t *used;         // pointer to used_actual
+} el_ctl_t;
+</pre>
+</div>
+
+<p>
+The following diagram shows some of the structure induced by use of a
+doubly linked lists overlaid onto the heap. The global control
+structure <code>el_ctl</code> has two lists for available and used space.
+</p>
+
+<div class="org-center">
+
+<div id="orgeaf2265" class="figure">
+<p><img src="listsglobal.png" alt="listsglobal.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 7: </span>Structure of heap with several used/available blocks. Pointers from <code>el_ctl</code> lists allow access to these blocks.</p>
+</div>
+</div>
 
 
-  ####################### YOUR ANSWER HERE #########################
-
-  ##################################################################
-
-
-(C) Binary Search in Tree vs Array
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  Compare the binary array search and binary tree search on small to
-  very large arrays. Determine if there is a size at which the
-  performance of these two begins to diverge. If so, describe why this
-  might be happening based on your understanding of the data structures
-  and the memory system. If not, describe why you believe there is
-  little performance difference between the two.
-
-  SHOW A TIMING TABLE to support your conclusions and ensure that the
-  times reported are larger that 1e-03.
-
-  ####################### YOUR ANSWER HERE #########################
-
-  ##################################################################
+<p>
+The following functions initialize the global control structures,
+print stats on the heap, and clean up at the end of execution.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">int el_init(int max_bytes);
+void el_print_stats();
+void el_cleanup();
+</pre>
+</div>
+</div>
+</div>
 
 
-(D) Caching Effects on Algorithms
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<div id="outline-container-orga4c5b29" class="outline-3">
+<h3 id="orga4c5b29"><span class="section-number-3">5.5</span> Pointers and "Actual" Space</h3>
+<div class="outline-text-3" id="text-5-5">
+<p>
+In several structures, there appear pointers named <code>xxx</code> and structs
+named <code>xxx_actual</code>.  For example, in <code>el_blocklist_t</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">typedef struct {
+  ...
+  el_blockhead_t beg_actual;    // fixed node at beginning of list; state is EL_BEGIN_BLOCK
+  el_blockhead_t *beg;          // pointer to beg_actual
+  ...
+} el_blocklist_t;
+</pre>
+</div>
+<p>
+The intent here is that there will <i>always</i> be a node at the beginning
+of the doubly linked list which just to make the programming easier so
+it makes sense to have an actual struct <code>beg_actual</code> present.
+However, when working with the list, the address of the beginning node
+is often referenced making <code>beg</code> useful. In any case, <code>beg</code> will be
+initialized to <code>&amp;beg_actual</code> as appears in <code>el_init_blocklist()</code>.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">void el_init_blocklist(el_blocklist_t *list){
+  list-&gt;beg        = &amp;(list-&gt;beg_actual); 
+  list-&gt;beg-&gt;state = EL_BEGIN_BLOCK;
+  list-&gt;beg-&gt;size  = EL_UNINITIALIZED;
+  ...  
+}
+</pre>
+</div>
 
-  It is commonly believed that memory systems that feature a Cache will
-  lead to arrays performing faster than linked structures such as Linked
-  Lists and Binary Search Trees. Describe whether your timings confirm
-  or refute this belief.  Address both types of algorithms in your
-  answer:
-  - What effects does Cache have on Linear Search in arrays and lists
-    and why?
-  - What effects does Cache have on Binary Search in arrays and trees
-    and why?
+<p>
+Similarly, since there will always be an Available List, <code>el_ctl_t</code>
+has both an <code>avail</code> pointer to the list and <code>avail_actual</code> which is
+the struct for the list.
+</p>
+</div>
+</div>
 
-  ####################### YOUR ANSWER HERE #########################
+<div id="outline-container-org39c3e4e" class="outline-3">
+<h3 id="org39c3e4e"><span class="section-number-3">5.6</span> Doubly Linked List Operations</h3>
+<div class="outline-text-3" id="text-5-6">
+<p>
+A large number of operations in EL Malloc boil down to doubly linked
+list operations. This includes
+</p>
+<ul class="org-ul">
+<li>Unlinking nodes from the middle of list during <code>el_free()</code></li>
+<li>Adding nodes to the beginning of a headed list (allocation and free)</li>
+<li>Traversing the list to print and search for available blocks</li>
+</ul>
 
-  ##################################################################
+<p>
+Recall that unlinking a node from a doubly linked list involves
+modifying the previous and next node as in the following.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">  node-&gt;prev-&gt;next = node-&gt;next;
+  node-&gt;next-&gt;prev = node-&gt;prev;
+</pre>
+</div>
+<p>
+while adding a new node to the front is typically accomplished via
+</p>
+<div class="org-src-container">
+<pre class="src src-c">  node-&gt;prev = list-&gt;beg;
+  node-&gt;next = list-&gt;beg-&gt;next;
+  node-&gt;prev-&gt;next = node;
+  node-&gt;next-&gt;prev = node;
+</pre>
+</div>
 
+<p>
+You may wish to review doubly linked list operations and do some
+reading on lists with "dummy" nodes at the beginning and ending if
+these concepts are rusty.
+</p>
 
-(E) OPTIONAL MAKEUP CREDIT
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+<p>
+The following functions pertain to block list operations.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">void el_init_blocklist(el_blocklist_t *list);
+void el_print_blocklist(el_blocklist_t *list);
+void el_add_block_front(el_blocklist_t *list, el_blockhead_t *block);
+void el_remove_block(el_blocklist_t *list, el_blockhead_t *block);
+</pre>
+</div>
+</div>
+</div>
 
-  If you decided to make use of a table of function pointers/structs
-  which is worth makeup credit, describe your basic design for this
-  below.
+<div id="outline-container-orga8b3942" class="outline-3">
+<h3 id="orga8b3942"><span class="section-number-3">5.7</span> Allocation via Block Splitting</h3>
+<div class="outline-text-3" id="text-5-7">
+<p>
+The basic operation of granting memory on a call to <code>el_malloc(size)</code>
+involves finding an Available Block with enough bytes for <b>both</b> the
+requested amount of memory and a new header/footer combination.  The
+current requirement is that <b>a block always gets split</b> on an
+allocation though a straight-forward optimization would be to not
+split in the case of a close or exact size match.
+</p>
 
-  ####################### YOUR ANSWER HERE #########################
+<p>
+This process is demonstrated in the below diagram in which a request
+for some bytes has been made. The process prior to diagram involves
+searching the Available List for a block with enough space.  Once
+found, the block is split into the portion that will be used and the
+remaining portion. A pointer to the user area immediately after the
+<code>el_blockhead_t</code> is returned.
+</p>
 
-  ##################################################################
+<div class="org-center">
+
+<div id="orgb9710d3" class="figure">
+<p><img src="split.png" alt="split.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 8: </span>Splitting a block in an allocation request.</p>
+</div>
+</div>
+
+<p>
+The following functions pertain to the location and splitting of
+blocks in the available list to fulfill allocation requests.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">el_blockhead_t *el_find_first_avail(size_t size);
+el_blockhead_t *el_split_block(el_blockhead_t *block, size_t new_size);
+void *el_malloc(size_t nbytes);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3f49d64" class="outline-3">
+<h3 id="org3f49d64"><span class="section-number-3">5.8</span> Freeing Blocks and Merging</h3>
+<div class="outline-text-3" id="text-5-8">
+<p>
+Freeing memory passes in a pointer to the user area that was
+granted. Immediately preceding this should be a <code>el_blockhead_t</code> and
+it can be found with pointer arithmetic.  
+</p>
+
+<p>
+In order to prevent memory from becoming continually divided into
+smaller blocks, on freeing the system checks to see if adjacent blocks
+can be merged.  Keep in mind that the blocks that can be merged are
+<b>adjacent in memory</b>, not next/previous in some linked list.  Adjacent
+blocks can be located using <code>el_block_above()</code> and <code>el_block_decr()</code>.
+</p>
+
+<p>
+To merge, the adjacent blocks must both be Available (not Used).  A
+free can then have several cases.
+</p>
+<ol class="org-ol">
+<li>The freed block cannot be merged with any others</li>
+<li>The freed block can be merged with only the block above it</li>
+<li>The freed block can be merged with only the block below it</li>
+<li>The freed block can be merged with both adjacent blocks</li>
+</ol>
+
+<p>
+The diagrams below show two of these cases.
+</p>
+<div class="org-center">
+
+<div id="org4710ae2" class="figure">
+<p><img src="free-merge.png" alt="free-merge.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 9: </span>Two cases of freeing blocks. The 2nd involves merging adjacent nodes with available space.</p>
+</div>
+</div>
+
+<p>
+With careful use of the below functions and handling of <code>NULL</code>
+arguments, all 4 cases can be handled with very little code.  Keep in
+mind that <code>el_block_above()/below()</code> should return <code>NULL</code> if there is
+no block above or below due to that are being out of the boundaries of
+the heap.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">el_blockhead_t *el_block_above(el_blockhead_t *block);
+el_blockhead_t *el_block_below(el_blockhead_t *block);
+void el_merge_block_with_above(el_blockhead_t *lower);
+void el_free(void *ptr);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0d2821f" class="outline-3">
+<h3 id="org0d2821f"><span class="section-number-3">5.9</span> Overall Code Structure of EL Malloc</h3>
+<div class="outline-text-3" id="text-5-9">
+<p>
+Below is the code structure of the EL Malloc library.  Some of the
+functions have been implemented already while those marked <code>REQUIRED</code>
+must be completed for full credit on the problem.
+</p>
+
+<pre class="example" id="org183c51b">
+// el_malloc.c: implementation of explicit list malloc functions.
+/////////// SOLUTION //////////////
+
+////////////////////////////////////////////////////////////////////////////////
+// Global control functions
+
+int el_init();
+// Create an initial block of memory for the heap using
+// mmap(). Initialize the el_ctl data structure to point at this
+// block. The initializ size/position of the heap for the memory map
+// are given in the symbols EL_HEAP_INITIAL_SIZE and
+// EL_HEAP_START_ADDRESS.  Initialize the lists in el_ctl to contain a
+// single large block of available memory and no used blocks of
+// memory.
+
+void el_cleanup();
+// Clean up the heap area associated with the system which unmaps all
+// pages associated with the heap.
+
+////////////////////////////////////////////////////////////////////////////////
+// Pointer arithmetic functions to access adjacent headers/footers
+
+el_blockfoot_t *el_get_footer(el_blockhead_t *head);
+// Compute the address of the foot for the given head which is at a
+// higher address than the head.
+
+el_blockhead_t *el_get_header(el_blockfoot_t *foot);
+// REQUIRED
+// Compute the address of the head for the given foot which is at a
+// lower address than the foot.
+
+el_blockhead_t *el_block_above(el_blockhead_t *block);
+// Return a pointer to the block that is one block higher in memory
+// from the given block.  This should be the size of the block plus
+// the EL_BLOCK_OVERHEAD which is the space occupied by the header and
+// footer. Returns NULL if the block above would be off the heap.
+// DOES NOT follow next pointer, looks in adjacent memory.
+
+el_blockhead_t *el_block_below(el_blockhead_t *block);
+// REQUIRED
+// Return a pointer to the block that is one block lower in memory
+// from the given block.  Uses the size of the preceding block found
+// in its foot. DOES NOT follow block-&gt;next pointer, looks in adjacent
+// memory. Returns NULL if the block below would be outside the heap.
+// 
+// WARNING: This function must perform slightly different arithmetic
+// than el_block_above(). Take care when implementing it.
+
+////////////////////////////////////////////////////////////////////////////////
+// Block list operations
+
+void el_print_blocklist(el_blocklist_t *list);
+// Print an entire blocklist. The format appears as follows.
+//
+// {length:   2  bytes:  3400}
+//   [  0] head @ 0x600000000000 {state: a  size:   128}
+//   [  1] head @ 0x600000000360 {state: a  size:  3192}
+//
+// Note that the '@' column uses the actual address of items which
+// relies on a consistent mmap() starting point for the heap.
+
+void el_print_block(el_blockhead_t *block);
+// Print a single block during a sequential walk through the heap
+
+void el_print_stats();
+// Print out stats on the heap for use in debugging. Shows the
+// available and used list along with a linear walk through the heap
+// blocks.
+
+void el_init_blocklist(el_blocklist_t *list);
+// Initialize the specified list to be empty. Sets the beg/end
+// pointers to the actual space and initializes those data to be the
+// ends of the list.  Initializes length and size to 0.
+
+void el_add_block_front(el_blocklist_t *list, el_blockhead_t *block);
+// REQUIRED
+// Add to the front of list; links for block are adjusted as are links
+// within list.  Length is incremented and the bytes for the list are
+// updated to include the new block's size and its overhead.
+
+void el_remove_block(el_blocklist_t *list, el_blockhead_t *block);
+// REQUIRED
+// Unlink block from the list it is in which should be the list
+// parameter.  Updates the length and bytes for that list including
+// the EL_BLOCK_OVERHEAD bytes associated with header/footer.
+
+////////////////////////////////////////////////////////////////////////////////
+// Allocation-related functions
+
+el_blockhead_t *el_find_first_avail(size_t size);
+// REQUIRED
+// Find the first block in the available list with block size of at
+// least `size`.  Returns a pointer to the found block or NULL if no
+// block of sufficient size is available.
+
+el_blockhead_t *el_split_block(el_blockhead_t *block, size_t new_size);
+// REQUIRED
+// Set the pointed to block to the given size and add a footer to
+// it. Creates another block above it by creating a new header and
+// assigning it the remaining space. Ensures that the new block has a
+// footer with the correct size. Returns a pointer to the newly
+// created block while the parameter block has its size altered to
+// parameter size. Does not do any linking of blocks.  If the
+// parameter block does not have sufficient size for a split (at least
+// new_size + EL_BLOCK_OVERHEAD for the new header/footer) makes no
+// changes tot the block and returns NULL indicating no new block was
+// created.
+
+void *el_malloc(size_t nbytes);
+// REQUIRED
+// Return pointer to a block of memory with at least the given size
+// for use by the user.  The pointer returned is to the usable space,
+// not the block header. Makes use of find_first_avail() to find a
+// suitable block and el_split_block() to split it.  Returns NULL if
+// no space is available.
+
+////////////////////////////////////////////////////////////////////////////////
+// De-allocation/free() related functions
+
+void el_merge_block_with_above(el_blockhead_t *lower);
+// REQUIRED
+// Attempt to merge the block lower with the next block in
+// memory. Does nothing if lower is null or not EL_AVAILABLE and does
+// nothing if the next higher block is null (because lower is the last
+// block) or not EL_AVAILABLE.  Otherwise, locates the next block with
+// el_block_above() and merges these two into a single block. Adjusts
+// the fields of lower to incorporate the size of higher block and the
+// reclaimed overhead. Adjusts footer of higher to indicate the two
+// blocks are merged.  Removes both lower and higher from the
+// available list and re-adds lower to the front of the available
+// list.
+
+void el_free(void *ptr);
+// REQUIRED
+// Free the block pointed to by the give ptr.  The area immediately
+// preceding the pointer should contain an el_blockhead_t with information
+// on the block size. Attempts to merge the free'd block with adjacent
+// blocks using el_merge_block_with_above().
+
+////////////////////////////////////////////////////////////////////////////////
+// HEAP EXPANSION FUNCTIONS
+
+int el_append_pages_to_heap(int npages);
+// Attempts to append pages of memory to the heap with mmap(). npages
+// is how many pages are to be appended with total bytes to be
+// appended as npages * EL_PAGE_BYTES. Calls mmap() with similar
+// arguments to those used in el_init() however requests the address
+// of the pages to be at heap_end so that the heap grows
+// contiguously. If this fails, prints the message
+// 
+//  ERROR: Unable to mmap() additional 3 pages
+// 
+// and returns 1. Note that mmap() returns the constant MAP_FAILED on
+// errors and the returned address will not match the requested
+// virtual address on failures.
+//
+// Otherwise, adjusts heap size and end for the expanded heap. Creates
+// a new block for the freshly allocated pages that is added to the
+// available list. Also attempts to merge this block with the block
+// below it. Returns 0 on success.
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org3ba34c9" class="outline-3">
+<h3 id="org3ba34c9"><span class="section-number-3">5.10</span> Demo Run using EL Malloc</h3>
+<div class="outline-text-3" id="text-5-10">
+<p>
+Below is a run showing the behavior of a series of <code>el_malloc() /
+el_free()</code> calls.  They are performed in the provided <code>el_demo.c</code>
+program. 
+</p>
+</div>
+
+<div id="outline-container-orgc9edf7f" class="outline-4">
+<h4 id="orgc9edf7f">Source for <code>el_demo.c</code></h4>
+<div class="outline-text-4" id="text-orgc9edf7f">
+<div class="org-src-container">
+<pre class="src src-c">// el_demo.c: Shows use cases for el_malloc() and el_free(). This file
+// can be used for testing but is not itself a test.
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;assert.h&gt;
+#include "el_malloc.h"
+
+void print_ptr(char *str, void *ptr){
+  if(ptr == NULL){
+    printf("%s: (nil)\n", str);
+  }
+  else{
+    printf("%s: %p\n", str, ptr);
+  }
+}
+
+int main(){
+  printf("EL_BLOCK_OVERHEAD: %lu\n",EL_BLOCK_OVERHEAD);
+  el_init();
+
+  printf("INITIAL\n"); el_print_stats(); printf("\n");
+
+  void *p1 = el_malloc(128);
+  void *p2 = el_malloc(48);
+  void *p3 = el_malloc(156);
+  printf("MALLOC 3\n"); el_print_stats(); printf("\n");
+
+  printf("POINTERS\n");
+  print_ptr("p3",p3);
+  print_ptr("p2",p2);
+  print_ptr("p1",p1);
+  printf("\n");
+
+  void *p4 = el_malloc(22);
+  void *p5 = el_malloc(64);
+  printf("MALLOC 5\n"); el_print_stats(); printf("\n");
+
+  printf("POINTERS\n");
+  print_ptr("p5",p5);
+  print_ptr("p4",p4);
+  print_ptr("p3",p3);
+  print_ptr("p2",p2);
+  print_ptr("p1",p1);
+  printf("\n");
+
+  el_free(p1);
+  printf("FREE 1\n"); el_print_stats(); printf("\n");
+
+  el_free(p3);
+  printf("FREE 3\n"); el_print_stats(); printf("\n");
+
+  p3 = el_malloc(32);
+  p1 = el_malloc(200);
+  
+  printf("ALLOC 3,1 AGAIN\n"); el_print_stats(); printf("\n");
+
+  printf("POINTERS\n");
+  print_ptr("p1",p1);
+  print_ptr("p3",p3);
+  print_ptr("p5",p5);
+  print_ptr("p4",p4);
+  print_ptr("p2",p2);
+  printf("\n");
+
+  el_free(p1);
+
+  printf("FREE'D 1\n"); el_print_stats(); printf("\n");
+
+  el_free(p2);
+
+  printf("FREE'D 2\n"); el_print_stats(); printf("\n");
+
+  p1 = el_malloc(3438);
+  p2 = el_malloc(1024);
+  printf("P2 FAILS\n");
+  printf("POINTERS\n");
+  print_ptr("p1",p1);
+  print_ptr("p3",p3);
+  print_ptr("p5",p5);
+  print_ptr("p4",p4);
+  print_ptr("p2",p2);
+  el_print_stats(); printf("\n");
+
+  el_append_pages_to_heap(3);
+  printf("APPENDED PAGES\n"); el_print_stats(); printf("\n");
+
+  p2 = el_malloc(1024);
+  printf("P2 SUCCEEDS\n");
+  printf("POINTERS\n");
+  print_ptr("p1",p1);
+  print_ptr("p3",p3);
+  print_ptr("p5",p5);
+  print_ptr("p4",p4);
+  print_ptr("p2",p2);
+  el_print_stats(); printf("\n");  
+
+  el_free(p1);
+  el_free(p2);
+  el_free(p3);
+  el_free(p4);
+  el_free(p5);
+
+  printf("FREE'D 1-5\n"); el_print_stats(); printf("\n");
+
+  el_cleanup();
+  return 0;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdaf3eea" class="outline-4">
+<h4 id="orgdaf3eea"><a id="orgb30d44d"></a> Output of El Malloc Demo</h4>
+<div class="outline-text-4" id="text-orgdaf3eea">
+<div class="org-src-container">
+<pre class="src src-text">EL_BLOCK_OVERHEAD: 40
+INITIAL
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   1  bytes:  4096}
+  [  0] head @ 0x612000000000 {state: a  size:  4056}
+USED LIST: {length:   0  bytes:     0}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       4056 (total: 0x1000)
+  prev:       0x610000000018
+  next:       0x610000000038
+  user:       0x612000000020
+  foot:       0x612000000ff8
+  foot-&gt;size: 4056
+
+MALLOC 3
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   1  bytes:  3644}
+  [  0] head @ 0x6120000001c4 {state: a  size:  3604}
+USED LIST: {length:   3  bytes:   452}
+  [  0] head @ 0x612000000100 {state: u  size:   156}
+  [  1] head @ 0x6120000000a8 {state: u  size:    48}
+  [  2] head @ 0x612000000000 {state: u  size:   128}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      u
+  size:       128 (total: 0xa8)
+  prev:       0x6120000000a8
+  next:       0x610000000098
+  user:       0x612000000020
+  foot:       0x6120000000a0
+  foot-&gt;size: 128
+[  1] @ 0x6120000000a8
+  state:      u
+  size:       48 (total: 0x58)
+  prev:       0x612000000100
+  next:       0x612000000000
+  user:       0x6120000000c8
+  foot:       0x6120000000f8
+  foot-&gt;size: 48
+[  2] @ 0x612000000100
+  state:      u
+  size:       156 (total: 0xc4)
+  prev:       0x610000000078
+  next:       0x6120000000a8
+  user:       0x612000000120
+  foot:       0x6120000001bc
+  foot-&gt;size: 156
+[  3] @ 0x6120000001c4
+  state:      a
+  size:       3604 (total: 0xe3c)
+  prev:       0x610000000018
+  next:       0x610000000038
+  user:       0x6120000001e4
+  foot:       0x612000000ff8
+  foot-&gt;size: 3604
+
+POINTERS
+p3: 0x612000000120
+p2: 0x6120000000c8
+p1: 0x612000000020
+
+MALLOC 5
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   1  bytes:  3478}
+  [  0] head @ 0x61200000026a {state: a  size:  3438}
+USED LIST: {length:   5  bytes:   618}
+  [  0] head @ 0x612000000202 {state: u  size:    64}
+  [  1] head @ 0x6120000001c4 {state: u  size:    22}
+  [  2] head @ 0x612000000100 {state: u  size:   156}
+  [  3] head @ 0x6120000000a8 {state: u  size:    48}
+  [  4] head @ 0x612000000000 {state: u  size:   128}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      u
+  size:       128 (total: 0xa8)
+  prev:       0x6120000000a8
+  next:       0x610000000098
+  user:       0x612000000020
+  foot:       0x6120000000a0
+  foot-&gt;size: 128
+[  1] @ 0x6120000000a8
+  state:      u
+  size:       48 (total: 0x58)
+  prev:       0x612000000100
+  next:       0x612000000000
+  user:       0x6120000000c8
+  foot:       0x6120000000f8
+  foot-&gt;size: 48
+[  2] @ 0x612000000100
+  state:      u
+  size:       156 (total: 0xc4)
+  prev:       0x6120000001c4
+  next:       0x6120000000a8
+  user:       0x612000000120
+  foot:       0x6120000001bc
+  foot-&gt;size: 156
+[  3] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x612000000100
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  4] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x610000000078
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  5] @ 0x61200000026a
+  state:      a
+  size:       3438 (total: 0xd96)
+  prev:       0x610000000018
+  next:       0x610000000038
+  user:       0x61200000028a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3438
+
+POINTERS
+p5: 0x612000000222
+p4: 0x6120000001e4
+p3: 0x612000000120
+p2: 0x6120000000c8
+p1: 0x612000000020
+
+FREE 1
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   2  bytes:  3646}
+  [  0] head @ 0x612000000000 {state: a  size:   128}
+  [  1] head @ 0x61200000026a {state: a  size:  3438}
+USED LIST: {length:   4  bytes:   450}
+  [  0] head @ 0x612000000202 {state: u  size:    64}
+  [  1] head @ 0x6120000001c4 {state: u  size:    22}
+  [  2] head @ 0x612000000100 {state: u  size:   156}
+  [  3] head @ 0x6120000000a8 {state: u  size:    48}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       128 (total: 0xa8)
+  prev:       0x610000000018
+  next:       0x61200000026a
+  user:       0x612000000020
+  foot:       0x6120000000a0
+  foot-&gt;size: 128
+[  1] @ 0x6120000000a8
+  state:      u
+  size:       48 (total: 0x58)
+  prev:       0x612000000100
+  next:       0x610000000098
+  user:       0x6120000000c8
+  foot:       0x6120000000f8
+  foot-&gt;size: 48
+[  2] @ 0x612000000100
+  state:      u
+  size:       156 (total: 0xc4)
+  prev:       0x6120000001c4
+  next:       0x6120000000a8
+  user:       0x612000000120
+  foot:       0x6120000001bc
+  foot-&gt;size: 156
+[  3] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x612000000100
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  4] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x610000000078
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  5] @ 0x61200000026a
+  state:      a
+  size:       3438 (total: 0xd96)
+  prev:       0x612000000000
+  next:       0x610000000038
+  user:       0x61200000028a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3438
+
+FREE 3
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   3  bytes:  3842}
+  [  0] head @ 0x612000000100 {state: a  size:   156}
+  [  1] head @ 0x612000000000 {state: a  size:   128}
+  [  2] head @ 0x61200000026a {state: a  size:  3438}
+USED LIST: {length:   3  bytes:   254}
+  [  0] head @ 0x612000000202 {state: u  size:    64}
+  [  1] head @ 0x6120000001c4 {state: u  size:    22}
+  [  2] head @ 0x6120000000a8 {state: u  size:    48}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       128 (total: 0xa8)
+  prev:       0x612000000100
+  next:       0x61200000026a
+  user:       0x612000000020
+  foot:       0x6120000000a0
+  foot-&gt;size: 128
+[  1] @ 0x6120000000a8
+  state:      u
+  size:       48 (total: 0x58)
+  prev:       0x6120000001c4
+  next:       0x610000000098
+  user:       0x6120000000c8
+  foot:       0x6120000000f8
+  foot-&gt;size: 48
+[  2] @ 0x612000000100
+  state:      a
+  size:       156 (total: 0xc4)
+  prev:       0x610000000018
+  next:       0x612000000000
+  user:       0x612000000120
+  foot:       0x6120000001bc
+  foot-&gt;size: 156
+[  3] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x6120000000a8
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  4] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x610000000078
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  5] @ 0x61200000026a
+  state:      a
+  size:       3438 (total: 0xd96)
+  prev:       0x612000000000
+  next:       0x610000000038
+  user:       0x61200000028a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3438
+
+ALLOC 3,1 AGAIN
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   3  bytes:  3530}
+  [  0] head @ 0x61200000035a {state: a  size:  3198}
+  [  1] head @ 0x612000000148 {state: a  size:    84}
+  [  2] head @ 0x612000000000 {state: a  size:   128}
+USED LIST: {length:   5  bytes:   566}
+  [  0] head @ 0x61200000026a {state: u  size:   200}
+  [  1] head @ 0x612000000100 {state: u  size:    32}
+  [  2] head @ 0x612000000202 {state: u  size:    64}
+  [  3] head @ 0x6120000001c4 {state: u  size:    22}
+  [  4] head @ 0x6120000000a8 {state: u  size:    48}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       128 (total: 0xa8)
+  prev:       0x612000000148
+  next:       0x610000000038
+  user:       0x612000000020
+  foot:       0x6120000000a0
+  foot-&gt;size: 128
+[  1] @ 0x6120000000a8
+  state:      u
+  size:       48 (total: 0x58)
+  prev:       0x6120000001c4
+  next:       0x610000000098
+  user:       0x6120000000c8
+  foot:       0x6120000000f8
+  foot-&gt;size: 48
+[  2] @ 0x612000000100
+  state:      u
+  size:       32 (total: 0x48)
+  prev:       0x61200000026a
+  next:       0x612000000202
+  user:       0x612000000120
+  foot:       0x612000000140
+  foot-&gt;size: 32
+[  3] @ 0x612000000148
+  state:      a
+  size:       84 (total: 0x7c)
+  prev:       0x61200000035a
+  next:       0x612000000000
+  user:       0x612000000168
+  foot:       0x6120000001bc
+  foot-&gt;size: 84
+[  4] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x6120000000a8
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  5] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x612000000100
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  6] @ 0x61200000026a
+  state:      u
+  size:       200 (total: 0xf0)
+  prev:       0x610000000078
+  next:       0x612000000100
+  user:       0x61200000028a
+  foot:       0x612000000352
+  foot-&gt;size: 200
+[  7] @ 0x61200000035a
+  state:      a
+  size:       3198 (total: 0xca6)
+  prev:       0x610000000018
+  next:       0x612000000148
+  user:       0x61200000037a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3198
+
+POINTERS
+p1: 0x61200000028a
+p3: 0x612000000120
+p5: 0x612000000222
+p4: 0x6120000001e4
+p2: 0x6120000000c8
+
+FREE'D 1
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   3  bytes:  3770}
+  [  0] head @ 0x61200000026a {state: a  size:  3438}
+  [  1] head @ 0x612000000148 {state: a  size:    84}
+  [  2] head @ 0x612000000000 {state: a  size:   128}
+USED LIST: {length:   4  bytes:   326}
+  [  0] head @ 0x612000000100 {state: u  size:    32}
+  [  1] head @ 0x612000000202 {state: u  size:    64}
+  [  2] head @ 0x6120000001c4 {state: u  size:    22}
+  [  3] head @ 0x6120000000a8 {state: u  size:    48}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       128 (total: 0xa8)
+  prev:       0x612000000148
+  next:       0x610000000038
+  user:       0x612000000020
+  foot:       0x6120000000a0
+  foot-&gt;size: 128
+[  1] @ 0x6120000000a8
+  state:      u
+  size:       48 (total: 0x58)
+  prev:       0x6120000001c4
+  next:       0x610000000098
+  user:       0x6120000000c8
+  foot:       0x6120000000f8
+  foot-&gt;size: 48
+[  2] @ 0x612000000100
+  state:      u
+  size:       32 (total: 0x48)
+  prev:       0x610000000078
+  next:       0x612000000202
+  user:       0x612000000120
+  foot:       0x612000000140
+  foot-&gt;size: 32
+[  3] @ 0x612000000148
+  state:      a
+  size:       84 (total: 0x7c)
+  prev:       0x61200000026a
+  next:       0x612000000000
+  user:       0x612000000168
+  foot:       0x6120000001bc
+  foot-&gt;size: 84
+[  4] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x6120000000a8
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  5] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x612000000100
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  6] @ 0x61200000026a
+  state:      a
+  size:       3438 (total: 0xd96)
+  prev:       0x610000000018
+  next:       0x612000000148
+  user:       0x61200000028a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3438
+
+FREE'D 2
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   3  bytes:  3858}
+  [  0] head @ 0x612000000000 {state: a  size:   216}
+  [  1] head @ 0x61200000026a {state: a  size:  3438}
+  [  2] head @ 0x612000000148 {state: a  size:    84}
+USED LIST: {length:   3  bytes:   238}
+  [  0] head @ 0x612000000100 {state: u  size:    32}
+  [  1] head @ 0x612000000202 {state: u  size:    64}
+  [  2] head @ 0x6120000001c4 {state: u  size:    22}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       216 (total: 0x100)
+  prev:       0x610000000018
+  next:       0x61200000026a
+  user:       0x612000000020
+  foot:       0x6120000000f8
+  foot-&gt;size: 216
+[  1] @ 0x612000000100
+  state:      u
+  size:       32 (total: 0x48)
+  prev:       0x610000000078
+  next:       0x612000000202
+  user:       0x612000000120
+  foot:       0x612000000140
+  foot-&gt;size: 32
+[  2] @ 0x612000000148
+  state:      a
+  size:       84 (total: 0x7c)
+  prev:       0x61200000026a
+  next:       0x610000000038
+  user:       0x612000000168
+  foot:       0x6120000001bc
+  foot-&gt;size: 84
+[  3] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x610000000098
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  4] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x612000000100
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  5] @ 0x61200000026a
+  state:      a
+  size:       3438 (total: 0xd96)
+  prev:       0x612000000000
+  next:       0x612000000148
+  user:       0x61200000028a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3438
+
+P2 FAILS
+POINTERS
+p1: 0x61200000028a
+p3: 0x612000000120
+p5: 0x612000000222
+p4: 0x6120000001e4
+p2: (nil)
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   2  bytes:   380}
+  [  0] head @ 0x612000000000 {state: a  size:   216}
+  [  1] head @ 0x612000000148 {state: a  size:    84}
+USED LIST: {length:   4  bytes:  3716}
+  [  0] head @ 0x61200000026a {state: u  size:  3438}
+  [  1] head @ 0x612000000100 {state: u  size:    32}
+  [  2] head @ 0x612000000202 {state: u  size:    64}
+  [  3] head @ 0x6120000001c4 {state: u  size:    22}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       216 (total: 0x100)
+  prev:       0x610000000018
+  next:       0x612000000148
+  user:       0x612000000020
+  foot:       0x6120000000f8
+  foot-&gt;size: 216
+[  1] @ 0x612000000100
+  state:      u
+  size:       32 (total: 0x48)
+  prev:       0x61200000026a
+  next:       0x612000000202
+  user:       0x612000000120
+  foot:       0x612000000140
+  foot-&gt;size: 32
+[  2] @ 0x612000000148
+  state:      a
+  size:       84 (total: 0x7c)
+  prev:       0x612000000000
+  next:       0x610000000038
+  user:       0x612000000168
+  foot:       0x6120000001bc
+  foot-&gt;size: 84
+[  3] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x610000000098
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  4] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x612000000100
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  5] @ 0x61200000026a
+  state:      u
+  size:       3438 (total: 0xd96)
+  prev:       0x610000000078
+  next:       0x612000000100
+  user:       0x61200000028a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3438
+
+APPENDED PAGES
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000004000
+total_bytes: 16384
+AVAILABLE LIST: {length:   3  bytes: 12668}
+  [  0] head @ 0x612000001000 {state: a  size: 12248}
+  [  1] head @ 0x612000000000 {state: a  size:   216}
+  [  2] head @ 0x612000000148 {state: a  size:    84}
+USED LIST: {length:   4  bytes:  3716}
+  [  0] head @ 0x61200000026a {state: u  size:  3438}
+  [  1] head @ 0x612000000100 {state: u  size:    32}
+  [  2] head @ 0x612000000202 {state: u  size:    64}
+  [  3] head @ 0x6120000001c4 {state: u  size:    22}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       216 (total: 0x100)
+  prev:       0x612000001000
+  next:       0x612000000148
+  user:       0x612000000020
+  foot:       0x6120000000f8
+  foot-&gt;size: 216
+[  1] @ 0x612000000100
+  state:      u
+  size:       32 (total: 0x48)
+  prev:       0x61200000026a
+  next:       0x612000000202
+  user:       0x612000000120
+  foot:       0x612000000140
+  foot-&gt;size: 32
+[  2] @ 0x612000000148
+  state:      a
+  size:       84 (total: 0x7c)
+  prev:       0x612000000000
+  next:       0x610000000038
+  user:       0x612000000168
+  foot:       0x6120000001bc
+  foot-&gt;size: 84
+[  3] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x610000000098
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  4] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x612000000100
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  5] @ 0x61200000026a
+  state:      u
+  size:       3438 (total: 0xd96)
+  prev:       0x610000000078
+  next:       0x612000000100
+  user:       0x61200000028a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3438
+[  6] @ 0x612000001000
+  state:      a
+  size:       12248 (total: 0x3000)
+  prev:       0x610000000018
+  next:       0x612000000000
+  user:       0x612000001020
+  foot:       0x612000003ff8
+  foot-&gt;size: 12248
+
+P2 SUCCEEDS
+POINTERS
+p1: 0x61200000028a
+p3: 0x612000000120
+p5: 0x612000000222
+p4: 0x6120000001e4
+p2: 0x612000001020
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000004000
+total_bytes: 16384
+AVAILABLE LIST: {length:   3  bytes: 11604}
+  [  0] head @ 0x612000001428 {state: a  size: 11184}
+  [  1] head @ 0x612000000000 {state: a  size:   216}
+  [  2] head @ 0x612000000148 {state: a  size:    84}
+USED LIST: {length:   5  bytes:  4780}
+  [  0] head @ 0x612000001000 {state: u  size:  1024}
+  [  1] head @ 0x61200000026a {state: u  size:  3438}
+  [  2] head @ 0x612000000100 {state: u  size:    32}
+  [  3] head @ 0x612000000202 {state: u  size:    64}
+  [  4] head @ 0x6120000001c4 {state: u  size:    22}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       216 (total: 0x100)
+  prev:       0x612000001428
+  next:       0x612000000148
+  user:       0x612000000020
+  foot:       0x6120000000f8
+  foot-&gt;size: 216
+[  1] @ 0x612000000100
+  state:      u
+  size:       32 (total: 0x48)
+  prev:       0x61200000026a
+  next:       0x612000000202
+  user:       0x612000000120
+  foot:       0x612000000140
+  foot-&gt;size: 32
+[  2] @ 0x612000000148
+  state:      a
+  size:       84 (total: 0x7c)
+  prev:       0x612000000000
+  next:       0x610000000038
+  user:       0x612000000168
+  foot:       0x6120000001bc
+  foot-&gt;size: 84
+[  3] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x610000000098
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  4] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x612000000100
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  5] @ 0x61200000026a
+  state:      u
+  size:       3438 (total: 0xd96)
+  prev:       0x612000001000
+  next:       0x612000000100
+  user:       0x61200000028a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3438
+[  6] @ 0x612000001000
+  state:      u
+  size:       1024 (total: 0x428)
+  prev:       0x610000000078
+  next:       0x61200000026a
+  user:       0x612000001020
+  foot:       0x612000001420
+  foot-&gt;size: 1024
+[  7] @ 0x612000001428
+  state:      a
+  size:       11184 (total: 0x2bd8)
+  prev:       0x610000000018
+  next:       0x612000000000
+  user:       0x612000001448
+  foot:       0x612000003ff8
+  foot-&gt;size: 11184
+
+FREE'D 1-5
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000004000
+total_bytes: 16384
+AVAILABLE LIST: {length:   1  bytes: 16384}
+  [  0] head @ 0x612000000000 {state: a  size: 16344}
+USED LIST: {length:   0  bytes:     0}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       16344 (total: 0x4000)
+  prev:       0x610000000018
+  next:       0x610000000038
+  user:       0x612000000020
+  foot:       0x612000003ff8
+  foot-&gt;size: 16344
 </pre>
 </div>
 </div>
 </div>
 </div>
+
+<div id="outline-container-orgb745d99" class="outline-3 grading30">
+<h3 id="orgb745d99"><span class="section-number-3">5.11</span> <a id="org5f2fec4"></a> Grading Criteria for El Malloc&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading30">grading30</span></span></h3>
+<div class="outline-text-3" id="text-5-11">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><b>Automated Tests</b></td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left"><code>make test-prob2</code> runs 10 tests for correctness with Valgrind enabled</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>make test-prob2 tesnum=5</code> to run individual tests</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><b>Manual Inspection</b></td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><code>el_get_header()</code> and <code>el_block_below()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of provided macros for pointer arithmetic</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Correct use of <code>sizeof()</code> operator to account for sizes</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>el_block_below()</code> checks for beginning of heap and returns NULL</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>el_add_block_front()</code> and <code>el_remove_block()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Sensible use of pointers prev/next to link/unlink nodes <b>efficiently; no looping used</b></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Correct updating of list length and bytes</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Accounts for <code>EL_BLOCK_OVERHEAD</code> when updating bytes</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><code>el_split_block()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of <code>el_get_foot()</code> to obtain footers for updating size</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear evidence of placing a new header and footer for new block</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Accounting for overhead <code>EL_BLOCK_OVERHEAD</code> when calculating new size</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><code>el_malloc()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of <code>el_find_first_avail()</code> to locate a node to split</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of <code>el_split_block()</code> to split block into two</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear state change of split blocks to Used and Available</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear movement of lower split blocks to front of Used List</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear movement of upper split blocks to front of Available lists</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of pointer arithmetic macros to computer user address</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><code>el_merge_block_with_above()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>NULL</code> checks for argument and block above which result in no changes</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear checks of whether both blocks are <code>EL_AVAILABLE</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of <code>el_block_above()</code> to find block above</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear updates to size of lower block and higher foot</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Movement of blocks out of available list and merged block to front</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>el_free()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Error checking that block is <code>EL_USED</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Movement of block from used to available list</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Attempts to merge block with blocks above and below it</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">30</td>
+<td class="org-left">Problem Total</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb3bf13e" class="outline-2">
+<h2 id="orgb3bf13e"><span class="section-number-2">6</span> Project Submission</h2>
+<div class="outline-text-2" id="text-6">
+</div>
+<div id="outline-container-org18d1c50" class="outline-3">
+<h3 id="org18d1c50"><span class="section-number-3">6.1</span> <a id="org81009e2"></a> Submit to Gradescope</h3>
+<div class="outline-text-3" id="text-6-1">
+<ol class="org-ol">
+<li><p>
+In a terminal, change to your project code directory and type
+<b>make zip</b> which will create a zip file of your code. A session
+should look like this:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">   &gt; cd Desktop/2021/p4-code      # location of project code
+
+   &gt; ls 
+   Makefile    el_malloc.c    test-input/
+   ...
+
+   &gt; make zip                     # create a zip file using Makefile target
+   rm -f p4-code.zip
+   cd .. &amp;&amp; zip "p4-code/p4-code.zip" -r "p4-code"
+     adding: p4-code/ (stored 0%)
+     adding: p4-code/el_malloc.c (deflated 72%)
+     adding: p4-code/Makefile (deflated 49%)
+     ...
+   Zip created in p4-code.zip
+
+   &gt; ls p4-code.zip
+   p4-code.zip
+</pre>
+</div></li>
+<li>Log into <a href="https://www.gradescope.com/">Gradescope</a> and locate and click Project 5' which will
+open up submission</li>
+<li>Click on the 'Drag and Drop' text which will open a file selection
+dialog; locate and choose your <code>p5-code.zip</code> file</li>
+<li>This will show the contents of the Zip file and should include your
+C source files along with testing files and directories.</li>
+<li>Click 'Upload' which will show progress uploading files.  It may
+take a few seconds before this dialog closes to indicate that the
+upload is successful. Note: there is a limit of 256 files per
+upload; normal submissions are not likely to have problems with
+this but you may want to make sure that nothing has gone wrong such
+as infinite loops creating many files or incredibly large files.</li>
+<li>Once files have successfully uploaded, the Autograder will begin
+running the command line tests and recording results.  These are
+the same tests that are run via <code>make test</code>.</li>
+<li>When the tests have completed, results will be displayed
+summarizing scores along with output for each batch of tests.</li>
+<li>Refer to the <a href="https://www-users.cs.umn.edu/~kauffman/2021/p1.html">Submission instructions for P1</a> for details and
+pictures.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org2a64ff3" class="outline-3">
+<h3 id="org2a64ff3"><span class="section-number-3">6.2</span> Late Policies</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+You may wish to review the policy on late project submission which
+will cost you late tokens to submit late or credit if you run out of
+tokens. <b>No projects will be accepted more than 48 hours after the
+deadline.</b>
+</p>
+
+<p>
+<a href="https://www-users.cs.umn.edu/~kauffman/2021/syllabus.html">https://www-users.cs.umn.edu/~kauffman/2021/syllabus.html</a>
+</p>
+</div>
+</div>
+</div>
+</div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-11-30 Wed 09:39 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-04-20 Thu 11:04 <br/> </i>
 </div>
 </body>
 </html>
