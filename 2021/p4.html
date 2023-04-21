@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-04-20 Thu 11:04 -->
+<!-- 2023-04-20 Thu 12:46 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Project 4: Performance Optimization and Timing</title>
@@ -344,77 +344,63 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2023-04-20 Thu 11:04</i>
+<i>Last Updated: 2023-04-20 Thu 12:46</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CSCI 2021 Project 4: Performance Optimization and Timing</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Wed 30-Nov-2022</b></li>
+<li><b>Due: 11:59pm Wed 01-May-2023</b></li>
 <li><i>Approximately 3.0-4.0% of total grade</i></li>
 <li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a></li>
 <li>Projects are <b>individual work</b>: no collaboration with other students
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-org10d05ab" class="outline-4">
-<h4 id="org10d05ab">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
+<div id="outline-container-orgca4a94c" class="outline-4">
+<h4 id="orgca4a94c">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
 </div>
-<div id="outline-container-org6acb607" class="outline-4">
-<h4 id="org6acb607">Video Overview: <i>Not yet available</i></h4>
+<div id="outline-container-orgba9a2c4" class="outline-4">
+<h4 id="orgba9a2c4">Video Overview: <i>Not yet available</i></h4>
 </div>
-<div id="outline-container-org5cab491" class="outline-4">
-<h4 id="org5cab491">CHANGELOG: Empty</h4>
+<div id="outline-container-org62bdc8d" class="outline-4">
+<h4 id="org62bdc8d">CHANGELOG: Empty</h4>
 </div>
-<div id="outline-container-org5ab7c95" class="outline-4">
-<h4 id="org5ab7c95"></h4>
-<div class="outline-text-4" id="text-org5ab7c95">
+<div id="outline-container-org2137825" class="outline-4">
+<h4 id="org2137825"></h4>
+<div class="outline-text-4" id="text-org2137825">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgb1d7c14">1. Introduction</a></li>
-<li><a href="#org6fbbe37">2. Download Code and Setup</a></li>
-<li><a href="#org2cfdc8c">3. <b>Problem 1</b>: Squaring a Matrix</a>
+<li><a href="#orgbe6e9a5">1. Introduction</a></li>
+<li><a href="#orgcf3bbbb">2. Download Code and Setup</a></li>
+<li><a href="#org7feb8c8">3. <b>Problem 1</b>: Squaring a Matrix</a>
 <ul>
-<li><a href="#org6eb1ce8">3.1. Overview</a></li>
-<li><a href="#orgf745b81">3.2. Optimize Matrix Squaring</a></li>
-<li><a href="#org0ac058f">3.3. Evaluation on <code>loginNN</code></a></li>
-<li><a href="#org42b2c6e">3.4. <code>matsquare_print.c</code> Testing Program</a></li>
-<li><a href="#orgb863b82">3.5. Optimization Suggestions and Documentation</a></li>
-<li><a href="#org5ae59fc">3.6. Grading Criteria for Problem 1 (45%)</a></li>
+<li><a href="#org646dc90">3.1. Overview</a></li>
+<li><a href="#org456693d">3.2. Optimize Matrix Squaring</a></li>
+<li><a href="#orgd039126">3.3. Evaluation on <code>loginNN</code></a></li>
+<li><a href="#org80482a1">3.4. <code>matsquare_print.c</code> Testing Program</a></li>
+<li><a href="#org2a9f82e">3.5. Optimization Suggestions and Documentation</a></li>
+<li><a href="#org8fcc506">3.6. Grading Criteria for Problem 1 (45%)</a></li>
 </ul>
 </li>
-<li><a href="#org7320a63">4. <b>Problem 2</b>: showsym</a>
+<li><a href="#orga163130">4. <b>Problem 2</b>: showsym</a>
 <ul>
-<li><a href="#org9719be4">4.1. ELF File References</a></li>
-<li><a href="#org40c2df1">4.2. Overall Approach</a></li>
-<li><a href="#orgc465f48">4.3. ELF Header and Section Header Array</a></li>
-<li><a href="#orgd41e37b">4.4. String Tables, Names, Section Headers</a></li>
-<li><a href="#org6b82a52">4.5. Symbol Table and .strtab</a></li>
-<li><a href="#orgeea8411">4.6. Behavior in Error Cases</a></li>
-<li><a href="#orgdb4359d">4.7. <code>showsym</code> Template</a></li>
-<li><a href="#org660047d">4.8. Grading Criteria for showsym</a></li>
+<li><a href="#org8abbc4e">4.1. Overview</a></li>
+<li><a href="#org9fa68c9">4.2. ELF File References</a></li>
+<li><a href="#org77e7a28">4.3. Overall Approach</a></li>
+<li><a href="#orgff5b400">4.4. ELF Header and Section Header Array</a></li>
+<li><a href="#org556bc07">4.5. String Tables, Names, Section Headers</a></li>
+<li><a href="#org4af0dfe">4.6. Symbol Table and .strtab</a></li>
+<li><a href="#orgcfdf3f2">4.7. Behavior in Error Cases</a></li>
+<li><a href="#org3bd70c8">4.8. <code>showsym</code> Template</a></li>
+<li><a href="#org05a446b">4.9. Grading Criteria for showsym</a></li>
 </ul>
 </li>
-<li><a href="#orgee60da5">5. <b>Problem 3</b>: EL Malloc</a>
+<li><a href="#orgdb53119">5. Project Submission</a>
 <ul>
-<li><a href="#org020f1de">5.1. EL Malloc Data Structures</a></li>
-<li><a href="#org8c77bd5">5.2. Block Header/Footer</a></li>
-<li><a href="#org81d3f83">5.3. Footers and Blocks Above/Below</a></li>
-<li><a href="#orgaf4f721">5.4. Block Lists and Global Control</a></li>
-<li><a href="#orga4c5b29">5.5. Pointers and "Actual" Space</a></li>
-<li><a href="#org39c3e4e">5.6. Doubly Linked List Operations</a></li>
-<li><a href="#orga8b3942">5.7. Allocation via Block Splitting</a></li>
-<li><a href="#org3f49d64">5.8. Freeing Blocks and Merging</a></li>
-<li><a href="#org0d2821f">5.9. Overall Code Structure of EL Malloc</a></li>
-<li><a href="#org3ba34c9">5.10. Demo Run using EL Malloc</a></li>
-<li><a href="#orgb745d99">5.11. Grading Criteria for El Malloc</a></li>
-</ul>
-</li>
-<li><a href="#orgb3bf13e">6. Project Submission</a>
-<ul>
-<li><a href="#org18d1c50">6.1. Submit to Gradescope</a></li>
-<li><a href="#org2a64ff3">6.2. Late Policies</a></li>
+<li><a href="#orgb570b6b">5.1. Submit to Gradescope</a></li>
+<li><a href="#orgcbfddb2">5.2. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -424,27 +410,28 @@ is allowed. Seek help from course staff if you get stuck for too long.</li>
 </div>
 
 
-<div id="outline-container-orgb1d7c14" class="outline-2">
-<h2 id="orgb1d7c14"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orgbe6e9a5" class="outline-2">
+<h2 id="orgbe6e9a5"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-This assignment focuses on aspects of optimizing and measuring
-performance.  
+This assignment focuses on two aspects discussed in lecture over the
+last month.
 </p>
-<ul class="org-ul">
-<li>The first problem provides a baseline implementation for
-a function and asks for a more performant version which runs
-faster. To do so, one must exploit knowledge of the memory hierarchy
-and processor pipeline.</li>
-<li>The second problem provides a series of functions for classic search
-algorithms and requires implementation of a <code>main()</code> function to
-benchmark the performance of those functions.</li>
-</ul>
+
+<ol class="org-ol">
+<li>Program Optimization: The project pack provides a baseline
+implementation for a function and asks for a more performant
+version which runs faster. To do so, one must exploit knowledge of
+the memory hierarchy and processor architecture to complete the
+computations more quickly.</li>
+<li>Memory Mapping a Binary file in the ELF format and locating a
+specific section to access its contents.</li>
+</ol>
 </div>
 </div>
 
-<div id="outline-container-org6fbbe37" class="outline-2">
-<h2 id="org6fbbe37"><span class="section-number-2">2</span> <a id="org12e0970"></a> Download Code and Setup</h2>
+<div id="outline-container-orgcf3bbbb" class="outline-2">
+<h2 id="orgcf3bbbb"><span class="section-number-2">2</span> <a id="org5791c1c"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -485,7 +472,7 @@ folder. Ultimately you will re-zip this folder to submit it.
 <tbody>
 <tr>
 <td class="org-left"><code>matsquare_optm.c</code></td>
-<td class="org-left">EDIT/COMPLETE</td>
+<td class="org-left">EDIT</td>
 <td class="org-left">Problem 1 create and fill in optimized function definition</td>
 </tr>
 
@@ -550,24 +537,17 @@ folder. Ultimately you will re-zip this folder to submit it.
 <td class="org-left">Several other ELF and non-ELF files provided</td>
 </tr>
 </tbody>
-<tbody>
-<tr>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-</tbody>
 </table>
 </div>
 </div>
 
 
-<div id="outline-container-org2cfdc8c" class="outline-2">
-<h2 id="org2cfdc8c"><span class="section-number-2">3</span> <b>Problem 1</b>: Squaring a Matrix</h2>
+<div id="outline-container-org7feb8c8" class="outline-2">
+<h2 id="org7feb8c8"><span class="section-number-2">3</span> <b>Problem 1</b>: Squaring a Matrix</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org6eb1ce8" class="outline-3">
-<h3 id="org6eb1ce8"><span class="section-number-3">3.1</span> Overview</h3>
+<div id="outline-container-org646dc90" class="outline-3">
+<h3 id="org646dc90"><span class="section-number-3">3.1</span> Overview</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 A problem that occasionally arises in numerical computing when working
@@ -595,7 +575,7 @@ multiplying it by itself.
 
 <div class="org-center">
 
-<div id="orgc062fd9" class="figure">
+<div id="org1098fab" class="figure">
 <p><img src="matsquare.png" alt="matsquare.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>3 by 3 matrix <code>M</code> with colored elements along with result of squaring the matrix as <code>M*M</code>.</p>
@@ -656,8 +636,8 @@ fairly slow when executing on most modern computing systems.
 </div>
 </div>
 
-<div id="outline-container-orgf745b81" class="outline-3">
-<h3 id="orgf745b81"><span class="section-number-3">3.2</span> Optimize Matrix Squaring</h3>
+<div id="outline-container-org456693d" class="outline-3">
+<h3 id="org456693d"><span class="section-number-3">3.2</span> Optimize Matrix Squaring</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 The purpose of this problem is to write <code>matsquare_OPTM()</code> which is a
@@ -695,8 +675,8 @@ Some details are provided in subsequent sections.
 </div>
 </div>
 
-<div id="outline-container-org0ac058f" class="outline-3">
-<h3 id="org0ac058f"><span class="section-number-3">3.3</span> Evaluation on <code>loginNN</code></h3>
+<div id="outline-container-orgd039126" class="outline-3">
+<h3 id="orgd039126"><span class="section-number-3">3.3</span> Evaluation on <code>loginNN</code></h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The provided file <code>matsquare_benchmark.c</code> provides a benchmark for the
@@ -831,8 +811,8 @@ obvious that bonus credit has been awarded.</i>
 </div>
 </div>
 
-<div id="outline-container-org42b2c6e" class="outline-3">
-<h3 id="org42b2c6e"><span class="section-number-3">3.4</span> <code>matsquare_print.c</code> Testing Program</h3>
+<div id="outline-container-org80482a1" class="outline-3">
+<h3 id="org80482a1"><span class="section-number-3">3.4</span> <code>matsquare_print.c</code> Testing Program</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 As one works on implementing optimizations in <code>matsquare_OPTM()</code>, bugs
@@ -882,8 +862,8 @@ BASE/OPTM Element Comparison:
 </div>
 
 
-<div id="outline-container-orgb863b82" class="outline-3">
-<h3 id="orgb863b82"><span class="section-number-3">3.5</span> <a id="org48b4fa9"></a> Optimization Suggestions and Documentation</h3>
+<div id="outline-container-org2a9f82e" class="outline-3">
+<h3 id="org2a9f82e"><span class="section-number-3">3.5</span> <a id="orgbc098b2"></a> Optimization Suggestions and Documentation</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 Labs and lectures have covered several kinds of optimizations which
@@ -920,7 +900,7 @@ effect so focusing first on the memory access pattern is crucial.
 
 <div class="org-center">
 
-<div id="org5f5409d" class="figure">
+<div id="org4b21dd0" class="figure">
 <p><img src="matsquare-order.png" alt="matsquare-order.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Illustration of how to favor row-wise access to compute squared matrix. Computation of first row results are shown with the beginnings of the second row.</p>
@@ -930,8 +910,8 @@ effect so focusing first on the memory access pattern is crucial.
 </div>
 
 
-<div id="outline-container-org5ae59fc" class="outline-3 grading">
-<h3 id="org5ae59fc"><span class="section-number-3">3.6</span> Grading Criteria for Problem 1 (45%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span></span></h3>
+<div id="outline-container-org8fcc506" class="outline-3 grading55">
+<h3 id="org8fcc506"><span class="section-number-3">3.6</span> Grading Criteria for Problem 1 (45%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading55">grading55</span></span></h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 The file <code>P4-WRITEUP.txt</code> has several questions that should be
@@ -957,47 +937,39 @@ their use.
 <tbody>
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">AUTOMATED TESTS</td>
+<td class="org-left"><b>Automated Tests</b></td>
 </tr>
 
 <tr>
 <td class="org-right">5</td>
 <td class="org-left">No memory errors reported by Valgrind via <code>make test-prob1</code></td>
 </tr>
-
+</tbody>
+<tbody>
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">MANUAL INSPECTION of <code>matsquare_optm.c</code></td>
+<td class="org-left"><b>Manual Inspection of <code>matsquare_optm.c</code></b></td>
 </tr>
 
 <tr>
 <td class="org-right">30</td>
-<td class="org-left">Performance of <code>matsquare_OPTM()</code> on <code>loginNN.cselabs.umn.edu</code></td>
+<td class="org-left">Performance of <code>matsquare_OPTM()</code> on <code>loginNN.cselabs.umn.edu</code> measured during grading</td>
 </tr>
 
 <tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">As measured by the provided <code>matsquare_benchmark</code> during grading</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">5</td>
+<td class="org-right">10</td>
 <td class="org-left">Answer for (B) Timing Table in comments of <code>matsquare_optm.c</code></td>
 </tr>
 
 <tr>
-<td class="org-right">5</td>
+<td class="org-right">10</td>
 <td class="org-left">Answer for (C) Optimizations in comments of <code>matsquare_optm.c</code></td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">55</td>
+<td class="org-left">Problem Total</td>
 </tr>
 </tbody>
 </table>
@@ -1006,9 +978,13 @@ their use.
 </div>
 
 
-<div id="outline-container-org7320a63" class="outline-2">
-<h2 id="org7320a63"><span class="section-number-2">4</span> <b>Problem 2</b>: showsym</h2>
+<div id="outline-container-orga163130" class="outline-2">
+<h2 id="orga163130"><span class="section-number-2">4</span> <b>Problem 2</b>: showsym</h2>
 <div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org8abbc4e" class="outline-3">
+<h3 id="org8abbc4e"><span class="section-number-3">4.1</span> Overview</h3>
+<div class="outline-text-3" id="text-4-1">
 <p>
 The <a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format">Executable and Linkable (ELF) File Format</a> is the Unix standard for
 binary files with runnable code in them.  By default, any executable
@@ -1110,10 +1086,11 @@ The output of <code>showsym</code> is a similar to <code>readelf -s</code> but a
 showing only information on public symbols in the ELF file.
 </p>
 </div>
+</div>
 
-<div id="outline-container-org9719be4" class="outline-3">
-<h3 id="org9719be4"><span class="section-number-3">4.1</span> ELF File References</h3>
-<div class="outline-text-3" id="text-4-1">
+<div id="outline-container-org9fa68c9" class="outline-3">
+<h3 id="org9fa68c9"><span class="section-number-3">4.2</span> ELF File References</h3>
+<div class="outline-text-3" id="text-4-2">
 <p>
 It is recommended to do some reading on the structure of the ELF
 format as it will assist in coming to grips with this problem. As you
@@ -1142,9 +1119,9 @@ use of 32-bit integers may still apply via <code>uint32_t</code>.
 </div>
 </div>
 
-<div id="outline-container-org40c2df1" class="outline-3">
-<h3 id="org40c2df1"><span class="section-number-3">4.2</span> Overall Approach</h3>
-<div class="outline-text-3" id="text-4-2">
+<div id="outline-container-org77e7a28" class="outline-3">
+<h3 id="org77e7a28"><span class="section-number-3">4.3</span> Overall Approach</h3>
+<div class="outline-text-3" id="text-4-3">
 <p>
 ELF files are divided into sections. Our main interest is to identify
 the Symbol Table section but this is done in several steps.
@@ -1174,9 +1151,9 @@ a way that is directly relevant to the present program.
 </div>
 </div>
 
-<div id="outline-container-orgc465f48" class="outline-3">
-<h3 id="orgc465f48"><span class="section-number-3">4.3</span> ELF Header and Section Header Array</h3>
-<div class="outline-text-3" id="text-4-3">
+<div id="outline-container-orgff5b400" class="outline-3">
+<h3 id="orgff5b400"><span class="section-number-3">4.4</span> ELF Header and Section Header Array</h3>
+<div class="outline-text-3" id="text-4-4">
 <p>
 The initial bytes in an ELF file always have a fixed structure which
 is the <code>ELF64_Ehdr</code> type.  Of primary interest are the following
@@ -1218,7 +1195,7 @@ parts of an ELF file.
 
 <div class="org-center">
 
-<div id="org98608f5" class="figure">
+<div id="org4332c62" class="figure">
 <p><img src="elf1.png" alt="elf1.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 3: </span>ELF File Header with Section Header Array and Section Header String Table.</p>
@@ -1227,9 +1204,9 @@ parts of an ELF file.
 </div>
 </div>
 
-<div id="outline-container-orgd41e37b" class="outline-3">
-<h3 id="orgd41e37b"><span class="section-number-3">4.4</span> String Tables, Names, Section Headers</h3>
-<div class="outline-text-3" id="text-4-4">
+<div id="outline-container-org556bc07" class="outline-3">
+<h3 id="org556bc07"><span class="section-number-3">4.5</span> String Tables, Names, Section Headers</h3>
+<div class="outline-text-3" id="text-4-5">
 <p>
 To keep the sizes of structures fixed while still allowing variable
 length names for things, all the names that are stored in ELF files
@@ -1278,9 +1255,9 @@ of symbol table entries.
 </div>
 </div>
 
-<div id="outline-container-org6b82a52" class="outline-3">
-<h3 id="org6b82a52"><span class="section-number-3">4.5</span> Symbol Table and .strtab</h3>
-<div class="outline-text-3" id="text-4-5">
+<div id="outline-container-org4af0dfe" class="outline-3">
+<h3 id="org4af0dfe"><span class="section-number-3">4.6</span> Symbol Table and .strtab</h3>
+<div class="outline-text-3" id="text-4-6">
 <p>
 Similar to the Section Header Array, the Symbol Table is comprised of
 an array of <code>Elf64_Sym</code> structs.  Each of these structs has a
@@ -1290,7 +1267,7 @@ symbol's name resides. The following diagram shows this relationship.
 
 <div class="org-center">
 
-<div id="org5d1a59e" class="figure">
+<div id="org1411e6f" class="figure">
 <p><img src="elf2.png" alt="elf2.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 4: </span>ELF Symbol Table and associated String Table</p>
@@ -1337,18 +1314,18 @@ An <code>if/else</code> or <code>switch/case</code> block to determine the type 
 </div>
 </div>
 
-<div id="outline-container-orgeea8411" class="outline-3">
-<h3 id="orgeea8411"><span class="section-number-3">4.6</span> <a id="org2fd74e0"></a> Behavior in Error Cases</h3>
-<div class="outline-text-3" id="text-4-6">
+<div id="outline-container-orgcfdf3f2" class="outline-3">
+<h3 id="orgcfdf3f2"><span class="section-number-3">4.7</span> <a id="org0147530"></a> Behavior in Error Cases</h3>
+<div class="outline-text-3" id="text-4-7">
 <p>
 The following errors can occur during execution of <code>showsym</code> and
 should result in the given error messages being printed.
 </p>
 </div>
 
-<div id="outline-container-orgc712bcc" class="outline-4">
-<h4 id="orgc712bcc">Wrong Magic Bytes</h4>
-<div class="outline-text-4" id="text-orgc712bcc">
+<div id="outline-container-orge6f0be4" class="outline-4">
+<h4 id="orge6f0be4">Wrong Magic Bytes</h4>
+<div class="outline-text-4" id="text-orge6f0be4">
 <p>
 <code>showsym</code> should check these "magic bytes" (first elements of
 <code>e_ident[]</code> in header). If they match the expected values, proceed but
@@ -1362,9 +1339,9 @@ ERROR: Magic bytes wrong, this is not an ELF file
 </div>
 </div>
 
-<div id="outline-container-orgf566f7d" class="outline-4">
-<h4 id="orgf566f7d">Missing Symbol Tables</h4>
-<div class="outline-text-4" id="text-orgf566f7d">
+<div id="outline-container-orgd03b02b" class="outline-4">
+<h4 id="orgd03b02b">Missing Symbol Tables</h4>
+<div class="outline-text-4" id="text-orgd03b02b">
 <p>
 During the search for the symbol table, it is possible that it is not
 found. Such objects are usually executables that have been "stripped"
@@ -1381,9 +1358,9 @@ ERROR: Couldn't find symbol table
 </div>
 </div>
 
-<div id="outline-container-orgdb4359d" class="outline-3">
-<h3 id="orgdb4359d"><span class="section-number-3">4.7</span> <code>showsym</code> Template</h3>
-<div class="outline-text-3" id="text-4-7">
+<div id="outline-container-org3bd70c8" class="outline-3">
+<h3 id="org3bd70c8"><span class="section-number-3">4.8</span> <code>showsym</code> Template</h3>
+<div class="outline-text-3" id="text-4-8">
 <p>
 A basic template for <code>showsym.c</code> is provided in the code pack which
 outlines the structure of the code along with some printing formats to
@@ -1393,9 +1370,9 @@ sure that your code complies with tests when the become available.
 </div>
 </div>
 
-<div id="outline-container-org660047d" class="outline-3 grading25">
-<h3 id="org660047d"><span class="section-number-3">4.8</span> Grading Criteria for showsym&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading25">grading25</span></span></h3>
-<div class="outline-text-3" id="text-4-8">
+<div id="outline-container-org05a446b" class="outline-3 grading45">
+<h3 id="org05a446b"><span class="section-number-3">4.9</span> Grading Criteria for showsym&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading45">grading45</span></span></h3>
+<div class="outline-text-3" id="text-4-9">
 <p>
 Both binary and shell tests can be run with <code>make test-p2</code>
 </p>
@@ -1447,6 +1424,11 @@ Both binary and shell tests can be run with <code>make test-p2</code>
 
 <tr>
 <td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
 <td class="org-left">Sets a pointer to the ELF File Header properly</td>
 </tr>
 
@@ -1466,7 +1448,7 @@ Both binary and shell tests can be run with <code>make test-p2</code>
 </tr>
 
 <tr>
-<td class="org-right">5</td>
+<td class="org-right">10</td>
 <td class="org-left">Sets up pointers to Section Header Array and associate String Table</td>
 </tr>
 
@@ -1491,7 +1473,7 @@ Both binary and shell tests can be run with <code>make test-p2</code>
 </tr>
 
 <tr>
-<td class="org-right">5</td>
+<td class="org-right">10</td>
 <td class="org-left">Prints information on byte position of symbol table and its size</td>
 </tr>
 
@@ -1516,23 +1498,8 @@ Both binary and shell tests can be run with <code>make test-p2</code>
 </tr>
 
 <tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">PENALTIES if the following styles criteria are lacking</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Clean, readable code</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Good indentation</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Good selection of variable names</td>
+<td class="org-right">5</td>
+<td class="org-left">Style (Clean, readable code)</td>
 </tr>
 </tbody>
 <tbody>
@@ -1546,1715 +1513,13 @@ Both binary and shell tests can be run with <code>make test-p2</code>
 </div>
 </div>
 
-<div id="outline-container-orgee60da5" class="outline-2">
-<h2 id="orgee60da5"><span class="section-number-2">5</span> <b>Problem 3</b>: EL Malloc</h2>
+<div id="outline-container-orgdb53119" class="outline-2">
+<h2 id="orgdb53119"><span class="section-number-2">5</span> Project Submission</h2>
 <div class="outline-text-2" id="text-5">
-<p>
-A <b>memory allocator</b> is small system which manages heap memory,
-sometimes referred to as the "data" segment of a program.  This
-portion of program memory is a linear set of addresses that form a
-large block which an expand at runtime by making requests to the
-operating system.  Solving the allocation problem forms backbone of
-what <code>malloc()/free()</code> do by keeping track of the space used and
-released by a user program.  Allocators also see use in garbage
-collected languages like Java where there are no explicit <code>free()</code>
-calls but the allocator must still find available space for new
-objects.
-</p>
-
-<p>
-One simple way to implement an allocator is to overlay linked lists
-on the heap which track at a minimum the available chunks of memory
-and possibly also the used chunks.  This comes with a cost: some of
-the bytes of memory in the heap are no longer available for the user
-program but are instead used for the allocator's book-keeping.  
-</p>
-
-<p>
-In this problem, an <i>explicit list</i> allocator is developed, thus the
-name of the system <code>el_malloc</code>.  It uses two lists to track memory in
-the heap:
-</p>
-<ul class="org-ul">
-<li>The <b>Available List</b> of blocks of memory that can be used to answer
-calls to <code>malloc()</code></li>
-<li>The <b>Used List</b> of blocks that have been returned by <code>malloc()</code> and
-should not be returned again until they are <code>free()'d</code></li>
-</ul>
-<p>
-Most operations boil down to manipulating these two lists in some
-form.
-</p>
-<ul class="org-ul">
-<li>Allocating with <code>ptr = el_malloc(size);</code> searches the Available List for a
-block with sufficient size. That block is split into two blocks. One block
-answers the request and is given about <code>size</code> bytes; it is moved to
-the Used List. The second block comprises the remainder of the space
-and remains on the Available List.</li>
-<li>Deallocating with <code>el_free(ptr);</code> moves the block referenced by
-<code>ptr</code> from the Used List to the Available List.  To prevent
-fragmentation of memory, the newly available block is <b>merged</b> with
-adjacent available blocks if possible.</li>
-</ul>
 </div>
-
-<div id="outline-container-org020f1de" class="outline-3">
-<h3 id="org020f1de"><span class="section-number-3">5.1</span> EL Malloc Data Structures</h3>
+<div id="outline-container-orgb570b6b" class="outline-3">
+<h3 id="orgb570b6b"><span class="section-number-3">5.1</span> <a id="org2108bbc"></a> Submit to Gradescope</h3>
 <div class="outline-text-3" id="text-5-1">
-<p>
-Several data structures defined in <code>el_malloc.h</code> should be studied so
-that one is acquainted with their intent. The following sections
-outline many of these and show diagrams to indicate transformation
-the required functions should implement.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org8c77bd5" class="outline-3">
-<h3 id="org8c77bd5"><span class="section-number-3">5.2</span> Block Header/Footer</h3>
-<div class="outline-text-3" id="text-5-2">
-<p>
-Each block of memory tracked by EL Malloc is preceded and succeeded by
-some bytes of memory for book keeping.  These are referred to as the
-block "header" and "footer" and are encoded in the <code>el_blockhead_t</code>
-and <code>el_blockfoot_t</code> structs.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-c">// type which is a "header" for a block of memory; containts info on
-// size, whether the block is available or in use, and links to the
-// next/prev blocks in a doubly linked list. This data structure
-// appears immediately before a block of memory that is tracked by the
-// allocator.
-typedef struct block {
-  size_t size;                  // number of bytes of memory in this block
-  char state;                   // either EL_AVAILABLE or EL_USED
-  struct block *next;           // pointer to next block in same list
-  struct block *prev;           // pointer to previous block in same list
-} el_blockhead_t;
-
-// Type for the "footer" of a block; indicates size of the preceding
-// block so that its header el_blockhead_t can be found with pointer
-// arithmetic. This data appears immediately after an area of memory
-// that may be used by a user or is free. Immediately after it is
-// either another header (el_blockhead_t) or the end of the heap.
-typedef struct {
-  size_t size;
-} el_blockfoot_t;
-</pre>
-</div>
-
-<p>
-As indicated, the blocks use <b>doubly linked nodes</b> in the header which
-will allow easy re-arrangement of the list.
-</p>
-
-<p>
-A picture of a block with its header, footer, and user data area is
-shown below.
-</p>
-<div class="org-center">
-
-<div id="orga0e444c" class="figure">
-<p><img src="block.png" alt="block.png" style="max-width:100%;" />
-</p>
-<p><span class="figure-number">Figure 5: </span>Block data preceded by a header (<code>el_blockhead_t</code>) and followed by a footer (<code>el_blockfoot_t</code>)._</p>
-</div>
-</div>
-</div>
-</div>
-
-
-
-<div id="outline-container-org81d3f83" class="outline-3">
-<h3 id="org81d3f83"><span class="section-number-3">5.3</span> Footers and Blocks Above/Below</h3>
-<div class="outline-text-3" id="text-5-3">
-<p>
-One might wonder why the footer appears.  In tracking blocks, there
-will arise the need to determine a block that is immediately before a
-given block in memory (not the previous in the linked list).  The
-footer enables this by tracking the size of the user block of memory
-immediately preceding it. 
-</p>
-
-
-<p>
-This is illustrated in the diagram below.
-</p>
-<div class="org-center">
-
-<div id="org3b00c43" class="figure">
-<p><img src="headfoot.png" alt="headfoot.png" style="max-width:100%;" />
-</p>
-<p><span class="figure-number">Figure 6: </span>Finding preceding block header using footer (<code>el_block_decr(header)</code>)</p>
-</div>
-</div>
-
-<p>
-This operation is implemented in the function <code>el_block_below(block)</code> and
-the similar operation <code>el_block_above(block)</code> finds the next header
-immediately following one in memory.
-</p>
-
-<p>
-The following functions use pointer arithmetic to determine block
-locations from a provided pointer.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">el_blockfoot_t *el_get_footer(el_blockhead_t *block);
-el_blockhead_t *el_get_header(el_blockfoot_t *foot);
-el_blockhead_t *el_block_above(el_blockhead_t *block);
-el_blockhead_t *el_block_below(el_blockhead_t *block);
-</pre>
-</div>
-
-<p>
-These functions benefit from macros defined in <code>el_malloc.h</code> that are
-useful for doing pointer operations involving bytes.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">// macro to add a byte offset to a pointer, arguments are a pointer
-// and a # of bytes (usually size_t)
-#define PTR_PLUS_BYTES(ptr,off) ((void *) (((size_t) (ptr)) + ((size_t) (off))))
-
-// macro to add a byte offset to a pointer, arguments are a pointer
-// and a # of bytes (usually size_t)
-#define PTR_MINUS_BYTES(ptr,off) ((void *) (((size_t) (ptr)) - ((size_t) (off))))
-
-// macro to add a byte offset to a pointer, arguments are a pointer
-// and a # of bytes (usually size_t)
-#define PTR_MINUS_PTR(ptr,ptq) (((size_t) (ptr)) - ((size_t) (ptq)))
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgaf4f721" class="outline-3">
-<h3 id="orgaf4f721"><span class="section-number-3">5.4</span> Block Lists and Global Control</h3>
-<div class="outline-text-3" id="text-5-4">
-<p>
-The main purpose of the memory allocator is to track the available and
-used blocks in explicit linked lists. This allows used and available
-memory to be distributed throughout the heap. Below are the data
-structures that track these lists and the global control data
-structure which houses information for the entire heap.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-c">// Type for a list of blocks; doubly linked with a fixed
-// "dummy" node at the beginning and end which do not contain any
-// data. List tracks its length and number of bytes in use.
-typedef struct {
-  el_blockhead_t beg_actual;    // fixed node at beginning of list; state is EL_BEGIN_BLOCK
-  el_blockhead_t end_actual;    // fixed node at end of list; state is EL_END_BLOCK
-  el_blockhead_t *beg;          // pointer to beg_actual
-  el_blockhead_t *end;          // pointer to end_actual
-  size_t length;                // length of the used block list (not counting beg/end)
-  size_t bytes;                 // total bytes in list used including overhead; 
-} el_blocklist_t;
-// NOTE: total available bytes for use/in-use in the list is (bytes - length*EL_BLOCK_OVERHEAD)
-
-// Type for the global control of the allocator. Tracks heap size,
-// start and end addresses, total size, and lists of available and
-// used blocks.
-typedef struct {
-  void *heap_start;             // pointer to where the heap starts
-  void *heap_end;               // pointer to where the heap ends; this memory address is out of bounds
-  size_t heap_bytes;            // number of bytes currently in the heap
-  el_blocklist_t avail_actual;  // space for the available list data
-  el_blocklist_t used_actual;   // space for the used list data
-  el_blocklist_t *avail;        // pointer to avail_actual
-  el_blocklist_t *used;         // pointer to used_actual
-} el_ctl_t;
-</pre>
-</div>
-
-<p>
-The following diagram shows some of the structure induced by use of a
-doubly linked lists overlaid onto the heap. The global control
-structure <code>el_ctl</code> has two lists for available and used space.
-</p>
-
-<div class="org-center">
-
-<div id="orgeaf2265" class="figure">
-<p><img src="listsglobal.png" alt="listsglobal.png" style="max-width:100%;" />
-</p>
-<p><span class="figure-number">Figure 7: </span>Structure of heap with several used/available blocks. Pointers from <code>el_ctl</code> lists allow access to these blocks.</p>
-</div>
-</div>
-
-
-<p>
-The following functions initialize the global control structures,
-print stats on the heap, and clean up at the end of execution.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">int el_init(int max_bytes);
-void el_print_stats();
-void el_cleanup();
-</pre>
-</div>
-</div>
-</div>
-
-
-<div id="outline-container-orga4c5b29" class="outline-3">
-<h3 id="orga4c5b29"><span class="section-number-3">5.5</span> Pointers and "Actual" Space</h3>
-<div class="outline-text-3" id="text-5-5">
-<p>
-In several structures, there appear pointers named <code>xxx</code> and structs
-named <code>xxx_actual</code>.  For example, in <code>el_blocklist_t</code>:
-</p>
-<div class="org-src-container">
-<pre class="src src-c">typedef struct {
-  ...
-  el_blockhead_t beg_actual;    // fixed node at beginning of list; state is EL_BEGIN_BLOCK
-  el_blockhead_t *beg;          // pointer to beg_actual
-  ...
-} el_blocklist_t;
-</pre>
-</div>
-<p>
-The intent here is that there will <i>always</i> be a node at the beginning
-of the doubly linked list which just to make the programming easier so
-it makes sense to have an actual struct <code>beg_actual</code> present.
-However, when working with the list, the address of the beginning node
-is often referenced making <code>beg</code> useful. In any case, <code>beg</code> will be
-initialized to <code>&amp;beg_actual</code> as appears in <code>el_init_blocklist()</code>.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">void el_init_blocklist(el_blocklist_t *list){
-  list-&gt;beg        = &amp;(list-&gt;beg_actual); 
-  list-&gt;beg-&gt;state = EL_BEGIN_BLOCK;
-  list-&gt;beg-&gt;size  = EL_UNINITIALIZED;
-  ...  
-}
-</pre>
-</div>
-
-<p>
-Similarly, since there will always be an Available List, <code>el_ctl_t</code>
-has both an <code>avail</code> pointer to the list and <code>avail_actual</code> which is
-the struct for the list.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org39c3e4e" class="outline-3">
-<h3 id="org39c3e4e"><span class="section-number-3">5.6</span> Doubly Linked List Operations</h3>
-<div class="outline-text-3" id="text-5-6">
-<p>
-A large number of operations in EL Malloc boil down to doubly linked
-list operations. This includes
-</p>
-<ul class="org-ul">
-<li>Unlinking nodes from the middle of list during <code>el_free()</code></li>
-<li>Adding nodes to the beginning of a headed list (allocation and free)</li>
-<li>Traversing the list to print and search for available blocks</li>
-</ul>
-
-<p>
-Recall that unlinking a node from a doubly linked list involves
-modifying the previous and next node as in the following.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">  node-&gt;prev-&gt;next = node-&gt;next;
-  node-&gt;next-&gt;prev = node-&gt;prev;
-</pre>
-</div>
-<p>
-while adding a new node to the front is typically accomplished via
-</p>
-<div class="org-src-container">
-<pre class="src src-c">  node-&gt;prev = list-&gt;beg;
-  node-&gt;next = list-&gt;beg-&gt;next;
-  node-&gt;prev-&gt;next = node;
-  node-&gt;next-&gt;prev = node;
-</pre>
-</div>
-
-<p>
-You may wish to review doubly linked list operations and do some
-reading on lists with "dummy" nodes at the beginning and ending if
-these concepts are rusty.
-</p>
-
-<p>
-The following functions pertain to block list operations.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">void el_init_blocklist(el_blocklist_t *list);
-void el_print_blocklist(el_blocklist_t *list);
-void el_add_block_front(el_blocklist_t *list, el_blockhead_t *block);
-void el_remove_block(el_blocklist_t *list, el_blockhead_t *block);
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orga8b3942" class="outline-3">
-<h3 id="orga8b3942"><span class="section-number-3">5.7</span> Allocation via Block Splitting</h3>
-<div class="outline-text-3" id="text-5-7">
-<p>
-The basic operation of granting memory on a call to <code>el_malloc(size)</code>
-involves finding an Available Block with enough bytes for <b>both</b> the
-requested amount of memory and a new header/footer combination.  The
-current requirement is that <b>a block always gets split</b> on an
-allocation though a straight-forward optimization would be to not
-split in the case of a close or exact size match.
-</p>
-
-<p>
-This process is demonstrated in the below diagram in which a request
-for some bytes has been made. The process prior to diagram involves
-searching the Available List for a block with enough space.  Once
-found, the block is split into the portion that will be used and the
-remaining portion. A pointer to the user area immediately after the
-<code>el_blockhead_t</code> is returned.
-</p>
-
-<div class="org-center">
-
-<div id="orgb9710d3" class="figure">
-<p><img src="split.png" alt="split.png" style="max-width:100%;" />
-</p>
-<p><span class="figure-number">Figure 8: </span>Splitting a block in an allocation request.</p>
-</div>
-</div>
-
-<p>
-The following functions pertain to the location and splitting of
-blocks in the available list to fulfill allocation requests.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">el_blockhead_t *el_find_first_avail(size_t size);
-el_blockhead_t *el_split_block(el_blockhead_t *block, size_t new_size);
-void *el_malloc(size_t nbytes);
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org3f49d64" class="outline-3">
-<h3 id="org3f49d64"><span class="section-number-3">5.8</span> Freeing Blocks and Merging</h3>
-<div class="outline-text-3" id="text-5-8">
-<p>
-Freeing memory passes in a pointer to the user area that was
-granted. Immediately preceding this should be a <code>el_blockhead_t</code> and
-it can be found with pointer arithmetic.  
-</p>
-
-<p>
-In order to prevent memory from becoming continually divided into
-smaller blocks, on freeing the system checks to see if adjacent blocks
-can be merged.  Keep in mind that the blocks that can be merged are
-<b>adjacent in memory</b>, not next/previous in some linked list.  Adjacent
-blocks can be located using <code>el_block_above()</code> and <code>el_block_decr()</code>.
-</p>
-
-<p>
-To merge, the adjacent blocks must both be Available (not Used).  A
-free can then have several cases.
-</p>
-<ol class="org-ol">
-<li>The freed block cannot be merged with any others</li>
-<li>The freed block can be merged with only the block above it</li>
-<li>The freed block can be merged with only the block below it</li>
-<li>The freed block can be merged with both adjacent blocks</li>
-</ol>
-
-<p>
-The diagrams below show two of these cases.
-</p>
-<div class="org-center">
-
-<div id="org4710ae2" class="figure">
-<p><img src="free-merge.png" alt="free-merge.png" style="max-width:100%;" />
-</p>
-<p><span class="figure-number">Figure 9: </span>Two cases of freeing blocks. The 2nd involves merging adjacent nodes with available space.</p>
-</div>
-</div>
-
-<p>
-With careful use of the below functions and handling of <code>NULL</code>
-arguments, all 4 cases can be handled with very little code.  Keep in
-mind that <code>el_block_above()/below()</code> should return <code>NULL</code> if there is
-no block above or below due to that are being out of the boundaries of
-the heap.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">el_blockhead_t *el_block_above(el_blockhead_t *block);
-el_blockhead_t *el_block_below(el_blockhead_t *block);
-void el_merge_block_with_above(el_blockhead_t *lower);
-void el_free(void *ptr);
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org0d2821f" class="outline-3">
-<h3 id="org0d2821f"><span class="section-number-3">5.9</span> Overall Code Structure of EL Malloc</h3>
-<div class="outline-text-3" id="text-5-9">
-<p>
-Below is the code structure of the EL Malloc library.  Some of the
-functions have been implemented already while those marked <code>REQUIRED</code>
-must be completed for full credit on the problem.
-</p>
-
-<pre class="example" id="org183c51b">
-// el_malloc.c: implementation of explicit list malloc functions.
-/////////// SOLUTION //////////////
-
-////////////////////////////////////////////////////////////////////////////////
-// Global control functions
-
-int el_init();
-// Create an initial block of memory for the heap using
-// mmap(). Initialize the el_ctl data structure to point at this
-// block. The initializ size/position of the heap for the memory map
-// are given in the symbols EL_HEAP_INITIAL_SIZE and
-// EL_HEAP_START_ADDRESS.  Initialize the lists in el_ctl to contain a
-// single large block of available memory and no used blocks of
-// memory.
-
-void el_cleanup();
-// Clean up the heap area associated with the system which unmaps all
-// pages associated with the heap.
-
-////////////////////////////////////////////////////////////////////////////////
-// Pointer arithmetic functions to access adjacent headers/footers
-
-el_blockfoot_t *el_get_footer(el_blockhead_t *head);
-// Compute the address of the foot for the given head which is at a
-// higher address than the head.
-
-el_blockhead_t *el_get_header(el_blockfoot_t *foot);
-// REQUIRED
-// Compute the address of the head for the given foot which is at a
-// lower address than the foot.
-
-el_blockhead_t *el_block_above(el_blockhead_t *block);
-// Return a pointer to the block that is one block higher in memory
-// from the given block.  This should be the size of the block plus
-// the EL_BLOCK_OVERHEAD which is the space occupied by the header and
-// footer. Returns NULL if the block above would be off the heap.
-// DOES NOT follow next pointer, looks in adjacent memory.
-
-el_blockhead_t *el_block_below(el_blockhead_t *block);
-// REQUIRED
-// Return a pointer to the block that is one block lower in memory
-// from the given block.  Uses the size of the preceding block found
-// in its foot. DOES NOT follow block-&gt;next pointer, looks in adjacent
-// memory. Returns NULL if the block below would be outside the heap.
-// 
-// WARNING: This function must perform slightly different arithmetic
-// than el_block_above(). Take care when implementing it.
-
-////////////////////////////////////////////////////////////////////////////////
-// Block list operations
-
-void el_print_blocklist(el_blocklist_t *list);
-// Print an entire blocklist. The format appears as follows.
-//
-// {length:   2  bytes:  3400}
-//   [  0] head @ 0x600000000000 {state: a  size:   128}
-//   [  1] head @ 0x600000000360 {state: a  size:  3192}
-//
-// Note that the '@' column uses the actual address of items which
-// relies on a consistent mmap() starting point for the heap.
-
-void el_print_block(el_blockhead_t *block);
-// Print a single block during a sequential walk through the heap
-
-void el_print_stats();
-// Print out stats on the heap for use in debugging. Shows the
-// available and used list along with a linear walk through the heap
-// blocks.
-
-void el_init_blocklist(el_blocklist_t *list);
-// Initialize the specified list to be empty. Sets the beg/end
-// pointers to the actual space and initializes those data to be the
-// ends of the list.  Initializes length and size to 0.
-
-void el_add_block_front(el_blocklist_t *list, el_blockhead_t *block);
-// REQUIRED
-// Add to the front of list; links for block are adjusted as are links
-// within list.  Length is incremented and the bytes for the list are
-// updated to include the new block's size and its overhead.
-
-void el_remove_block(el_blocklist_t *list, el_blockhead_t *block);
-// REQUIRED
-// Unlink block from the list it is in which should be the list
-// parameter.  Updates the length and bytes for that list including
-// the EL_BLOCK_OVERHEAD bytes associated with header/footer.
-
-////////////////////////////////////////////////////////////////////////////////
-// Allocation-related functions
-
-el_blockhead_t *el_find_first_avail(size_t size);
-// REQUIRED
-// Find the first block in the available list with block size of at
-// least `size`.  Returns a pointer to the found block or NULL if no
-// block of sufficient size is available.
-
-el_blockhead_t *el_split_block(el_blockhead_t *block, size_t new_size);
-// REQUIRED
-// Set the pointed to block to the given size and add a footer to
-// it. Creates another block above it by creating a new header and
-// assigning it the remaining space. Ensures that the new block has a
-// footer with the correct size. Returns a pointer to the newly
-// created block while the parameter block has its size altered to
-// parameter size. Does not do any linking of blocks.  If the
-// parameter block does not have sufficient size for a split (at least
-// new_size + EL_BLOCK_OVERHEAD for the new header/footer) makes no
-// changes tot the block and returns NULL indicating no new block was
-// created.
-
-void *el_malloc(size_t nbytes);
-// REQUIRED
-// Return pointer to a block of memory with at least the given size
-// for use by the user.  The pointer returned is to the usable space,
-// not the block header. Makes use of find_first_avail() to find a
-// suitable block and el_split_block() to split it.  Returns NULL if
-// no space is available.
-
-////////////////////////////////////////////////////////////////////////////////
-// De-allocation/free() related functions
-
-void el_merge_block_with_above(el_blockhead_t *lower);
-// REQUIRED
-// Attempt to merge the block lower with the next block in
-// memory. Does nothing if lower is null or not EL_AVAILABLE and does
-// nothing if the next higher block is null (because lower is the last
-// block) or not EL_AVAILABLE.  Otherwise, locates the next block with
-// el_block_above() and merges these two into a single block. Adjusts
-// the fields of lower to incorporate the size of higher block and the
-// reclaimed overhead. Adjusts footer of higher to indicate the two
-// blocks are merged.  Removes both lower and higher from the
-// available list and re-adds lower to the front of the available
-// list.
-
-void el_free(void *ptr);
-// REQUIRED
-// Free the block pointed to by the give ptr.  The area immediately
-// preceding the pointer should contain an el_blockhead_t with information
-// on the block size. Attempts to merge the free'd block with adjacent
-// blocks using el_merge_block_with_above().
-
-////////////////////////////////////////////////////////////////////////////////
-// HEAP EXPANSION FUNCTIONS
-
-int el_append_pages_to_heap(int npages);
-// Attempts to append pages of memory to the heap with mmap(). npages
-// is how many pages are to be appended with total bytes to be
-// appended as npages * EL_PAGE_BYTES. Calls mmap() with similar
-// arguments to those used in el_init() however requests the address
-// of the pages to be at heap_end so that the heap grows
-// contiguously. If this fails, prints the message
-// 
-//  ERROR: Unable to mmap() additional 3 pages
-// 
-// and returns 1. Note that mmap() returns the constant MAP_FAILED on
-// errors and the returned address will not match the requested
-// virtual address on failures.
-//
-// Otherwise, adjusts heap size and end for the expanded heap. Creates
-// a new block for the freshly allocated pages that is added to the
-// available list. Also attempts to merge this block with the block
-// below it. Returns 0 on success.
-
-</pre>
-</div>
-</div>
-
-<div id="outline-container-org3ba34c9" class="outline-3">
-<h3 id="org3ba34c9"><span class="section-number-3">5.10</span> Demo Run using EL Malloc</h3>
-<div class="outline-text-3" id="text-5-10">
-<p>
-Below is a run showing the behavior of a series of <code>el_malloc() /
-el_free()</code> calls.  They are performed in the provided <code>el_demo.c</code>
-program. 
-</p>
-</div>
-
-<div id="outline-container-orgc9edf7f" class="outline-4">
-<h4 id="orgc9edf7f">Source for <code>el_demo.c</code></h4>
-<div class="outline-text-4" id="text-orgc9edf7f">
-<div class="org-src-container">
-<pre class="src src-c">// el_demo.c: Shows use cases for el_malloc() and el_free(). This file
-// can be used for testing but is not itself a test.
-
-#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;assert.h&gt;
-#include "el_malloc.h"
-
-void print_ptr(char *str, void *ptr){
-  if(ptr == NULL){
-    printf("%s: (nil)\n", str);
-  }
-  else{
-    printf("%s: %p\n", str, ptr);
-  }
-}
-
-int main(){
-  printf("EL_BLOCK_OVERHEAD: %lu\n",EL_BLOCK_OVERHEAD);
-  el_init();
-
-  printf("INITIAL\n"); el_print_stats(); printf("\n");
-
-  void *p1 = el_malloc(128);
-  void *p2 = el_malloc(48);
-  void *p3 = el_malloc(156);
-  printf("MALLOC 3\n"); el_print_stats(); printf("\n");
-
-  printf("POINTERS\n");
-  print_ptr("p3",p3);
-  print_ptr("p2",p2);
-  print_ptr("p1",p1);
-  printf("\n");
-
-  void *p4 = el_malloc(22);
-  void *p5 = el_malloc(64);
-  printf("MALLOC 5\n"); el_print_stats(); printf("\n");
-
-  printf("POINTERS\n");
-  print_ptr("p5",p5);
-  print_ptr("p4",p4);
-  print_ptr("p3",p3);
-  print_ptr("p2",p2);
-  print_ptr("p1",p1);
-  printf("\n");
-
-  el_free(p1);
-  printf("FREE 1\n"); el_print_stats(); printf("\n");
-
-  el_free(p3);
-  printf("FREE 3\n"); el_print_stats(); printf("\n");
-
-  p3 = el_malloc(32);
-  p1 = el_malloc(200);
-  
-  printf("ALLOC 3,1 AGAIN\n"); el_print_stats(); printf("\n");
-
-  printf("POINTERS\n");
-  print_ptr("p1",p1);
-  print_ptr("p3",p3);
-  print_ptr("p5",p5);
-  print_ptr("p4",p4);
-  print_ptr("p2",p2);
-  printf("\n");
-
-  el_free(p1);
-
-  printf("FREE'D 1\n"); el_print_stats(); printf("\n");
-
-  el_free(p2);
-
-  printf("FREE'D 2\n"); el_print_stats(); printf("\n");
-
-  p1 = el_malloc(3438);
-  p2 = el_malloc(1024);
-  printf("P2 FAILS\n");
-  printf("POINTERS\n");
-  print_ptr("p1",p1);
-  print_ptr("p3",p3);
-  print_ptr("p5",p5);
-  print_ptr("p4",p4);
-  print_ptr("p2",p2);
-  el_print_stats(); printf("\n");
-
-  el_append_pages_to_heap(3);
-  printf("APPENDED PAGES\n"); el_print_stats(); printf("\n");
-
-  p2 = el_malloc(1024);
-  printf("P2 SUCCEEDS\n");
-  printf("POINTERS\n");
-  print_ptr("p1",p1);
-  print_ptr("p3",p3);
-  print_ptr("p5",p5);
-  print_ptr("p4",p4);
-  print_ptr("p2",p2);
-  el_print_stats(); printf("\n");  
-
-  el_free(p1);
-  el_free(p2);
-  el_free(p3);
-  el_free(p4);
-  el_free(p5);
-
-  printf("FREE'D 1-5\n"); el_print_stats(); printf("\n");
-
-  el_cleanup();
-  return 0;
-}
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgdaf3eea" class="outline-4">
-<h4 id="orgdaf3eea"><a id="orgb30d44d"></a> Output of El Malloc Demo</h4>
-<div class="outline-text-4" id="text-orgdaf3eea">
-<div class="org-src-container">
-<pre class="src src-text">EL_BLOCK_OVERHEAD: 40
-INITIAL
-HEAP STATS (overhead per node: 40)
-heap_start:  0x612000000000
-heap_end:    0x612000001000
-total_bytes: 4096
-AVAILABLE LIST: {length:   1  bytes:  4096}
-  [  0] head @ 0x612000000000 {state: a  size:  4056}
-USED LIST: {length:   0  bytes:     0}
-HEAP BLOCKS:
-[  0] @ 0x612000000000
-  state:      a
-  size:       4056 (total: 0x1000)
-  prev:       0x610000000018
-  next:       0x610000000038
-  user:       0x612000000020
-  foot:       0x612000000ff8
-  foot-&gt;size: 4056
-
-MALLOC 3
-HEAP STATS (overhead per node: 40)
-heap_start:  0x612000000000
-heap_end:    0x612000001000
-total_bytes: 4096
-AVAILABLE LIST: {length:   1  bytes:  3644}
-  [  0] head @ 0x6120000001c4 {state: a  size:  3604}
-USED LIST: {length:   3  bytes:   452}
-  [  0] head @ 0x612000000100 {state: u  size:   156}
-  [  1] head @ 0x6120000000a8 {state: u  size:    48}
-  [  2] head @ 0x612000000000 {state: u  size:   128}
-HEAP BLOCKS:
-[  0] @ 0x612000000000
-  state:      u
-  size:       128 (total: 0xa8)
-  prev:       0x6120000000a8
-  next:       0x610000000098
-  user:       0x612000000020
-  foot:       0x6120000000a0
-  foot-&gt;size: 128
-[  1] @ 0x6120000000a8
-  state:      u
-  size:       48 (total: 0x58)
-  prev:       0x612000000100
-  next:       0x612000000000
-  user:       0x6120000000c8
-  foot:       0x6120000000f8
-  foot-&gt;size: 48
-[  2] @ 0x612000000100
-  state:      u
-  size:       156 (total: 0xc4)
-  prev:       0x610000000078
-  next:       0x6120000000a8
-  user:       0x612000000120
-  foot:       0x6120000001bc
-  foot-&gt;size: 156
-[  3] @ 0x6120000001c4
-  state:      a
-  size:       3604 (total: 0xe3c)
-  prev:       0x610000000018
-  next:       0x610000000038
-  user:       0x6120000001e4
-  foot:       0x612000000ff8
-  foot-&gt;size: 3604
-
-POINTERS
-p3: 0x612000000120
-p2: 0x6120000000c8
-p1: 0x612000000020
-
-MALLOC 5
-HEAP STATS (overhead per node: 40)
-heap_start:  0x612000000000
-heap_end:    0x612000001000
-total_bytes: 4096
-AVAILABLE LIST: {length:   1  bytes:  3478}
-  [  0] head @ 0x61200000026a {state: a  size:  3438}
-USED LIST: {length:   5  bytes:   618}
-  [  0] head @ 0x612000000202 {state: u  size:    64}
-  [  1] head @ 0x6120000001c4 {state: u  size:    22}
-  [  2] head @ 0x612000000100 {state: u  size:   156}
-  [  3] head @ 0x6120000000a8 {state: u  size:    48}
-  [  4] head @ 0x612000000000 {state: u  size:   128}
-HEAP BLOCKS:
-[  0] @ 0x612000000000
-  state:      u
-  size:       128 (total: 0xa8)
-  prev:       0x6120000000a8
-  next:       0x610000000098
-  user:       0x612000000020
-  foot:       0x6120000000a0
-  foot-&gt;size: 128
-[  1] @ 0x6120000000a8
-  state:      u
-  size:       48 (total: 0x58)
-  prev:       0x612000000100
-  next:       0x612000000000
-  user:       0x6120000000c8
-  foot:       0x6120000000f8
-  foot-&gt;size: 48
-[  2] @ 0x612000000100
-  state:      u
-  size:       156 (total: 0xc4)
-  prev:       0x6120000001c4
-  next:       0x6120000000a8
-  user:       0x612000000120
-  foot:       0x6120000001bc
-  foot-&gt;size: 156
-[  3] @ 0x6120000001c4
-  state:      u
-  size:       22 (total: 0x3e)
-  prev:       0x612000000202
-  next:       0x612000000100
-  user:       0x6120000001e4
-  foot:       0x6120000001fa
-  foot-&gt;size: 22
-[  4] @ 0x612000000202
-  state:      u
-  size:       64 (total: 0x68)
-  prev:       0x610000000078
-  next:       0x6120000001c4
-  user:       0x612000000222
-  foot:       0x612000000262
-  foot-&gt;size: 64
-[  5] @ 0x61200000026a
-  state:      a
-  size:       3438 (total: 0xd96)
-  prev:       0x610000000018
-  next:       0x610000000038
-  user:       0x61200000028a
-  foot:       0x612000000ff8
-  foot-&gt;size: 3438
-
-POINTERS
-p5: 0x612000000222
-p4: 0x6120000001e4
-p3: 0x612000000120
-p2: 0x6120000000c8
-p1: 0x612000000020
-
-FREE 1
-HEAP STATS (overhead per node: 40)
-heap_start:  0x612000000000
-heap_end:    0x612000001000
-total_bytes: 4096
-AVAILABLE LIST: {length:   2  bytes:  3646}
-  [  0] head @ 0x612000000000 {state: a  size:   128}
-  [  1] head @ 0x61200000026a {state: a  size:  3438}
-USED LIST: {length:   4  bytes:   450}
-  [  0] head @ 0x612000000202 {state: u  size:    64}
-  [  1] head @ 0x6120000001c4 {state: u  size:    22}
-  [  2] head @ 0x612000000100 {state: u  size:   156}
-  [  3] head @ 0x6120000000a8 {state: u  size:    48}
-HEAP BLOCKS:
-[  0] @ 0x612000000000
-  state:      a
-  size:       128 (total: 0xa8)
-  prev:       0x610000000018
-  next:       0x61200000026a
-  user:       0x612000000020
-  foot:       0x6120000000a0
-  foot-&gt;size: 128
-[  1] @ 0x6120000000a8
-  state:      u
-  size:       48 (total: 0x58)
-  prev:       0x612000000100
-  next:       0x610000000098
-  user:       0x6120000000c8
-  foot:       0x6120000000f8
-  foot-&gt;size: 48
-[  2] @ 0x612000000100
-  state:      u
-  size:       156 (total: 0xc4)
-  prev:       0x6120000001c4
-  next:       0x6120000000a8
-  user:       0x612000000120
-  foot:       0x6120000001bc
-  foot-&gt;size: 156
-[  3] @ 0x6120000001c4
-  state:      u
-  size:       22 (total: 0x3e)
-  prev:       0x612000000202
-  next:       0x612000000100
-  user:       0x6120000001e4
-  foot:       0x6120000001fa
-  foot-&gt;size: 22
-[  4] @ 0x612000000202
-  state:      u
-  size:       64 (total: 0x68)
-  prev:       0x610000000078
-  next:       0x6120000001c4
-  user:       0x612000000222
-  foot:       0x612000000262
-  foot-&gt;size: 64
-[  5] @ 0x61200000026a
-  state:      a
-  size:       3438 (total: 0xd96)
-  prev:       0x612000000000
-  next:       0x610000000038
-  user:       0x61200000028a
-  foot:       0x612000000ff8
-  foot-&gt;size: 3438
-
-FREE 3
-HEAP STATS (overhead per node: 40)
-heap_start:  0x612000000000
-heap_end:    0x612000001000
-total_bytes: 4096
-AVAILABLE LIST: {length:   3  bytes:  3842}
-  [  0] head @ 0x612000000100 {state: a  size:   156}
-  [  1] head @ 0x612000000000 {state: a  size:   128}
-  [  2] head @ 0x61200000026a {state: a  size:  3438}
-USED LIST: {length:   3  bytes:   254}
-  [  0] head @ 0x612000000202 {state: u  size:    64}
-  [  1] head @ 0x6120000001c4 {state: u  size:    22}
-  [  2] head @ 0x6120000000a8 {state: u  size:    48}
-HEAP BLOCKS:
-[  0] @ 0x612000000000
-  state:      a
-  size:       128 (total: 0xa8)
-  prev:       0x612000000100
-  next:       0x61200000026a
-  user:       0x612000000020
-  foot:       0x6120000000a0
-  foot-&gt;size: 128
-[  1] @ 0x6120000000a8
-  state:      u
-  size:       48 (total: 0x58)
-  prev:       0x6120000001c4
-  next:       0x610000000098
-  user:       0x6120000000c8
-  foot:       0x6120000000f8
-  foot-&gt;size: 48
-[  2] @ 0x612000000100
-  state:      a
-  size:       156 (total: 0xc4)
-  prev:       0x610000000018
-  next:       0x612000000000
-  user:       0x612000000120
-  foot:       0x6120000001bc
-  foot-&gt;size: 156
-[  3] @ 0x6120000001c4
-  state:      u
-  size:       22 (total: 0x3e)
-  prev:       0x612000000202
-  next:       0x6120000000a8
-  user:       0x6120000001e4
-  foot:       0x6120000001fa
-  foot-&gt;size: 22
-[  4] @ 0x612000000202
-  state:      u
-  size:       64 (total: 0x68)
-  prev:       0x610000000078
-  next:       0x6120000001c4
-  user:       0x612000000222
-  foot:       0x612000000262
-  foot-&gt;size: 64
-[  5] @ 0x61200000026a
-  state:      a
-  size:       3438 (total: 0xd96)
-  prev:       0x612000000000
-  next:       0x610000000038
-  user:       0x61200000028a
-  foot:       0x612000000ff8
-  foot-&gt;size: 3438
-
-ALLOC 3,1 AGAIN
-HEAP STATS (overhead per node: 40)
-heap_start:  0x612000000000
-heap_end:    0x612000001000
-total_bytes: 4096
-AVAILABLE LIST: {length:   3  bytes:  3530}
-  [  0] head @ 0x61200000035a {state: a  size:  3198}
-  [  1] head @ 0x612000000148 {state: a  size:    84}
-  [  2] head @ 0x612000000000 {state: a  size:   128}
-USED LIST: {length:   5  bytes:   566}
-  [  0] head @ 0x61200000026a {state: u  size:   200}
-  [  1] head @ 0x612000000100 {state: u  size:    32}
-  [  2] head @ 0x612000000202 {state: u  size:    64}
-  [  3] head @ 0x6120000001c4 {state: u  size:    22}
-  [  4] head @ 0x6120000000a8 {state: u  size:    48}
-HEAP BLOCKS:
-[  0] @ 0x612000000000
-  state:      a
-  size:       128 (total: 0xa8)
-  prev:       0x612000000148
-  next:       0x610000000038
-  user:       0x612000000020
-  foot:       0x6120000000a0
-  foot-&gt;size: 128
-[  1] @ 0x6120000000a8
-  state:      u
-  size:       48 (total: 0x58)
-  prev:       0x6120000001c4
-  next:       0x610000000098
-  user:       0x6120000000c8
-  foot:       0x6120000000f8
-  foot-&gt;size: 48
-[  2] @ 0x612000000100
-  state:      u
-  size:       32 (total: 0x48)
-  prev:       0x61200000026a
-  next:       0x612000000202
-  user:       0x612000000120
-  foot:       0x612000000140
-  foot-&gt;size: 32
-[  3] @ 0x612000000148
-  state:      a
-  size:       84 (total: 0x7c)
-  prev:       0x61200000035a
-  next:       0x612000000000
-  user:       0x612000000168
-  foot:       0x6120000001bc
-  foot-&gt;size: 84
-[  4] @ 0x6120000001c4
-  state:      u
-  size:       22 (total: 0x3e)
-  prev:       0x612000000202
-  next:       0x6120000000a8
-  user:       0x6120000001e4
-  foot:       0x6120000001fa
-  foot-&gt;size: 22
-[  5] @ 0x612000000202
-  state:      u
-  size:       64 (total: 0x68)
-  prev:       0x612000000100
-  next:       0x6120000001c4
-  user:       0x612000000222
-  foot:       0x612000000262
-  foot-&gt;size: 64
-[  6] @ 0x61200000026a
-  state:      u
-  size:       200 (total: 0xf0)
-  prev:       0x610000000078
-  next:       0x612000000100
-  user:       0x61200000028a
-  foot:       0x612000000352
-  foot-&gt;size: 200
-[  7] @ 0x61200000035a
-  state:      a
-  size:       3198 (total: 0xca6)
-  prev:       0x610000000018
-  next:       0x612000000148
-  user:       0x61200000037a
-  foot:       0x612000000ff8
-  foot-&gt;size: 3198
-
-POINTERS
-p1: 0x61200000028a
-p3: 0x612000000120
-p5: 0x612000000222
-p4: 0x6120000001e4
-p2: 0x6120000000c8
-
-FREE'D 1
-HEAP STATS (overhead per node: 40)
-heap_start:  0x612000000000
-heap_end:    0x612000001000
-total_bytes: 4096
-AVAILABLE LIST: {length:   3  bytes:  3770}
-  [  0] head @ 0x61200000026a {state: a  size:  3438}
-  [  1] head @ 0x612000000148 {state: a  size:    84}
-  [  2] head @ 0x612000000000 {state: a  size:   128}
-USED LIST: {length:   4  bytes:   326}
-  [  0] head @ 0x612000000100 {state: u  size:    32}
-  [  1] head @ 0x612000000202 {state: u  size:    64}
-  [  2] head @ 0x6120000001c4 {state: u  size:    22}
-  [  3] head @ 0x6120000000a8 {state: u  size:    48}
-HEAP BLOCKS:
-[  0] @ 0x612000000000
-  state:      a
-  size:       128 (total: 0xa8)
-  prev:       0x612000000148
-  next:       0x610000000038
-  user:       0x612000000020
-  foot:       0x6120000000a0
-  foot-&gt;size: 128
-[  1] @ 0x6120000000a8
-  state:      u
-  size:       48 (total: 0x58)
-  prev:       0x6120000001c4
-  next:       0x610000000098
-  user:       0x6120000000c8
-  foot:       0x6120000000f8
-  foot-&gt;size: 48
-[  2] @ 0x612000000100
-  state:      u
-  size:       32 (total: 0x48)
-  prev:       0x610000000078
-  next:       0x612000000202
-  user:       0x612000000120
-  foot:       0x612000000140
-  foot-&gt;size: 32
-[  3] @ 0x612000000148
-  state:      a
-  size:       84 (total: 0x7c)
-  prev:       0x61200000026a
-  next:       0x612000000000
-  user:       0x612000000168
-  foot:       0x6120000001bc
-  foot-&gt;size: 84
-[  4] @ 0x6120000001c4
-  state:      u
-  size:       22 (total: 0x3e)
-  prev:       0x612000000202
-  next:       0x6120000000a8
-  user:       0x6120000001e4
-  foot:       0x6120000001fa
-  foot-&gt;size: 22
-[  5] @ 0x612000000202
-  state:      u
-  size:       64 (total: 0x68)
-  prev:       0x612000000100
-  next:       0x6120000001c4
-  user:       0x612000000222
-  foot:       0x612000000262
-  foot-&gt;size: 64
-[  6] @ 0x61200000026a
-  state:      a
-  size:       3438 (total: 0xd96)
-  prev:       0x610000000018
-  next:       0x612000000148
-  user:       0x61200000028a
-  foot:       0x612000000ff8
-  foot-&gt;size: 3438
-
-FREE'D 2
-HEAP STATS (overhead per node: 40)
-heap_start:  0x612000000000
-heap_end:    0x612000001000
-total_bytes: 4096
-AVAILABLE LIST: {length:   3  bytes:  3858}
-  [  0] head @ 0x612000000000 {state: a  size:   216}
-  [  1] head @ 0x61200000026a {state: a  size:  3438}
-  [  2] head @ 0x612000000148 {state: a  size:    84}
-USED LIST: {length:   3  bytes:   238}
-  [  0] head @ 0x612000000100 {state: u  size:    32}
-  [  1] head @ 0x612000000202 {state: u  size:    64}
-  [  2] head @ 0x6120000001c4 {state: u  size:    22}
-HEAP BLOCKS:
-[  0] @ 0x612000000000
-  state:      a
-  size:       216 (total: 0x100)
-  prev:       0x610000000018
-  next:       0x61200000026a
-  user:       0x612000000020
-  foot:       0x6120000000f8
-  foot-&gt;size: 216
-[  1] @ 0x612000000100
-  state:      u
-  size:       32 (total: 0x48)
-  prev:       0x610000000078
-  next:       0x612000000202
-  user:       0x612000000120
-  foot:       0x612000000140
-  foot-&gt;size: 32
-[  2] @ 0x612000000148
-  state:      a
-  size:       84 (total: 0x7c)
-  prev:       0x61200000026a
-  next:       0x610000000038
-  user:       0x612000000168
-  foot:       0x6120000001bc
-  foot-&gt;size: 84
-[  3] @ 0x6120000001c4
-  state:      u
-  size:       22 (total: 0x3e)
-  prev:       0x612000000202
-  next:       0x610000000098
-  user:       0x6120000001e4
-  foot:       0x6120000001fa
-  foot-&gt;size: 22
-[  4] @ 0x612000000202
-  state:      u
-  size:       64 (total: 0x68)
-  prev:       0x612000000100
-  next:       0x6120000001c4
-  user:       0x612000000222
-  foot:       0x612000000262
-  foot-&gt;size: 64
-[  5] @ 0x61200000026a
-  state:      a
-  size:       3438 (total: 0xd96)
-  prev:       0x612000000000
-  next:       0x612000000148
-  user:       0x61200000028a
-  foot:       0x612000000ff8
-  foot-&gt;size: 3438
-
-P2 FAILS
-POINTERS
-p1: 0x61200000028a
-p3: 0x612000000120
-p5: 0x612000000222
-p4: 0x6120000001e4
-p2: (nil)
-HEAP STATS (overhead per node: 40)
-heap_start:  0x612000000000
-heap_end:    0x612000001000
-total_bytes: 4096
-AVAILABLE LIST: {length:   2  bytes:   380}
-  [  0] head @ 0x612000000000 {state: a  size:   216}
-  [  1] head @ 0x612000000148 {state: a  size:    84}
-USED LIST: {length:   4  bytes:  3716}
-  [  0] head @ 0x61200000026a {state: u  size:  3438}
-  [  1] head @ 0x612000000100 {state: u  size:    32}
-  [  2] head @ 0x612000000202 {state: u  size:    64}
-  [  3] head @ 0x6120000001c4 {state: u  size:    22}
-HEAP BLOCKS:
-[  0] @ 0x612000000000
-  state:      a
-  size:       216 (total: 0x100)
-  prev:       0x610000000018
-  next:       0x612000000148
-  user:       0x612000000020
-  foot:       0x6120000000f8
-  foot-&gt;size: 216
-[  1] @ 0x612000000100
-  state:      u
-  size:       32 (total: 0x48)
-  prev:       0x61200000026a
-  next:       0x612000000202
-  user:       0x612000000120
-  foot:       0x612000000140
-  foot-&gt;size: 32
-[  2] @ 0x612000000148
-  state:      a
-  size:       84 (total: 0x7c)
-  prev:       0x612000000000
-  next:       0x610000000038
-  user:       0x612000000168
-  foot:       0x6120000001bc
-  foot-&gt;size: 84
-[  3] @ 0x6120000001c4
-  state:      u
-  size:       22 (total: 0x3e)
-  prev:       0x612000000202
-  next:       0x610000000098
-  user:       0x6120000001e4
-  foot:       0x6120000001fa
-  foot-&gt;size: 22
-[  4] @ 0x612000000202
-  state:      u
-  size:       64 (total: 0x68)
-  prev:       0x612000000100
-  next:       0x6120000001c4
-  user:       0x612000000222
-  foot:       0x612000000262
-  foot-&gt;size: 64
-[  5] @ 0x61200000026a
-  state:      u
-  size:       3438 (total: 0xd96)
-  prev:       0x610000000078
-  next:       0x612000000100
-  user:       0x61200000028a
-  foot:       0x612000000ff8
-  foot-&gt;size: 3438
-
-APPENDED PAGES
-HEAP STATS (overhead per node: 40)
-heap_start:  0x612000000000
-heap_end:    0x612000004000
-total_bytes: 16384
-AVAILABLE LIST: {length:   3  bytes: 12668}
-  [  0] head @ 0x612000001000 {state: a  size: 12248}
-  [  1] head @ 0x612000000000 {state: a  size:   216}
-  [  2] head @ 0x612000000148 {state: a  size:    84}
-USED LIST: {length:   4  bytes:  3716}
-  [  0] head @ 0x61200000026a {state: u  size:  3438}
-  [  1] head @ 0x612000000100 {state: u  size:    32}
-  [  2] head @ 0x612000000202 {state: u  size:    64}
-  [  3] head @ 0x6120000001c4 {state: u  size:    22}
-HEAP BLOCKS:
-[  0] @ 0x612000000000
-  state:      a
-  size:       216 (total: 0x100)
-  prev:       0x612000001000
-  next:       0x612000000148
-  user:       0x612000000020
-  foot:       0x6120000000f8
-  foot-&gt;size: 216
-[  1] @ 0x612000000100
-  state:      u
-  size:       32 (total: 0x48)
-  prev:       0x61200000026a
-  next:       0x612000000202
-  user:       0x612000000120
-  foot:       0x612000000140
-  foot-&gt;size: 32
-[  2] @ 0x612000000148
-  state:      a
-  size:       84 (total: 0x7c)
-  prev:       0x612000000000
-  next:       0x610000000038
-  user:       0x612000000168
-  foot:       0x6120000001bc
-  foot-&gt;size: 84
-[  3] @ 0x6120000001c4
-  state:      u
-  size:       22 (total: 0x3e)
-  prev:       0x612000000202
-  next:       0x610000000098
-  user:       0x6120000001e4
-  foot:       0x6120000001fa
-  foot-&gt;size: 22
-[  4] @ 0x612000000202
-  state:      u
-  size:       64 (total: 0x68)
-  prev:       0x612000000100
-  next:       0x6120000001c4
-  user:       0x612000000222
-  foot:       0x612000000262
-  foot-&gt;size: 64
-[  5] @ 0x61200000026a
-  state:      u
-  size:       3438 (total: 0xd96)
-  prev:       0x610000000078
-  next:       0x612000000100
-  user:       0x61200000028a
-  foot:       0x612000000ff8
-  foot-&gt;size: 3438
-[  6] @ 0x612000001000
-  state:      a
-  size:       12248 (total: 0x3000)
-  prev:       0x610000000018
-  next:       0x612000000000
-  user:       0x612000001020
-  foot:       0x612000003ff8
-  foot-&gt;size: 12248
-
-P2 SUCCEEDS
-POINTERS
-p1: 0x61200000028a
-p3: 0x612000000120
-p5: 0x612000000222
-p4: 0x6120000001e4
-p2: 0x612000001020
-HEAP STATS (overhead per node: 40)
-heap_start:  0x612000000000
-heap_end:    0x612000004000
-total_bytes: 16384
-AVAILABLE LIST: {length:   3  bytes: 11604}
-  [  0] head @ 0x612000001428 {state: a  size: 11184}
-  [  1] head @ 0x612000000000 {state: a  size:   216}
-  [  2] head @ 0x612000000148 {state: a  size:    84}
-USED LIST: {length:   5  bytes:  4780}
-  [  0] head @ 0x612000001000 {state: u  size:  1024}
-  [  1] head @ 0x61200000026a {state: u  size:  3438}
-  [  2] head @ 0x612000000100 {state: u  size:    32}
-  [  3] head @ 0x612000000202 {state: u  size:    64}
-  [  4] head @ 0x6120000001c4 {state: u  size:    22}
-HEAP BLOCKS:
-[  0] @ 0x612000000000
-  state:      a
-  size:       216 (total: 0x100)
-  prev:       0x612000001428
-  next:       0x612000000148
-  user:       0x612000000020
-  foot:       0x6120000000f8
-  foot-&gt;size: 216
-[  1] @ 0x612000000100
-  state:      u
-  size:       32 (total: 0x48)
-  prev:       0x61200000026a
-  next:       0x612000000202
-  user:       0x612000000120
-  foot:       0x612000000140
-  foot-&gt;size: 32
-[  2] @ 0x612000000148
-  state:      a
-  size:       84 (total: 0x7c)
-  prev:       0x612000000000
-  next:       0x610000000038
-  user:       0x612000000168
-  foot:       0x6120000001bc
-  foot-&gt;size: 84
-[  3] @ 0x6120000001c4
-  state:      u
-  size:       22 (total: 0x3e)
-  prev:       0x612000000202
-  next:       0x610000000098
-  user:       0x6120000001e4
-  foot:       0x6120000001fa
-  foot-&gt;size: 22
-[  4] @ 0x612000000202
-  state:      u
-  size:       64 (total: 0x68)
-  prev:       0x612000000100
-  next:       0x6120000001c4
-  user:       0x612000000222
-  foot:       0x612000000262
-  foot-&gt;size: 64
-[  5] @ 0x61200000026a
-  state:      u
-  size:       3438 (total: 0xd96)
-  prev:       0x612000001000
-  next:       0x612000000100
-  user:       0x61200000028a
-  foot:       0x612000000ff8
-  foot-&gt;size: 3438
-[  6] @ 0x612000001000
-  state:      u
-  size:       1024 (total: 0x428)
-  prev:       0x610000000078
-  next:       0x61200000026a
-  user:       0x612000001020
-  foot:       0x612000001420
-  foot-&gt;size: 1024
-[  7] @ 0x612000001428
-  state:      a
-  size:       11184 (total: 0x2bd8)
-  prev:       0x610000000018
-  next:       0x612000000000
-  user:       0x612000001448
-  foot:       0x612000003ff8
-  foot-&gt;size: 11184
-
-FREE'D 1-5
-HEAP STATS (overhead per node: 40)
-heap_start:  0x612000000000
-heap_end:    0x612000004000
-total_bytes: 16384
-AVAILABLE LIST: {length:   1  bytes: 16384}
-  [  0] head @ 0x612000000000 {state: a  size: 16344}
-USED LIST: {length:   0  bytes:     0}
-HEAP BLOCKS:
-[  0] @ 0x612000000000
-  state:      a
-  size:       16344 (total: 0x4000)
-  prev:       0x610000000018
-  next:       0x610000000038
-  user:       0x612000000020
-  foot:       0x612000003ff8
-  foot-&gt;size: 16344
-</pre>
-</div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgb745d99" class="outline-3 grading30">
-<h3 id="orgb745d99"><span class="section-number-3">5.11</span> <a id="org5f2fec4"></a> Grading Criteria for El Malloc&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading30">grading30</span></span></h3>
-<div class="outline-text-3" id="text-5-11">
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-right" />
-
-<col  class="org-left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="org-right">Weight</th>
-<th scope="col" class="org-left">Criteria</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><b>Automated Tests</b></td>
-</tr>
-
-<tr>
-<td class="org-right">10</td>
-<td class="org-left"><code>make test-prob2</code> runs 10 tests for correctness with Valgrind enabled</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>make test-prob2 tesnum=5</code> to run individual tests</td>
-</tr>
-</tbody>
-<tbody>
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><b>Manual Inspection</b></td>
-</tr>
-
-<tr>
-<td class="org-right">5</td>
-<td class="org-left"><code>el_get_header()</code> and <code>el_block_below()</code></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Use of provided macros for pointer arithmetic</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Correct use of <code>sizeof()</code> operator to account for sizes</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>el_block_below()</code> checks for beginning of heap and returns NULL</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>el_add_block_front()</code> and <code>el_remove_block()</code></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Sensible use of pointers prev/next to link/unlink nodes <b>efficiently; no looping used</b></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Correct updating of list length and bytes</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Accounts for <code>EL_BLOCK_OVERHEAD</code> when updating bytes</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">5</td>
-<td class="org-left"><code>el_split_block()</code></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Use of <code>el_get_foot()</code> to obtain footers for updating size</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Clear evidence of placing a new header and footer for new block</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Accounting for overhead <code>EL_BLOCK_OVERHEAD</code> when calculating new size</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">5</td>
-<td class="org-left"><code>el_malloc()</code></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Use of <code>el_find_first_avail()</code> to locate a node to split</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Use of <code>el_split_block()</code> to split block into two</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Clear state change of split blocks to Used and Available</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Clear movement of lower split blocks to front of Used List</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Clear movement of upper split blocks to front of Available lists</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Use of pointer arithmetic macros to computer user address</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">5</td>
-<td class="org-left"><code>el_merge_block_with_above()</code></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>NULL</code> checks for argument and block above which result in no changes</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Clear checks of whether both blocks are <code>EL_AVAILABLE</code></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Use of <code>el_block_above()</code> to find block above</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Clear updates to size of lower block and higher foot</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Movement of blocks out of available list and merged block to front</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>el_free()</code></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Error checking that block is <code>EL_USED</code></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Movement of block from used to available list</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Attempts to merge block with blocks above and below it</td>
-</tr>
-</tbody>
-<tbody>
-<tr>
-<td class="org-right">30</td>
-<td class="org-left">Problem Total</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgb3bf13e" class="outline-2">
-<h2 id="orgb3bf13e"><span class="section-number-2">6</span> Project Submission</h2>
-<div class="outline-text-2" id="text-6">
-</div>
-<div id="outline-container-org18d1c50" class="outline-3">
-<h3 id="org18d1c50"><span class="section-number-3">6.1</span> <a id="org81009e2"></a> Submit to Gradescope</h3>
-<div class="outline-text-3" id="text-6-1">
 <ol class="org-ol">
 <li><p>
 In a terminal, change to your project code directory and type
@@ -3265,14 +1530,14 @@ should look like this:
 <pre class="src src-sh">   &gt; cd Desktop/2021/p4-code      # location of project code
 
    &gt; ls 
-   Makefile    el_malloc.c    test-input/
+   Makefile    matsquare_optm.c    test-input/
    ...
 
    &gt; make zip                     # create a zip file using Makefile target
    rm -f p4-code.zip
    cd .. &amp;&amp; zip "p4-code/p4-code.zip" -r "p4-code"
      adding: p4-code/ (stored 0%)
-     adding: p4-code/el_malloc.c (deflated 72%)
+     adding: p4-code/matsquare_optm.c (deflated 72%)
      adding: p4-code/Makefile (deflated 49%)
      ...
    Zip created in p4-code.zip
@@ -3304,9 +1569,9 @@ pictures.</li>
 </div>
 </div>
 
-<div id="outline-container-org2a64ff3" class="outline-3">
-<h3 id="org2a64ff3"><span class="section-number-3">6.2</span> Late Policies</h3>
-<div class="outline-text-3" id="text-6-2">
+<div id="outline-container-orgcbfddb2" class="outline-3">
+<h3 id="orgcbfddb2"><span class="section-number-3">5.2</span> Late Policies</h3>
+<div class="outline-text-3" id="text-5-2">
 <p>
 You may wish to review the policy on late project submission which
 will cost you late tokens to submit late or credit if you run out of
@@ -3322,7 +1587,7 @@ deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-04-20 Thu 11:04 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-04-20 Thu 12:46 <br/> </i>
 </div>
 </body>
 </html>
