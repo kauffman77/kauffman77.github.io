@@ -1,0 +1,981 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-04-25 Tue 13:19 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 5451 Assignment 3: Shared Memory and GPU Programming</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e8c62e;
+--heading-fg-color:#7a0019;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2023-04-25 Tue 13:19</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CSCI 5451 Assignment 3: Shared Memory and GPU Programming</h1>
+<ul class="org-ul">
+<li><b>Due: Tue 02-May by 11:59 pm</b></li>
+<li><i>Approximately 30% of total grade</i></li>
+<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a></li>
+<li>You may work in groups of 2 and submit one assignment per group.</li>
+</ul>
+
+<div id="outline-container-orga3f2882" class="outline-4">
+<h4 id="orga3f2882">CODE DISTRIBUTION: <a href="a2-code.zip">a2-code.zip</a></h4>
+<div class="outline-text-4" id="text-orga3f2882">
+</div>
+</div>
+
+<div id="outline-container-org8c3e2a9" class="outline-4">
+<h4 id="org8c3e2a9">CHANGELOG: Empty</h4>
+</div>
+<div id="outline-container-org5b986dc" class="outline-4">
+<h4 id="org5b986dc"></h4>
+<div class="outline-text-4" id="text-org5b986dc">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org34b424f">1. Overview</a></li>
+<li><a href="#org5f75b00">2. Download Code and Setup</a></li>
+<li><a href="#org04e67e9">3. <code>A3-WRITEUP.txt</code> Writeup File</a></li>
+<li><a href="#org5cfbbc4">4. Benchmarking on CUDA Machines</a></li>
+<li><a href="#org5fc14f6">5. <b>Problem 1</b>: OpenMP K-Means Clustering</a>
+<ul>
+<li><a href="#orgdbdacf8">5.1. Implementation Requirements</a></li>
+<li><a href="#org2546de6">5.2. Implementation Notes</a></li>
+<li><a href="#org1e86644">5.3. Grading Criteria for Problem 1</a></li>
+</ul>
+</li>
+<li><a href="#org36815ea">6. <b>Problem 2</b>: CUDA K-Means Clustering</a>
+<ul>
+<li><a href="#org3998af3">6.1. Implementation Requirements</a></li>
+<li><a href="#org1a9f4d3">6.2. Implementation Notes</a></li>
+<li><a href="#orgbefa551">6.3. Grading Criteria for Problem 2</a></li>
+</ul>
+</li>
+<li><a href="#org1d97c5a">7. Project Submission on Gradescope</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org34b424f" class="outline-2">
+<h2 id="org34b424f"><span class="section-number-2">1</span> Overview</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+As the previous assignment, this one involves coding a parallel
+version of the K-Means application in according to 2 different
+parallel paradigms.
+</p>
+
+<ol class="org-ol">
+<li>Shared Memory Parallelism via OpenMP</li>
+<li>GPU Parallelism via CUDA</li>
+</ol>
+
+<p>
+For both problems, after finishing your code, you will need to run
+some timing experiments and describe the results in a short text file.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5f75b00" class="outline-2">
+<h2 id="org5f75b00"><span class="section-number-2">2</span> Download Code and Setup</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Download the code pack linked at the top of the page. Unzip this which
+will create a project folder. Create new files in this
+folder. Ultimately you will re-zip this folder to submit it.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">State</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">ALL PROBLEMS</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>A3-WRITEUP.txt</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Fill in timing tables and write answers to discussion questions</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Build file to compile all programs</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running script</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>kmeans_serial.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Serial version of K-means clustering to write in C</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>kmeans.py</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Serial version of K-means clustering in Python</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">PROBLEM 1</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>kmeans_omp.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Shared memory OMP version of K-means clustering to write in C</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_kmeans_omp.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 2 tests for K-means clustering</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">PROBLEM 2</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>kmeans_cuda.cu</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">GPU parallel version of K-means clustering to write in C</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_kmeans_cuda.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 2 tests for K-means clustering</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org04e67e9" class="outline-2">
+<h2 id="org04e67e9"><span class="section-number-2">3</span> <code>A3-WRITEUP.txt</code> Writeup File</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Below is a blank copy of the writeup document included in the code
+pack. Fill in answers directly into this file as you complete your
+programs and submit it as part of your upload.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                              ____________
+
+                               A3 WRITEUP
+                              ____________
+
+
+
+
+
+GROUP MEMBERS
+-------------
+
+  - Member 1: &lt;NAME&gt; &lt;X500&gt;
+  - Member 2: &lt;NAME&gt; &lt;X500&gt;
+
+  Up to 2 people may collaborate on this assignment. Write names/x.500
+  above. If working alone, leave off Member 2.
+
+  ONLY ONE GROUP MEMBER SHOULD SUBMIT TO GRADESCOPE THEN ADD THEIR
+  PARTNER ACCORDING TO INSTRUCTIONS IN THE ASSIGNMENT WEB PAGE.
+
+
+Problem 1: kmeans_omp
+=====================
+
+kmeans_omp Timing Table
+~~~~~~~~~~~~~~~~~~~~~~~
+
+  Fill in the following table on measuring the performance of your
+  `kmeans_omp' program on `cudaNN.cselabs.umn.edu' where `NN' is `01' to
+  `05'. Replace 00.00 entries with your actual run times. You can use
+  the provided `kmeans-omp.sh' script to ease this task.
+
+  The columns are for each of 3 data files that are provided and run in
+  the job script.
+
+  -------------------------------------------------------------------
+                                       Data File                     
+   Procs  digits_all_5e3.txt  digits_all_1e4.txt  digits_all_3e4.txt 
+  -------------------------------------------------------------------
+       1               00.00               00.00               00.00 
+       2               00.00               00.00               00.00 
+       4               00.00               00.00               00.00 
+       8               00.00               00.00               00.00 
+      10               00.00               00.00               00.00 
+      13               00.00               00.00               00.00 
+      16               00.00               00.00               00.00 
+      32               00.00               00.00               00.00 
+  -------------------------------------------------------------------
+
+
+kmeans_omp Discussion Questions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Analyze your table of results and answer the following questions.
+  1. Did using more processors result in speedups?
+  2. Describe any trends or anomalies you see in the timings and
+     speculate on their causes - e.g. was there are a steady increase in
+     runtimes, steady decrease, or jagged changes in timing?
+  3. Try to explain how number of processors and problem size seem to
+     affect runtimes/speedup in the problem.
+
+
+Problem 2: kmeans_cuda
+======================
+
+kmeans_cuda Timing Table
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Fill in the following table on measuring the performance of your
+  `kmeans_cuda' program on `cudaNN.cselabs.umn.edu' where `NN' is `01'
+  to `05'. Replace 00.00 entries with your actual run times. You can use
+  the provided `kmeans-omp.sh' script to ease this task.
+
+  The columns are for each of 3 data files that are provided and run in
+  the job script.
+
+  ------------------------------------------------------------------------
+                                            Data File                     
+   Procs       digits_all_5e3.txt  digits_all_1e4.txt  digits_all_3e4.txt 
+  ------------------------------------------------------------------------
+   CPU Serial               00.00               00.00               00.00 
+   GPU                      00.00               00.00               00.00 
+  ------------------------------------------------------------------------
+
+
+kmeans_cuda Discussion Questions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Analyze your table of results and answer the following questions.
+  1. Did using the GPU result in speedups?
+  2. Describe your general approach on how you used GPU threads/blocks
+     to parallelize the algorithm.
+     - How did you subdivide the Cluster Center Calculation Phase?
+     - How did you subdivide the Data Assignment Phase?
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org5cfbbc4" class="outline-2">
+<h2 id="org5cfbbc4"><span class="section-number-2">4</span> Benchmarking on CUDA Machines</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+CSE Labs machines has a series of servers named machines
+<code>cuda01-cselabs.umn.edu</code> to <code>cuda05-cselabs.umn.edu</code>. Each of these a
+large-ish number of CPU cores and an Nvidia GPU along with the
+compilation toolchain such as the <code>nvcc</code> compiler. You may develop
+your code anywhere you like but perform timing evaluations on these
+machines.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5fc14f6" class="outline-2">
+<h2 id="org5fc14f6"><span class="section-number-2">5</span> <b>Problem 1</b>: OpenMP K-Means Clustering</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Implement parallel version of the K-means algorithm for shared memory
+using OpenMP. Name your program <code>kmeans_omp.c</code> to be compatible with
+the provided <code>Makefile</code>. We will discuss the basic strategy for
+parallelizing the code during lecture so review the discussion present
+there if you need guidance.
+</p>
+</div>
+
+<div id="outline-container-orgdbdacf8" class="outline-3">
+<h3 id="orgdbdacf8"><span class="section-number-3">5.1</span> Implementation Requirements</h3>
+<div class="outline-text-3" id="text-5-1">
+<ol class="org-ol">
+<li><code>kmeans_omp</code> will accept the same command line arguments as the
+Serial version.</li>
+<li>The behavior and output of the OpenMP version will match the serial
+version in format; e.g. printed messages and produced output files.</li>
+<li>The program will be compiled with OpenMP features enabled so there
+is no requirement that the needs to compile/work in the absence of
+OpenMP libraries or compiler support.</li>
+<li>As before, follow the general flow provided in the Python
+implementation. The OpenMP version should produce identical results
+and hopefully faster.</li>
+<li>Your program should honor the environment variable
+<code>OMP_NUM_THREADS</code> which sets the number of threads used in
+OpenMP. This variable is used in the provided timing script. The
+variable will be honored unless you do something special in your
+code like call <code>omp_set_num_threads()</code> so avoid doing that and all
+is well.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org2546de6" class="outline-3">
+<h3 id="org2546de6"><span class="section-number-3">5.2</span> Implementation Notes</h3>
+<div class="outline-text-3" id="text-5-2">
+<ul class="org-ul">
+<li>Parallelize the two major phases of the algorithm, Cluster Center
+Calculation and Data Assignment to Clusters.</li>
+<li>Note that the Cluster Center Calculation involves a reduction in the
+original form of the code. You will need to take some care on this
+to preserve correctness as the built-in OpenMP reduction facility is
+likely insufficient. Using a locking mechanism or "manual reduction"
+which involves a local copy of some data is recommended. If using a
+locking mechanism, create a lock for each cluster so that only one
+thread is modifying the new cluster center at a time.</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org1e86644" class="outline-3 grading 50">
+<h3 id="org1e86644"><span class="section-number-3">5.3</span> <a id="orgac212ac"></a> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+Test cases are provided in <code>test_kmeans_omp.org</code>. The <code>Makefile</code>
+contains a target for this, just requires the missing
+<code>test_kmeans_omp.org</code> file which will have the tests.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">&#xa0;</th>
+<th scope="col" class="org-left">CRITERIA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Code compiles via <code>make prob1</code>, honors command line parameters on interactive runs.</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Passes automated tests via <code>make test-prob1</code></td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Cleanly written code with good documentation and demonstrates appropriate use of</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">OpenMP directives and functions to facilitate parallelism</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Written report includes timings table described above</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Written report includes answers to discussion questions written above.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org36815ea" class="outline-2">
+<h2 id="org36815ea"><span class="section-number-2">6</span> <b>Problem 2</b>: CUDA K-Means Clustering</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Implement parallel version of the K-means algorithm for Nvidia GPU
+acceleration using CUDA. Name your program <code>kmeans_cuda.cu</code> to be
+compatible with the provided <code>Makefile</code>. We will discuss the basic
+strategy for parallelizing the code during lecture so review the
+discussion present there if you need guidance.
+</p>
+</div>
+
+<div id="outline-container-org3998af3" class="outline-3">
+<h3 id="org3998af3"><span class="section-number-3">6.1</span> Implementation Requirements</h3>
+<div class="outline-text-3" id="text-6-1">
+<ol class="org-ol">
+<li><code>kmeans_cuda</code> will accept the same command line arguments as the
+Serial version.</li>
+<li>The behavior and output of the CUDA version will match the serial
+version in format; e.g. printed messages and produced output files.</li>
+<li>The program will be compiled with the CUDA compiler so there is no
+requirement that the needs to compile/work in the absence of CUDA
+libraries or compiler support.</li>
+<li>As before, follow the general flow provided in the Python
+implementation. The OpenMP version should produce identical results
+and hopefully faster.</li>
+<li>No runtime parameters to set the number of threads/blocks will be
+provided. Instead, determine the number of threads/blocks to use
+from the data size. The timing tables to report reflect this:
+report times only on the data files indicated.</li>
+</ol>
+</div>
+</div>
+
+
+<div id="outline-container-org1a9f4d3" class="outline-3">
+<h3 id="org1a9f4d3"><span class="section-number-3">6.2</span> Implementation Notes</h3>
+<div class="outline-text-3" id="text-6-2">
+<ul class="org-ul">
+<li>The <code>nvcc</code> compiler is a C++ compiler so has slightly different
+conventions than <code>gcc</code>.  Errors for setting pointers without
+explicit castes are prevalent. Also <code>.c</code> files yield different
+compile/link behavior than <code>.cu</code> files.  You may need to adjust the
+provided <code>Makefile</code> as it uses files <code>kmeans_cuda.cu</code> and
+<code>kmeans_util.cu</code> during compilation. Only a <code>kmeans_util.c</code> file is
+provided but symbolically linking these as the same file via <code>ln -s
+  kmeans_util.c kmeans_util.cu</code> can allow its dual use for both C and
+C++ compilation.</li>
+
+<li>Make use of <code>cudaMalloc() / cudaMemcpy()</code> to create memory for the
+data and cluster structs / arrays on the GPU and transfer the
+dataset to the GPU.  You may assume that the entire dataset fits in
+the GPU memory. Keep in mind that the data must be moved between the
+Host / Device through explicit calls: anything that is computed on
+GPU must be copied back to the CPU.</li>
+
+<li><p>
+The two major phases of the algorithm should be parallelized
+</p>
+<ol class="org-ol">
+<li>Computation of cluster centers based on assignment of data to
+clusters.</li>
+<li>Assignment of data to clusters based on cluster centers.</li>
+</ol>
+<p>
+These two should be at least their own Kernels but it may be wise to
+further subdivide.
+</p></li>
+
+<li>There are no specific requirements on how to subdivide the tasks
+into Blocks / Threads and you are encouraged to experiment somewhat
+to try to get better performance. Keep in mind that there is no
+ability to synchronize threads between blocks and atomic operations
+are costly. Consider carefully how to subdivide the loops of the
+problem to get correct results and good performance.</li>
+
+<li><b>Calculating Cluster Centers</b>: This phase calculates new cluster
+centers based on the existing assignment of data to clusters. This
+is essentially a reduction (sum) over features followed by a
+division by cluster counts OR alternatively the division can be done
+during the reduction at the risk of small numerical differences.
+Since reductions on CUDA are tricky, take care to find a work
+distribution among threads that will enable good performance and
+avoid the need to synchronize. Options to consider are 1 thread per
+feature dimension, 1 thread per cluster, and combinations
+thereof. <i>This is the trickier phase to parallelize well.</i></li>
+
+<li><b>Assignment to Clusters</b>: This phase calculates the assignment of
+each data element to a cluster based on existing cluster centers. It
+should also calculate the total number of data in each cluster based
+on the new assignment.  Since it is expected that the number of data
+points is large, an easy way to parallelize the loop is to assign
+one thread per data element.  With this parallelization, the only
+major coordination is on totaling the cluster counts.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgbefa551" class="outline-3 grading 50">
+<h3 id="orgbefa551"><span class="section-number-3">6.3</span> <a id="orge096147"></a> Grading Criteria for Problem 2&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div class="outline-text-3" id="text-6-3">
+<p>
+Test cases are provided in <code>test_kmeans_cuda.org</code>. The <code>Makefile</code>
+contains a target for this, just requires the missing
+<code>test_kmeans_cuda.org</code> file which will have the tests.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">&#xa0;</th>
+<th scope="col" class="org-left">CRITERIA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Code compiles via <code>make prob2</code>, honors command line parameters on interactive runs.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Passes automated tests via <code>make test-prob2</code> (will only work if CUDA is present such as on lab machines)</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><i>NOTE: Gradescope will not run test-prob2 as it does not have a GPU; this score will be added during grading</i></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Cleanly written code with good documentation and demonstrates appropriate use of</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Code that transfers data between Host / Device</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of several CUDA kernels which parallelize the tasks present in the clustering algorithm</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Written report includes timings table described above</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Written report includes answers to discussion questions written above.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org1d97c5a" class="outline-2">
+<h2 id="org1d97c5a"><span class="section-number-2">7</span> Project Submission on Gradescope</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+Submission is identical to the previous programming assignment. See
+the <a href="a2.html">A2 Description</a> if you need additional details.
+</p>
+</div>
+
+<div id="outline-container-orgd98fe89" class="outline-4">
+<h4 id="orgd98fe89">Late Policies</h4>
+<div class="outline-text-4" id="text-orgd98fe89">
+<p>
+You may wish to review the policy on late project submission which
+will cost 1 Engagement Point per day late. <b>No projects will be
+accepted more than 48 hours after the deadline.</b>
+</p>
+
+<p>
+<a href="https://www-users.cs.umn.edu/~kauffman/5451/syllabus.html">https://www-users.cs.umn.edu/~kauffman/5451/syllabus.html</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-04-25 Tue 13:19 <br/> </i>
+</div>
+</body>
+</html>
