@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-04-21 Fri 15:12 -->
+<!-- 2023-04-25 Tue 09:22 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 2021 Project 4: Performance Optimization and Timing</title>
@@ -344,7 +344,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2023-04-21 Fri 15:12</i>
+<i>Last Updated: 2023-04-25 Tue 09:22</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CSCI 2021 Project 4: Performance Optimization and Timing</h1>
@@ -356,15 +356,39 @@ text-align: justify;
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-orgb33b10d" class="outline-4">
-<h4 id="orgb33b10d">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
+<div id="outline-container-orgf234f10" class="outline-4">
+<h4 id="orgf234f10">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
 </div>
-<div id="outline-container-org3063875" class="outline-4">
-<h4 id="org3063875">Video Overview: <i>Not yet available</i></h4>
+<div id="outline-container-orgb75b1e5" class="outline-4">
+<h4 id="orgb75b1e5">Video Overview: <i>Not yet available</i></h4>
 </div>
-<div id="outline-container-orge141407" class="outline-4">
-<h4 id="orge141407">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-orge141407">
+<div id="outline-container-org5751793" class="outline-4">
+<h4 id="org5751793">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org5751793">
+<dl class="org-dl">
+<dt>Tue Apr 25 09:22:29 AM CDT 2023</dt><dd><p>
+As noted in <a href="https://piazza.com/class/lcsjsmrfvdb1k4/post/604">Post 604</a>, Problem 1
+Test #5 would often time out for correct code due to Valgrind
+slowing down the computationally intense loops to check memory
+references.  The tests have been adjusted to account for this and
+can be updated using the following commands in a terminal
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">  &gt;&gt; make sanity-check
+  Files matsquare_benchmark.c and ../matsquare_benchmark.c differ
+  Files test_matsquare.org and ../test_matsquare.org differ
+  ERROR: Stock Files Changed, Run `make sanity-restore` to fix this
+  
+  &gt;&gt; make sanity-restore
+  Restored original files, backed up copies in directory sanity-backups
+  
+  &gt;&gt; make sanity-check
+  Stock Files Sane
+</pre>
+</div></dd>
+</dl>
+
+
 <dl class="org-dl">
 <dt>Fri Apr 21 03:11:01 PM CDT 2023</dt><dd>Fixed several typos such as
 incorrect totals for problem points and mention of a writing answers
@@ -379,42 +403,42 @@ directory.</dd>
 </dl>
 </div>
 </div>
-<div id="outline-container-org1e8fb58" class="outline-4">
-<h4 id="org1e8fb58"></h4>
-<div class="outline-text-4" id="text-org1e8fb58">
+<div id="outline-container-org8ab924c" class="outline-4">
+<h4 id="org8ab924c"></h4>
+<div class="outline-text-4" id="text-org8ab924c">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org1f6c639">1. Introduction</a></li>
-<li><a href="#orgd7d4654">2. Download Code and Setup</a></li>
-<li><a href="#org7627c99">3. <b>Problem 1</b>: Squaring a Matrix</a>
+<li><a href="#orge42f385">1. Introduction</a></li>
+<li><a href="#orgf04c265">2. Download Code and Setup</a></li>
+<li><a href="#orga4add5f">3. <b>Problem 1</b>: Squaring a Matrix</a>
 <ul>
-<li><a href="#org0769f79">3.1. Overview</a></li>
-<li><a href="#org0eb7354">3.2. Optimize Matrix Squaring</a></li>
-<li><a href="#orgf59f370">3.3. Evaluation on <code>loginNN</code></a></li>
-<li><a href="#orgbbbad51">3.4. <code>matsquare_print.c</code> Testing Program</a></li>
-<li><a href="#org110effe">3.5. Optimization Suggestions and Documentation</a></li>
-<li><a href="#orgb56ae65">3.6. Grading Criteria for Problem 1 (55%)</a></li>
+<li><a href="#org7555c65">3.1. Overview</a></li>
+<li><a href="#orgf2bb3dd">3.2. Optimize Matrix Squaring</a></li>
+<li><a href="#orgc89de05">3.3. Evaluation on <code>loginNN</code></a></li>
+<li><a href="#orgc49ec02">3.4. <code>matsquare_print.c</code> Testing Program</a></li>
+<li><a href="#org73f09bd">3.5. Optimization Suggestions and Documentation</a></li>
+<li><a href="#orgbf76134">3.6. Grading Criteria for Problem 1 (55%)</a></li>
 </ul>
 </li>
-<li><a href="#orgecb8862">4. <b>Problem 2</b>: showsym</a>
+<li><a href="#org6652592">4. <b>Problem 2</b>: showsym</a>
 <ul>
-<li><a href="#org4ed1465">4.1. Overview</a></li>
-<li><a href="#org5db9767">4.2. ELF File References</a></li>
-<li><a href="#org7bdca9a">4.3. Overall Approach</a></li>
-<li><a href="#org7414623">4.4. ELF Header and Section Header Array</a></li>
-<li><a href="#orgfdc5c47">4.5. String Tables, Names, Section Headers</a></li>
-<li><a href="#org8e11ef5">4.6. Symbol Table and .strtab</a></li>
-<li><a href="#org9f02c5b">4.7. Behavior in Error Cases</a></li>
-<li><a href="#org6710247">4.8. <code>showsym</code> Template</a></li>
-<li><a href="#org943b216">4.9. Grading Criteria for showsym (45%)</a></li>
+<li><a href="#orgd33b921">4.1. Overview</a></li>
+<li><a href="#orge581f53">4.2. ELF File References</a></li>
+<li><a href="#orgd5530f8">4.3. Overall Approach</a></li>
+<li><a href="#org911cf29">4.4. ELF Header and Section Header Array</a></li>
+<li><a href="#org721fe73">4.5. String Tables, Names, Section Headers</a></li>
+<li><a href="#org0edf028">4.6. Symbol Table and .strtab</a></li>
+<li><a href="#org633045b">4.7. Behavior in Error Cases</a></li>
+<li><a href="#orgb23246b">4.8. <code>showsym</code> Template</a></li>
+<li><a href="#orga465beb">4.9. Grading Criteria for showsym (45%)</a></li>
 </ul>
 </li>
-<li><a href="#orgcd52d37">5. Project Submission</a>
+<li><a href="#org33e69d9">5. Project Submission</a>
 <ul>
-<li><a href="#orgc4261b1">5.1. Submit to Gradescope</a></li>
-<li><a href="#org93af712">5.2. Late Policies</a></li>
+<li><a href="#orgc1e1297">5.1. Submit to Gradescope</a></li>
+<li><a href="#orgd1a18e9">5.2. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -424,8 +448,8 @@ directory.</dd>
 </div>
 
 
-<div id="outline-container-org1f6c639" class="outline-2">
-<h2 id="org1f6c639"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orge42f385" class="outline-2">
+<h2 id="orge42f385"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This assignment focuses on two aspects discussed in lecture over the
@@ -444,8 +468,8 @@ specific section to access its contents.</li>
 </div>
 </div>
 
-<div id="outline-container-orgd7d4654" class="outline-2">
-<h2 id="orgd7d4654"><span class="section-number-2">2</span> <a id="orgf093465"></a> Download Code and Setup</h2>
+<div id="outline-container-orgf04c265" class="outline-2">
+<h2 id="orgf04c265"><span class="section-number-2">2</span> <a id="orgba5ce08"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -556,12 +580,12 @@ folder. Ultimately you will re-zip this folder to submit it.
 </div>
 
 
-<div id="outline-container-org7627c99" class="outline-2">
-<h2 id="org7627c99"><span class="section-number-2">3</span> <b>Problem 1</b>: Squaring a Matrix</h2>
+<div id="outline-container-orga4add5f" class="outline-2">
+<h2 id="orga4add5f"><span class="section-number-2">3</span> <b>Problem 1</b>: Squaring a Matrix</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org0769f79" class="outline-3">
-<h3 id="org0769f79"><span class="section-number-3">3.1</span> Overview</h3>
+<div id="outline-container-org7555c65" class="outline-3">
+<h3 id="org7555c65"><span class="section-number-3">3.1</span> Overview</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 A problem that occasionally arises in numerical computing when working
@@ -589,7 +613,7 @@ multiplying it by itself.
 
 <div class="org-center">
 
-<div id="org1469b95" class="figure">
+<div id="org1943230" class="figure">
 <p><img src="matsquare.png" alt="matsquare.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>3 by 3 matrix <code>M</code> with colored elements along with result of squaring the matrix as <code>M*M</code>.</p>
@@ -650,8 +674,8 @@ fairly slow when executing on most modern computing systems.
 </div>
 </div>
 
-<div id="outline-container-org0eb7354" class="outline-3">
-<h3 id="org0eb7354"><span class="section-number-3">3.2</span> Optimize Matrix Squaring</h3>
+<div id="outline-container-orgf2bb3dd" class="outline-3">
+<h3 id="orgf2bb3dd"><span class="section-number-3">3.2</span> Optimize Matrix Squaring</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 The purpose of this problem is to write <code>matsquare_OPTM()</code> which is a
@@ -689,8 +713,8 @@ Some details are provided in subsequent sections.
 </div>
 </div>
 
-<div id="outline-container-orgf59f370" class="outline-3">
-<h3 id="orgf59f370"><span class="section-number-3">3.3</span> Evaluation on <code>loginNN</code></h3>
+<div id="outline-container-orgc89de05" class="outline-3">
+<h3 id="orgc89de05"><span class="section-number-3">3.3</span> Evaluation on <code>loginNN</code></h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The provided file <code>matsquare_benchmark.c</code> provides a benchmark for the
@@ -825,8 +849,8 @@ obvious that bonus credit has been awarded.</i>
 </div>
 </div>
 
-<div id="outline-container-orgbbbad51" class="outline-3">
-<h3 id="orgbbbad51"><span class="section-number-3">3.4</span> <code>matsquare_print.c</code> Testing Program</h3>
+<div id="outline-container-orgc49ec02" class="outline-3">
+<h3 id="orgc49ec02"><span class="section-number-3">3.4</span> <code>matsquare_print.c</code> Testing Program</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 As one works on implementing optimizations in <code>matsquare_OPTM()</code>, bugs
@@ -876,8 +900,8 @@ BASE/OPTM Element Comparison:
 </div>
 
 
-<div id="outline-container-org110effe" class="outline-3">
-<h3 id="org110effe"><span class="section-number-3">3.5</span> <a id="orgcdb6693"></a> Optimization Suggestions and Documentation</h3>
+<div id="outline-container-org73f09bd" class="outline-3">
+<h3 id="org73f09bd"><span class="section-number-3">3.5</span> <a id="orgea50381"></a> Optimization Suggestions and Documentation</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 Labs and lectures have covered several kinds of optimizations which
@@ -914,7 +938,7 @@ effect so focusing first on the memory access pattern is crucial.
 
 <div class="org-center">
 
-<div id="org03cf6be" class="figure">
+<div id="org7ef08ef" class="figure">
 <p><img src="matsquare-order.png" alt="matsquare-order.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Illustration of how to favor row-wise access to compute squared matrix. Computation of first row results are shown with the beginnings of the second row.</p>
@@ -924,8 +948,8 @@ effect so focusing first on the memory access pattern is crucial.
 </div>
 
 
-<div id="outline-container-orgb56ae65" class="outline-3 grading55">
-<h3 id="orgb56ae65"><span class="section-number-3">3.6</span> Grading Criteria for Problem 1 (55%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading55">grading55</span></span></h3>
+<div id="outline-container-orgbf76134" class="outline-3 grading55">
+<h3 id="orgbf76134"><span class="section-number-3">3.6</span> Grading Criteria for Problem 1 (55%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading55">grading55</span></span></h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 In addition to completing the code and the points associated with its
@@ -991,12 +1015,12 @@ template to report your performance and your approach to optimizing.
 </div>
 
 
-<div id="outline-container-orgecb8862" class="outline-2">
-<h2 id="orgecb8862"><span class="section-number-2">4</span> <b>Problem 2</b>: showsym</h2>
+<div id="outline-container-org6652592" class="outline-2">
+<h2 id="org6652592"><span class="section-number-2">4</span> <b>Problem 2</b>: showsym</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org4ed1465" class="outline-3">
-<h3 id="org4ed1465"><span class="section-number-3">4.1</span> Overview</h3>
+<div id="outline-container-orgd33b921" class="outline-3">
+<h3 id="orgd33b921"><span class="section-number-3">4.1</span> Overview</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 The <a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format">Executable and Linkable (ELF) File Format</a> is the Unix standard for
@@ -1101,8 +1125,8 @@ showing only information on public symbols in the ELF file.
 </div>
 </div>
 
-<div id="outline-container-org5db9767" class="outline-3">
-<h3 id="org5db9767"><span class="section-number-3">4.2</span> ELF File References</h3>
+<div id="outline-container-orge581f53" class="outline-3">
+<h3 id="orge581f53"><span class="section-number-3">4.2</span> ELF File References</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 It is recommended to do some reading on the structure of the ELF
@@ -1132,8 +1156,8 @@ use of 32-bit integers may still apply via <code>uint32_t</code>.
 </div>
 </div>
 
-<div id="outline-container-org7bdca9a" class="outline-3">
-<h3 id="org7bdca9a"><span class="section-number-3">4.3</span> Overall Approach</h3>
+<div id="outline-container-orgd5530f8" class="outline-3">
+<h3 id="orgd5530f8"><span class="section-number-3">4.3</span> Overall Approach</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 ELF files are divided into sections. Our main interest is to identify
@@ -1164,8 +1188,8 @@ a way that is directly relevant to the present program.
 </div>
 </div>
 
-<div id="outline-container-org7414623" class="outline-3">
-<h3 id="org7414623"><span class="section-number-3">4.4</span> ELF Header and Section Header Array</h3>
+<div id="outline-container-org911cf29" class="outline-3">
+<h3 id="org911cf29"><span class="section-number-3">4.4</span> ELF Header and Section Header Array</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 The initial bytes in an ELF file always have a fixed structure which
@@ -1208,7 +1232,7 @@ parts of an ELF file.
 
 <div class="org-center">
 
-<div id="org1616577" class="figure">
+<div id="org2d0435c" class="figure">
 <p><img src="elf1.png" alt="elf1.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 3: </span>ELF File Header with Section Header Array and Section Header String Table.</p>
@@ -1217,8 +1241,8 @@ parts of an ELF file.
 </div>
 </div>
 
-<div id="outline-container-orgfdc5c47" class="outline-3">
-<h3 id="orgfdc5c47"><span class="section-number-3">4.5</span> String Tables, Names, Section Headers</h3>
+<div id="outline-container-org721fe73" class="outline-3">
+<h3 id="org721fe73"><span class="section-number-3">4.5</span> String Tables, Names, Section Headers</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 To keep the sizes of structures fixed while still allowing variable
@@ -1268,8 +1292,8 @@ of symbol table entries.
 </div>
 </div>
 
-<div id="outline-container-org8e11ef5" class="outline-3">
-<h3 id="org8e11ef5"><span class="section-number-3">4.6</span> Symbol Table and .strtab</h3>
+<div id="outline-container-org0edf028" class="outline-3">
+<h3 id="org0edf028"><span class="section-number-3">4.6</span> Symbol Table and .strtab</h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
 Similar to the Section Header Array, the Symbol Table is comprised of
@@ -1280,7 +1304,7 @@ symbol's name resides. The following diagram shows this relationship.
 
 <div class="org-center">
 
-<div id="org4be0a1c" class="figure">
+<div id="org514d42b" class="figure">
 <p><img src="elf2.png" alt="elf2.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 4: </span>ELF Symbol Table and associated String Table</p>
@@ -1327,8 +1351,8 @@ An <code>if/else</code> or <code>switch/case</code> block to determine the type 
 </div>
 </div>
 
-<div id="outline-container-org9f02c5b" class="outline-3">
-<h3 id="org9f02c5b"><span class="section-number-3">4.7</span> <a id="org6782df5"></a> Behavior in Error Cases</h3>
+<div id="outline-container-org633045b" class="outline-3">
+<h3 id="org633045b"><span class="section-number-3">4.7</span> <a id="org515dbba"></a> Behavior in Error Cases</h3>
 <div class="outline-text-3" id="text-4-7">
 <p>
 The following errors can occur during execution of <code>showsym</code> and
@@ -1336,9 +1360,9 @@ should result in the given error messages being printed.
 </p>
 </div>
 
-<div id="outline-container-org23063de" class="outline-4">
-<h4 id="org23063de">Wrong Magic Bytes</h4>
-<div class="outline-text-4" id="text-org23063de">
+<div id="outline-container-org773b3bd" class="outline-4">
+<h4 id="org773b3bd">Wrong Magic Bytes</h4>
+<div class="outline-text-4" id="text-org773b3bd">
 <p>
 <code>showsym</code> should check these "magic bytes" (first elements of
 <code>e_ident[]</code> in header). If they match the expected values, proceed but
@@ -1352,9 +1376,9 @@ ERROR: Magic bytes wrong, this is not an ELF file
 </div>
 </div>
 
-<div id="outline-container-org06e6f37" class="outline-4">
-<h4 id="org06e6f37">Missing Symbol Tables</h4>
-<div class="outline-text-4" id="text-org06e6f37">
+<div id="outline-container-org5213356" class="outline-4">
+<h4 id="org5213356">Missing Symbol Tables</h4>
+<div class="outline-text-4" id="text-org5213356">
 <p>
 During the search for the symbol table, it is possible that it is not
 found. Such objects are usually executables that have been "stripped"
@@ -1371,8 +1395,8 @@ ERROR: Couldn't find symbol table
 </div>
 </div>
 
-<div id="outline-container-org6710247" class="outline-3">
-<h3 id="org6710247"><span class="section-number-3">4.8</span> <code>showsym</code> Template</h3>
+<div id="outline-container-orgb23246b" class="outline-3">
+<h3 id="orgb23246b"><span class="section-number-3">4.8</span> <code>showsym</code> Template</h3>
 <div class="outline-text-3" id="text-4-8">
 <p>
 A basic template for <code>showsym.c</code> is provided in the code pack which
@@ -1383,8 +1407,8 @@ sure that your code complies with tests when the become available.
 </div>
 </div>
 
-<div id="outline-container-org943b216" class="outline-3 grading45">
-<h3 id="org943b216"><span class="section-number-3">4.9</span> Grading Criteria for showsym (45%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading45">grading45</span></span></h3>
+<div id="outline-container-orga465beb" class="outline-3 grading45">
+<h3 id="orga465beb"><span class="section-number-3">4.9</span> Grading Criteria for showsym (45%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading45">grading45</span></span></h3>
 <div class="outline-text-3" id="text-4-9">
 <p>
 Both binary and shell tests can be run with <code>make test-p2</code>
@@ -1526,12 +1550,12 @@ Both binary and shell tests can be run with <code>make test-p2</code>
 </div>
 </div>
 
-<div id="outline-container-orgcd52d37" class="outline-2">
-<h2 id="orgcd52d37"><span class="section-number-2">5</span> Project Submission</h2>
+<div id="outline-container-org33e69d9" class="outline-2">
+<h2 id="org33e69d9"><span class="section-number-2">5</span> Project Submission</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-orgc4261b1" class="outline-3">
-<h3 id="orgc4261b1"><span class="section-number-3">5.1</span> <a id="org4e3b9dd"></a> Submit to Gradescope</h3>
+<div id="outline-container-orgc1e1297" class="outline-3">
+<h3 id="orgc1e1297"><span class="section-number-3">5.1</span> <a id="orge050d68"></a> Submit to Gradescope</h3>
 <div class="outline-text-3" id="text-5-1">
 <ol class="org-ol">
 <li><p>
@@ -1582,8 +1606,8 @@ pictures.</li>
 </div>
 </div>
 
-<div id="outline-container-org93af712" class="outline-3">
-<h3 id="org93af712"><span class="section-number-3">5.2</span> Late Policies</h3>
+<div id="outline-container-orgd1a18e9" class="outline-3">
+<h3 id="orgd1a18e9"><span class="section-number-3">5.2</span> Late Policies</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 You may wish to review the policy on late project submission which
@@ -1600,7 +1624,7 @@ deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-04-21 Fri 15:12 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-04-25 Tue 09:22 <br/> </i>
 </div>
 </body>
 </html>
