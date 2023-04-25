@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-12-06 Tue 16:15 -->
+<!-- 2023-04-25 Tue 16:58 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CSCI 2021 HW14: pmap and Linking</title>
+<title>CSCI 2021 HW14: Wrap-up and Review</title>
 <meta name="author" content="Chris Kauffman" />
 <meta name="generator" content="Org Mode" />
 <style>
@@ -344,387 +344,1030 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-12-06 Tue 16:15</i>
+<i>Last Updated: 2023-04-25 Tue 16:58</i>
 </div>
 <div id="content" class="content">
-<h1 class="title">CSCI 2021 HW14: pmap and Linking</h1>
-<ul class="org-ul">
-<li><b>Due: 11:59pm Tue 13-Dec 2022</b></li>
-<li><i>Approximately 0.83% of total grade</i></li>
-<li>Homework and Quizzes are open resource/open collaboration. You must
-submit your own work but you may freely discuss HW topics with other
-members of the class.</li>
-</ul>
+<h1 class="title">CSCI 2021 HW14: Wrap-up and Review</h1>
 
-<div id="outline-container-orgdf74a93" class="outline-4">
-<h4 id="orgdf74a93">CODE DISTRIBUTION: <a href="hw14-code.zip">hw14-code.zip</a></h4>
+<div id="outline-container-org9ceaa70" class="outline-4">
+<h4 id="org9ceaa70">CODE DISTRIBUTION: <a href="hw14-code.zip">hw14-code.zip</a></h4>
+<div class="outline-text-4" id="text-org9ceaa70">
+<ul class="org-ul">
+<li>Download the code distribution every HW</li>
+<li>See further setup instructions below</li>
+</ul>
+</div>
 </div>
 
-<div id="outline-container-org6122357" class="outline-4">
-<h4 id="org6122357">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-org6122357">
+<div id="outline-container-orgd848b79" class="outline-4">
+<h4 id="orgd848b79">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orgd848b79">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org00f05a6">1. Rationale</a>
+<li><a href="#org5feda26">1. Rationale</a>
 <ul>
-<li><a href="#orgb669c65">Associated Reading / Preparation</a></li>
-<li><a href="#org4c0849e">Grading Policy</a></li>
+<li><a href="#org055b5fa">Associated Reading / Preparation</a></li>
+<li><a href="#org73d30c5">Grading Policy</a></li>
 </ul>
 </li>
-<li><a href="#org725ea4b">2. Codepack</a></li>
-<li><a href="#orgd480b36">3. What to Understand</a></li>
-<li><a href="#org5401376">4. Questions</a></li>
+<li><a href="#org8ceee38">2. Review Problem 1</a></li>
+<li><a href="#org21313c6">3. Review Problem 2</a></li>
+<li><a href="#orga2bfaf1">4. Review Problem 3</a></li>
+<li><a href="#orge0316db">5. Review Problem 4</a>
+<ul>
+<li><a href="#org99bee94">Main Memory</a></li>
+<li><a href="#org7b8ab5e">Cache</a></li>
+<li><a href="#org8dc33c8">Code</a></li>
+<li><a href="#org8c3b7e1">Stats for Strides:</a></li>
+</ul>
+</li>
+<li><a href="#org0888072">6. Review Problem 5</a>
+<ul>
+<li><a href="#org65ded3d">(A) Predictions</a></li>
+<li><a href="#org57f6f99">(B) Timing</a></li>
+<li><a href="#orgd42e580">(C) Analysis</a></li>
+<li><a href="#org7aea1aa">(D) Optimized Reversal</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org00f05a6" class="outline-2">
-<h2 id="org00f05a6"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org5feda26" class="outline-2">
+<h2 id="org5feda26"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-On modern computing systems, virtual memory creates the illusion that
-every program has a linear address space from 0 to some large
-address. Mostly this happens behind the scenes and is managed by the
-operating system but knowledge of presence of virtual addresses
-provides insight into many aspects of practical programming.  One can
-inspect some of the OS information on the virtual address space of a
-program using utilities such as <code>pmap</code>.
+This HW reviews concepts from earlier assignments and lecture to
+prepare for the final exam.  It is optional but provides some useful
+practice.
 </p>
+</div>
 
+<div id="outline-container-org055b5fa" class="outline-3">
+<h3 id="org055b5fa">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-org055b5fa">
 <p>
-The linker is a little discussed portion of a typical compiler chain
-but it is a frequent source of frustrating compilation errors when
-dealing with code libraries. This lab covers the basics of linking to
-system libraries and how this affects the virtual memory image of the
-resulting program.
+Review the following sections from Bryant and O'Hallaron: 
 </p>
-</div>
-
-<div id="outline-container-orgb669c65" class="outline-3">
-<h3 id="orgb669c65">Associated Reading / Preparation</h3>
-<div class="outline-text-3" id="text-orgb669c65">
-<p>
-Bryant and O'Hallaron: Ch 9 on Virtual Memory is informative for this
-Problem 1. The <code>mmap()</code> function is discussed in section 9.8.4. Bryant
-and O'Hallaron Ch 7 on Linking and ELF formats is pertinent to the
-second problem.
-</p>
+<ul class="org-ul">
+<li>Ch 5 on code optimizations</li>
+<li>Ch 6 on the memory hierarchy especially writing cache friendly code</li>
+<li>Ch 9 on Virtual Memory and Paging</li>
+<li>Ch 7 on Linking and the ELF Format</li>
+<li>Previous chapters mentioned on the schedule to prepare for the
+comprehensive portion of the final exam.</li>
+</ul>
 </div>
 </div>
 
-<div id="outline-container-org4c0849e" class="outline-3">
-<h3 id="org4c0849e">Grading Policy</h3>
-<div class="outline-text-3" id="text-org4c0849e">
-<p>
-Credit for this HW is earned by taking the associated HW Quiz which is
-linked under <code>Gradescope</code>.  The quiz will ask similar questions as
-those that are present in the <code>QUESTIONS.txt</code> file and those that
-complete all answers in <code>QUESTIONS.txt</code> should have no trouble with
-the quiz.
-</p>
-
-<p>
-Homework and Quizzes are open resource/open collaboration. You must
-submit your own work but you may freely discuss HW topics with other
-members of the class.
-</p>
-
-<p>
-See the <a href="../2021/syllabus.html">full policies in the course syllabus</a>.
-</p>
+<div id="outline-container-org73d30c5" class="outline-3">
+<h3 id="org73d30c5">Grading Policy</h3>
+<div class="outline-text-3" id="text-org73d30c5">
+<ul class="org-ul">
+<li>There is no material to submit for this HW and it is not worth
+additional credit.</li>
+<li>There is an <a href="https://canvas.umn.edu/courses/354941/quizzes/709189">Exit Survey on Canvas</a> which is linked under the
+Assignments section. This is an anonymous survey. Completing it will
+earn <b>1 additional Engagemen Point</b></li>
+<li>Students are also encouraged to complete the Student Rating of
+Teaching for the course here: <a href="https://srt.umn.edu/blue">https://srt.umn.edu/blue</a>. A
+sufficient response rate will trigger a final exam question to be
+revealed during the last lecture.</li>
+</ul>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org725ea4b" class="outline-2">
-<h2 id="org725ea4b"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org8ceee38" class="outline-2">
+<h2 id="org8ceee38"><span class="section-number-2">2</span> Review Problem 1</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-The codepack for the HW contains the following files:
+Consider the following C program which runs a function and reports the
+addresses of several entities before pausing.
 </p>
 
+<div class="org-src-container">
+<pre class="src src-c">#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+
+int important_func(int arg1, long arg2){
+  printf("%p : important_func()\n",&amp;important_func);
+  printf("%p : arg1\n",&amp;arg1);
+  printf("%p : arg2\n",&amp;arg2);
+  printf("program pid is %d\n",getpid());
+  printf("press any key to continue\n");
+  getchar();
+}
+
+int main(int argc, char *argv[]){
+  int x = 1;
+  long y = 2;
+  important_func(x, y);
+  return 0;
+}
+</pre>
+</div>
+
+<p>
+Running the program creates the following output.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; gcc demoprog.c 
+&gt; ./a.out
+0x5575f7169169 : important_func()
+0x7ffea79aa9bc : arg1
+0x7ffea79aa9b0 : arg2
+program pid is 11045
+press any key to continue
+</pre>
+</div>
+
+<p>
+While the program is paused, <code>pmap</code> is invoked in another terminal and
+produces the following. Certain lines numbered in comments on the
+right.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; pmap 11045
+11045:   a.out                                 #Line
+00005575f7168000      4K r---- a.out           # 1 
+00005575f7169000      4K r-x-- a.out           # 2 
+00005575f716a000      4K r---- a.out           # 3 
+00005575f716b000      4K r---- a.out           # 4 
+00005575f716c000      4K rw--- a.out           # 5 
+00005575f8117000    132K rw---   [ anon ]      # 6 
+00007fcdd5146000    136K r---- libc-2.29.so    # 7 
+00007fcdd5168000   1328K r-x-- libc-2.29.so    # 8 
+00007fcdd52b4000    304K r---- libc-2.29.so    # 9 
+00007fcdd5300000      4K ----- libc-2.29.so    #10 
+00007fcdd5301000     16K r---- libc-2.29.so    #11 
+00007fcdd5305000      8K rw--- libc-2.29.so    #12 
+00007fcdd5307000     24K rw---   [ anon ]      #13 
+00007fcdd5340000      8K r---- ld-2.29.so      #14 
+00007fcdd5342000    124K r-x-- ld-2.29.so      #15 
+00007fcdd5361000     32K r---- ld-2.29.so      #16 
+00007fcdd536a000      4K r---- ld-2.29.so      #17 
+00007fcdd536b000      4K rw--- ld-2.29.so      #18 
+00007fcdd536c000      4K rw---   [ anon ]      #19 
+00007ffea798b000    132K rw---   [ stack ]     #20 
+00007ffea79cf000     12K r----   [ anon ]      #21 
+00007ffea79d2000      4K r-x--   [ anon ]      #22 
+ total             2296K                        
+</pre>
+</div>
+
+<p>
+Answer the following questions.
+</p>
+<ol class="org-ol">
+<li>Which specific lines of <code>pmap</code> output correspond to which entities
+in the program? Aside from the address correspondence, what
+information that <code>pmap</code> prints supports this correspondence?</li>
+<li>Despite the entities <code>important_func()</code> and <code>arg1</code> appearing on the
+same line of C code, they are assigned very different memory
+addresses. Why is this the case?</li>
+<li>We learned in our discussion of assembly programming that the first
+6 arguments of functions are passed in registers and registers do
+not have main memory addresses. However, the program prints out an
+address for <code>arg1</code> and <code>arg2</code>. Explain what is going on and how
+this discrepancy is resolved.</li>
+</ol>
+</div>
+
+<div id="outline-container-orgc848173" class="outline-4">
+<h4 id="orgc848173">SOLUTION</h4>
+<div class="outline-text-4" id="text-orgc848173">
+<button onclick="document.getElementById('solution1').style.display='block'">Click for Solution</button>
+<div id="solution1" style="display:none;">
+<ol class="org-ol">
+<li><p>
+Correspondences are
+</p>
+<ul class="org-ul">
+<li><p>
+<code>important_func()</code>: pmap Line 2; the addresses are very close
+together
+</p>
+<pre class="example">
+0x005575f7169000 : pmap Line 2
+0x005575f7169169 : important_func() in program
+</pre>
+
+<p>
+This also makes sense because <code>pmap</code> shows permissions of <code>r-x</code>,
+readable and executable, for this portion of the program, what
+one would expect for a function.
+</p></li>
+</ul>
+<ul class="org-ul">
+<li><p>
+<code>arg1 / arg2</code>: <code>pmap</code> Line 20; again the addresses are very close.
+</p>
+<pre class="example">
+0x007ffea798b000 from pmap Line 20
+0x007ffea79aa9b0 from arg2
+0x007ffea79aa9bc from arg1
+</pre>
+
+<p>
+This is also confirmed by the label for the <code>pmap</code> entry as
+<code>[stack]</code> where local variables and arguments live and the
+permissions of <code>rw-</code>, readable/writeable as one would expect for
+data. 
+</p></li>
+</ul></li>
+<li><code>important_func()</code> is a function and meant to be executed while
+<code>arg1/arg2</code> are variables, data that is meant to be read and
+written. To that end, they will be stored in different locations
+with different permissions.  The <code>.text</code> section of ELF files will
+be mapped into memory as the executable instructions, in this case
+at a lower memory address of <code>0x005575f7169169</code>. This area does NOT
+allow for write permission as the assembly instructions are not
+expected to change. The data that those instructions operate on is
+in different areas which do allow writing, in this case the stack
+which is at <code>0x007ffea798b000</code>. The stack is only needed while the
+program is running so has no corresponding ELF section: it is
+created when the program is loaded to run.</li>
+<li>The first 6 arguments to functions are passed in registers, in this
+case <code>rdi</code> for <code>arg1</code> and <code>rsi</code> for <code>arg2</code>. However, the C code
+dictates that these need a main memory address. So, the compiler
+will generate an assembly sequence that writes the register values
+into main memory, almost certainly in the stack where local
+variables for functions are stored. This is confirmed by the
+addresses printed, that <code>arg1, arg2</code> are located just after the
+start of the stack.  This enables the address to be
+printed. However, if the C code contained no mention of the need
+for an address for <code>arg1 / arg2</code>, likely they would not need to be
+in main memory at all and would solely be stored in registers to
+increase execution efficiency.</li>
+</ol>
+
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org21313c6" class="outline-2">
+<h2 id="org21313c6"><span class="section-number-2">3</span> Review Problem 2</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+The following is a compilation session that goes wrong. Study it and
+the errors that ensue.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; cat do_math.c                      # show code for program
+// Demo program using math operations.
+#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+#include &lt;unistd.h&gt;
+
+int main(int argc, char *argv[]){
+  double e = M_E;
+  double cos_e = cos(e);
+  double sin_e = sin(e);
+  double e_squared = pow(e,2.0);
+
+  printf("E is %.3f\n",e);
+  printf("cos(E) is %.3f\n",cos_e);
+  printf("sin(E) is %.3f\n",sin_e);
+  printf("E^2 is %.3f\n",e_squared);
+
+  printf("program pid is %d\n",getpid());
+  printf("press any key to continue\n");
+  getchar();
+
+  return 0;
+}
+
+&gt; gcc -c do_math.c                   # compile the code with -c option
+
+&gt; file do_math.o
+do_math.o: ELF 64-bit LSB relocatable, x86-64, version 1 (SYSV), not stripped
+
+&gt; gcc -o math_prog do_math.c         # compile the program to an executable
+/usr/bin/ld: /tmp/ccNWf9Yu.o: in function `main':
+do_math.c:(.text+0x26): undefined reference to `cos'
+/usr/bin/ld: do_math.c:(.text+0x3d): undefined reference to `sin'
+/usr/bin/ld: do_math.c:(.text+0x60): undefined reference to `pow'
+collect2: error: ld returned 1 exit status
+</pre>
+</div>
+
+<ol class="org-ol">
+<li>Why is it that the first <code>gcc -c</code> compilation succeeds while the
+second <code>gcc -o</code> fails? What is the difference between these two
+invocations?</li>
+<li>What role does the <code>math.h</code> header file play in this compilation
+process? What would happen if it were removed?</li>
+<li>What kind of error is reported in the second set of failures? Does
+it require code changes to the <code>do_math.c</code> file?</li>
+<li>How does one "fix" this problem to produce the ultimate executable.</li>
+</ol>
+</div>
+
+
+<div id="outline-container-org7aa860a" class="outline-4">
+<h4 id="org7aa860a">SOLUTION</h4>
+<div class="outline-text-4" id="text-org7aa860a">
+<button onclick="document.getElementById('solution2').style.display='block'">Click for Solution</button>
+<div id="solution2" style="display:none;">
+<ol class="org-ol">
+<li>The differences between <code>gcc</code> invocations are
+<ul class="org-ul">
+<li><code>gcc -c</code> means to 'compile only' which will produce a <code>.o</code> ELF
+object file which is not yet executable. This is possible for the
+<code>do_math.c</code> because it will simply convert the sole <code>main()</code>
+function to assembly code in the <code>do_math.o</code> file.</li>
+<li><code>gcc -o</code> or just <code>gcc</code> with no output options will attempt to
+produce an executable and requires linking all the provided code
+together along with any required libraries. This fails as the
+<code>main()</code> function uses functions like <code>pow()</code> which are not
+provided so an executable cannot be produced.</li>
+</ul></li>
+<li>The <code>math.h</code> file is included and provides prototypes for functions
+like <code>pow()</code> and definitions for some mathematical constants like
+<code>M_E</code> (base of the natural logarithm).  This ensures that the
+compiler generates the assembly code sequence in <code>main()</code> to call
+functions like <code>pow()</code> correctly. Without the header, it would be
+easy to make a mistake such as passing arguments to <code>pow()</code> in
+the wrong registers.</li>
+<li>The error in <code>gcc -o</code> is a <b>Linking Error</b> as some compiled code is
+missing, in this case the definitions of functions like <code>pow()</code>.
+There is nothing wrong with the <code>do_math.c</code> file and no changes are
+required in it. One simply needs to indicate to the compiler that
+it should link against the math library.</li>
+<li><p>
+This problem is easily fixed by indicating <code>libm</code>, the math
+library, should be linked with the following compiler invocation as
+demonstrated below.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; gcc -o math_prog do_math.c -lm         # compile and link to the math library
+
+&gt; file math_prog                         # type of file for math_prog
+math_prog: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked,
+interpreter /lib64/ld-linux-x86-64.so.2
+
+&gt; ./math_prog                            # run the executable
+E is 2.718
+cos(E) is -0.912
+sin(E) is 0.411
+E^2 is 7.389
+program pid is 3329876
+press any key to continue
+
+&gt; 
+</pre>
+</div></li>
+</ol>
+
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orga2bfaf1" class="outline-2">
+<h2 id="orga2bfaf1"><span class="section-number-2">4</span> Review Problem 3</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Continuing the previous problem with the <code>do_math.c</code> program, while
+running it the program, one can invoke <code>pmap</code> to gather information on
+the working memory of the program. The shows two simultaneous runs of
+<code>math_prog</code> along with its corresponding <code>pmap</code> information.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">#### SHELL 1 ######                              #### SHELL 2 ######      
+&gt; ./math_prog                                    &gt; ./math_prog            
+E is 2.718                                       E is 2.718               
+cos(E) is -0.912                                 cos(E) is -0.912         
+sin(E) is 0.411                                  sin(E) is 0.411          
+E^2 is 7.389                                     E^2 is 7.389             
+program pid is 3334355                           program pid is 3335206   
+press any key to continue                        press any key to continue
+
+#### SHELL 3 ######                              #### SHELL 4 ######
+&gt; pmap 3334355                                   &gt; pmap 3335206                              
+3334355:   ./math_prog                           3335206:   ./math_prog                      
+000055eb074de000      4K r---- math_prog         000055d42f543000      4K r---- math_prog    
+000055eb074df000      4K r-x-- math_prog         000055d42f544000      4K r-x-- math_prog    
+000055eb074e0000      4K r---- math_prog         000055d42f545000      4K r---- math_prog    
+000055eb074e1000      4K r---- math_prog         000055d42f546000      4K r---- math_prog    
+000055eb074e2000      4K rw--- math_prog         000055d42f547000      4K rw--- math_prog    
+000055eb09132000    132K rw---   [ anon ]        000055d42f7fe000    132K rw---   [ anon ]   
+00007f8a8f301000     12K rw---   [ anon ]        00007f465f83c000     12K rw---   [ anon ]   
+00007f8a8f304000    148K r---- libc-2.30.so      00007f465f83f000    148K r---- libc-2.30.so 
+00007f8a8f329000   1332K r-x-- libc-2.30.so      00007f465f864000   1332K r-x-- libc-2.30.so 
+00007f8a8f476000    296K r---- libc-2.30.so      00007f465f9b1000    296K r---- libc-2.30.so 
+00007f8a8f4c0000      4K ----- libc-2.30.so      00007f465f9fb000      4K ----- libc-2.30.so 
+00007f8a8f4c1000     12K r---- libc-2.30.so      00007f465f9fc000     12K r---- libc-2.30.so 
+00007f8a8f4c4000     12K rw--- libc-2.30.so      00007f465f9ff000     12K rw--- libc-2.30.so 
+00007f8a8f4c7000     16K rw---   [ anon ]        00007f465fa02000     16K rw---   [ anon ]   
+00007f8a8f4cb000     60K r---- libm-2.30.so      00007f465fa06000     60K r---- libm-2.30.so 
+00007f8a8f4da000    624K r-x-- libm-2.30.so      00007f465fa15000    624K r-x-- libm-2.30.so 
+00007f8a8f576000    612K r---- libm-2.30.so      00007f465fab1000    612K r---- libm-2.30.so 
+00007f8a8f60f000      4K r---- libm-2.30.so      00007f465fb4a000      4K r---- libm-2.30.so 
+00007f8a8f610000      4K rw--- libm-2.30.so      00007f465fb4b000      4K rw--- libm-2.30.so 
+00007f8a8f611000      8K rw---   [ anon ]        00007f465fb4c000      8K rw---   [ anon ]   
+00007f8a8f645000      8K r---- ld-2.30.so        00007f465fb80000      8K r---- ld-2.30.so   
+00007f8a8f647000    124K r-x-- ld-2.30.so        00007f465fb82000    124K r-x-- ld-2.30.so   
+00007f8a8f666000     32K r---- ld-2.30.so        00007f465fba1000     32K r---- ld-2.30.so   
+00007f8a8f66f000      4K r---- ld-2.30.so        00007f465fbaa000      4K r---- ld-2.30.so   
+00007f8a8f670000      4K rw--- ld-2.30.so        00007f465fbab000      4K rw--- ld-2.30.so   
+00007f8a8f671000      4K rw---   [ anon ]        00007f465fbac000      4K rw---   [ anon ]   
+00007ffcf2746000    132K rw---   [ stack ]       00007fff6782d000    132K rw---   [ stack ]  
+00007ffcf27fc000     12K r----   [ anon ]        00007fff67876000     12K r----   [ anon ]   
+00007ffcf27ff000      4K r-x--   [ anon ]        00007fff67879000      4K r-x--   [ anon ]   
+ffffffffff600000      4K --x--   [ anon ]        ffffffffff600000      4K --x--   [ anon ]   
+ total             3624K                          total             3624K                    
+</pre>
+</div>
+
+<ol class="org-ol">
+<li>The <code>pmap</code> listings show entries for <code>libc-2.30.so</code> and
+<code>libm-2.30.so</code>. What are these entities and are they present in the
+<code>do_math</code> program?</li>
+<li>Identify several parts of the working memory of the two <code>math_prog</code>
+processes that are distinct from each other. Also identify several
+parts that are <b>shared</b> and describe how this sharing is possible.</li>
+<li>Both processes report using <code>3624K</code> of memory. Do you expect that
+once one process finishes, there will be <code>3264K</code> of memory made
+available? Describe why or why not.</li>
+</ol>
+</div>
+
+<div id="outline-container-orgc83641a" class="outline-4">
+<h4 id="orgc83641a">SOLUTION</h4>
+<div class="outline-text-4" id="text-orgc83641a">
+<button onclick="document.getElementById('solution3').style.display='block'">Click for Solution</button>
+<div id="solution3" style="display:none;">
+<ol class="org-ol">
+<li><p>
+The listings for <code>libm</code> and <code>libc</code> are the dynamically linked
+libraries that are needed by <code>math_prog</code>.  While the names vary
+slightly, one can see these are required by <code>math_prog</code> with
+utilities like <code>ldd</code> which show dynamic library dependencies:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; ldd math_prog
+	linux-vdso.so.1 (0x00007ffe123ff000)
+	libm.so.6 =&gt; /usr/lib/libm.so.6 (0x00007f98f5c11000)
+	libc.so.6 =&gt; /usr/lib/libc.so.6 (0x00007f98f5a4a000)
+	/lib64/ld-linux-x86-64.so.2 =&gt; /usr/lib64/ld-linux-x86-64.so.2 (0x00007f98f5d90000)
+</pre>
+</div>
+<p>
+<code>math_prog</code> uses printing facilities like <code>printf()</code> which are in
+<code>libc</code> and the mathematical functions that are in <code>libm</code>. These are
+NOT in the <code>math_prog</code> executable and are instead linked to it as
+it is loaded to start running. For example, showing the symbol
+table for <code>math_prog</code> identifies several of the functions needed
+are undefined.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; readelf -s math_prog
+...
+Symbol table '.symtab' contains 70 entries:
+...
+    51: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND pow@@GLIBC_2.29
+    53: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND printf@@GLIBC_2.2.5
+    65: 0000000000001199   261 FUNC    GLOBAL DEFAULT   13 main
+    66: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND sin@@GLIBC_2.2.5
+...
+</pre>
+</div>
+<p>
+In fact, <code>readelf -s</code> often reports on symbols in the <code>.dynsym</code>
+which are dynamically linked symbols that are NOT in the executable
+but come from other libraries.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; readelf -s math_prog
+
+Symbol table '.dynsym' contains 13 entries:
+   Num:    Value          Size Type    Bind   Vis      Ndx Name
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_deregisterTMCloneTab
+     2: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND puts@GLIBC_2.2.5 (2)
+     3: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND getpid@GLIBC_2.2.5 (2)
+     4: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND pow@GLIBC_2.29 (3)
+     5: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND printf@GLIBC_2.2.5 (2)
+     6: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND cos@GLIBC_2.2.5 (4)
+     7: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@GLIBC_2.2.5 (2)
+     8: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND getchar@GLIBC_2.2.5 (2)
+     9: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND __gmon_start__
+    10: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND sin@GLIBC_2.2.5 (4)
+    11: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_registerTMCloneTable
+    12: 0000000000000000     0 FUNC    WEAK   DEFAULT  UND __cxa_finalize@GLIBC_2.2.5 (2)
+...
+</pre>
+</div></li>
+</ol>
+
+
+<ol class="org-ol">
+<li>The first few sections of <code>math_prog</code> are likely distinct
+corresponding to each process's Text and Global Data memory
+areas. Also their Stack areas are likely distinct.  However, both
+processes will share parts of the <code>libc</code> and <code>libm</code> memory,
+especially that which is marked <code>r--</code> (read only) or <code>r-x</code>
+(read/execute). Despite there being different virtual addresses
+associated with these areas of memory, the OS Page Tables for these
+processes will point them at the same Physical Locations so that
+only a single copy of <code>libc</code> and <code>libm</code> needs to be in memory at
+one time.</li>
+
+<li>When a <code>math_prog</code> process finishes, it will release all its
+exclusive memory such as Stack, Text, Heap, and Globals. This
+memory can then be used by the operating system for other
+purposes.  However, any shared libraries may remain in
+memory. After one or both <code>math_prog</code> processes finish, if ANY
+other processes are still using <code>libc</code> or <code>libm</code> they will remain
+in memory. This makes it unlikely that the OS will reclaim the full
+<code>3624K</code> when <code>math_prog</code> finishes.</li>
+</ol>
+
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orge0316db" class="outline-2">
+<h2 id="orge0316db"><span class="section-number-2">5</span> Review Problem 4</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Below are tables showing values in Main Memory and the state of a
+small Cache.  Beneath this is a short code fragment that sums elements
+from main memory. The code has a user parameter <code>stride</code>. For strides
+of 1,2,3,4, work through the code changing cache and counting how many
+cache hits/misses occur with the given stride. Show the final state of
+cache in each case.
+</p>
+</div>
+
+<div id="outline-container-org99bee94" class="outline-3">
+<h3 id="org99bee94">Main Memory</h3>
+<div class="outline-text-3" id="text-org99bee94">
+<div class="org-src-container">
+<pre class="src src-text">| Addr | Addr Bits      | Value |
+|------+----------------+-------|
+|   20 | 00  10  0000   |     9 |
+|   24 | 00  10  0100   |    10 |
+|   28 | 00  10  1000   |    11 |
+|   2C | 00  10  1100   |    12 |
+|   30 | 00  11  0000   |    13 |
+|   34 | 00  11  0100   |    14 |
+|   38 | 00  11  1000   |    15 |
+|   3C | 00  11  1100   |    16 |
+|   40 | 01  00  0000   |    17 |
+|   44 | 01  00  0100   |    18 |
+|   48 | 01  00  1000   |    19 |
+|   4C | 01  00  1100   |    20 |
+|   50 | 01  01  0000   |    21 |
+|   54 | 01  01  0100   |    22 |
+|   58 | 01  01  1000   |    23 |
+|   5C | 01  01  1100   |    24 |
+|   60 | 01  10  0000   |    25 |
+|   64 | 01  10  0100   |    26 |
+|   68 | 01  10  1000   |    27 |
+|   6C | 01  10  1100   |    28 |
+|------+----------------+-------|
+|      | Tag Set Offset |       |
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7b8ab5e" class="outline-3">
+<h3 id="org7b8ab5e">Cache</h3>
+<div class="outline-text-3" id="text-org7b8ab5e">
+<ul class="org-ul">
+<li>Direct-mapped: 1 line per set</li>
+<li>16-byte lines = 4-bit offset</li>
+<li>4 Sets = 2-bit index</li>
+<li>8-bit Address = 2-bit tag</li>
+<li>Total Cache Size = 64 bytes   
+4 sets * 16 bytes</li>
+<li>Mostly cold with some data from an earlier part of the code</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-text">|     |   |     | Blocks/Line           |
+| Set | V | Tag | 0-3  4-7  8-11  12-15 |
+|-----+---+-----+-----------------------|
+|  00 | 1 | 00  | 1    2    3     4     |
+|  01 | 0 | -   | -                     |
+|  10 | 0 | -   | -                     |
+|  11 | 0 | -   | -                     |
+|-----+---+-----+-----------------------|
+| Set | V | Tag | 0-3  4-7  8-11  12-15 |
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org8dc33c8" class="outline-3">
+<h3 id="org8dc33c8">Code</h3>
+<div class="outline-text-3" id="text-org8dc33c8">
+<div class="org-src-container">
+<pre class="src src-c">int *data = (int *) 0x20;           // address of start of the array
+int stride; scanf("%d", &amp;stride);   // user enters 1, 2, 3, or other values
+int sum = 0;
+for(int i=0; i&lt;20; i += stride){
+  sum += data[i];
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8c3b7e1" class="outline-3">
+<h3 id="org8c3b7e1">Stats for Strides:</h3>
+<div class="outline-text-3" id="text-org8c3b7e1">
+<p>
+Show sum, number of hits/misses, and final cache state for strides of 1,2,3,4.
+</p>
+<ul class="org-ul">
+<li>Stride 1: sum, misses/hits, final cache state</li>
+<li>Stride 2: sum, misses/hits, final cache state</li>
+<li>Stride 3: sum, misses/hits, final cache state</li>
+<li>Stride 4: sum, misses/hits, final cache state</li>
+</ul>
+</div>
+
+
+
+<div id="outline-container-org3ba86d1" class="outline-4">
+<h4 id="org3ba86d1">SOLUTION</h4>
+<div class="outline-text-4" id="text-org3ba86d1">
+<button onclick="document.getElementById('solution4').style.display='block'">Click for Solution</button>
+<div id="solution4" style="display:none;">
+<p>
+All strides have the following final cache state
+</p>
+<div class="org-src-container">
+<pre class="src src-text">|     |   |     | Blocks/Line |                                                                            |
+| Set | V | Tag | 0  4  8  12 | Notes                                                                      |
+|-----+---+-----+-------------+----------------------------------------------------------------------------|
+|  00 | 1 |  01 | 17 18 19 20 | Original contents '1 2 3 4' evicted midway through the loop                |
+|  01 | 1 |  01 | 21 22 23 24 |                                                                            |
+|  10 | 1 |  01 | 25 26 27 28 | First loop iteration loads '9 10 11 12' which is evicted in last iteration |
+|  11 | 1 |  00 | 13 14 15 16 |                                                                            |
+|-----+---+-----+-------------+----------------------------------------------------------------------------|
+| Set | V | Tag | 0  4  8  12 |                                                                            |
+</pre>
+</div>
+
+<p>
+Miss/Hit Diagram for Strides
+</p>
+<div class="org-src-container">
+<pre class="src src-text">| Addr | Addr Bits      | Value |  i | Stride1 | Stride2 |  i | Stride3 | Stride4 |
+|------+----------------+-------+----+---------+---------+----+---------+---------|
+|   20 | 00  10  0000   |     9 |  0 | Miss    | Miss    |  0 | Miss    | Miss    |
+|   24 | 00  10  0100   |    10 |  1 | Hit     |         |  1 |         |         |
+|   28 | 00  10  1000   |    11 |  2 | Hit     | Hit     |  2 |         |         |
+|   2C | 00  10  1100   |    12 |  3 | Hit     |         |  3 | Hit     |         |
+|   30 | 00  11  0000   |    13 |  4 | Miss    | Miss    |  4 |         | Miss    |
+|   34 | 00  11  0100   |    14 |  5 | Hit     |         |  5 |         |         |
+|   38 | 00  11  1000   |    15 |  6 | Hit     | Hit     |  6 | Miss    |         |
+|   3C | 00  11  1100   |    16 |  7 | Hit     |         |  7 |         |         |
+|   40 | 01  00  0000   |    17 |  8 | Miss    | Miss    |  8 |         | Miss    |
+|   44 | 01  00  0100   |    18 |  9 | Hit     |         |  9 | Miss    |         |
+|   48 | 01  00  1000   |    19 | 10 | Hit     | Hit     | 10 |         |         |
+|   4C | 01  00  1100   |    20 | 11 | Hit     |         | 11 |         |         |
+|   50 | 01  01  0000   |    21 | 12 | Miss    | Miss    | 12 | Miss    | Miss    |
+|   54 | 01  01  0100   |    22 | 13 | Hit     |         | 13 |         |         |
+|   58 | 01  01  1000   |    23 | 14 | Hit     | Hit     | 14 |         |         |
+|   5C | 01  01  1100   |    24 | 15 | Hit     |         | 15 | Hit     |         |
+|   60 | 01  10  0000   |    25 | 16 | Miss    | Miss    | 16 |         | Miss    |
+|   64 | 01  10  0100   |    26 | 17 | Hit     |         | 17 |         |         |
+|   68 | 01  10  1000   |    27 | 18 | Hit     | Hit     | 18 | Miss    |         |
+|   6C | 01  10  1100   |    28 | 19 | Hit     |         | 19 |         |         |
+|------+----------------+-------+----+---------+---------+----+---------+---------|
+|      | Tag Set Offset |       |    |         |         |    |         |         |
+</pre>
+</div>
+
+<p>
+Totals
+</p>
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
 <colgroup>
-<col  class="org-left" />
+<col  class="org-right" />
 
-<col  class="org-left" />
+<col  class="org-right" />
 
-<col  class="org-left" />
+<col  class="org-right" />
+
+<col  class="org-right" />
 </colgroup>
 <thead>
 <tr>
-<th scope="col" class="org-left">File</th>
-<th scope="col" class="org-left">State</th>
-<th scope="col" class="org-left">Description</th>
+<th scope="col" class="org-right">Stride</th>
+<th scope="col" class="org-right">Sum</th>
+<th scope="col" class="org-right">Misses</th>
+<th scope="col" class="org-right">Hits</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="org-left"><code>QUESTIONS.txt</code></td>
-<td class="org-left">EDIT</td>
-<td class="org-left">Questions to answer</td>
+<td class="org-right">1</td>
+<td class="org-right">370</td>
+<td class="org-right">5</td>
+<td class="org-right">15</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>Makefile</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Makefile to build programs for the HW</td>
+<td class="org-right">2</td>
+<td class="org-right">180</td>
+<td class="org-right">5</td>
+<td class="org-right">5</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>memory_parts.c</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Problem 1 program to analyze</td>
+<td class="org-right">3</td>
+<td class="org-right">126</td>
+<td class="org-right">5</td>
+<td class="org-right">2</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>gettysburg.txt</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Problem 1 data file</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>do_math.c</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Problem 2 program compile and link</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>do_pthreads.c</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Problem 2 program compile and link</td>
+<td class="org-right">4</td>
+<td class="org-right">85</td>
+<td class="org-right">5</td>
+<td class="org-right">0</td>
 </tr>
 </tbody>
 </table>
+
+<p>
+For smaller strides, the favorable ratio of Hits to Misses explains
+the better throughput observed in practice.
+</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 
-<div id="outline-container-orgd480b36" class="outline-2">
-<h2 id="orgd480b36"><span class="section-number-2">3</span> What to Understand</h2>
-<div class="outline-text-2" id="text-3">
+
+
+<div id="outline-container-org0888072" class="outline-2">
+<h2 id="org0888072"><span class="section-number-2">6</span> Review Problem 5</h2>
+<div class="outline-text-2" id="text-6">
 <p>
-Ensure that you understand
+The code in <code>reversal_benchmark.c</code> implements two functions which reverse the
+elements of an array. They take markedly different approaches.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">void reverse_arr1(int *arr, long size){
+  int *tmp = malloc(sizeof(int)*size);
+  for(long i=0; i&lt;size; i++){
+    tmp[i] = arr[size-i-1];
+  }
+  for(long i=0; i&lt;size; i++){
+    arr[i] = tmp[i];
+  }
+  free(tmp);
+}
+
+void reverse_arr2(int *arr, long size){
+  for(long i=0; i&lt;size/2; i++){
+    int tmp = arr[i];
+    arr[i] = arr[size-i-1];
+    arr[size-i-1] = tmp;
+  }
+}
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org65ded3d" class="outline-3">
+<h3 id="org65ded3d">(A) Predictions</h3>
+<div class="outline-text-3" id="text-org65ded3d">
+<p>
+Predict which of these two functions will run faster based on their
+code characteristics. Justify your answer by contrasting the features
+of the two reversal functions.
+</p>
+</div>
+
+<div id="outline-container-org65278c0" class="outline-4">
+<h4 id="org65278c0">SOLUTION</h4>
+<div class="outline-text-4" id="text-org65278c0">
+<button onclick="document.getElementById('solution5A').style.display='block'">Click for Solution</button>
+<div id="solution5A" style="display:none;">
+
+<p>
+<code>reverse_arr1()</code> seems less likely to perform well because
 </p>
 <ul class="org-ul">
-<li>That program regions like the stack and heap are comprised of
-virtual addresses that the OS maps to physical locations</li>
-<li>Basic compiler options to link against standard libraries like the
-math library</li>
-<li>How the <code>nm</code> command can show defined and undefined symbols in an
-executable</li>
-<li>How to use <code>ldd</code> to show what libraries an executable is dynamically
-dependent upon</li>
+<li>it makes two passes through the array meaning it utilizes cache less
+effectively than <code>reverse_arr2()</code></li>
+<li>the second loop pass means that there is additional loop overhead to
+increment counters and perform boundary checks</li>
+<li>memory is allocated and then free'd which takes time that is not
+spent in reverse<sub>arr2</sub></li>
 </ul>
 </div>
 </div>
+</div>
+</div>
 
-<div id="outline-container-org5401376" class="outline-2">
-<h2 id="org5401376"><span class="section-number-2">4</span> Questions</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-org57f6f99" class="outline-3">
+<h3 id="org57f6f99">(B) Timing</h3>
+<div class="outline-text-3" id="text-org57f6f99">
 <p>
-Analyze the files in the provided codepack and answer the questions
-given in <code>QUESTIONS.txt</code>.
+Modify the provided <code>reversal_benchmark.c</code> file to perform timing calculations
+on the two functions as they are called on different sizes of arrays.
+Print runtimes in a tabular format.
 </p>
 
+<p>
+Make sure to compile/run with a convention like the following:
+</p>
 <div class="org-src-container">
-<pre class="src src-text">                           _________________
+<pre class="src src-sh">&gt; gcc -Og reversal_benchmark.c    # compile with minimal optimizations
 
-                            HW 14 QUESTIONS
-                           _________________
+&gt; ./a.out                         # show usage
+usage: ./a.out &lt;min_pow2&gt; &lt;max_pow2&gt; &lt;repeats&gt;
 
-
-- Name: (FILL THIS in)
-- NetID: (THE kauf0095 IN kauf0095@umn.edu)
-
-Write your answers to the questions below directly in this text file.
-Submit the whole text file while taking the associated quiz.
-
-
-PROBLEM 1: Virtual Memory and pmap
-==================================
-
-(A) memory_parts memory areas
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  Examine the source code for the provided `memory_parts.c'
-  program. Identify what region of program memory you expect the
-  following variables to be allocated into:
-  - global_arr[]
-  - stack_arr[]
-  - heap_arr
+&gt; ./a.out 10 20 100               # run benchmark, size 2^10 to 2^20, 100 repeats per
+      SIZE       rev1       rev2
+      1024       ???        ???
+      2048       ???        ???
+      4096       ???        ???
+      8192       ???        ???
+     16384       ???        ???
+     32768       ???        ???
+     65536       ???        ???
+    131072       ???        ???
+    262144       ???        ???
+    524288       ???        ???
+   1048576       ???        ???
+</pre>
+</div>
 
 
-(B) Running memory_parts and pmap
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  Compile the `memory_parts' using the provided Makefile.
-  ,----
-  | &gt; make memory_parts
-  `----
-  Run the program and note that it prints several pieces of information
-  - The addresses of several of the variables allocated
-  - Its Process ID (PID) which is a unique number used to identify the
-    running program. This is an integer.
-  For example, the output might be
-  ,----
-  | &gt; ./memory-parts
-  | 0x5605a7c271e9 : main()
-  | 0x5605a7c2a0c0 : global_arr
-  | 0x7ffe5ff7d600 : stack_arr
-  | 0x5605a92442a0 : heap_arr
-  | 0x7f1fa7303000 : mmap'd file
-  | 0x600000000000 : mmap'd block1
-  | 0x600000001000 : mmap'd block2
-  | my pid is 8406
-  | press any key to continue
-  `----
-  so the programs PID is 11160
+<p>
+Paste the C code you wrote below to show you how you timed the
+function runs.
+</p>
+</div>
 
-  The program will also stop at this point until a key is pressed. DO
-  NOT PRESS A KEY YET.
+<div id="outline-container-org36a2ad5" class="outline-4">
+<h4 id="org36a2ad5">SOLUTION</h4>
+<div class="outline-text-4" id="text-org36a2ad5">
+<button onclick="document.getElementById('solution5B').style.display='block'">Click for Solution</button>
+<div id="solution5B" style="display:none;">
 
-  Open another terminal and type the following command in that new
-  terminal.
-  ,----
-  | &gt; pmap THE-PID-NUMBER-THAT-WAS-PRINTED-EARLIER
-  `----
+<div class="org-src-container">
+<pre class="src src-c">// In loop over sizes 
+    clock_t begin, end;
+    
+    begin = clock();
+    for(int i=0; i&lt;repeats; i++){ // repeatedly run function
+      reverse_arr1(arr1,size);
+    }
+    end = clock();
+    double cpu_time1 = ((double) (end - begin)) / CLOCKS_PER_SEC;
+    printf("%10.4e ",cpu_time1);
+      
+    begin = clock();
+    for(int i=0; i&lt;repeats; i++){ // repeatedly run function
+      reverse_arr2(arr2,size);
+    }
+    end = clock();
+    double cpu_time2 = ((double) (end - begin)) / CLOCKS_PER_SEC;
+    printf("%10.4e ",cpu_time2);
 
-  Paste the output of pmap below.
-
-
-(C) Program Addresses vs Mapped Addresses
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  pmap prints out the virtual address space table for the program. The
-  leftmost column is a virtual address mapped by the OS for the program
-  to some physical location.  The next column is the size of the area of
-  memory associated with that starting address. The 3rd column contains
-  permissions of the program has for the memory area: r for read, w for
-  read, x for execute. The final column is contains any identifying
-  information about the memory area that pmap can discern.
-
-  Compare the addresses of variables and functions from the paused
-  program to the output. Try to determine the virtual address space in
-  which each variable resides and what region of program memory that
-  virtual address must belong to (stack, heap, globals, text).  In some
-  cases, the identifying information provided by pmap may make this
-  obvious.
-
-
-(D) Min Size of Mapped Areas
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  The minimum size of any virtual area of memory appears to be 4K. Why
-  is this the case?
-
-
-(E) Additional Observations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  Notice that in addition to the "normal" variables that are mapped,
-  there is also an entry for the mmap()'d file 'gettysburg.txt' in the
-  virtual address table.  The mmap() function is explored in the next
-  problem but note its calling sequence which involves use of a couple
-  system calls:
-  1. `open()' which is a low level file opening call which returns a
-     numeric file descriptor.
-  2. `fstat()' which obtains information such as size for an open file
-     based on its numeric file descriptor. The `stat() / fstat()' system
-     calls are used to ask the Unix Operating System information about
-     files such as their size, modification times, and access
-     permissions.  This system call is studied more in Operating System
-     courses.
-
-  Finally there are additional calls to `mmap()' which allocate memory
-  to the program at a specific virtual address. Similar code to this is
-  often used to allocate and expand the heap area of memory for programs
-  in implementations of `malloc()'.
-
-
-PROBLEM 2: Linking to System Libraries
-======================================
-
-(A)
-~~~
-
-  The file `do_math.c' contains some basic usage of the C library math
-  functions like `pow()'.  Compile this program using the command line
-  ,----
-  | &gt; gcc do_math.c
-  `----
-
-  and show the results below which should be problematic. Describe why
-  the linker complains about functions like `cos' and `pow'.
-
-  *Note*: problems will arise on Linux systems with gcc: other
-  OS/compiler combinations may not cause any problems.
-
-
-(B)
-~~~
-
-  In order to fix this problem, one must link the program against the
-  math library typically called `libm'. This can be done with the option
-  `-l' for "library" and `m' for the math library as shown:
-  ,----
-  | &gt; gcc do_math.c -lm
-  `----
-
-
-  Show a run of the resulting executable after a successful compile
-  below.
-
-
-(C)
-~~~
-
-  After successfully compiling `do_math.c', use the `ldd' command to
-  examine which dynamically linked libraries it requires to
-  run. Assuming the executable is named `a.out', invoke the command like
-  this
-  ,----
-  | &gt; ldd a.out
-  `----
-
-  Show the output for this command and note anything related to the math
-  library that is reported.
-
-
-(D)
-~~~
-
-  Run the program which should report its Process ID (pid) before
-  pausing.  In a separate terminal, while the program is still running,
-  execute the pmap command to see the virtual address space for the
-  program (command `pmap &lt;pid&gt;'). Paste the results below and describe
-  any relation to the math library that is apparent.
-
-
-(E)
-~~~
-
-  Repeat the general steps above with the C file `do_pthreads.c' which
-  will require linking to the PThreads library with `-lpthread'.
-  - Compile to show error messages
-  - Compile successfully with proper linking and show output
-  - Call `ldd' on the executable
-  - While the program is paused, run `pmap' to see its virtual address
-    space
-
-  Show the output of these commands below.
 </pre>
 </div>
 </div>
 </div>
 </div>
+</div>
+
+<div id="outline-container-orgd42e580" class="outline-3">
+<h3 id="orgd42e580">(C) Analysis</h3>
+<div class="outline-text-3" id="text-orgd42e580">
+<p>
+Paste the table of numbers your code produced for timing the two
+reversal functions. Describe if the one you predicted would be faster
+actually was measured to be faster. 
+</p>
+</div>
+
+<div id="outline-container-org3135568" class="outline-4">
+<h4 id="org3135568">SOLUTION</h4>
+<div class="outline-text-4" id="text-org3135568">
+<button onclick="document.getElementById('solution5C').style.display='block'">Click for Solution</button>
+<div id="solution5C" style="display:none;">
+
+<div class="org-src-container">
+<pre class="src src-text">val&gt; ./a.out 10 20 100  # run benchmark
+      SIZE       rev1       rev2   rev_OPTM 
+      1024 4.1300e-04 2.3100e-04 1.4300e-04 
+      2048 8.0300e-04 4.5600e-04 2.7900e-04 
+      4096 1.2870e-03 2.1300e-04 1.3000e-04 
+      8192 7.7700e-04 4.2500e-04 2.5900e-04 
+     16384 1.5420e-03 8.4600e-04 5.1700e-04 
+     32768 4.3180e-03 2.2670e-03 1.3730e-03 
+     65536 8.2900e-03 3.8690e-03 2.7980e-03 
+    131072 1.5041e-02 7.9850e-03 4.4940e-03 
+    262144 3.1649e-02 1.3665e-02 9.0430e-03 
+    524288 5.8907e-02 2.7332e-02 1.8127e-02 
+   1048576 1.2882e-01 5.5805e-02 3.7581e-02 
+</pre>
+</div>
+
+<p>
+<code>array_rev2()</code> is definitely faster at all sizes measured taking only
+1/2 to 1/3 of the time as <code>array_rev1()</code> at the most sizes. 
+</p>
+
+<p>
+The last column shows the results of the optional optimized version of <code>array_rev2()</code>
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7aea1aa" class="outline-3">
+<h3 id="org7aea1aa">(D) Optimized Reversal</h3>
+<div class="outline-text-3" id="text-org7aea1aa">
+<p>
+After determining the faster reversal function, modify it further in
+an attempt to further improve its performance.
+</p>
+</div>
+
+<div id="outline-container-org8b79a96" class="outline-4">
+<h4 id="org8b79a96">SOLUTION</h4>
+<div class="outline-text-4" id="text-org8b79a96">
+<button onclick="document.getElementById('solution5D').style.display='block'">Click for Solution</button>
+<div id="solution5D" style="display:none;">
+
+<p>
+Unrolling the loop in <code>reverse_arr2()</code> is sufficient to improve the
+performance though this requires a touch of care to get the indices
+correct.  See the table above for empirical results on an Intel
+laptop. 
+</p>
+<div class="org-src-container">
+<pre class="src src-c">
+// based on reverse_arr2() + unrolling
+void reverse_arr_OPTM(int *arr, long size){
+  long i;
+
+  for(i=0; i&lt;size/2-4; i+=4){   // unrolled loop
+    int tmp0 = arr[i+0];
+    arr[i+0] = arr[size-i-1-0];
+    arr[size-i-1-0] = tmp0;
+
+    int tmp1 = arr[i+1];
+    arr[i+1] = arr[size-i-1-1];
+    arr[size-i-1-1] = tmp1;
+
+    int tmp2 = arr[i+2];
+    arr[i+2] = arr[size-i-1-2];
+    arr[size-i-1-2] = tmp2;
+
+    int tmp3 = arr[i+3];
+    arr[i+3] = arr[size-i-1-3];
+    arr[size-i-1-3] = tmp3;
+  }
+
+  for(; i&lt;size/2; i+=1){     // cleanup
+    int tmp0 = arr[i+0];
+    arr[i+0] = arr[size-i-1-0];
+    arr[size-i-1-0] = tmp0;
+  }
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-12-06 Tue 16:15 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-04-25 Tue 16:58 <br/> </i>
 </div>
 </body>
 </html>
