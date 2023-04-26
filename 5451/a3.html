@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-04-25 Tue 14:28 -->
+<!-- 2023-04-26 Wed 11:35 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CSCI 5451 Assignment 3: Shared Memory and GPU Programming</title>
@@ -344,7 +344,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2023-04-25 Tue 14:28</i>
+<i>Last Updated: 2023-04-26 Wed 11:35</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CSCI 5451 Assignment 3: Shared Memory and GPU Programming</h1>
@@ -355,41 +355,50 @@ text-align: justify;
 <li>You may work in groups of 2 and submit one assignment per group.</li>
 </ul>
 
-<div id="outline-container-orgc981ecc" class="outline-4">
-<h4 id="orgc981ecc">CODE DISTRIBUTION: <a href="a3-code.zip">a3-code.zip</a></h4>
-<div class="outline-text-4" id="text-orgc981ecc">
+<div id="outline-container-org2967256" class="outline-4">
+<h4 id="org2967256">CODE DISTRIBUTION: <a href="a3-code.zip">a3-code.zip</a></h4>
+<div class="outline-text-4" id="text-org2967256">
 </div>
 </div>
 
-<div id="outline-container-org2f15d82" class="outline-4">
-<h4 id="org2f15d82">CHANGELOG: Empty</h4>
+<div id="outline-container-org437addc" class="outline-4">
+<h4 id="org437addc">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org437addc">
+<dl class="org-dl">
+<dt>Wed Apr 26 11:33:50 AM CDT 2023</dt><dd>A bug in <code>test_kmeans_omp.org</code>
+has been corrected; As reported in <a href="https://piazza.com/class/lctooaak84t7jc/post/84">Post 84</a> Test 8 expected incorrect
+output.  The codepack now contains a corrected version of the test
+file which you can also download here: <a href="test_kmeans_omp.org">test_kmeans_omp.org</a></dd>
+</dl>
 </div>
-<div id="outline-container-org3fd7ddd" class="outline-4">
-<h4 id="org3fd7ddd"></h4>
-<div class="outline-text-4" id="text-org3fd7ddd">
+</div>
+
+<div id="outline-container-org6d5a4ae" class="outline-4">
+<h4 id="org6d5a4ae"></h4>
+<div class="outline-text-4" id="text-org6d5a4ae">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org8a82357">1. Overview</a></li>
-<li><a href="#org880e683">2. Download Code and Setup</a></li>
-<li><a href="#orgee37672">3. <code>A3-WRITEUP.txt</code> Writeup File</a></li>
-<li><a href="#org4fd0168">4. Benchmarking on CUDA Machines</a></li>
-<li><a href="#orge486f45">5. <b>Problem 1</b>: OpenMP K-Means Clustering</a>
+<li><a href="#orgdcaa2fd">1. Overview</a></li>
+<li><a href="#orgc53acf8">2. Download Code and Setup</a></li>
+<li><a href="#orge59ebc6">3. <code>A3-WRITEUP.txt</code> Writeup File</a></li>
+<li><a href="#org4854e0d">4. Benchmarking on CUDA Machines</a></li>
+<li><a href="#orgd6da703">5. <b>Problem 1</b>: OpenMP K-Means Clustering</a>
 <ul>
-<li><a href="#org9add852">5.1. Implementation Requirements</a></li>
-<li><a href="#org702b7be">5.2. Implementation Notes</a></li>
-<li><a href="#orgd530b76">5.3. Grading Criteria for Problem 1</a></li>
+<li><a href="#orgb44d9e7">5.1. Implementation Requirements</a></li>
+<li><a href="#orgdfbd7dc">5.2. Implementation Notes</a></li>
+<li><a href="#org0bcbf32">5.3. Grading Criteria for Problem 1</a></li>
 </ul>
 </li>
-<li><a href="#orgb029e75">6. <b>Problem 2</b>: CUDA K-Means Clustering</a>
+<li><a href="#org451c108">6. <b>Problem 2</b>: CUDA K-Means Clustering</a>
 <ul>
-<li><a href="#org1514442">6.1. Implementation Requirements</a></li>
-<li><a href="#orga632fb1">6.2. Implementation Notes</a></li>
-<li><a href="#org7986a25">6.3. Grading Criteria for Problem 2</a></li>
+<li><a href="#org64136d3">6.1. Implementation Requirements</a></li>
+<li><a href="#org8873deb">6.2. Implementation Notes</a></li>
+<li><a href="#org5f03dbb">6.3. Grading Criteria for Problem 2</a></li>
 </ul>
 </li>
-<li><a href="#org1c34dc6">7. Project Submission on Gradescope</a></li>
+<li><a href="#org6fccb72">7. Project Submission on Gradescope</a></li>
 </ul>
 </div>
 </div>
@@ -397,8 +406,8 @@ text-align: justify;
 </div>
 
 
-<div id="outline-container-org8a82357" class="outline-2">
-<h2 id="org8a82357"><span class="section-number-2">1</span> Overview</h2>
+<div id="outline-container-orgdcaa2fd" class="outline-2">
+<h2 id="orgdcaa2fd"><span class="section-number-2">1</span> Overview</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 As the previous assignment, this one involves coding a parallel
@@ -418,8 +427,8 @@ some timing experiments and describe the results in a short text file.
 </div>
 </div>
 
-<div id="outline-container-org880e683" class="outline-2">
-<h2 id="org880e683"><span class="section-number-2">2</span> Download Code and Setup</h2>
+<div id="outline-container-orgc53acf8" class="outline-2">
+<h2 id="orgc53acf8"><span class="section-number-2">2</span> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -523,8 +532,8 @@ folder. Ultimately you will re-zip this folder to submit it.
 </div>
 </div>
 
-<div id="outline-container-orgee37672" class="outline-2">
-<h2 id="orgee37672"><span class="section-number-2">3</span> <code>A3-WRITEUP.txt</code> Writeup File</h2>
+<div id="outline-container-orge59ebc6" class="outline-2">
+<h2 id="orge59ebc6"><span class="section-number-2">3</span> <code>A3-WRITEUP.txt</code> Writeup File</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Below is a blank copy of the writeup document included in the code
@@ -634,8 +643,8 @@ kmeans_cuda Discussion Questions
 </div>
 
 
-<div id="outline-container-org4fd0168" class="outline-2">
-<h2 id="org4fd0168"><span class="section-number-2">4</span> Benchmarking on CUDA Machines</h2>
+<div id="outline-container-org4854e0d" class="outline-2">
+<h2 id="org4854e0d"><span class="section-number-2">4</span> Benchmarking on CUDA Machines</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 CSE Labs machines has a series of servers named machines
@@ -648,8 +657,8 @@ machines.
 </div>
 </div>
 
-<div id="outline-container-orge486f45" class="outline-2">
-<h2 id="orge486f45"><span class="section-number-2">5</span> <b>Problem 1</b>: OpenMP K-Means Clustering</h2>
+<div id="outline-container-orgd6da703" class="outline-2">
+<h2 id="orgd6da703"><span class="section-number-2">5</span> <b>Problem 1</b>: OpenMP K-Means Clustering</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Implement parallel version of the K-means algorithm for shared memory
@@ -660,8 +669,8 @@ there if you need guidance.
 </p>
 </div>
 
-<div id="outline-container-org9add852" class="outline-3">
-<h3 id="org9add852"><span class="section-number-3">5.1</span> Implementation Requirements</h3>
+<div id="outline-container-orgb44d9e7" class="outline-3">
+<h3 id="orgb44d9e7"><span class="section-number-3">5.1</span> Implementation Requirements</h3>
 <div class="outline-text-3" id="text-5-1">
 <ol class="org-ol">
 <li><code>kmeans_omp</code> will accept the same command line arguments as the
@@ -684,8 +693,8 @@ is well.</li>
 </div>
 </div>
 
-<div id="outline-container-org702b7be" class="outline-3">
-<h3 id="org702b7be"><span class="section-number-3">5.2</span> Implementation Notes</h3>
+<div id="outline-container-orgdfbd7dc" class="outline-3">
+<h3 id="orgdfbd7dc"><span class="section-number-3">5.2</span> Implementation Notes</h3>
 <div class="outline-text-3" id="text-5-2">
 <ul class="org-ul">
 <li>Parallelize the two major phases of the algorithm, Cluster Center
@@ -702,8 +711,8 @@ thread is modifying the new cluster center at a time.</li>
 </div>
 
 
-<div id="outline-container-orgd530b76" class="outline-3 grading 50">
-<h3 id="orgd530b76"><span class="section-number-3">5.3</span> <a id="org80d44c5"></a> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div id="outline-container-org0bcbf32" class="outline-3 grading 50">
+<h3 id="org0bcbf32"><span class="section-number-3">5.3</span> <a id="orga5c1f0e"></a> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 Test cases are provided in <code>test_kmeans_omp.org</code>. The <code>Makefile</code>
@@ -761,8 +770,8 @@ contains a target for this, just requires the missing
 </div>
 </div>
 
-<div id="outline-container-orgb029e75" class="outline-2">
-<h2 id="orgb029e75"><span class="section-number-2">6</span> <b>Problem 2</b>: CUDA K-Means Clustering</h2>
+<div id="outline-container-org451c108" class="outline-2">
+<h2 id="org451c108"><span class="section-number-2">6</span> <b>Problem 2</b>: CUDA K-Means Clustering</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Implement parallel version of the K-means algorithm for Nvidia GPU
@@ -773,8 +782,8 @@ discussion present there if you need guidance.
 </p>
 </div>
 
-<div id="outline-container-org1514442" class="outline-3">
-<h3 id="org1514442"><span class="section-number-3">6.1</span> Implementation Requirements</h3>
+<div id="outline-container-org64136d3" class="outline-3">
+<h3 id="org64136d3"><span class="section-number-3">6.1</span> Implementation Requirements</h3>
 <div class="outline-text-3" id="text-6-1">
 <ol class="org-ol">
 <li><code>kmeans_cuda</code> will accept the same command line arguments as the
@@ -796,8 +805,8 @@ report times only on the data files indicated.</li>
 </div>
 
 
-<div id="outline-container-orga632fb1" class="outline-3">
-<h3 id="orga632fb1"><span class="section-number-3">6.2</span> Implementation Notes</h3>
+<div id="outline-container-org8873deb" class="outline-3">
+<h3 id="org8873deb"><span class="section-number-3">6.2</span> Implementation Notes</h3>
 <div class="outline-text-3" id="text-6-2">
 <ul class="org-ul">
 <li>The <code>nvcc</code> compiler is a C++ compiler so has slightly different
@@ -859,8 +868,8 @@ major coordination is on totaling the cluster counts.</li>
 </div>
 </div>
 
-<div id="outline-container-org7986a25" class="outline-3 grading 50">
-<h3 id="org7986a25"><span class="section-number-3">6.3</span> <a id="org0c974ec"></a> Grading Criteria for Problem 2&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
+<div id="outline-container-org5f03dbb" class="outline-3 grading 50">
+<h3 id="org5f03dbb"><span class="section-number-3">6.3</span> <a id="org3dec284"></a> Grading Criteria for Problem 2&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="50">50</span></span></h3>
 <div class="outline-text-3" id="text-6-3">
 <p>
 Test cases are provided in <code>test_kmeans_cuda.org</code>. The <code>Makefile</code>
@@ -949,8 +958,8 @@ contains a target for this, just requires the missing
 </div>
 
 
-<div id="outline-container-org1c34dc6" class="outline-2">
-<h2 id="org1c34dc6"><span class="section-number-2">7</span> Project Submission on Gradescope</h2>
+<div id="outline-container-org6fccb72" class="outline-2">
+<h2 id="org6fccb72"><span class="section-number-2">7</span> Project Submission on Gradescope</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 Submission is identical to the previous programming assignment. See
@@ -958,9 +967,9 @@ the <a href="a2.html">A2 Description</a> if you need additional details.
 </p>
 </div>
 
-<div id="outline-container-orgcbed624" class="outline-4">
-<h4 id="orgcbed624">Late Policies</h4>
-<div class="outline-text-4" id="text-orgcbed624">
+<div id="outline-container-orgebe2b6f" class="outline-4">
+<h4 id="orgebe2b6f">Late Policies</h4>
+<div class="outline-text-4" id="text-orgebe2b6f">
 <p>
 You may wish to review the policy on late project submission which
 will cost 1 Engagement Point per day late. <b>No projects will be
@@ -975,7 +984,7 @@ accepted more than 48 hours after the deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-04-25 Tue 14:28 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-04-26 Wed 11:35 <br/> </i>
 </div>
 </body>
 </html>
