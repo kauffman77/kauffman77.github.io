@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-11-05 Sun 11:15 -->
+<!-- 2023-11-05 Sun 11:34 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Dis10: ~dup() / dup2()~ and the File Descriptor Table</title>
@@ -344,7 +344,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2023-11-05 Sun 11:15</i>
+<i>Last Updated: 2023-11-05 Sun 11:34</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Dis10: <code>dup() / dup2()</code> and the File Descriptor Table</h1>
@@ -353,9 +353,9 @@ text-align: justify;
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-orgb926327" class="outline-4">
-<h4 id="orgb926327">CODE DISTRIBUTION: <a href="dis10-code.zip">dis10-code.zip</a></h4>
-<div class="outline-text-4" id="text-orgb926327">
+<div id="outline-container-org6e979d6" class="outline-4">
+<h4 id="org6e979d6">CODE DISTRIBUTION: <a href="dis10-code.zip">dis10-code.zip</a></h4>
+<div class="outline-text-4" id="text-org6e979d6">
 <ul class="org-ul">
 <li>Download the code distribution</li>
 <li>See further setup instructions below</li>
@@ -363,25 +363,26 @@ text-align: justify;
 </div>
 </div>
 
-<div id="outline-container-orge290917" class="outline-4">
-<h4 id="orge290917">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-orge290917">
+<div id="outline-container-org5e3dcbb" class="outline-4">
+<h4 id="org5e3dcbb">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org5e3dcbb">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgc4d9fe4">1. Rationale</a></li>
-<li><a href="#org489a0a1">2. Codepack</a></li>
-<li><a href="#org561cf3e">3. QUESTIONS.txt File Contents</a></li>
-<li><a href="#orgdf5f595">4. Submission</a></li>
+<li><a href="#org6ebfe43">1. Rationale</a></li>
+<li><a href="#org2a7a04e">2. Codepack</a></li>
+<li><a href="#org4058900">3. I/O Redirection</a></li>
+<li><a href="#org027f913">4. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org20603f6">5. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgc4d9fe4" class="outline-2">
-<h2 id="orgc4d9fe4"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org6ebfe43" class="outline-2">
+<h2 id="org6ebfe43"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 As discussed in lecture, Unix maintains a table of open File
@@ -394,9 +395,9 @@ descriptor table works and how it is inherited by child processes.
 </p>
 </div>
 
-<div id="outline-container-org1bdd017" class="outline-4">
-<h4 id="org1bdd017">Grading Policy</h4>
-<div class="outline-text-4" id="text-org1bdd017">
+<div id="outline-container-org3e76af6" class="outline-4">
+<h4 id="org3e76af6">Grading Policy</h4>
+<div class="outline-text-4" id="text-org3e76af6">
 <p>
 Credit for this exercise is earned by completing the code/asnwers here
 and submitting a Zip of the work to Gradescope. Students are
@@ -419,8 +420,8 @@ See the <a href="../syllabus.html">full policies in the course syllabus</a>.
 </div>
 </div>
 
-<div id="outline-container-org489a0a1" class="outline-2">
-<h2 id="org489a0a1"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org2a7a04e" class="outline-2">
+<h2 id="org2a7a04e"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for this exercise is linked at the top of this
@@ -499,9 +500,62 @@ the following files which are briefly described.
 </div>
 </div>
 
-<div id="outline-container-org561cf3e" class="outline-2">
-<h2 id="org561cf3e"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org4058900" class="outline-2">
+<h2 id="org4058900"><span class="section-number-2">3</span> I/O Redirection</h2>
 <div class="outline-text-2" id="text-3">
+<p>
+Programs often need to deal with open files for reading and
+writing. The UNIX Operating System (Linux included in this) maintains
+a data structure called the <b>File Descriptor Table</b> for all open
+files. Some entries in this table are automatically created like
+Standard Input and Standard Output. Others are created via the
+<code>open()</code> system call. The table is maintained in Kernel Space and can
+only be altered via system calls like <code>open() / close() / ~dup() /
+dup2()</code>.
+</p>
+
+<p>
+It is useful to have some diagrams of how the <code>dup()</code> and <code>dup2()</code>
+system calls manipulate the table of file descriptors.  The following
+diagrams will be discussed in lecture and may be used by course staff
+to assist students in understanding how programs like
+<code>switch_stdout.c</code> work.
+</p>
+</div>
+
+<div id="outline-container-org4d2de38" class="outline-4">
+<h4 id="org4d2de38">Fork and Child File Descriptors</h4>
+<div class="outline-text-4" id="text-org4d2de38">
+<div class="org-center">
+
+<div id="orga7ada74" class="figure">
+<p><img src="fork-fds.png" alt="fork-fds.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Effects of <code>open()</code>'ing a file then calling <code>fork()</code> : the child and parent both refer to the same open file.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org1e1595c" class="outline-4">
+<h4 id="org1e1595c">dup() and dup2() System calls</h4>
+<div class="outline-text-4" id="text-org1e1595c">
+<div class="org-center">
+
+<div id="orgaa5b2d0" class="figure">
+<p><img src="fork-fds.png" alt="fork-fds.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 2: </span>LEFT: Effect of calling <code>dup()</code> to create a duplicate file descriptor table entry. RIGHT: Effect of calling <code>dup2()</code> to overwrite on file descriptor entry with another.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org027f913" class="outline-2">
+<h2 id="org027f913"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
+<div class="outline-text-2" id="text-4">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the exercise.
 Follow the instructions in it to complete the QUIZ and CODE questions
@@ -678,9 +732,9 @@ CODE Complete redirect_child.c
 </div>
 </div>
 
-<div id="outline-container-orgdf5f595" class="outline-2">
-<h2 id="orgdf5f595"><span class="section-number-2">4</span> Submission</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-org20603f6" class="outline-2">
+<h2 id="org20603f6"><span class="section-number-2">5</span> Submission</h2>
+<div class="outline-text-2" id="text-5">
 <p>
 Follow the instructions at the end of <a href="dis01.html">Dis01</a> if you need a refresher on
 how to upload your completed exercise zip to Gradescope.
@@ -689,7 +743,7 @@ how to upload your completed exercise zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-11-05 Sun 11:15 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-11-05 Sun 11:34 <br/> </i>
 </div>
 </body>
 </html>
