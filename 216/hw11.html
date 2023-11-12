@@ -1,0 +1,664 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-11-12 Sun 11:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMSC216 HW11: Matrices and Memory Optimization</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2023-11-12 Sun 11:56</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CMSC216 HW11: Matrices and Memory Optimization</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Mon 20-Nov-2023</b></li>
+<li><i>Approximately 0.83% of total grade</i></li>
+<li>Homework and Quizzes are open resource/open collaboration. You must
+submit your own work but you may freely discuss HW topics with other
+members of the class.</li>
+</ul>
+
+<div id="outline-container-org9806da8" class="outline-4">
+<h4 id="org9806da8">CODE DISTRIBUTION: <a href="hw11-code.zip">hw11-code.zip</a></h4>
+<div class="outline-text-4" id="text-org9806da8">
+<ul class="org-ul">
+<li>Download the code distribution</li>
+<li>See further setup instructions below</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgdc4a93a" class="outline-4">
+<h4 id="orgdc4a93a">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-orgdc4a93a">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org182ecd9">1. Rationale</a>
+<ul>
+<li><a href="#orgf7d199d">Associated Reading / Preparation</a></li>
+<li><a href="#org5e338e2">Grading Policy</a></li>
+</ul>
+</li>
+<li><a href="#org8df841d">2. Codepack</a></li>
+<li><a href="#org220a88d">3. Overview and Background</a></li>
+<li><a href="#orgfc7f48a">4. What to Understand</a></li>
+<li><a href="#orga54a487">5. Questions</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org182ecd9" class="outline-2">
+<h2 id="org182ecd9"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Basic understanding of how the memory system works to fulfill
+load/store requests is essential when one wishes to optimize program
+performance.  Having an intuition on which styles of coding exploit
+cache memories will offer great performance benefits on most modern
+computing architectures.
+</p>
+
+<p>
+This HW analyzes a simple set of routines that have different
+performance due to their memory access pattern. The final problem is
+to create a more efficient version of a routine which accesses memory
+in a fashion that exploits cache more effectively increasing
+performance.
+</p>
+</div>
+
+<div id="outline-container-orgf7d199d" class="outline-3">
+<h3 id="orgf7d199d">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-orgf7d199d">
+<p>
+Bryant and O'Hallaron: Ch 6 on The Memory Hierarchy. Ch 6.5 and 6.6
+may be particularly helpful
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5e338e2" class="outline-3">
+<h3 id="org5e338e2">Grading Policy</h3>
+<div class="outline-text-3" id="text-org5e338e2">
+<p>
+Credit for this HW is earned by taking the associated HW Quiz which is
+linked under <code>Gradescope</code>.  The quiz will ask similar questions as
+those that are present in the <code>QUESTIONS.txt</code> file and those that
+complete all answers in <code>QUESTIONS.txt</code> should have no trouble with
+the quiz.
+</p>
+
+<p>
+Homework and Quizzes are open resource/open collaboration. You must
+submit your own work but you may freely discuss HW topics with other
+members of the class.
+</p>
+
+<p>
+See the <a href="../syllabus.html">full policies in the course syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8df841d" class="outline-2">
+<h2 id="org8df841d"><span class="section-number-2">2</span> Codepack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The codepack for the HW contains the following files:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">State</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Makefile to buil the <code>matsums_main</code> program</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>matvec.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Header file defining some types and functions for</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>matvec_util.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Utility functions to manipulate matrices/vectors</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>matsums_funcs.c</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Small "algorithms" to time arithmetic operations</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>matsums_main.c</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Main function that times different summing techinques</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Questions to answer</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org220a88d" class="outline-2">
+<h2 id="org220a88d"><span class="section-number-2">3</span> Overview and Background</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+This HW deals with matrices and vectors. In C these are typically 2D
+arrays (matrices) and 1D arrays (vectors), though to increase
+performance of the memory system, other approaches are sometimes
+taken. Part of this lab is to examine the <code>matrix_t</code> and <code>vector_t</code>
+types provided as they may pertain to later assignments.
+</p>
+
+<p>
+The lab focuses on analyzing two simple routines
+</p>
+<ul class="org-ul">
+<li><code>sum_rows()</code> which sums the rows of a matrix into an appropriately
+sized vector.</li>
+<li><code>sum_cols()</code> which sums the columns of a matrix into an
+appropriately sized vector.</li>
+</ul>
+<p>
+Similar to discussion in class, these two have different performance
+properties that can only be explained through knowledge of the memory
+hierarchy.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfc7f48a" class="outline-2">
+<h2 id="orgfc7f48a"><span class="section-number-2">4</span> What to Understand</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Ensure that you understand
+</p>
+<ul class="org-ul">
+<li>How different access patterns in memory can lead to significantly
+different speeds in code</li>
+<li>How in some cases, re-arranging code to access memory in a different
+pattern can dramatically improve performance</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orga54a487" class="outline-2">
+<h2 id="orga54a487"><span class="section-number-2">5</span> Questions</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Analyze the files in the provided codepack and answer the questions
+given in <code>QUESTIONS.txt</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                           _________________
+
+                            HW 11 QUESTIONS
+                           _________________
+
+
+Write your answers to the questions below directly in this text file to
+prepare for the associated quiz. Credit for the HW is earned by
+completing the associated online quiz on Gradescope.
+
+
+Timing Note
+===========
+
+  This code has been timed on GRACE to verify it behaves as expected in
+  most cases but as with all timing code, system load and other
+  circumstances can affect the actual timing results. If you strange
+  times that seem to conflict with the expected answers, report it to
+  staff to get help.
+
+
+PROBLEM 1: Code Overview
+========================
+
+(A) Vector and Matrix
+~~~~~~~~~~~~~~~~~~~~~
+
+  Examine the header file `matvec.h' which gives type definitions and
+  declares functions associated with a simple matrix and vector type.
+
+  For the matrix type `matrix_t' with R rows and C columns, how is a 2D
+  matrix actually laid out in memory?
+
+
+(B) Getting and Setting Elements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  For the `matrix_t' and `vector_t' types, convenient means to get and
+  set elements is provided. This mechanism is used in the utility
+  functions in `matvec_util.c' and defined in `matvec.h'.
+
+  Describe how one would get element (R,C) of `matrix_t' or set it to
+  value Z.  Why are these mechanisms not functions?
+
+
+PROBLEM 2: Timing Rows vs Columns
+=================================
+
+(A) row_sums vs col_sums Timing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Compile and run the `matsums_main' executable using the provided
+  `Makefile' (typing `make' should suffice).
+
+  Run the code on `csel-kh1250-NN.cselabs.umn.edu' to ensure you get the
+  expected performance experience.
+
+  Run this program with differing parameters which control the number of
+  rows and columns in the matrix which is summed. Show some example runs
+  with different parameters including on large square matrix with 16000
+  rows and 8000 columns.
+
+  Note any speed differences between the two on large matrices.
+
+
+(B) row_sums vs col_sums speed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Examine the source code for the functions `row_sums()' and
+  `col_sums()' in the file `matsums_funcs.c'.  Describe why the
+  timing/speed differences you observed previously are occurring based
+  on features of the source code you see and the layout of the
+  `matrix_t' that is being summed.
+
+
+PROBLEM 3: opt_col_sums()
+=========================
+
+  Complete the function `opt_col_sums()' in file `matsums_funcs.c'. This
+  function should have identical behavior to `col_sums()' (it sums the
+  columns of the matrix into a provided array). However, it should be
+  *optimized* so that it achieves performance near to that of the
+  `row_sums()' function. To achieve this, re-arrange the loops to
+  iterate as efficiently as possible with respect to the memory
+  system. Feel free to ask course staff for hints on how to do this or
+  do some online research.
+
+  To time `opt_col_sums()', uncomment relevant blocks in the
+  `matsums_main.c' program that are provided for it.
+
+  Paste your source code and a copy of the timing results of running
+  `matsums_main' on an 16000 by 8000 matrix.
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2023-11-12 Sun 11:56 <br/> </i>
+</div>
+</body>
+</html>
