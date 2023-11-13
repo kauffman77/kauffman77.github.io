@@ -1,0 +1,1981 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-11-12 Sun 21:45 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMSC216 Project 4: A Little Shellac</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2023-11-12 Sun 21:45</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CMSC216 Project 4: A Little Shellac</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Tue 28-Nov-2023</b></li>
+<li><i>Approximately 3.0-4.0% of total grade</i></li>
+<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a></li>
+<li>Projects are <b>individual work</b>: no collaboration with other students
+is allowed. Seek help from course staff if you get stuck for too long.</li>
+</ul>
+
+<div id="outline-container-orgdac2291" class="outline-4">
+<h4 id="orgdac2291">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
+</div>
+
+<div id="outline-container-org6d0d718" class="outline-4">
+<h4 id="org6d0d718">VIDEO OVERVIEW: <i>Not yet available</i></h4>
+</div>
+<div id="outline-container-org3f1a98b" class="outline-4">
+<h4 id="org3f1a98b">CHANGELOG:</h4>
+</div>
+
+<div id="outline-container-org048ab13" class="outline-4">
+<h4 id="org048ab13"></h4>
+<div class="outline-text-4" id="text-org048ab13">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org0b1911c">1. Overview</a></li>
+<li><a href="#org35d3955">2. Download Code and Setup</a></li>
+<li><a href="#orgb839b8f">3. <b>Problem 1</b>: Interactive Loop</a>
+<ul>
+<li><a href="#org64b45b1">3.1. Basic Interactive Loop</a></li>
+<li><a href="#org740ef4e">3.2. Sample Session</a></li>
+<li><a href="#org7135500">3.3. Printing Help</a></li>
+<li><a href="#orgda0709e">3.4. Other Supported Commands</a></li>
+<li><a href="#orgd0b4a18">3.5. Input Lines and Tokenization</a></li>
+<li><a href="#org2385178">3.6. Exit on End of Input</a></li>
+<li><a href="#org9f6ec4c">3.7. Command Echoing</a></li>
+</ul>
+</li>
+<li><a href="#orgbcbdb69">4. <b>Problem 2</b>: Basic Job Functionality</a>
+<ul>
+<li><a href="#orgc627e79">4.1. Overview</a></li>
+<li><a href="#org9058122">4.2. Shellac Structs</a></li>
+<li><a href="#org4de10a5">4.3. Outline of <code>shellac_job.c</code></a></li>
+<li><a href="#org3bf5e36">4.4. Outline of <code>shellac_control.c</code></a></li>
+<li><a href="#org00b291e">4.5. Implementation Notes</a></li>
+</ul>
+</li>
+<li><a href="#org4adbddb">5. <b>Problem 3</b>: I/O Redirection and Background Jobs</a>
+<ul>
+<li><a href="#orgf9110d5">5.1. Overview</a></li>
+<li><a href="#orgf9a0e1a">5.2. Sample Session</a></li>
+<li><a href="#orgba1c51f">5.3. I/O Redirection</a></li>
+<li><a href="#org4aaa248">5.4. Background Jobs</a></li>
+</ul>
+</li>
+<li><a href="#orgdcf6351">6. Grading Criteria</a></li>
+<li><a href="#org6cf3f36">7. Assignment Submission</a>
+<ul>
+<li><a href="#org37dfb85">7.1. Submit to Gradescope</a></li>
+<li><a href="#org91338f5">7.2. Late Policies</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0b1911c" class="outline-2">
+<h2 id="org0b1911c"><span class="section-number-2">1</span> Overview</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Students and practitioners alike use command line shells on a daily
+basis often without much thought for their inner workings.  "Shells"
+are just that: a shallow layer around system calls. Typing <code>ls -l</code> and
+seeing a directory listing with details is usually accomplished in a
+shell by <code>fork()</code>'ing a child process which then <code>exec()</code>'s the <code>ls</code>
+command.  
+</p>
+
+<p>
+This project builds a simple command line shell called <code>shellac</code> in
+several steps to illustrate the parts. It will exercise both C skills
+and systems programming skill through the use of system calls.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org35d3955" class="outline-2">
+<h2 id="org35d3955"><span class="section-number-2">2</span> <a id="orgf37e1c7"></a> Download Code and Setup</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Download the code pack linked at the top of the page. Unzip this which
+will create a project folder. Create new files in this
+folder. Ultimately you will re-zip this folder to submit it.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">State</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>shellac.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Header file for shellac</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>shellac_util.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Utility functions provided</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>shellac_main.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">main() function for shellac</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>shellac_job.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Functions that operate on the <code>job_t</code> struct</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>shellac_control.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Functions that operate on the <code>shellac_t</code> struct</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">Build/Testing Files</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Build file to compile all programs</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running script</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_prob1.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for Problem 1</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_prob2.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for Problem 2</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_prob3.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for Problem 3</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_shellac_job.c</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Unit tests for job struct</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_shellac_control.c</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Unit tests for control struct</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_standardize_pids</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Filter to standardize PIDs during testing</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test-data/</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Subdirectory with files / programs used during testing</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgb839b8f" class="outline-2">
+<h2 id="orgb839b8f"><span class="section-number-2">3</span> <b>Problem 1</b>: Interactive Loop</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org64b45b1" class="outline-3">
+<h3 id="org64b45b1"><span class="section-number-3">3.1</span> Basic Interactive Loop</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+This Problem will have you complete a basic interactive loop for
+<code>shellac_main.c</code>. You'll also need to at least create the other files
+like <code>shellac_job.c</code> and <code>shellac_control.c</code> but need not put anything
+in them until the next problem.
+</p>
+
+<p>
+The basic interactive loop for Shellac is similar to interactive
+command loops we have previously worked on such as:
+</p>
+<ul class="org-ul">
+<li>Project 2's Treeset Application</li>
+<li>Discussion 02's List Application</li>
+</ul>
+
+<p>
+Review these past code bases as needed or get help from staff if you
+need assistance in setting up the basic Shellac main loop. Structure
+the interactive loop as follows.
+</p>
+<ol class="org-ol">
+<li>An indefinite (likely <code>while()</code>) loop</li>
+<li>At the top of each loop, print the <code>(shellac)</code> prompt</li>
+<li>Read a line of text using the <code>fgets()</code> function (see notes on this
+later) and possibly print it if echoing is enabled</li>
+<li>Tokenize the string using the provided <code>tokenize_string()</code> function</li>
+<li>Analyze the 0th token for one of the built-in commands like <code>help</code>
+or <code>exit</code> and act accordingly</li>
+<li>If the token is not a builtin command, start a child process to
+execute the job (completed in Problem 2)</li>
+<li>The <code>exit</code> command breaks out of the interactive loop and shuts
+down the program.</li>
+</ol>
+
+<p>
+Like the previous interactive programs that maintained a tree, hash
+table, or linked list, Shellac also maintains a data structure. It is
+a <code>shellac_t</code> struct which has an array of <code>job_t</code> structs to track
+processes launched in the background. Problem 2 will introduce those
+types while for now, just setting up the interactive loop is
+sufficient. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org740ef4e" class="outline-3">
+<h3 id="org740ef4e"><span class="section-number-3">3.2</span> Sample Session</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+This section provides a sample of how the Shellac interactive loop
+should look and work once the problem is complete. It can be used as a
+reference and aspects of it appear in the test cases.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; shellac
+(shellac) help
+SHELLAC COMMANDS
+help               : show this message
+exit               : exit the program
+jobs               : list all background jobs that are currently running
+pause &lt;secs&gt;       : pause for the given number of seconds, fractional values supported
+wait &lt;jobnum&gt;      : wait for given background job to finish, error if no such job is present
+tokens [arg1] ...  : print out all the tokens on this input line to see how they apper
+command [arg1] ... : Non-built-in is run as a job
+
+(shellac)
+
+(shellac) tokens x y z
+4 tokens in input line
+tokens[0]: tokens
+tokens[1]: x
+tokens[2]: y
+tokens[3]: z
+
+(shellac) jobs
+0 total jobs
+
+(shellac) pause 1.2347
+Pausing for 1.235 seconds
+
+(shellac) wait 2
+ERROR: No job '2' to wait for
+
+(shellac) exit
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org7135500" class="outline-3">
+<h3 id="org7135500"><span class="section-number-3">3.3</span> Printing Help</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+The required help message for Shellac can be produced using the
+following, somewhat involved string.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">void print_help(){
+  char *helpstr = "\
+SHELLAC COMMANDS\n\
+help               : show this message\n\
+exit               : exit the program\n\
+jobs               : list all background jobs that are currently running\n\
+pause &lt;secs&gt;       : pause for the given number of seconds, fractional values supported\n\
+wait &lt;jobnum&gt;      : wait for given background job to finish, error if no such job is present\n\
+tokens [arg1] ...  : print out all the tokens on this input line to see how they apper\n\
+command [arg1] ... : Non-built-in is run as a job\n\
+";
+  printf(helpstr);
+}
+</pre>
+</div>
+<p>
+Note the use of the Backslash character which allows continuation of a
+string in the next line of code.  You may freely copy this function
+into your <code>shellac_main.c</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgda0709e" class="outline-3">
+<h3 id="orgda0709e"><span class="section-number-3">3.4</span> Other Supported Commands</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+As the help message indicates, you'll want to add cases for each built
+in commands. Samples of the behavior of each of these are in the
+sample runs but are outlined briefly here.
+</p>
+</div>
+
+<div id="outline-container-org428faca" class="outline-4">
+<h4 id="org428faca"><code>help</code></h4>
+<div class="outline-text-4" id="text-org428faca">
+<p>
+Print the help message; <code>print_help()</code> is ideal for this.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org31078f3" class="outline-4">
+<h4 id="org31078f3"><code>exit</code></h4>
+<div class="outline-text-4" id="text-org31078f3">
+<p>
+Break out of the interactive loop and quit Shellac.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga5cec9d" class="outline-4">
+<h4 id="orga5cec9d"><code>jobs</code></h4>
+<div class="outline-text-4" id="text-orga5cec9d">
+<p>
+Print out all jobs presently running. Currently this will only print
+the message
+</p>
+<pre class="example">
+0 total jobs
+</pre>
+
+<p>
+as no job launching functionality is implemented.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4657784" class="outline-4">
+<h4 id="org4657784"><code>pause &lt;secs&gt;</code></h4>
+<div class="outline-text-4" id="text-org4657784">
+<p>
+Sleep shellac for an specified amount of time using the provided
+<code>pause_for()</code> function in <code>shellac_util.c</code>.  This functionality must
+be present but is not likely to be tested.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc345343" class="outline-4">
+<h4 id="orgc345343"><code>wait &lt;jobnum&gt;</code></h4>
+<div class="outline-text-4" id="text-orgc345343">
+<p>
+Block Shellac until the indicated job is complete.  This functionality
+involves background jobs and will be completed in Problem 3.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7db6dba" class="outline-4">
+<h4 id="org7db6dba"><code>tokens &lt;arg1&gt; &lt;arg2&gt; ...</code></h4>
+<div class="outline-text-4" id="text-org7db6dba">
+<p>
+Print out a listing of the tokens in the input line which will look
+like the following:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">(shellac) tokens ls -ld -1 test-data/
+5 tokens in input line
+tokens[0]: tokens
+tokens[1]: ls
+tokens[2]: -ld
+tokens[3]: -1
+tokens[4]: test-data/
+</pre>
+</div>
+<p>
+This allows testing of whether the implementation is using the
+provided <code>tokenize_string()</code> function correctly to split up the input.
+It doesn't have much practical purpose other than for testing /
+debugging.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge7d909c" class="outline-4">
+<h4 id="orge7d909c"><code>cmd &lt;arg1&gt; &lt;arg2&gt; ...</code></h4>
+<div class="outline-text-4" id="text-orge7d909c">
+<p>
+Run a job (child process) according to the command line given. This
+functionality is the subject of later problems and does not need to be
+implemented yet.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd0b4a18" class="outline-3">
+<h3 id="orgd0b4a18"><span class="section-number-3">3.5</span> Input Lines and Tokenization</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+The C programming language is not known for its ease of handling
+string processing.  Tasks that are straight-forward in other languages
+like splitting a string on spaces are tedious and error-prone in C.
+You'll get some sense of this with the need to get an entire input
+line and split it on spaces in Shellac.
+</p>
+
+<p>
+Use the <code>fgets()</code> function to get whole input lines in the interactive
+loop. Its basic usage is as follows.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">char *fgets(char dest[], int size, FILE *infile);
+
+{
+  FILE *infile = ...;
+  char dest[64]; // a rather small size but...
+  char *result = fgets(dest, 64, infile);
+  ...;
+}
+</pre>
+</div>
+<ul class="org-ul">
+<li><code>fgets()</code> returns <code>NULL</code> if there is no more input which is an
+alternative way to finish Shellac (no more input to read) which
+should be detected and cause Shellac to exit</li>
+<li>If <code>fgets()</code> doesn't return <code>NULL</code> it will return a pointer directly
+to the input</li>
+</ul>
+
+<p>
+Shellac needs to analyze at least 0th space-separated string (token)
+on any input line separately. Additionally, some built-in commands
+need more than the 0th token while the need to start child processes
+requires completely splitting up the input line into space separated
+strings. This is done using the provided <code>tokenize_string()</code> function
+from <code>shellac_util.c</code>. It's use is demonstrated in the function
+docstring:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">EXAMPLE USAGE:
+{
+    char input[] = "gcc -o myprog source.c &gt; output.txt";
+    char *tokens[255];
+    int ntok;
+    tokenize_string(input, tokens, &amp;ntok);
+    // ntoks: 6;
+    // tokens[0]: "gcc";
+    // tokens[1]: "-o";
+    // tokens[2]: "mpyprog";
+    // tokens[3]: "source.c";
+    // tokens[4]: "&gt;";
+    // tokens[5]: "output.txt";
+    // input[] is now "gcc\0-o\0myprog\0source.c\0&gt;\0output.txt"
+}
+</pre>
+</div>
+<p>
+Note that the <code>tokens[]</code> array points into the <code>input[]</code> array and the
+function modifies it. Later these strings will be needed separately
+from the <code>input[]</code> array so will copies will be made of them in
+Problem 2.  
+</p>
+
+<p>
+For now, the <code>tokenize_string()</code> function along with a printing loop
+in <code>main()</code> is sufficient to finish the <code>tokens &lt;arg1&gt; ...</code> builtin
+command. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2385178" class="outline-3">
+<h3 id="org2385178"><span class="section-number-3">3.6</span> Exit on End of Input</h3>
+<div class="outline-text-3" id="text-3-6">
+<p>
+One can exit Shellac using the <code>exit</code> command as in 
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">(shellac) exit
+&gt;&gt; 
+</pre>
+</div>
+
+<p>
+Alternatively, in a scripted setting, one can simply stop providing
+input lines and Shellac should detect the end of input (end of file)
+and exit as well. In interactive settings, one can press the keystroke
+<code>Control-d</code> to indicate the end of input. The behavior should be to
+print a message and exit as in:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">(shellac)      # press control-d
+End of input
+
+&gt;&gt;             # exited shellac and back to normal prompt
+</pre>
+</div>
+
+<p>
+Use the return value of the input function used to get input lines in
+order to detect the end of input.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org9f6ec4c" class="outline-3">
+<h3 id="org9f6ec4c"><span class="section-number-3">3.7</span> Command Echoing</h3>
+<div class="outline-text-3" id="text-3-7">
+<p>
+To be compatible with tests, Shellac must support command echoing as
+we have done in previous interactive programs (e.g. Project 2's
+Treeset and Discussion02's List application).  When Shellac is invoked
+as <code>shellac --echo</code> with the echoing option passed, each interactive
+command is printed back to the screen. Some quick examples:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; shellac     ## run without echoing
+(shellac) help
+SHELLAC COMMANDS
+help               : show this message
+exit               : exit the program
+jobs               : list all background jobs that are currently running
+pause &lt;secs&gt;       : pause for the given number of seconds, fractional values supported
+wait &lt;jobnum&gt;      : wait for given background job to finish, error if no such job is present
+tokens [arg1] ...  : print out all the tokens on this input line to see how they apper
+command [arg1] ... : Non-built-in is run as a job
+
+(shellac) exit
+
+&gt;&gt; shellac --echo  ## run WITH echoing
+(shellac) help
+help               ## "help" command is echoed
+SHELLAC COMMANDS
+help               : show this message
+exit               : exit the program
+jobs               : list all background jobs that are currently running
+pause &lt;secs&gt;       : pause for the given number of seconds, fractional values supported
+wait &lt;jobnum&gt;      : wait for given background job to finish, error if no such job is present
+tokens [arg1] ...  : print out all the tokens on this input line to see how they apper
+command [arg1] ... : Non-built-in is run as a job
+
+(shellac) exit     ## exit command is echoed
+exit
+
+&gt;&gt; 
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org770976d" class="outline-4">
+<h4 id="org770976d">Command Echoing in Scripting</h4>
+<div class="outline-text-4" id="text-org770976d">
+<p>
+Echoing commands allows "scripting" of Shellac with scripted sections
+looking like interactive sessions.  Note differences below in the below
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; cat cmds.txt                 # a text file with some commands for shellac
+help
+tokens a b c
+exit
+
+######### WITH ECHOING ###########
+&gt;&gt; shellac --echo &lt; cmds.txt    # shellac reads from input file, echoes commands
+(shellac) help                  # nice output ensues
+SHELLAC COMMANDS
+help               : show this message
+exit               : exit the program
+jobs               : list all background jobs that are currently running
+pause &lt;secs&gt;       : pause for the given number of seconds, fractional values supported
+wait &lt;jobnum&gt;      : wait for given background job to finish, error if no such job is present
+tokens [arg1] ...  : print out all the tokens on this input line to see how they apper
+command [arg1] ... : Non-built-in is run as a job
+(shellac) tokens a b c
+4 tokens in input line
+tokens[0]: tokens
+tokens[1]: a
+tokens[2]: b
+tokens[3]: c
+(shellac) exit
+
+######### NO ECHOING ###########
+&gt;&gt; shellac &lt; cmds.txt           # read from input but without command echoing
+(shellac) SHELLAC COMMANDS      # prompt / output gets mingled
+help               : show this message
+exit               : exit the program
+jobs               : list all background jobs that are currently running
+pause &lt;secs&gt;       : pause for the given number of seconds, fractional values supported
+wait &lt;jobnum&gt;      : wait for given background job to finish, error if no such job is present
+tokens [arg1] ...  : print out all the tokens on this input line to see how they apper
+command [arg1] ... : Non-built-in is run as a job
+(shellac) 4 tokens in input line
+tokens[0]: tokens
+tokens[1]: a
+tokens[2]: b
+tokens[3]: c
+(shellac) &gt;&gt;                    # and things look weird
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgffd0097" class="outline-4">
+<h4 id="orgffd0097">Implementing Echoing</h4>
+<div class="outline-text-4" id="text-orgffd0097">
+<p>
+Echoing is typically done by checking the command line arguments to
+<code>shellac_main</code> for the string <code>--echo</code> and then setting some sort of
+variable to indicate that echoing should be done. Each iteration of
+the main loop will read a command and if echoing is turned on, the
+input line will be printed back to screen. If echoing is not on, then
+the command is not printed.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgbcbdb69" class="outline-2">
+<h2 id="orgbcbdb69"><span class="section-number-2">4</span> <b>Problem 2</b>: Basic Job Functionality</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-orgc627e79" class="outline-3">
+<h3 id="orgc627e79"><span class="section-number-3">4.1</span> Overview</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Completing this problem will add the capability of running commands in
+Shellac. At its core, this is just a <code>fork() / exec()</code>
+combination. However, to lay the groundwork for more convenience in
+the shell, the functionality is broken into functions that manipulate
+two structs defined in <code>shellac.h</code>. Once these functions are complete,
+<code>shellac_main.c</code> can be modified to allow running a single job. 
+</p>
+</div>
+
+<div id="outline-container-org00a3a6c" class="outline-4">
+<h4 id="org00a3a6c">Sample Session</h4>
+<div class="outline-text-4" id="text-org00a3a6c">
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; shellac
+
+(shellac) echo Hello shell implementation!
+=== JOB 0 STARTING: echo ===
+Hello shell implementation!
+=== JOB 0 COMPLETED echo [#34912]: EXIT(0) ===
+
+(shellac) gcc --version
+=== JOB 0 STARTING: gcc ===
+gcc (GCC) 13.2.1 20230801
+Copyright (C) 2023 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+=== JOB 0 COMPLETED gcc [#34913]: EXIT(0) ===
+
+(shellac) ls /
+=== JOB 0 STARTING: ls ===
+bin   dev  home  lib64	     mnt  proc	run   srv	sys  usr
+boot  etc  lib	 lost+found  opt  root	sbin  swapfile	tmp  var
+=== JOB 0 COMPLETED ls [#34937]: EXIT(0) ===
+
+(shellac) jobs
+0 total jobs
+(shellac) test-data/table.sh 4
+=== JOB 0 STARTING: test-data/table.sh ===
+i^1=      1  i^2=      1  i^3=      1
+i^1=      2  i^2=      4  i^3=      8
+i^1=      3  i^2=      9  i^3=     27
+i^1=      4  i^2=     16  i^3=     64
+=== JOB 0 COMPLETED test-data/table.sh [#34951]: EXIT(0) ===
+
+(shellac) grep string not-there.txt
+=== JOB 0 STARTING: grep ===
+grep: not-there.txt: No such file or directory
+=== JOB 0 COMPLETED grep [#34955]: EXIT(2) ===
+
+(shellac) exit
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org9058122" class="outline-3">
+<h3 id="org9058122"><span class="section-number-3">4.2</span> Shellac Structs</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+The following structs are defined in <code>shellac.h</code> and encapsulate the
+idea of a child command / job and tracking a collection of them in
+Shellac.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">// job_t: struct to represent a running job/child process.
+typedef struct {
+  char   jobname[MAX_LINE];        // name of command like "ls" or "gcc"
+  char  *argv[ARG_MAX+1];          // argv for running child, NULL terminated
+  int    argc;                     // number of elements on command line
+  pid_t  pid;                      // PID of child
+  int    retval;                   // return value of child, -1 if not finished
+  int    condition;                // one of the JOBCOND_xxx values whic indicates state of job
+  char  *output_file;              // name of output file or NULL if stdout
+  char  *input_file;               // name of input file or NULL if stdin
+  char   is_background;            // 1 for background job (&amp; on command line), 0 otherwise
+} job_t;
+
+// shellac_t: struct for tracking state of shellac program
+typedef struct {                
+  job_t *jobs[MAX_JOBS];         // array of pointers to job_t structs; may have NULLs internally
+  int job_count;                 // count of non-null job_t entries
+} shellac_t;
+</pre>
+</div>
+
+<p>
+The <code>job_t</code> struct tracks a single "job" or command that is being
+run. The <code>shellac_t</code> struct contains an array of <code>job_t</code> structs so
+that several jobs can be run simultaneously in Shellac.
+</p>
+
+<p>
+Functions that operate on the structs are in the <code>shellac_job.c</code> and
+<code>shellac_control.c</code> 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4de10a5" class="outline-3">
+<h3 id="org4de10a5"><span class="section-number-3">4.3</span> Outline of <code>shellac_job.c</code></h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Most but not all of the functions in <code>shellac_job.c</code> must be completed
+for Problem 2 so that jobs can be initialized, run, and updated as
+they complete. Below is an outline of the required functions. More may
+be added as needed.
+</p>
+
+<pre class="example" id="orgd4caca7">
+// shellac_job.c: functions related the job_t struct abstracting a
+// running command. Most functions maninpulate jot_t structs.
+
+void job_print(job_t *job);
+// Prints a representation of the job. Used primarily in testing but
+// useful as well for debugging. Several provided utility functions
+// from shellac_util.c are useful to simplify the formatting process:
+// strnull() simplifies printing nice "NULL" strings and
+// job_condition_str() simplifies creating a string based on condition
+// codes.
+// 
+// SAMPLE OUTPUT FORMAT: 
+// job {
+//   .jobname       = 'diff'
+//   .pid           = #2378
+//   .retval        = 1
+//   .condition     = EXIT(1)
+//   .output_file   = diff_output.txt
+//   .input_file    = NULL
+//   .is_background = 1
+//   .argc          = 3
+//   .argv[] = {
+//     [ 0] = diff
+//     [ 1] = file1.txt
+//     [ 2] = file2.txt
+//     [ 3] = NULL
+//    }
+// }
+
+job_t *job_new(char *argv[]);
+// Create a new job based on the argv[] provided. The parameter argv[]
+// will be NULL terminated to allow detecing the end of the
+// array. Allocates heap memory for a job_t struct and creates heap
+// copies of argv[] via string duplication. The last element in
+// job.argv[] will be NULL terminated as the paramter array is. The
+// initial condition of the job is INIT with -1 for its pid and
+// retval. The jobname is argv[0] and.  Normal foreground jobs have
+// is_background set to 0.
+//
+// PROBLEM 3: If argv[] contains input or output redirection (&gt; outfile
+// OR &lt; infile) or the background symbol &amp;, then removes these from
+// the argv[] and sets appropriate other fields. If problems are found
+// with input/output redirection such as a "&gt;" with no following file,
+// prints an error and return NULL.
+// 
+// HINTS for PROBLEM 3: The provided array_shift() function from the
+// shellac_util.c may prove useful to shift over input / output
+// redirection though other methods are possible. Note that the "&gt;"
+// "&lt;" and "&amp;" strings are removed from the command line so must be
+// handled wth care: either don't duplicat them or free() any
+// duplicates of them before returning.
+
+void job_free(job_t *job);
+// Deallocates a job structure. Deallocates the strings in the argv[]
+// array. Deallocates any input / output file associated with
+// fields. Finally de-allocates the struct itself.
+
+void job_start(job_t *job);
+// Forks a process and executes the command described in the job as a
+// process.  Changes the condition field to "RUN".
+//
+// PROBLEM 3: If input/output redirection is indicated by fields of
+// the job, sets this up using dup2() calls. For output redirection,
+// ensures any output files are created and if they already exist, are
+// "clobbered" via appropriate options to open(). If input/output
+// redirection fails, the child process should exit with JOBCOND_FAIL_OUTP or INP.
+
+int job_update_status(job_t *job);
+// Checks on the job for a status update. This utilizes a wait() or
+// waitpid() system call. If the job has completed, updates its
+// condition to reflect either EXIT or FAIL. For exits, uses macros to
+// extract the exit status and assigns it the retval field.
+// 
+// PROBLEM 2: For foreground (default) jobs, blocks the parent process
+// until the child is completed. Returns 1 for a condition change
+// (e.g. RUN to EXIT / FAIL).
+//
+// PROBLEM 3: For background jobs, uses the WNOHANG option to avoid
+// blocking the parent. If the job is finished, updates its retval,
+// condition, and returns 1. If the job is not finished, just returns
+// 0.
+//
+// For erroneous calls such as calls on a NULL job or on a non-running
+// job without a pid, the behavior of this function is implementation
+// dependent (may segfault, may exit with an error message, etc.) This
+// situation is not tested.
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org3bf5e36" class="outline-3">
+<h3 id="org3bf5e36"><span class="section-number-3">4.4</span> Outline of <code>shellac_control.c</code></h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+Some of the functions in <code>shellac_control.c</code> must be completed as they
+would be used to add/update jobs in the main interactive loop. Below
+is a listing of the required functions that show up in unit tests.
+</p>
+
+<pre class="example" id="orged88dc1">
+// shellac_control.c: functions related the shellac_t struct that controls
+// multiple jobs
+
+void shellac_init(shellac_t *shellac);
+// Initialize all fields of the shellac argv[] array to NULL and set
+// the job_count to 0
+
+int shellac_add_job(shellac_t *shellac, job_t *job);
+// Add a single job to the argv[] array. Search for the first NULL
+// entry in the array and add that on. Does basic error checking to
+// see if array is full and prints an error message of some kind of
+// so.
+
+int shellac_remove_job(shellac_t *shellac, int jobnum);
+// Remove the indicated job from the jobs array and replace its entry
+// with NULL. Decrements the job count. De-allocates memory associated
+// with the job via a call to job_free(). Does basic error checking so
+// that if the specified jobnum is already NULL, prints an error to
+// that effect.
+
+void shellac_start_job(shellac_t *shellac, int jobnum);
+// Starts the specified job number. First prints a message about
+// starting the job of the format
+// 
+//   === JOB %d STARTING: %s ===\n
+// 
+// with jobnum and jobname filled in. Then uses a call to job_start()
+// to start the job.
+
+void shellac_print_jobs(shellac_t *shellac);
+// Prints the job number and jobname of all non-NULL jobs in the jobs
+// array.
+
+void shellac_free_jobs(shellac_t *shellac);
+// Traverses the jobs array and de-allocates any non-null jobs.
+
+void shellac_update_one(shellac_t *shellac, int jobnum);
+// Examples of the printed message:
+// === JOB 0 COMPLETED bash [#1000]: EXIT(0) ===
+// === JOB 5 COMPLETED gcc [#22830]: EXIT(1) ===
+// === JOB 1 COMPLETED cat [#22833]: FAIL(INPT) ===
+
+void shellac_update_all(shellac_t *shellac);
+// Iterates through all jobs in the jobs array and updates them. Used
+// mainly to check for the completion of background jobs at the end of
+// each interactive loop iteration.
+
+void shellac_wait_one(shellac_t *shellac, int jobnum);
+// Change the status of a background job to foreground
+// (e.g. is_background becomes 0) then update that job to wait for
+// it. Does basic error checking so that if the jobnum indicated
+// doesn't exit, an error message of some sort is printed.
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org00b291e" class="outline-3">
+<h3 id="org00b291e"><span class="section-number-3">4.5</span> Implementation Notes</h3>
+<div class="outline-text-3" id="text-4-5">
+</div>
+<div id="outline-container-orga9d9493" class="outline-4">
+<h4 id="orga9d9493">Overall</h4>
+<div class="outline-text-4" id="text-orga9d9493">
+<ol class="org-ol">
+<li>Complete most of the functions in <code>shellac_job.c</code> though not all
+functionality needs to be present yet: some notes are given in the
+documentation strings for functions on which aspects of functions
+must work for Problem 3 only.</li>
+<li>Similarly complete most of the functions in <code>shellac_control.c</code>. Not
+all are tested in Problem 2 but having basic implementations will
+allow the automated tests to run.</li>
+<li>Finally modify <code>shellac_main.c</code> to add in handling of commands to
+launch foreground jobs.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org8425b51" class="outline-4">
+<h4 id="org8425b51"><code>Dprintf()</code> for Debugging</h4>
+<div class="outline-text-4" id="text-org8425b51">
+<p>
+It may be worthwhile to utilize the <code>Dprintf()</code> function provided
+in <code>shellac_util.c</code>.  This will print a <code>printf()</code> style message
+for debugging ONLY if a debug environment is detected via an
+environment variable. For example including the following line
+</p>
+<pre class="example">
+Dprintf("forking off child process\n");
+</pre>
+
+<p>
+won't print anything unless Shellac is run as follows:
+</p>
+<pre class="example">
+DEBUG=1 ./shellac
+</pre>
+
+<p>
+in which case when the debug message happens, it will print as
+</p>
+<pre class="example">
+|DEBUG| forking off child process
+</pre>
+
+<p>
+This can be useful to include debug messages that can be enabled as
+you work but will be silenced during testing.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org80327b2" class="outline-4">
+<h4 id="org80327b2"><code>shellac_job.c</code></h4>
+<div class="outline-text-4" id="text-org80327b2">
+<ol class="org-ol">
+<li>The <code>job_t</code> is tracks information on a running child process. It's
+most important parts are the <code>argv[]</code> field which is used to name
+the job and eventually passed to <code>exec()</code> as well as its <code>pid</code>
+which is assigned when the job is started.</li>
+<li>When creating a job via <code>job_new()</code>, the parameter <code>argv[]</code> should
+have all strings duplicated via <code>strdup()</code> calls. Later these
+duplicated strings are de-allocatd in <code>job_free()</code>.  Duplicating
+the strings allows the job struct to move independently of the
+parameter strings: the passed parameters can change by reading a
+new input line without affecting the running job.</li>
+<li><p>
+Notice that during printing in <code>job_print()</code>, the field <code>argv[]</code> is
+printed up to the <code>argc</code> index which should always be NULL:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">   job {
+     .jobname       = 'diff'
+     ...
+     .argc          = 3
+     .argv[] = {
+       [ 0] = diff
+       [ 1] = file1.txt
+       [ 2] = file2.txt
+       [ 3] = NULL
+      }
+   }
+</pre>
+</div>
+<p>
+This is because <code>argv[]</code> will eventually be passed to an <code>execvp()</code>
+call that needs the array to be NULL terminated and the printing
+helps verify that this is set up correctly in the struct.
+</p></li>
+<li>For Problem 2's version of <code>job_new()</code>, there is no need to check
+for input/output redirection via <code>&lt;</code> and <code>&gt;</code> or for the background
+symbol <code>&amp;</code>. However, this will be revisited in Problem 3.</li>
+<li><code>job_start()</code> amounts to <code>fork()</code>'ing a process. The parent, which
+remains Shellac, should return immediately after capturing the PID
+of the child process. The child process should recognize itself as
+such and then use a call to <code>execvp()</code> to become a command that is
+described in <code>jobname</code> and <code>argv[]</code>.</li>
+<li>In <code>job_start()</code> do some error checking for failures to <code>fork()</code>
+and <code>exec()</code>.  Specifically, if the child fails to exec, exit with
+<code>JOBCOND_FAIL_EXEC</code> to notify Shellac of the failure.</li>
+<li><code>job_update_status()</code> essentially wraps the <code>waitpid()</code> system
+call. Its behavior on foreground jobs (<code>is_background==0</code>) is to
+block the parent until the child finishes.  After waiting, check
+the child with macros like <code>WIFEXITED()</code> adjust the <code>condition</code> of
+the job to <code>JOBCOND_EXIT</code> for a normal exit or <code>JOBCOND_FAIL_OTHER</code>
+if the program did not exit normally. For normal exits, extract the
+exit status with <code>WEXITSTATUS()</code> and set the job's <code>retval</code> to
+this.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgd02080b" class="outline-4">
+<h4 id="orgd02080b"><code>shellac_control.c</code></h4>
+<div class="outline-text-4" id="text-orgd02080b">
+<ol class="org-ol">
+<li>Most of the functions in <code>shellac_control.c</code> work on the
+<code>shellac_t</code> struct, a glorified array of <code>job_t</code> structs.</li>
+<li>The struct maintains a <code>jobcount</code> of how many jobs are tracked. In
+problem 2, this will mainly be 1 only which is stored in the 0th
+array slot. However, build towards tracking multiple jobs.</li>
+<li><p>
+The <code>jobs[]</code> array in a <code>shellac_t</code> may be sparsely populated as in
+</p>
+<div class="org-src-container">
+<pre class="src src-text">   jobcount = 3
+   jobs[0] = NULL
+   jobs[1] = job {.jobname="ls", .... }
+   jobs[2] = job {.jobname="gcc", .... }
+   jobs[3] = NULL
+   jobs[4] = NULL
+   jobs[5] = job {.jobname="wc", .... }
+   jobs[6] = NULL
+   ...
+</pre>
+</div>
+<p>
+Notice that there are 3 non-null entries but they are not
+contiguous so that they have job numbers 1,2,5.  This is
+intentional and is not essential for Problem 2's ultimate goal to
+run single jobs but will become important in Problem 3. Some of the
+functionality such as <code>shellac_print_jobs()</code> relies on the above
+<code>NULL</code> structure so that printing the above array should yield:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">   [1] ls
+   [2] gcc
+   [5] wc
+   3 total jobs
+</pre>
+</div>
+<p>
+This is not tested until Problem 3 but is simple to enough to
+implement now.
+</p></li>
+<li><b>Perform error checking</b> on changes to the <code>shellac_t</code>'s <code>jobs[]</code>
+array. Check that the array is not full on adding and that requests
+to remove a job or start one at a given index are non-NULL.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org5f78df7" class="outline-4">
+<h4 id="org5f78df7">Modifications to Shellac <code>main()</code></h4>
+<div class="outline-text-4" id="text-org5f78df7">
+<ul class="org-ul">
+<li>Once the most of the functions are complete, add a <code>shellac_t</code>
+struct to <code>shellac_main.c</code>. On detecting a not-builtin command like
+<code>ls</code> or <code>gcc</code>, use functions to create a Job, add it to the
+<code>shellac_t</code> and immediately update it.</li>
+<li>Immediately waiting on a job treaties as a "foreground" job: don't
+print the prompt or accept another command until the running job
+completes.  Alternatively, background jobs will be supported by the
+end of Problem 3.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4adbddb" class="outline-2">
+<h2 id="org4adbddb"><span class="section-number-2">5</span> <b>Problem 3</b>: I/O Redirection and Background Jobs</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-orgf9110d5" class="outline-3">
+<h3 id="orgf9110d5"><span class="section-number-3">5.1</span> Overview</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+Completing this problem adds input and output redirection to the shell
+as well as the ability to run a job in the background, features most
+standard command line shells possess.  It will make modifications to
+all the source files to affect this outcome.
+</p>
+
+<p>
+Each of these is supported with the following syntax and they may be
+used in any combination.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Description</th>
+<th scope="col" class="org-left">Format</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Output redirection via <code>&gt;</code></td>
+<td class="org-left"><code>cmd arg1 arg2 ... &gt; outfile.txt</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Input redirection via <code>&lt;</code></td>
+<td class="org-left"><code>cmd arg1 arg2 ... &lt; infile.txt</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Background job via <code>&amp;</code></td>
+<td class="org-left"><code>cmd arg1 arg2 ... &amp;</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Combined out/in redirect</td>
+<td class="org-left"><code>cmd arg1 arg2 ... &gt; outfile.txt &lt; infile.txt</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Combined in redirect + BG</td>
+<td class="org-left"><code>cmd arg1 arg2 ... &lt; infile.txt &amp;</code></td>
+</tr>
+
+<tr>
+<td class="org-left">etc.</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgf9a0e1a" class="outline-3">
+<h3 id="orgf9a0e1a"><span class="section-number-3">5.2</span> Sample Session</h3>
+<div class="outline-text-3" id="text-5-2">
+<div class="org-src-container">
+<pre class="src src-text">(shellac) echo hello world
+=== JOB 0 STARTING: echo ===
+hello world
+=== JOB 0 COMPLETED echo [#35434]: EXIT(0) ===
+
+(shellac) echo hello redirection &gt; somefile.txt
+=== JOB 0 STARTING: echo ===
+=== JOB 0 COMPLETED echo [#35435]: EXIT(0) ===
+
+(shellac) cat somefile.txt
+=== JOB 0 STARTING: cat ===
+hello redirection
+=== JOB 0 COMPLETED cat [#35438]: EXIT(0) ===
+
+(shellac) wc &lt; somefile.txt
+=== JOB 0 STARTING: wc ===
+ 1  2 18
+=== JOB 0 COMPLETED wc [#35440]: EXIT(0) ===
+
+(shellac) seq 20 &gt; nums.txt
+=== JOB 0 STARTING: seq ===
+=== JOB 0 COMPLETED seq [#35464]: EXIT(0) ===
+
+(shellac) grep 2 &lt; nums.txt &gt; found.txt
+=== JOB 0 STARTING: grep ===
+=== JOB 0 COMPLETED grep [#35467]: EXIT(0) ===
+
+(shellac) cat found.txt
+=== JOB 0 STARTING: cat ===
+2
+12
+20
+=== JOB 0 COMPLETED cat [#35468]: EXIT(0) ===
+
+
+(shellac) test-data/sleepprint.sh 5 hello I'm awake &amp;
+=== JOB 0 STARTING: test-data/sleepprint.sh ===
+(shellac) test-data/sleepprint.sh 5 hello I'm awake &amp;
+=== JOB 1 STARTING: test-data/sleepprint.sh ===
+(shellac) test-data/sleepprint.sh 5 hello I'm awake &amp;
+=== JOB 2 STARTING: test-data/sleepprint.sh ===
+(shellac) jobs
+[0] test-data/sleepprint.sh
+[1] test-data/sleepprint.sh
+[2] test-data/sleepprint.sh
+3 total jobs
+(shellac) hello I'm awake
+hello I'm awake
+hello I'm awake
+
+=== JOB 0 COMPLETED test-data/sleepprint.sh [#35479]: EXIT(0) ===
+=== JOB 1 COMPLETED test-data/sleepprint.sh [#35481]: EXIT(0) ===
+=== JOB 2 COMPLETED test-data/sleepprint.sh [#35483]: EXIT(0) ===
+
+(shellac) jobs
+0 total jobs
+
+(shellac) exit
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgba1c51f" class="outline-3">
+<h3 id="orgba1c51f"><span class="section-number-3">5.3</span> I/O Redirection</h3>
+<div class="outline-text-3" id="text-5-3">
+<ol class="org-ol">
+<li><p>
+Revisit <code>job_new()</code> to search <code>argv[]</code> for the symbols <code>&lt;</code> and <code>&gt;</code>
+followed by a file. The <code>&gt;</code> or <code>&lt;</code> and the file following it should
+be removed from the <code>argv[]</code> array for the command and have the
+<code>output_file</code> or <code>input_file</code> set appropriately. Here is an
+example from the tests:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">   {
+       char *args[] = {
+         "ls", "&gt;", "output.txt", NULL
+       };
+       job_t *job = job_new(args);
+       job_print(job);
+       job_free(job);
+   }
+   ---OUTPUT---
+   job {
+     .jobname       = 'ls'
+     .pid           = -1
+     .retval        = -1
+     .condition     = INIT
+     .output_file   = output.txt
+     .input_file    = NULL
+     .is_background = 0
+     .argc          = 1
+     .argv[] = {
+       [ 0] = ls
+       [ 1] = NULL
+      }
+   }
+</pre>
+</div>
+
+<p>
+Note how <code>argc</code> is only 1: both <code>&gt;</code> and <code>output.txt</code> have been
+removed from <code>argv[]</code>.  This removal can be done either during the
+copying loop from the parameter <code>argv[]</code> to the struct field
+<code>argrv[]</code> or afterwards. Careful to free any memory associated with
+extraneous strings like <code>&gt;</code> which won't have pointers to them
+anymore.
+</p></li>
+<li>Revisit <code>job_start()</code> and add cases after <code>fork()</code> has been called
+so that a child process re-arranges file descriptors. <code>open()</code> a
+file for reading on input redirection or writing on output
+redirection. Use <code>dup2()</code> to overwrite either Standard In/Out (or
+both) with the opened file.</li>
+<li><p>
+When opening for writing, make sure to use options that will
+accomplish these there items
+</p>
+<ul class="org-ul">
+<li><code>O_WRONLY</code>: for writing</li>
+<li><code>O_CREAT</code>: which will create a file if it is not present</li>
+<li><code>O_TRUNC</code>: which will "truncate" any existing file to 0 size so
+that it is completely overwritten rather than writing bytes to
+only its beginning</li>
+</ul>
+<p>
+As well, use the version 3 arg version of <code>open(fname, opts,
+   perms)</code> and set the permissions to <code>S_IRUSR|S_IWUSR</code> to enable
+further reading/writing of the created file.
+</p></li>
+<li>Do some basic error checking: if a file can't be opened, detect it
+and exit the child process with either <code>JOBCOND_FAIL_INPT</code> or
+<code>JOBCOND_FAIL_OUTP</code> to indicate a problem with the redirection.</li>
+<li>Check that the changes in the Shellac main loop have taken effect
+and then try the unit tests.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org4aaa248" class="outline-3">
+<h3 id="org4aaa248"><span class="section-number-3">5.4</span> Background Jobs</h3>
+<div class="outline-text-3" id="text-5-4">
+<ol class="org-ol">
+<li>Revisit <code>job_new()</code> to check for the <code>&amp;</code> background symbol. When
+detected, set the <code>is_background</code> field to 1.</li>
+<li><p>
+Revisit <code>job_update()</code> to respect the <code>is_background</code> field
+</p>
+<ul class="org-ul">
+<li><code>is_background==0</code> should block the parent on a <code>waitpid()</code> until
+the child finishes</li>
+<li><code>is_background==1</code> should return immediately to the parent on
+<code>waitpid()</code> if the child is not yet finished. This can be
+accomplished with the <code>WNOHANG</code> option to <code>waitpid()</code>.</li>
+</ul>
+<p>
+Return a 0 when a child job is not complete yet.
+</p></li>
+<li>Complete any missing functionality in <code>shellac_control.c</code> for
+functions like <code>shellac_add()</code> so that multiple jobs can be
+added. As well, complete the <code>shellac_update_all()</code> function which
+waits for all jobs in the <code>shellac</code> struct. Use repeated calls to
+<code>shellac_update_one()</code> for this. Note that now <code>job_update()</code> may
+return a 0 to indicate that the job is not done yet in which case
+it should not be removed from the job array.</li>
+<li>Add a call to <code>shellac_update_all()</code> at the end of the <code>main()</code>
+interactive loop so that at the end of each iteration, background
+jobs are checked for completion. This allows reporting on the
+completion every time another command is used or when just pressing
+"enter" to get another prompt.</li>
+<li>Check that the changes in the Shellac main loop have taken effect
+and then try the unit tests.</li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdcf6351" class="outline-2 grading 100">
+<h2 id="orgdcf6351"><span class="section-number-2">6</span> Grading Criteria&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="100">100</span></span></h2>
+<div class="outline-text-2" id="text-6">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">AUTOMATED TESTS: 1 point per test</td>
+</tr>
+
+<tr>
+<td class="org-right">65</td>
+<td class="org-left">TOTAL</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Problem 1: <code>make test-prob1</code> runs tests from <code>test_prob1.org</code> for correctness</td>
+</tr>
+
+<tr>
+<td class="org-right">27</td>
+<td class="org-left">Problem 2: <code>make test-prob2</code> runs tests from <code>test_prob2.org</code> for correctness</td>
+</tr>
+
+<tr>
+<td class="org-right">28</td>
+<td class="org-left">Problem 3: <code>make test-prob3</code> runs tests from <code>test_prob3.org</code> for correctness</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">MANUAL INSPECTION</td>
+</tr>
+
+<tr>
+<td class="org-right">35</td>
+<td class="org-left">TOTAL</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Manual Inspection of <code>shellac_main.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear checks for the <code>--echo</code> option on the command line for Shellac</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of the <code>shellac_t</code> struct to track jobs</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear main loop to read input and execute commands</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of <code>fgets()</code> function to read input lines</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Checks for end of input based on the return value from <code>fgets()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of <code>tokenize_string()</code> to break up input lines into tokens</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear set of cases looking for built-in commands like <code>help</code> and <code>exit</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Case for <code>tokens</code> built-in with code to print tokens</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Cases for the <code>jobs, wait, pause</code> commands with appropriate function calls</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Case for non-builtin which starts jobs and updates it immediately</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Checks on background jobs at the end of each loop iteration via <code>shellac_update_all()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Overall sane indentation, reasonable variable naming and presence of some commentary to guide readers</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">15</td>
+<td class="org-left">Manual Inspection of <code>shellac_job.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Problem 2: All functions present with attempted implementations.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Problem 3: Functionality for input/output redirection present in <code>job_new() / job_start()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Problem 3: Functionality for background present in <code>job_new() / job_update()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Overall sane indentation, reasonable variable naming and presence of some commentary to guide readers</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Manual Inspection of <code>shellac_control.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Problem 2: All functions present with attempted implementations.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Problem 3: Functionality for background present via support for adding/removing elements to jobs array</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Overall sane indentation, reasonable variable naming and presence of some commentary to guide readers</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+
+
+
+<div id="outline-container-org6cf3f36" class="outline-2">
+<h2 id="org6cf3f36"><span class="section-number-2">7</span> Assignment Submission</h2>
+<div class="outline-text-2" id="text-7">
+</div>
+<div id="outline-container-org37dfb85" class="outline-3">
+<h3 id="org37dfb85"><span class="section-number-3">7.1</span> <a id="orgc798279"></a> Submit to Gradescope</h3>
+<div class="outline-text-3" id="text-7-1">
+<p>
+Refer to the Project 1 instructions and adapt them for details of how
+to submit to Gradescope. In summary they are
+</p>
+
+<ol class="org-ol">
+<li>Type <code>make zip</code> in the project directory to create <code>p2-comlete.zip</code></li>
+<li>Log into <a href="https://www.gradescope.com/">Gradescope</a>, select Project 2, and upload <code>p4-complete.zip</code></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org91338f5" class="outline-3">
+<h3 id="org91338f5"><span class="section-number-3">7.2</span> Late Policies</h3>
+<div class="outline-text-3" id="text-7-2">
+<p>
+You may wish to review the policy on late project submission which
+will cost 1 Engagement Point per day late. <b>No projects will be
+accepted more than 48 hours after the deadline.</b>
+</p>
+
+<p>
+<a href="https://www-users.cs.umn.edu/~kauffman/2021/syllabus.html">https://www-users.cs.umn.edu/~kauffman/2021/syllabus.html</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2023-11-12 Sun 21:45 <br/> </i>
+</div>
+</body>
+</html>
