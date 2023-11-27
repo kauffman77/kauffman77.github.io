@@ -29,13 +29,24 @@
 
 <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/papercolor-dark.min.css"> -- -- -->
 <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.min.css">  -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.min.css"> 
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.min.css">  -->
+<link rel="stylesheet" href="./srcery-ck.css"> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+      document.querySelectorAll('pre.src-c').forEach((el) => {
+          el.classList.add("language-c");
+      });
+      document.querySelectorAll('pre.src-text').forEach((el) => {
+          el.classList.add("language-plaintext");
+      });
+  });
   hljs.configure({cssSelector: 'pre'}); // highlight pre blocks
   hljs.highlightAll();                  // perform highlighting
 </script>
 
+
+  
 
 <!-- 2023-11-21 Tue 08:08 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
@@ -1523,7 +1534,8 @@ array slot. However, build towards tracking multiple jobs.</li>
 The <code>jobs[]</code> array in a <code>shellac_t</code> may be sparsely populated as in
 </p>
 <div class="org-src-container">
-<pre class="src src-text">   jobcount = 3
+<pre class="src src-c">{
+   jobcount = 3
    jobs[0] = NULL
    jobs[1] = job {.jobname="ls", .... }
    jobs[2] = job {.jobname="gcc", .... }
@@ -1532,6 +1544,7 @@ The <code>jobs[]</code> array in a <code>shellac_t</code> may be sparsely popula
    jobs[5] = job {.jobname="wc", .... }
    jobs[6] = NULL
    ...
+}
 </pre>
 </div>
 <p>
@@ -1725,7 +1738,7 @@ be removed from the <code>argv[]</code> array for the command and have the
 example from the tests:
 </p>
 <div class="org-src-container">
-<pre class="src src-text">   {
+<pre class="src src-c">   {
        char *args[] = {
          "ls", "&gt;", "output.txt", NULL
        };
