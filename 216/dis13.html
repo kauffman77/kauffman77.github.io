@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-12-04 Mon 09:49 -->
+<!-- 2023-12-04 Mon 13:22 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Dis13: Matrices and Memory Optimization</title>
@@ -344,7 +344,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2023-12-04 Mon 09:49</i>
+<i>Last Updated: 2023-12-04 Mon 13:22</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Dis13: Matrices and Memory Optimization</h1>
@@ -353,14 +353,31 @@ text-align: justify;
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-org9f691ba" class="outline-4">
-<h4 id="org9f691ba">CODE DISTRIBUTION: <a href="dis13-code.zip">dis13-code.zip</a></h4>
+<div id="outline-container-orgc976fe1" class="outline-4">
+<h4 id="orgc976fe1">CODE DISTRIBUTION: <a href="dis13-code.zip">dis13-code.zip</a></h4>
 </div>
 
-<div id="outline-container-orgae5eb55" class="outline-4">
-<h4 id="orgae5eb55">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-orgae5eb55">
+<div id="outline-container-org79ae657" class="outline-4">
+<h4 id="org79ae657">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org79ae657">
 <dl class="org-dl">
+<dt>Mon Dec  4 01:16:48 PM EST 2023</dt><dd><p>
+The original <code>Makefile</code> did not
+link the PThreads library in it to the executable resulting in a
+compilation problem reported in <a href="https://piazza.com/class/lm10ickte3k6bi/post/369">Post 369.</a> This can be fixed by
+editing line 17 of the <code>Makefile</code> to add the <code>-lpthread</code> option
+which will link the required library.
+</p>
+<div class="org-src-container">
+<pre class="src src-text"> 1:    # CMSC216 Makefile
+...    ....
+16:    csums_thread_main : csums_thread_main.o csums_thread_funcs.o csums_thread_util.o
+17:    	$(CC) -o $@ $^ -lpthread
+                       ^^^^^^^^^
+                     add this option
+</pre>
+</div></dd>
+
 <dt>Mon Dec  4 09:47:19 AM EST 2023</dt><dd>The original version of the QUIZ
 in QUESTIONS.org had a bug. <code>QUESTIONS.md5</code> has been updated to
 correct this in the current codepack. If you downloaded the
@@ -370,26 +387,26 @@ codepack and copy over the <code>QUESTIONS.md5</code> file.</dd>
 </div>
 </div>
 
-<div id="outline-container-orgd6d96f2" class="outline-4">
-<h4 id="orgd6d96f2"></h4>
-<div class="outline-text-4" id="text-orgd6d96f2">
+<div id="outline-container-org7ad1ff7" class="outline-4">
+<h4 id="org7ad1ff7"></h4>
+<div class="outline-text-4" id="text-org7ad1ff7">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgf4b2cf1">1. Rationale</a></li>
-<li><a href="#org8519026">2. Codepack</a></li>
-<li><a href="#org7a24827">3. Overview and Background</a></li>
-<li><a href="#org7e23e78">4. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org1ac0131">5. Submission</a></li>
+<li><a href="#orgf4c44a2">1. Rationale</a></li>
+<li><a href="#org3f84b03">2. Codepack</a></li>
+<li><a href="#orgd3966cf">3. Overview and Background</a></li>
+<li><a href="#orge536a06">4. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org357d96a">5. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgf4b2cf1" class="outline-2">
-<h2 id="orgf4b2cf1"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orgf4c44a2" class="outline-2">
+<h2 id="orgf4c44a2"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Threads are frequently used to improve the performance of applications
@@ -401,18 +418,18 @@ shared result.
 </p>
 </div>
 
-<div id="outline-container-org12f98e6" class="outline-4">
-<h4 id="org12f98e6">Associated Reading / Preparation</h4>
-<div class="outline-text-4" id="text-org12f98e6">
+<div id="outline-container-orgb62ed2d" class="outline-4">
+<h4 id="orgb62ed2d">Associated Reading / Preparation</h4>
+<div class="outline-text-4" id="text-orgb62ed2d">
 <p>
 Bryant and O'Hallaron: Ch 12.3-6 covers threaded programming.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgfa94910" class="outline-4">
-<h4 id="orgfa94910">Grading Policy</h4>
-<div class="outline-text-4" id="text-orgfa94910">
+<div id="outline-container-org36857db" class="outline-4">
+<h4 id="org36857db">Grading Policy</h4>
+<div class="outline-text-4" id="text-org36857db">
 <p>
 Credit for this exercise is earned by completing the code/asnwers here
 and submitting a Zip of the work to Gradescope. Students are
@@ -435,8 +452,8 @@ See the <a href="../syllabus.html">full policies in the course syllabus</a>.
 </div>
 </div>
 
-<div id="outline-container-org8519026" class="outline-2">
-<h2 id="org8519026"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org3f84b03" class="outline-2">
+<h2 id="org3f84b03"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the lab contains the following files:
@@ -530,8 +547,8 @@ The codepack for the lab contains the following files:
 </div>
 </div>
 
-<div id="outline-container-org7a24827" class="outline-2">
-<h2 id="org7a24827"><span class="section-number-2">3</span> Overview and Background</h2>
+<div id="outline-container-orgd3966cf" class="outline-2">
+<h2 id="orgd3966cf"><span class="section-number-2">3</span> Overview and Background</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 This exercise deals with matrices and vectors again similar to
@@ -547,8 +564,8 @@ implementation.
 </div>
 </div>
 
-<div id="outline-container-org7e23e78" class="outline-2">
-<h2 id="org7e23e78"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-orge536a06" class="outline-2">
+<h2 id="orge536a06"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -679,8 +696,8 @@ CODE: Complete col_sums_thread()
 </div>
 </div>
 
-<div id="outline-container-org1ac0131" class="outline-2">
-<h2 id="org1ac0131"><span class="section-number-2">5</span> Submission</h2>
+<div id="outline-container-org357d96a" class="outline-2">
+<h2 id="org357d96a"><span class="section-number-2">5</span> Submission</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Follow the instructions at the end of <a href="dis01.html">Dis01</a> if you need a refresher on
@@ -690,7 +707,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2023-12-04 Mon 09:49 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2023-12-04 Mon 13:22 <br/> </i>
 </div>
 </body>
 </html>
