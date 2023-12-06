@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-12-06 Wed 10:06 -->
+<!-- 2023-12-06 Wed 10:35 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Project 5: Performance Opt and Threading</title>
@@ -477,7 +477,7 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2023-12-06 Wed 10:06</i>
+<i>Last Updated: 2023-12-06 Wed 10:35</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Project 5: Performance Opt and Threading</h1>
@@ -489,16 +489,19 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-orgf3e9d94" class="outline-4">
-<h4 id="orgf3e9d94">CODE/TEST DISTRIBUTION: <a href="p5-code.zip">p5-code.zip</a></h4>
+<div id="outline-container-org1a33db1" class="outline-4">
+<h4 id="org1a33db1">CODE/TEST DISTRIBUTION: <a href="p5-code.zip">p5-code.zip</a></h4>
 </div>
-<div id="outline-container-org7aa89b9" class="outline-4">
-<h4 id="org7aa89b9">Video Overview: <i>Not Yet Available</i></h4>
+<div id="outline-container-orga346c09" class="outline-4">
+<h4 id="orga346c09">Video Overview: <a href="https://youtu.be/7d58GeVtNJ0">https://youtu.be/7d58GeVtNJ0</a></h4>
 </div>
-<div id="outline-container-orgee5dfba" class="outline-4">
-<h4 id="orgee5dfba">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-orgee5dfba">
+<div id="outline-container-orgc71b578" class="outline-4">
+<h4 id="orgc71b578">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-orgc71b578">
 <dl class="org-dl">
+<dt>Wed Dec  6 10:34:57 AM EST 2023</dt><dd>A video overview of Project 5 is
+now available here: <a href="https://youtu.be/7d58GeVtNJ0">https://youtu.be/7d58GeVtNJ0</a></dd>
+
 <dt>Sat Dec  2 11:07:57 AM EST 2023</dt><dd>The initial release had an
 incorrect <code>#include "matvec.h"</code> in <code>sumdiag_optm.c</code>. This should be
 <code>#include "sumdiag.h"</code> instead and has been fixed in <code>p5-code.zip</code>.
@@ -508,29 +511,29 @@ project.</dd>
 </div>
 </div>
 
-<div id="outline-container-org101fbad" class="outline-4">
-<h4 id="org101fbad"></h4>
-<div class="outline-text-4" id="text-org101fbad">
+<div id="outline-container-orged2796f" class="outline-4">
+<h4 id="orged2796f"></h4>
+<div class="outline-text-4" id="text-orged2796f">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org9630325">1. Introduction</a></li>
-<li><a href="#org38d6592">2. Download Code and Setup</a></li>
-<li><a href="#orgdf92fca">3. <b>Problem 1</b>: Matrix Diagonal Sums</a>
+<li><a href="#orge1cef7e">1. Introduction</a></li>
+<li><a href="#org639f15e">2. Download Code and Setup</a></li>
+<li><a href="#orgddff921">3. <b>Problem 1</b>: Matrix Diagonal Sums</a>
 <ul>
-<li><a href="#org2cd9d20">3.1. Overview</a></li>
-<li><a href="#org2e4442d">3.2. Optimize Diagonal Sums</a></li>
-<li><a href="#org4af133a">3.3. Evaluation on Grace</a></li>
-<li><a href="#org6389950">3.4. <code>sumdiag_print.c</code> Testing Program</a></li>
+<li><a href="#orgf2b8da2">3.1. Overview</a></li>
+<li><a href="#org140783d">3.2. Optimize Diagonal Sums</a></li>
+<li><a href="#org0a70988">3.3. Evaluation on Grace</a></li>
+<li><a href="#org025ebde">3.4. <code>sumdiag_print.c</code> Testing Program</a></li>
 <li><a href="#optimizations">3.5. Optimization Suggestions and Documentation</a></li>
-<li><a href="#org384acbe">3.6. Constraints</a></li>
-<li><a href="#org45df174">3.7. Additional Optimizations for Makeup Credit</a></li>
-<li><a href="#org4936650">3.8. Optimization Hints</a></li>
-<li><a href="#org2c9ac08">3.9. Grading Criteria for Problem 1 (100%)</a></li>
+<li><a href="#org6550df8">3.6. Constraints</a></li>
+<li><a href="#org1ad3606">3.7. Additional Optimizations for Makeup Credit</a></li>
+<li><a href="#org81b3a57">3.8. Optimization Hints</a></li>
+<li><a href="#orgfe1c0cd">3.9. Grading Criteria for Problem 1 (100%)</a></li>
 </ul>
 </li>
-<li><a href="#orge392944">4. Writeup</a></li>
+<li><a href="#org1675ca0">4. Writeup</a></li>
 </ul>
 </div>
 </div>
@@ -538,8 +541,8 @@ project.</dd>
 </div>
 
 
-<div id="outline-container-org9630325" class="outline-2">
-<h2 id="org9630325"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orge1cef7e" class="outline-2">
+<h2 id="orge1cef7e"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 A baseline implementation for a function operating on a matrix is
@@ -551,8 +554,8 @@ and enabling multi-threading to further boost perforamnce.
 </div>
 </div>
 
-<div id="outline-container-org38d6592" class="outline-2">
-<h2 id="org38d6592"><span class="section-number-2">2</span> <a id="orgeccea08"></a> Download Code and Setup</h2>
+<div id="outline-container-org639f15e" class="outline-2">
+<h2 id="org639f15e"><span class="section-number-2">2</span> <a id="org7fc848e"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -643,12 +646,12 @@ folder. Ultimately you will re-zip this folder to submit it.
 </div>
 </div>
 
-<div id="outline-container-orgdf92fca" class="outline-2">
-<h2 id="orgdf92fca"><span class="section-number-2">3</span> <b>Problem 1</b>: Matrix Diagonal Sums</h2>
+<div id="outline-container-orgddff921" class="outline-2">
+<h2 id="orgddff921"><span class="section-number-2">3</span> <b>Problem 1</b>: Matrix Diagonal Sums</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org2cd9d20" class="outline-3">
-<h3 id="org2cd9d20"><span class="section-number-3">3.1</span> Overview</h3>
+<div id="outline-container-orgf2b8da2" class="outline-3">
+<h3 id="orgf2b8da2"><span class="section-number-3">3.1</span> Overview</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 A problem that occasionally arises in numerical computing when working
@@ -661,7 +664,7 @@ the following diagram which also shows the sums of the diagonals.
 
 <div class="org-center">
 
-<div id="orge36a8fb" class="figure">
+<div id="org051d676" class="figure">
 <p><img src="sumdiag.png" alt="sumdiag.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>5 by 5 matrix with diagonals colored. The diagram shows our numbering scheme for diagonals and the corresponding diagonal sums. Diagonal numbers start at 0 and progress counter-clockwise around the bottom and right of the matrix. For square matrices, the main diagonal is always numbered as the #rows-1 or #cols-1 which are equal.</p>
@@ -720,8 +723,8 @@ systems.
 </div>
 </div>
 
-<div id="outline-container-org2e4442d" class="outline-3">
-<h3 id="org2e4442d"><span class="section-number-3">3.2</span> Optimize Diagonal Sums</h3>
+<div id="outline-container-org140783d" class="outline-3">
+<h3 id="org140783d"><span class="section-number-3">3.2</span> Optimize Diagonal Sums</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 The purpose of this problem is to write <code>sumdiag_OPTM()</code> which is a
@@ -762,8 +765,8 @@ Some details are provided in subsequent sections.
 </div>
 </div>
 
-<div id="outline-container-org4af133a" class="outline-3">
-<h3 id="org4af133a"><span class="section-number-3">3.3</span> Evaluation on Grace</h3>
+<div id="outline-container-org0a70988" class="outline-3">
+<h3 id="org0a70988"><span class="section-number-3">3.3</span> Evaluation on Grace</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The file <code>sumdiag_benchmark.c</code> provides a benchmark for the speed of
@@ -933,8 +936,8 @@ benchmark will report as much
 </div>
 
 
-<div id="outline-container-org6389950" class="outline-3">
-<h3 id="org6389950"><span class="section-number-3">3.4</span> <code>sumdiag_print.c</code> Testing Program</h3>
+<div id="outline-container-org025ebde" class="outline-3">
+<h3 id="org025ebde"><span class="section-number-3">3.4</span> <code>sumdiag_print.c</code> Testing Program</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 As one works on implementing optimizations in <code>sumdiag_OPTM()</code>, bugs
@@ -977,8 +980,8 @@ Diagnonal Sums:                        # prints diag sums for BASE/OPTM
 </div>
 
 
-<div id="outline-container-orge2d9fa4" class="outline-3">
-<h3 id="optimizations"><a id="orge2d9fa4"></a><span class="section-number-3">3.5</span> <a id="org00ddd81"></a> Optimization Suggestions and Documentation</h3>
+<div id="outline-container-org3bc2fa3" class="outline-3">
+<h3 id="optimizations"><a id="org3bc2fa3"></a><span class="section-number-3">3.5</span> <a id="orge2bed2a"></a> Optimization Suggestions and Documentation</h3>
 <div class="outline-text-3" id="text-optimizations">
 <p>
 Labs and lectures will cover several kinds of optimizations which are
@@ -1008,13 +1011,13 @@ questions in <code>P5-WRITEUP.txt</code>.
 </div>
 </div>
 
-<div id="outline-container-org384acbe" class="outline-3">
-<h3 id="org384acbe"><span class="section-number-3">3.6</span> Constraints</h3>
+<div id="outline-container-org6550df8" class="outline-3">
+<h3 id="org6550df8"><span class="section-number-3">3.6</span> Constraints</h3>
 <div class="outline-text-3" id="text-3-6">
 </div>
-<div id="outline-container-orgd172680" class="outline-4">
-<h4 id="orgd172680">Use a Mutex</h4>
-<div class="outline-text-4" id="text-orgd172680">
+<div id="outline-container-org2ae1715" class="outline-4">
+<h4 id="org2ae1715">Use a Mutex</h4>
+<div class="outline-text-4" id="text-org2ae1715">
 <p>
 While it may be possible to implement a completely lock-free solution
 with threads, <b>your implementation MUST use mutexes to coordinate
@@ -1026,9 +1029,9 @@ coordination.
 </div>
 </div>
 
-<div id="outline-container-orgd5b8781" class="outline-4">
-<h4 id="orgd5b8781">Avoid Global Variables</h4>
-<div class="outline-text-4" id="text-orgd5b8781">
+<div id="outline-container-orgd562c30" class="outline-4">
+<h4 id="orgd562c30">Avoid Global Variables</h4>
+<div class="outline-text-4" id="text-orgd562c30">
 <p>
 In many simple threaded programs, global variables are a convenient
 way to give worker threads/functions access to shared data. <b>AVOID
@@ -1051,8 +1054,8 @@ might look
 </div>
 </div>
 
-<div id="outline-container-org45df174" class="outline-3">
-<h3 id="org45df174"><span class="section-number-3">3.7</span> Additional Optimizations for Makeup Credit</h3>
+<div id="outline-container-org1ad3606" class="outline-3">
+<h3 id="org1ad3606"><span class="section-number-3">3.7</span> Additional Optimizations for Makeup Credit</h3>
 <div class="outline-text-3" id="text-3-7">
 <p>
 Additional optimizations may be performed to further speed up the
@@ -1077,8 +1080,8 @@ sign that makeup credit is earned.
 </div>
 </div>
 
-<div id="outline-container-org4936650" class="outline-3">
-<h3 id="org4936650"><span class="section-number-3">3.8</span> Optimization Hints</h3>
+<div id="outline-container-org81b3a57" class="outline-3">
+<h3 id="org81b3a57"><span class="section-number-3">3.8</span> Optimization Hints</h3>
 <div class="outline-text-3" id="text-3-8">
 <ol class="org-ol">
 <li>While optimizing the memory access pattern, it is handy to be able
@@ -1105,8 +1108,8 @@ approaches.</li>
 </div>
 
 
-<div id="outline-container-org2c9ac08" class="outline-3 grading 100">
-<h3 id="org2c9ac08"><span class="section-number-3">3.9</span> Grading Criteria for Problem 1 (100%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="100">100</span></span></h3>
+<div id="outline-container-orgfe1c0cd" class="outline-3 grading 100">
+<h3 id="orgfe1c0cd"><span class="section-number-3">3.9</span> Grading Criteria for Problem 1 (100%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="100">100</span></span></h3>
 <div class="outline-text-3" id="text-3-9">
 <p>
 The file <code>P4-WRITEUP.txt</code> has several questions that should be
@@ -1233,8 +1236,8 @@ their use.
 
 
 
-<div id="outline-container-orge392944" class="outline-2">
-<h2 id="orge392944"><span class="section-number-2">4</span> Writeup</h2>
+<div id="outline-container-org1675ca0" class="outline-2">
+<h2 id="org1675ca0"><span class="section-number-2">4</span> Writeup</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 This assignment involves answering questions in the file
@@ -1318,7 +1321,7 @@ PROBLEM 1: sumdiag_OPTM()
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2023-12-06 Wed 10:06 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2023-12-06 Wed 10:35 <br/> </i>
 </div>
 </body>
 </html>
