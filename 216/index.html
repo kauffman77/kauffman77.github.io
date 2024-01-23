@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-09-09 Sat 11:55 -->
+<!-- 2024-01-23 Tue 14:44 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216: Introduction to Computer Systems</title>
@@ -193,10 +193,8 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { }
 </style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 <style type="text/css">
-th.org-right  { text-align: right;  }
-th.org-left   { text-align: left;   }
-th.org-center { text-align: center; }
 @media screen {
 :root {
 --heading-bg-color:#e21833;
@@ -206,8 +204,8 @@ html {
 font-family: serif;
 text-align: justify;
 }
-.src, .example {
-background-color: var(--heading-fg-color);
+pre.src, pre.example {
+overflow-x: scroll;
 }
 /* Merge subtitle area with title area */
 .subtitle {
@@ -234,6 +232,7 @@ color: var(--heading-fg-color);
 font-variant: small-caps;
 padding: 0em 0em 0em .5em; /* top right bottom left */
 margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
 }
 blockquote {
 font-style: italic;
@@ -242,10 +241,14 @@ td, th {
 padding-top: 2px;
 padding-bottom: 2px;
 }
-#content {  // org devs keep moving around width
+body {
 background-color: #EEE;
-max-width:1200px;
-margin:0 auto;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
 }
 .tag {
 background-color: inherit; font-family: inherit;
@@ -255,6 +258,78 @@ text-transform: uppercase;
 
 .figure p { text-align: inherit; }
 figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
 }
 
 @media print {
@@ -262,20 +337,174 @@ html {
 font-family: serif;
 font-size: 10pt;
 text-align: justify;
+.linenr { font-size: xx-small; }
 }
 }
 </style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","homeputer>","grace10:"], // allowed interactive prompts
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"    , "language-c");
+lang_map.set("src-text" , "language-plaintext");
+lang_map.set("src-sh"   , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2023-09-09 Sat 11:55</i>
+<i>Last Updated: 2024-01-23 Tue 14:44</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216: Introduction to Computer Systems</h1>
 
-<div id="outline-container-org791e99c" class="outline-2">
-<h2 id="org791e99c">Welcome to CMSC216 4xx Sections</h2>
-<div class="outline-text-2" id="text-org791e99c">
+<div id="outline-container-orga0fb589" class="outline-4">
+<h4 id="orga0fb589"></h4>
+<div class="outline-text-4" id="text-orga0fb589">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org438a2df">Welcome to CMSC216 1xx / 3xx Sections</a></li>
+<li><a href="#orgd951eea">Calendar of Meetings and Office Hours</a></li>
+<li><a href="#orge4d5e46">Staff and Office Hours</a></li>
+<li><a href="#org1badeca">Meetings</a></li>
+<li><a href="#org5b3708d">C Programming Resources</a></li>
+<li><a href="#orgaa1dddb">Getting Started</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org438a2df" class="outline-2">
+<h2 id="org438a2df">Welcome to CMSC216 1xx / 3xx Sections</h2>
+<div class="outline-text-2" id="text-org438a2df">
 <p>
 Essential links are below.
 </p>
@@ -293,9 +522,21 @@ request regrades</li>
 </div>
 </div>
 
-<div id="outline-container-org3d250c2" class="outline-2">
-<h2 id="org3d250c2">Staff and Office Hours</h2>
-<div class="outline-text-2" id="text-org3d250c2">
+<div id="outline-container-orgd951eea" class="outline-2">
+<h2 id="orgd951eea">Calendar of Meetings and Office Hours</h2>
+<div class="outline-text-2" id="text-orgd951eea">
+<p>
+All TA office hours are in AVW 4166
+</p>
+
+<iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&bgcolor=%23ffffff&ctz=America%2FNew_York&mode=WEEK&src=Y19hNTZhYzc2MTlkMjViOGEzNDE4ZGI1OTk3MThjZmNhNDc4Zjg2YzRiZWE5MjJmMDIyZTg2NDMwZmU3ZTg5NWEwQGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20&src=ZW4udXNhI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&color=%23009688&color=%230B8043" style="border-width:0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
+</div>
+</div>
+
+
+<div id="outline-container-orge4d5e46" class="outline-2">
+<h2 id="orge4d5e46">Staff and Office Hours</h2>
+<div class="outline-text-2" id="text-orge4d5e46">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -327,72 +568,234 @@ request regrades</li>
 <td class="org-left">Chris Kauffman</td>
 <td class="org-left">profk@umd.edu</td>
 <td class="org-left">Prof</td>
+<td class="org-left">&#xa0;</td>
 <td class="org-left">IRB 2226</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">Donghyeon Joo</td>
-<td class="org-left">dhjoo98@umd.edu</td>
-<td class="org-left">GTA</td>
-<td class="org-left">AVW 4166</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">Curie Kim</td>
-<td class="org-left">curiekim@umd.edu</td>
-<td class="org-left">GTA</td>
-<td class="org-left">AVW 4166</td>
-<td class="org-left">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 </tbody>
 <tbody>
 <tr>
-<td class="org-left">Clara Gong</td>
-<td class="org-left">cgong12@terpmail.umd.edu</td>
-<td class="org-left">UTA</td>
-<td class="org-left">AVW 4166</td>
+<td class="org-left">Yoon-Kyung Shon</td>
+<td class="org-left">&lt;ykshon@umd.edu&gt;</td>
+<td class="org-left">GTA</td>
 <td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left">Keith Lee</td>
-<td class="org-left">klee9765@terpmail.umd.edu</td>
+<td class="org-left">Aadit Nilay</td>
+<td class="org-left">&lt;aadit@terpmail.umd.edu&gt;</td>
 <td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
 <td class="org-left">AVW 4166</td>
 <td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Aadit Shah</td>
+<td class="org-left">&lt;aadit201@terpmail.umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Adam Yang</td>
+<td class="org-left">&lt;ayang115@terpmail.umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Aditya Shelke</td>
+<td class="org-left">&lt;ashelke@terpmail.umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Ananya Dandi</td>
+<td class="org-left">&lt;adandi@terpmail.umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
 <td class="org-left">Carter Maisel</td>
-<td class="org-left">cmaisel@terpmail.umd.edu</td>
+<td class="org-left">&lt;cmaisel@terpmail.umd.edu&gt;</td>
 <td class="org-left">UTA</td>
-<td class="org-left">AVW 4166</td>
 <td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left">Gavin Hung</td>
-<td class="org-left">ghung@umd.edu</td>
+<td class="org-left">Christian Nygard</td>
+<td class="org-left">&lt;cnygard@terpmail.umd.edu&gt;</td>
 <td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
 <td class="org-left">AVW 4166</td>
 <td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Clara Gong</td>
+<td class="org-left">&lt;cgong12@terpmail.umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Dashawna Lara</td>
+<td class="org-left">&lt;dlara16@terpmail.umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Eckart Schneider</td>
+<td class="org-left">&lt;eckshn@terpmail.umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Feileen Li</td>
+<td class="org-left">&lt;fli1234@terpmail.umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Gavin Crisologo</td>
+<td class="org-left">&lt;gcrisolo@terpmail.umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Iris Guo</td>
+<td class="org-left">&lt;iguo@terpmail.umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Jihyo Park</td>
+<td class="org-left">&lt;jihyo@terpmail.umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Justin Reese</td>
+<td class="org-left">&lt;jreese30@umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Kushal Kapoor</td>
+<td class="org-left">&lt;kushalk@terpmail.umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Luis Esparza</td>
+<td class="org-left">&lt;lesparza@terpmail.umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Matthew Liu</td>
+<td class="org-left">&lt;mliu218@terpmail.umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
 <td class="org-left">Mosinmiloluwa Ojeyomi</td>
-<td class="org-left">mojeyomi@terpmail.umd.edu</td>
+<td class="org-left">&lt;mojeyomi@terpmail.umd.edu&gt;</td>
 <td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
 <td class="org-left">AVW 4166</td>
 <td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Patrick Gough</td>
+<td class="org-left">&lt;pgough@umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Rebecca Lam</td>
+<td class="org-left">&lt;rlam12@terpmail.umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Rohan Panigrahi</td>
+<td class="org-left">&lt;rpanigr@terpmail.umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Ryan Jung</td>
+<td class="org-left">&lt;ryjung@umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Vedant Agrawal</td>
+<td class="org-left">&lt;vedant99@terpmail.umd.edu&gt;</td>
+<td class="org-left">UTA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">AVW 4166</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 </tbody>
@@ -400,16 +803,9 @@ request regrades</li>
 </div>
 </div>
 
-<div id="outline-container-orgeb4bc5b" class="outline-2">
-<h2 id="orgeb4bc5b">Calendar</h2>
-<div class="outline-text-2" id="text-orgeb4bc5b">
-<iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&bgcolor=%23ffffff&ctz=America%2FNew_York&showTitle=0&mode=WEEK&showCalendars=1&src=Y18zMjJjYzJlNGQ3Zjc2YzM2NDBiZjZkZDRmMmRlMWZmNGFmZWNhY2U4MjYxZmI4NjQ0NmUxMWQ5Zjg2Nzc3MjYzQGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20&color=%237CB342" style="border:solid 1px #777" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
-</div>
-</div>
-
-<div id="outline-container-orge216272" class="outline-2">
-<h2 id="orge216272">Meetings</h2>
-<div class="outline-text-2" id="text-orge216272">
+<div id="outline-container-org1badeca" class="outline-2">
+<h2 id="org1badeca">Meetings</h2>
+<div class="outline-text-2" id="text-org1badeca">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -471,9 +867,9 @@ request regrades</li>
 </div>
 </div>
 
-<div id="outline-container-org1b48b5c" class="outline-2">
-<h2 id="org1b48b5c">C Programming Resources</h2>
-<div class="outline-text-2" id="text-org1b48b5c">
+<div id="outline-container-org5b3708d" class="outline-2">
+<h2 id="org5b3708d">C Programming Resources</h2>
+<div class="outline-text-2" id="text-org5b3708d">
 <p>
 C programming will play a major role in this class so start exploring.
 </p>
@@ -489,9 +885,9 @@ page</dd>
 </dl>
 </div>
 </div>
-<div id="outline-container-org1ca4f63" class="outline-2">
-<h2 id="org1ca4f63">Getting Started</h2>
-<div class="outline-text-2" id="text-org1ca4f63">
+<div id="outline-container-orgaa1dddb" class="outline-2">
+<h2 id="orgaa1dddb">Getting Started</h2>
+<div class="outline-text-2" id="text-orgaa1dddb">
 <dl class="org-dl">
 <dt>Review the Course Syllabus</dt><dd><p>
 This will be our "contract" for the semester and contains tons of
@@ -515,7 +911,7 @@ is worth examining the textbook website as well.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2023-09-09 Sat 11:55 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-01-23 Tue 14:44 <br/> </i>
 </div>
 </body>
 </html>
