@@ -1,0 +1,2727 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-02-09 Fri 15:35 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMSC216 Project 1: C Programming</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","homeputer>","grace10:"], // allowed interactive prompts
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"    , "language-c");
+lang_map.set("src-text" , "language-plaintext");
+lang_map.set("src-sh"   , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2024-02-09 Fri 15:35</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CMSC216 Project 1: C Programming</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Mon 25-Sep-2023</b></li>
+<li><i>Approximately 4.0% of total grade</i></li>
+<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a> <i>Submission will open soon</i></li>
+<li>Projects are <b>individual work</b>: no sharing of code between students
+is allowed. Seek help from course staff if you get stuck for too
+long.</li>
+</ul>
+
+<div id="outline-container-org197f48d" class="outline-4">
+<h4 id="org197f48d">CODE DISTRIBUTION: <a href="p1-code.zip">p1-code.zip</a></h4>
+</div>
+<div id="outline-container-org3dab22c" class="outline-4">
+<h4 id="org3dab22c">VIDEO OVERVIEW: <a href="https://youtu.be/mr1scoIoR7g">https://youtu.be/mr1scoIoR7g</a></h4>
+</div>
+<div id="outline-container-orgf19825c" class="outline-4">
+<h4 id="orgf19825c">CHANGELOG: Empty</h4>
+</div>
+<div id="outline-container-orga2fd13b" class="outline-4">
+<h4 id="orga2fd13b"></h4>
+<div class="outline-text-4" id="text-orga2fd13b">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org1ec2f19">1. Introduction</a>
+<ul>
+<li><a href="#org465b460">1.1. Grading Criteria</a></li>
+<li><a href="#org0b7500b">1.2. Getting Started</a></li>
+</ul>
+</li>
+<li><a href="#org56af951">2. Download Code and Setup</a>
+<ul>
+<li><a href="#orge4cd713">2.1. Makefile</a></li>
+<li><a href="#orge504b4a">2.2. Automated Tests</a></li>
+</ul>
+</li>
+<li><a href="#org85ca40b">3. <b>Problem 1</b>: Banlet Support</a>
+<ul>
+<li><a href="#orga420cc5">3.1. Overview</a></li>
+<li><a href="#org06e9c4c">3.2. Outline of <code>banlet_funcs.c</code></a></li>
+<li><a href="#orgef57d66">3.3. Editing and Testing</a></li>
+<li><a href="#org1f7afbd">3.4. String Utility Functions</a></li>
+<li><a href="#orgc6f00ff">3.5. Print Fontified</a></li>
+<li><a href="#orgcc7512f">3.6. Grading Criteria for Problem 1</a></li>
+</ul>
+</li>
+<li><a href="#orgb0d2e5e">4. <b>Problem 2</b>: Banlet Output and Input</a>
+<ul>
+<li><a href="#org4ec25b1">4.1. Overview</a></li>
+<li><a href="#org3cb625f">4.2. Printing Multiple Fontified Lines</a></li>
+<li><a href="#org186c210">4.3. Loading Fonts</a></li>
+<li><a href="#orgbe396c8">4.4. Loading Text Files (slurp)</a></li>
+<li><a href="#org4a6ab1c">4.5. Grading Criteria for Problem 2</a></li>
+</ul>
+</li>
+<li><a href="#org56a1190">5. <b>Problem 3</b>: Banlet Main</a>
+<ul>
+<li><a href="#org3f82fa3">5.1. Overview</a></li>
+<li><a href="#orgfd55aca">5.2. Command Line Arguments</a></li>
+<li><a href="#org8316c2e">5.3. Handling Multiple Options</a></li>
+<li><a href="#orgea697b2">5.4. Grading Criteria for Problem 1</a></li>
+</ul>
+</li>
+<li><a href="#orga82b005">6. Project Submission</a>
+<ul>
+<li><a href="#orgf0caafd">6.1. Submit to Gradescope</a></li>
+<li><a href="#org52ee522">6.2. Late Policies</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1ec2f19" class="outline-2">
+<h2 id="org1ec2f19"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Basic application programming in C is an essential step downward
+towards the lower levels of computing. This project explores
+fundamental aspects of getting work done in C:
+</p>
+<ul class="org-ul">
+<li>Dynamic memory management with <code>malloc()/free()</code></li>
+<li>Reading data from files in text format</li>
+<li>Displaying information to the screen</li>
+<li>Building data structures with C <code>structs</code> and pointers</li>
+</ul>
+
+<p>
+The assignment is divided into several problems utilizing many of the
+above techniques.
+</p>
+<ul class="org-ul">
+<li>Problem 1 is a warm up with some basic string and printing routines
+to implement.</li>
+<li>Problem 2 builds on the previous routines to complete a banner
+letter printing function as well as deal with loading fonts and text
+files</li>
+<li>Problem 3 completes the application by coding a <code>main()</code> function to
+employ the preceding  functions to display banner text in a terminal.</li>
+</ul>
+
+<p>
+Problems build on each other and should be done in order to complete
+the project.
+</p>
+</div>
+
+<div id="outline-container-org465b460" class="outline-3">
+<h3 id="org465b460"><span class="section-number-3">1.1</span> Grading Criteria</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Credit for this assignment will be given based on two categories.
+</p>
+
+<ul class="org-ul">
+<li><b>Manual Inspection Criteria (~50%)</b>: Each problem has a checklist of
+things that graders will look for. The checklist is in the spec and
+often contains hints on what to do. Make sure you have a look at
+these.</li>
+
+<li><b>Automated Testing (~50%)</b>: Each problem has tests associated with
+it along with instructions on how to run those tests from the
+command line.  Tests require that code compiles and runs according
+to the descriptions given so make sure you verify that these work.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org0b7500b" class="outline-3">
+<h3 id="org0b7500b"><span class="section-number-3">1.2</span> Getting Started</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Take the following steps to get started
+</p>
+<ol class="org-ol">
+<li>Download the code associated with the project linked at the top of
+the spec. Unzip it and examine some of the provided code.</li>
+<li>Examine the overview of the files provided listed in the
+<a href="#org1dd47b2">Download and Setup</a> section. This gives brief descriptions of files
+that already exist and those that you must create.</li>
+<li>Pick a problem and read. There is a lot of information and many
+examples provided for each problem. Reading this will help you
+write the correct code earlier rather than later.</li>
+<li>Ask questions: if its not clear how to proceed, put up a Piazza
+post or visit an office hour.</li>
+<li>Get coding: <b>don't wait</b> to start for too long as this will greatly
+increase your stress level an potentially result in late
+submissions.</li>
+<li>Familiarize yourself with the <a href="syllabus.html#late-submission">late submission policy</a> for
+assignments so you are not caught off guard. <b>No submissions will
+be accepted more than 48 hours after the deadline.</b></li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org56af951" class="outline-2">
+<h2 id="org56af951"><span class="section-number-2">2</span> <a id="org1dd47b2"></a> Download Code and Setup</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Download the code pack linked at the top of the page. Unzip this which
+will create a project folder. Create new files in this
+folder. Ultimately you will re-zip this folder to submit it.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">State</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Build file to compile all programs</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>banlet_funcs.c</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 1&amp;2 functions to write</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>banlet_main.c</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 3 main function skeleton to edit</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>banlet_demo.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Demo code to show some structs</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>banlet.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Header file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>banlet_font_standard.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Source file for "builtin" font</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_banlet_funcs.c</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Testing file for functions in Problem 1-2</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>data/font_banner.txt</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">Font files for testing</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>data/font_mini.txt</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#x2026;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>data/bass.txt</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">Text files for testing</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>data/oo.txt</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#x2026;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">TESTING</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running script</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test-results/</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Directory in which temporary testing files are written</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_banlet1.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 tests</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_banlet2.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 2 tests</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_banlet3.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 2 tests</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="outline-container-orge4cd713" class="outline-3">
+<h3 id="orge4cd713"><span class="section-number-3">2.1</span> Makefile</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+A <code>Makefile</code> is provided as part of this project. Building programs in
+C is a bit tedious and most folks use <b>build systems</b> of which <code>make</code>
+is the oldest. The instructions and dependencies to create programs
+are written in a <code>Makefile</code> which is then interpreted by the <code>make</code>
+program which will run <code>gcc</code> and other commands to create programs.
+</p>
+
+<p>
+Use this <code>Makefile</code> by issuing commands like <code>make prob1</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; make help
+Typical usage is:
+  &gt; make                          # build all programs
+  &gt; make clean                    # remove all compiled items
+  &gt; make zip                      # create a zip file for submission
+  &gt; make prob1                    # built targets associated with problem 1
+  &gt; make test                     # run all tests
+  &gt; make test-prob2               # run test for problem 2
+  &gt; make test-prob2 testnum=5     # run problem 2 test #5 only
+
+&gt;&gt; make prob2                   # build problem 2 demo program
+gcc -Wall -Wno-comment -Werror -g -Wno-unused-variable -c banlet_funcs.c
+
+&gt; make clean                    # remove all programs/binary object files
+rm -f banlet_main banlet_demo test_banlet_funcs  *.o
+
+&gt;&gt; make prob3                   # build problem 3 main program
+gcc -Wall -Wno-comment -Werror -g -Wno-unused-variable -c banlet_main.c
+gcc -Wall -Wno-comment -Werror -g -Wno-unused-variable -c banlet_funcs.c
+gcc -Wall -Wno-comment -Werror -g -Wno-unused-variable -c banlet_font_standard.c
+gcc -Wall -Wno-comment -Werror -g -Wno-unused-variable -o banlet_main banlet_main.o banlet_funcs.o banlet_font_standard.o
+
+&gt; make clean                    # remove all programs/binary object files
+rm -f banlet_main banlet_demo test_banlet_funcs  *.o
+
+&gt;&gt; make                         # build all programs/objects for the assignment
+gcc -Wall -Wno-comment -Werror -g -Wno-unused-variable -c banlet_main.c
+gcc -Wall -Wno-comment -Werror -g -Wno-unused-variable -c banlet_funcs.c
+gcc -Wall -Wno-comment -Werror -g -Wno-unused-variable -c banlet_font_standard.c
+gcc -Wall -Wno-comment -Werror -g -Wno-unused-variable -o banlet_main banlet_main.o banlet_funcs.o banlet_font_standard.o
+gcc -Wall -Wno-comment -Werror -g -Wno-unused-variable -o banlet_demo banlet_demo.c banlet_font_standard.o
+gcc -Wall -Wno-comment -Werror -g -Wno-unused-variable -o test_banlet_funcs test_banlet_funcs.c banlet_funcs.o banlet_font_standard.o
+</pre>
+</div>
+
+<p>
+You are not required to understand all that is in the <code>Makefile</code> (yet)
+but it is a very useful tool well worth your time to learn.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge504b4a" class="outline-3">
+<h3 id="orge504b4a"><span class="section-number-3">2.2</span> <a id="orgb7a55a0"></a> Automated Tests</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Automated tests are included with the code distribution. <b>These tests
+are known to work on grace.umd.edu only</b> but in most cases they should
+run identically in Linux environments. They <i>may</i> work on the Windows Subsystem
+for Linux but no guarantees are made. They very unlikely to run on
+MacOS natively as Linux-specific tools are used.
+</p>
+
+<p>
+The provided <code>Makefile</code> allows automated tests to be run via calls
+like <code>make test-prob1</code> to test Problem 1 and <code>make test-prob2</code> to test
+Problem 2. See the transcript below.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; make test                    # run tests for problem 1, compiles required code first
+gcc -Wall -Wno-comment -Werror -g -Wno-unused-variable -c banlet_funcs.c
+gcc -Wall -Wno-comment -Werror -g -Wno-unused-variable -c banlet_font_standard.c
+gcc -Wall -Wno-comment -Werror -g -Wno-unused-variable -o test_banlet_funcs test_banlet_funcs.c banlet_funcs.o banlet_font_standard.o
+./testy test_banlet1.org 
+============================================================
+== test_banlet1.org : Problem 1 String / Printing Functions in banlet_funcs.c
+== Running 15 / 15 tests
+1)  string_replace_char_1          : ok
+2)  string_replace_char_2          : ok
+3)  string_replace_char_3          : ok
+4)  string_replace_char_4          : ok
+5)  count_linebreaks_1             : ok
+6)  count_linebreaks_2             : ok
+7)  count_linebreaks_3             : ok
+8)  find_linebreaks_1              : ok
+9)  find_linebreaks_2              : ok
+10) find_linebreaks_3              : ok
+11) find_linebreaks_4              : ok
+12) print_fontified_oneline_1      : ok
+13) print_fontified_oneline_2      : ok
+14) print_fontified_oneline_3      : ok
+15) print_fontified_oneline_length : ok
+============================================================
+RESULTS: 15 / 15 tests passed
+
+&gt;&gt; make test-prob3              # run tests for problem 2
+gcc -Wall -Wno-comment -Werror -g -Wno-unused-variable -c banlet_main.c
+gcc -Wall -Wno-comment -Werror -g -Wno-unused-variable -o banlet_main banlet_main.o banlet_funcs.o banlet_font_standard.o
+./testy test_banlet3.org 
+============================================================
+== test_banlet3.org : Problem 3 slurp_file() and banlet_main tests
+== Running 15 / 15 tests
+1)  banlet_main Hello World                         : ok
+2)  banlet_main multiline                           : ok
+...
+
+&gt; make test                         # run tests for all problems
+...
+</pre>
+</div>
+<p>
+Each problem describes specifically how tests can be run and how
+credit will be assigned.
+</p>
+
+<p>
+Note that one can <b>run a single test</b> with the following <code>make</code>
+invocation which sets <code>testnum</code>.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; make test-prob2 testnum=5
+</pre>
+</div>
+<p>
+This is useful when debugging to limit the output and time it takes to
+check program results.
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org85ca40b" class="outline-2">
+<h2 id="org85ca40b"><span class="section-number-2">3</span> <b>Problem 1</b>: Banlet Support</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orga420cc5" class="outline-3">
+<h3 id="orga420cc5"><span class="section-number-3">3.1</span> Overview</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Problems 1 and 2 recreate a simplified version of the <a href="http://www.figlet.org/">figlet program</a>
+program that is available on many Unix systems. The problems construct
+a similar program called <b>Banlet</b> which prints messages as "banner
+letters" which are larger and more striking than standard terminal
+fonts.  As an example, here is what <code>banlet_main</code> does in practice:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; ./banlet_main 'Hi there!'                                    # print a simple "fontified" message"
+._. ._.    ._.   _                       ._.
+| | | |(`)  | |_.| |__    ___ ._ __.  ___ | |
+| |_| ||'|  | __|| '_ \  /'_`\| `__| /'_`\| |
+|  _  || |  | |_ | | | ||  __/| |   |  __/|_|
+|_| |_||_|   \__||_| |_| \___||_|    \___|(_)
+
+&gt; ./banlet_main $'How do\nyou do?' data/font_banner.txt        # print a multiline message in a different font
+#     #                                
+#     #  ####  #    #    #####   ####  
+#     # #    # #    #    #    # #    # 
+####### #    # #    #    #    # #    # 
+#     # #    # # ## #    #    # #    # 
+#     # #    # ##  ##    #    # #    # 
+#     #  ####  #    #    #####   ####  
+                                       
+                                      #####  
+#   #  ####  #    #    #####   ####  #     # 
+ # #  #    # #    #    #    # #    #       # 
+  #   #    # #    #    #    # #    #    ###  
+  #   #    # #    #    #    # #    #    #    
+  #   #    # #    #    #    # #    #         
+  #    ####   ####     #####   ####     #    
+
+&gt; ./banlet_main "$(cat data/testing.txt)" data/font_mini.txt   # select a different font, message from a file
+___                                                                                       
+ |  _  __|_o._  _    _ _.._      ._ |    ._ ._      _   _|_|_  _   ._ ._ _  _ _ ._  _ _   
+ | (/__&gt; |_|| |(_|  (_(_|| |  (_)| ||\/  |_)| (_)\/(/_   |_| |(/_  |_)| (/__&gt;(/_| |(_(/_  
+                _|                   /   |                         |                      
+     _                                                               
+   _|_  |_     _  _   ._    _|_  _|_|_  _ o._   _.|_  _ _ ._  _ _    
+(_) |   |_)|_|(_|_&gt;o  | |(_) |_   |_| |(/_||   (_||_)_&gt;(/_| |(_(/_o  
+               _|  /                                                 
+     _                _                
+__  |_ _| _ _  _ ._  | \o o|  __|_._ _.
+    |_(_|_&gt;(_|(/_|   |_/| ||&lt;_&gt; |_| (_|
+            _|           _|            
+</pre>
+</div>
+
+<p>
+Problem 1 lays out a number of utility functions that operate on
+strings which gradually build towards the full functionality
+required. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org06e9c4c" class="outline-3">
+<h3 id="org06e9c4c"><span class="section-number-3">3.2</span> Outline of <code>banlet_funcs.c</code></h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+The file <code>banlet_funcs.c</code> will contain most of the support functions
+for the Banlet program. An outline of these functions are presented
+below. Note that each function has the Problem # to which it belongs.
+</p>
+
+<pre class="example" id="org9231bc4">
+// SOLUTION
+// banlet_funcs.c: support functions for the banlet_main program.
+
+void string_replace_char(char *str, char old, char new);
+// PROBLEM 1: Replace instances of character 'old' with 'new' in the
+// string 'str'.  May use the strlen() library function to determine
+// string length or directly look for a '\0' null termination
+// character to end the string.
+// 
+// EXAMPLES:
+// char s1[]="A A B B A"; string_replace_char(s1, 'A', 'X'); // s1 is "X X B B X"
+// char s2[]="A A B B A"; string_replace_char(s2, 'B', 'Y'); // s2 is "A A Y Y A"
+// char s3[]="A A B B A"; string_replace_char(s3, ' ', '-'); // s3 is "A-A-B-B-A"
+
+int count_linebreaks(char *msg);
+// PROBLEM 1: Counts the number of newline characters '\n' in the
+// string 'msg'; return this number +1 as the end of lines will always
+// be a line break. May use the strlen() library function to determine
+// string length or directly look for a '\0' null termination
+// character to end the string.
+// 
+// EXAMPLES:
+// count_linebreaks("Hi")        -&gt;  1
+// count_linebreaks("Hi There")  -&gt;  1
+// count_linebreaks("Hi\nThere") -&gt;  2
+// count_linebreaks("O\nM\nG")   -&gt;  3
+
+int *find_linebreaks(char *msg, int *nbreaks);
+// PROBLEM 1: Counts the linebreaks (newline '\n' chars and end of
+// string) and returns an array of integers with the position for each
+// linebreak in string 'msg'.  Uses the count_linebreaks()
+// function. The 'nbreaks' parameter is an OUTPUT integer that should
+// be set to the number of breaks in 'msg' using the C dereference
+// operator (*).
+//
+// EXAMPLES:
+// int nbreaks = -1;
+// int *breaks = find_linebreaks("Hello\nWorld", &amp;nbreaks);
+// //            index in string: 012345 67890
+// // nbreaks is now 2
+// // breask is now [5, 11]
+
+void print_fontified_oneline(char *msg, font_t *font, int length);
+// PROBLEM 1: Prints string 'msg' using 'font'. Only prints characters
+// 0 to 'length-1'.  Iterates over each row in font-&gt;height and then
+// scans across the charactes in 'msg' printing each "row" of the
+// character. On reaching index 'length', prints a newline and then
+// scans across 'msg' again printing characters from the next row.
+// Each msg[i] character is used to as the index into fonts-&gt;glyphs[]
+// to access the "glyph" that will be printed.
+//
+// NOTE: This function does NOT handle embedded newline '\n'
+// characters. It is intended to be called repeatedly on each line in
+// multiline text with '\n' characters found using the
+// 'find_linebreaks()' function.
+//
+// EXAMPLE:
+//
+// print_fontified_oneline("Hello!", &amp;font_standard, 6);
+// // Prints the following on standard output:
+// ._. ._.      ,-,,-,       ._.
+// | | | |  ___ | || |  ___  | |
+// | |_| | /'_`\| || | / _ \ | |
+// |  _  ||  __/| || || (_) ||_|
+// |_| |_| \___||_||_| \___/ (_)
+
+void print_fontified(char *msg, font_t *font);
+// PROBLEM 1: Uses print_fontified_oneline() with find_linebreaks() to
+// correctly print 'msg' with 'font' even if there are linebreaks in
+// 'msg'.  Uses find_linebreaks() to find the end of each line in
+// 'msg' and then iterates over lines printing each.  Uses pointer
+// arithmetic to pass the starting position of each line into calls of
+// print_fontified_oneline(). Frees memory allocated (such as through
+// use of count_linebreaks()) before returning.
+//
+// EXAMPLE:
+//   print_fontified("apple\nB@N@N@\nCarr0^", &amp;font_standard);
+// Shows the following on standard output:
+//                      ,-,      
+//   __ _ ,_ __. ,_ __. | |  ___ 
+//  / _` || '_ \ | '_ \ | | /'_`\
+// | (_| || |_) || |_) || ||  __/
+//  \__,_|| .__/ | .__/ |_| \___|
+//        |_|    |_|             
+// ,____    ____  ._  ._.   ____  ._  ._.   ____  
+// | == )  / __ \ | \ | |  / __ \ | \ | |  / __ \ 
+// |  _ \ / / _` ||  \| | / / _` ||  \| | / / _` |
+// | |_)|| | (_| || |\  || | (_| || |\  || | (_| |
+// |____/ \ \__,.||_| \_| \ \__,.||_| \_| \ \__,.|
+//         \____/          \____/          \____/ 
+//   ____.                     ___   /\ 
+//  / ___|  __ _ ._ __.._ __. / _ \ |/\|
+// | |     / _` || `__|| `__|| | | |    
+// | |___.| (_| || |   | |   | |_| |    
+//  \____| \__,_||_|   |_|    \___/     
+
+void glyph_init(glyph_t *glyph, int codepoint);
+// PROVIDED: Initializes a glyph to mostly X's except for its
+// codepoint on the first line.
+
+font_t *font_load(char *filename);
+// PROBLEM 2: Loads a banner font from 'filename'.  The format of font
+// files is documented more thoroughly in the project specification
+// but is generally comprised of a first line that indicate the height
+// of each glyph in the font followed by a sequence of each glyph
+// starting with its codepoint (ASCII index) and a grid of characters
+// in it. To make parsing easier, the ? character is used to represent
+// blank spaces in glyph shapes.
+//
+// EXAMPLE:
+// height: 4
+// 42
+// ???
+// \|/
+// /|\
+// ???
+// 43
+// ???
+// _|_
+// ?|?
+// ???
+//
+// The two characters above are the codepoint 42 '*' and codepoint 43
+// '+' with the ? symbols eventually being replaced by spaces during
+// loading.
+// 
+// If 'filename' cannot be opened for reading, returns NULL.
+//
+// Memory allocation happens in two steps: (1) allocates memory for a
+// font_t struct then (2) allocates memory for an array of glyph_t
+// structs of length NUM_ASCII_GLYPHS (a constant defined in
+// banlet.h). Sets the font-&gt;glyphs field to be the allocated array of
+// glyphs.  Reads the font-&gt;height field from teh first line of the
+// file.  Iterates over each element of the glyphs array and calls the
+// glyph_init() function on it to populate it with default data.  Then
+// proceeds to read glyphs from the file. Glyphs are read by reading
+// the integer codepoint first which determins which element of the
+// glyph array to read into.  Then a loop over the height of the font
+// is used to read each row of the glyph into the
+// glyph[codepoint]-&gt;data[row]; fscanf() with '%s' specifier is used
+// for this.  Finally, the string_replace_char() function is used to
+// replace all '?' characters with ' ' (space) characters in the glyph
+// data. Sets the width of each glyph using the strlen() function on
+// any balid row of the glyph data.
+//
+// Glyphs are read from 'filename' until an attempt to read a glyph's
+// codepoint with fscanf() returns EOF (end of file). This causes the
+// routine to return the allocated font_t data for use elsewhere.
+
+void font_free(font_t *font);
+// PROBLEM 2: Frees the memory associated with 'font'.  First frees
+// the glyph array, then frees the font itself. Hint: this funciton
+// should be 2 lines long.
+
+char *slurp_file(char *filename);
+// PROBLEM 2: Read all characters from the file 'filename' into a
+// dynamcally allocated array. Terminates the array with the '\0'
+// character to form a valid C string and return that string. If the
+// file cannot be opened, return NULL.
+// 
+// CONSTRAINT: Does not use any functions that determine the size of a
+// file a priori such as fstat() or fseek() or their kin.
+//
+// BASELINE: Uses a "2-Pass" solution. Counts the characters in file
+// via calls to fscanf() or fgetc(), then returns to beginning of the
+// file with rewind(), allocates an appropriately sized block of
+// memory, then reads all characters into it in a second pass.
+//
+// OPTIONAL MAKEUP CREDIT: Uses a single I/O pass and dynamically
+// expands memory to handle larger inputs. For full makeup credit,
+// this approach must abide by the following additional conditions:
+// - Does not use functions that determine the size of the file
+// - Does not allocate/copy memory each loop iteration
+// - Does not use the realloc() function, only malloc()/free()
+// - Has amortized linear time and linear space; the allocated array may
+//   not be any larger than 2x the number of characters in it
+// - Uses a mmeory allocation scheme similar to thos used with
+//   dynamic arrays to meet the above requirement; see
+//   https://en.wikipedia.org/wiki/Dynamic_array
+// WRITE COMMENTS DESCRIBING YOUR MAKEUP CREDIT APPROACH; solutions
+// without reasonably detailed comments will not receive any MAKEUP
+// credit.
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgef57d66" class="outline-3">
+<h3 id="orgef57d66"><span class="section-number-3">3.3</span> Editing and Testing</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+The project code contains a skeleton version of <code>banlet_funcs.c</code> which
+you should fill in with definitions. With this skeleton version, you
+can immediately <b>start testing your code</b> by typing <code>make test-prob1</code>.
+Without changes, you will get failures for all tests as in
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; make test-prob1
+./testy test_banlet_funcs1.org 
+============================================================
+== test_banlet_funcs1.org : Problem 1 First 5 Functions in banlet_funcs.c
+== Running 15 / 15 tests
+1)  string_replace_char_1     : FAIL -&gt; results in file 'test-results/prob1-01-result.tmp'
+2)  string_replace_char_2     : FAIL -&gt; results in file 'test-results/prob1-02-result.tmp'
+3)  string_replace_char_3     : FAIL -&gt; results in file 'test-results/prob1-03-result.tmp'
+4)  string_replace_char_4     : FAIL -&gt; results in file 'test-results/prob1-04-result.tmp'
+...
+15) print_fontified_oneline_4 : FAIL -&gt; results in file 'test-results/prob1-15-result.tmp'
+============================================================
+RESULTS: 0 / 15 tests passed
+</pre>
+</div>
+
+<p>
+However, the ability to run tests on your code an see progress is
+extremely important. <b>Your first goal when starting a new project
+should be to see some results or running the program</b> which is much
+easier if some benevolent dictator has provided a bunch of tests.
+</p>
+
+<p>
+Keep in mind that as you fail tests, you can see the results files in
+any text editor or in the terminal. The <code>cat</code> command is helpful for
+this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt; cat test-results/prob1-01-result.tmp
+(TEST 1) string_replace_char_1
+COMMENTS:
+
+program: ./test_banlet_funcs1 string_replace_char_1
+Failure messages:
+- FAILURE: Output Mismatch at lines marked
+
+--- Side by Side Differences ---
+- Expect output in: test-results/raw/prob1-01-expect.tmp
+- Actual output in: test-results/raw/prob1-01-actual.tmp
+- Differing lines have a character like '|' in the middle\n
+==== EXPECT ====                                ==== ACTUAL ====                             
+{                                               {
+    // Tests replacing characters in a string       // Tests replacing characters in a string
+    char string[]="A A B B A";                      char string[]="A A B B A";
+    string_replace_char(string, 'A', 'X');          string_replace_char(string, 'A', 'X');
+    printf("result: '%s'\n", string);               printf("result: '%s'\n", string);
+}                                               }
+result: 'X X B B X'                           | result: 'A A B B A'
+--- Line Differences ---
+EXPECT:   7) result: 'X X B B X'
+ACTUAL:   7) result: 'A A B B A'
+
+--- Valgrind Log from: test-results/raw/prob1-01-valgrd.tmp ---
+==29883== Memcheck, a memory error detector
+==29883== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==29883== Using Valgrind-3.16.1 and LibVEX; rerun with -h for copyright info
+==29883== Command: ./test_banlet_funcs1 string_replace_char_1
+==29883== Parent PID: 29882
+==29883== 
+==29883== 
+==29883== HEAP SUMMARY:
+==29883==     in use at exit: 0 bytes in 0 blocks
+==29883==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==29883== 
+==29883== All heap blocks were freed -- no leaks are possible
+==29883== 
+==29883== For lists of detected and suppressed errors, rerun with: -s
+==29883== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+</pre>
+</div>
+
+<p>
+You can also use the invocation
+</p>
+<pre class="example">
+&gt; make test-prob1 testnum=5
+</pre>
+
+<p>
+to run a single test and see its results.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1f7afbd" class="outline-3">
+<h3 id="org1f7afbd"><span class="section-number-3">3.4</span> String Utility Functions</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+The first 3 functions to implement in <code>banlet_funcs.c</code> are string
+utility functions that will be used later. As covered in lecture, C
+uses raw arrays of characters as its string type. Often these are
+passed as a pointer to character data, thus the prototypes that
+involve <code>char *</code> as in
+</p>
+<div class="org-src-container">
+<pre class="src src-c">void string_replace_char(char *str, char old, char new)
+</pre>
+</div>
+<p>
+Keep the following in mind.
+</p>
+<ol class="org-ol">
+<li>You'll need to iterate over the characters in the string. Since
+<code>str</code> is a pointer, one can use the indexing syntax <code>str[i]</code> to
+access individual characters in it. This can also be used to assign
+a new character as in <code>str[i] = 'A';</code>.</li>
+<li><code>str</code> does not carry its length with it so there is no
+<code>str.length</code> or <code>length(str)</code> available and <b><code>sizeof(str)</code> WILL NOT
+WORK</b> to determine the length of the string.</li>
+<li>Since one definitely needs to iterate over all characters in <code>str</code>,
+use one of the following two
+mechanisms to find its end
+<ul class="org-ul">
+<li><code>strlen(str)</code>: this handy function from the C string library
+gives returns the length of strings only</li>
+<li>The <code>\0</code> character: all standard strings are to be terminated
+with a null <code>\0</code> character; one can check if <code>str[i] == '\0'</code>
+while iterating to find the end of the string. This is the
+technique that is used by library functions like <code>printf()</code> to
+find the end of strings.</li>
+</ul></li>
+<li>Make sure to use an equality check when comparing elements, that is
+the <code>x == y</code> operator in C, NOT the assignment operator <code>=</code>.</li>
+</ol>
+</div>
+
+<div id="outline-container-org6297307" class="outline-4">
+<h4 id="org6297307"><code>find_linebreaks()</code></h4>
+<div class="outline-text-4" id="text-org6297307">
+<p>
+Consider the prototype for <code>find_linebreaks()</code> which has some
+interesting features:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">int *find_linebreaks(char *msg, int *nbreaks)
+</pre>
+</div>
+<p>
+Importantly, this function must return 2 things determined from
+parameter <code>msg</code>
+</p>
+<ol class="org-ol">
+<li>An array of integers indicating the positions in <code>msg</code> where <code>\n</code>
+(newline) characters appear along with the end of the string. This
+is the return value for the function which must be a <code>malloc()</code>'d
+array. Do NOT <code>free()</code> the array of integers you <code>malloc()</code> in
+<code>find_linebreaks()</code>: it will be freed by the calling function</li>
+<li><p>
+The length of the returned array must also be returned. C does not
+support multiple returns per se, but pointers more than make up for
+this.  The parameter <code>nbreaks</code> is meant to be SET by
+<code>find_linebreaks()</code> as indicated in the function
+documentation. A caller will provide the address of an integer for
+the function to set
+</p>
+<div class="org-src-container">
+<pre class="src src-c">   int nbreaks = -1;
+   int *breaks = find_linebreaks("Hello\nWorld", &amp;nbreaks);
+   //            index in string: 012345 67890
+   // nbreaks is now 2
+   // breask is now [5, 11]
+</pre>
+</div></li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc6f00ff" class="outline-3">
+<h3 id="orgc6f00ff"><span class="section-number-3">3.5</span> Print Fontified</h3>
+<div class="outline-text-3" id="text-3-5">
+</div>
+<div id="outline-container-org28afc16" class="outline-4">
+<h4 id="org28afc16">Glyphs and Fonts</h4>
+<div class="outline-text-4" id="text-org28afc16">
+<p>
+The function <code>print_fontified_oneline()</code> is used to print single line
+of text in a "font" as defined by the project. Normally fonts have
+interesting geometric curves and drawing instructions embedded in
+them. Most standard terminals don't support printing such things but
+do support printing character data. Thus "fonts" in Banlet are just a
+grid of text that is to be printed in when displaying a single
+character. For example, when printing a fontified version of "A", the
+following <b>glyph</b> is used in builtin font for Banlet.
+</p>
+<div class="org-src-container">
+<pre class="src src-text"> 012345678
+0   / \   
+1  / _ \  
+2 / ___ \ 
+3/_/   \_\
+4        
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org99e4fa6" class="outline-4">
+<h4 id="org99e4fa6">Basic Algorithm for Fontified Printing</h4>
+<div class="outline-text-4" id="text-org99e4fa6">
+<p>
+This presents some interesting challenges when printing sequences of
+such glyphs as one must typically print across rows of text before
+moving the to the next line.  So, to print the string "CAT", one would
+print the first row of each glyph, then the second, then the 3rd, and
+so on.  As an example, here is "CAT" built incrementally. The <code>@</code>
+symbol is used to denote where printing finishes at each step
+</p>
+<div class="org-src-container">
+<pre class="src src-text">DEMO of printing "CAT" via print_fontified_oneline() algorithm
+
+ROW 0, PRINT 0th CHAR 'C'
+  ____@
+
+ROW 0, PRINT 1th CHAR 'A'
+  ____     _    @
+
+ROW 0, PRINT 2th CHAR 'T'
+  ____     _     _____@
+
+ROW 0 DONE, PRINT \n
+  ____     _     _____
+@
+
+ROW 1, PRINT 0th CHAR 'C'
+  ____     _     _____
+ / ___|@
+
+ROW 1, PRINT 1th CHAR 'A'
+  ____     _     _____
+ / ___|   / \   @
+
+ROW 1, PRINT 2th CHAR 'T'
+  ____     _     _____
+ / ___|   / \   |_   _|@
+
+ROW 1 DONE, PRINT \n
+  ____     _     _____
+ / ___|   / \   |_   _|
+@
+
+AFTER PRINTING 2th ROW ALL CHARS
+  ____     _     _____ 
+ / ___|   / \   |_   _|
+| |      / _ \    | |  @
+
+AFTER PRINTING 3th ROW ALL CHARS
+  ____     _     _____ 
+ / ___|   / \   |_   _|
+| |      / _ \    | |  
+| |___  / ___ \   | |  @
+
+AFTER COMPLETING ALL ROWS / CHARS
+  ____     _     _____ 
+ / ___|   / \   |_   _|
+| |      / _ \    | |  
+| |___  / ___ \   | |  
+ \____|/_/   \_\  |_|  
+@
+</pre>
+</div>
+
+<p>
+Implementing this basic printing algorithm is the purpose of the
+<code>print_fontified_oneline()</code> function.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb58a1fd" class="outline-4">
+<h4 id="orgb58a1fd">Font and Glyph C Types</h4>
+<div class="outline-text-4" id="text-orgb58a1fd">
+<p>
+The <code>font_t</code> and <code>glyph_t</code> data types are defined in the <code>banlet.h</code>
+header file and are as follows.
+</p>
+<div class="org-src-container">
+<pre class="src src-c"><span class="linenr"> 1: </span>#define MAX_HEIGHT 10                // max height in chars for glyphs
+<span class="linenr"> 2: </span>#define MAX_WIDTH  20                // max width  in chars for glyphs
+<span class="linenr"> 3: </span>#define NUM_ASCII_GLYPHS 128         // number of glyphs in a font
+<span class="linenr"> 4: </span>
+<span class="linenr"> 5: </span>typedef struct {                     // type associated with individual glyphs
+<span class="linenr"> 6: </span>  char data[MAX_HEIGHT][MAX_WIDTH];  // 2D array of data for glyph, rows should be \0-terminated strings
+<span class="linenr"> 7: </span>  int codepoint;                     // ASCII codepoint, e.g. 65 for 'A' etc.
+<span class="linenr"> 8: </span>  int width;                         // width of the glyph
+<span class="linenr"> 9: </span>} glyph_t;
+<span class="linenr">10: </span>
+<span class="linenr">11: </span>typedef struct {                     // type associated with a font
+<span class="linenr">12: </span>  glyph_t *glyphs;                   // array of glyphs with length NUM_ASCII_GLYPHS for each ASCII codepoint
+<span class="linenr">13: </span>  int height;                        // height of all glyphs in the font
+<span class="linenr">14: </span>} font_t;
+<span class="linenr">15: </span>
+<span class="linenr">16: </span>extern font_t font_standard;         // font defined in banlet_font_standard.c
+</pre>
+</div>
+
+<p>
+In order to access the glyph data to print, one must usually go
+through a font data structure such as in this sample code provided in
+<code>banlet_demo.c</code>. 
+</p>
+<div class="org-src-container">
+<pre class="src src-C"><span class="linenr"> 1: </span>// banlet_demo.c: shows some syntax patterns to access parts of the
+<span class="linenr"> 2: </span>// font_t and glyph_t data in banlet.
+<span class="linenr"> 3: </span>
+<span class="linenr"> 4: </span>#include "banlet.h"
+<span class="linenr"> 5: </span>
+<span class="linenr"> 6: </span>int main(int argc, char *argv[]){
+<span class="linenr"> 7: </span>  font_t *font = &amp;font_standard; // builtin font
+<span class="linenr"> 8: </span>  printf("Standard font has %d rows\n",
+<span class="linenr"> 9: </span>         font-&gt;height);
+<span class="linenr">10: </span>
+<span class="linenr">11: </span>  int codepoint = 'A';          // ASCII code 65
+<span class="linenr">12: </span>  printf("Width of codepoint %d in font is: %d\n",
+<span class="linenr">13: </span>         codepoint,
+<span class="linenr">14: </span>         font-&gt;glyphs[codepoint].width);
+<span class="linenr">15: </span>
+<span class="linenr">16: </span>  printf("Row 0 of glyph is: %s\n",
+<span class="linenr">17: </span>         font-&gt;glyphs[codepoint].data[0]);
+<span class="linenr">18: </span>
+<span class="linenr">19: </span>  printf("Row 1 of glyph is: %s\n",
+<span class="linenr">20: </span>         font-&gt;glyphs[codepoint].data[1]);
+<span class="linenr">21: </span>
+<span class="linenr">22: </span>  printf("Row 2 of glyph is: %s\n",
+<span class="linenr">23: </span>         font-&gt;glyphs[codepoint].data[2]);
+<span class="linenr">24: </span>  return 0;
+<span class="linenr">25: </span>}
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Note the combination use of the struct field dereference "arrow"
+operator <code>x-&gt;y</code>, array index <code>x[y]</code>, and the field access "dot"
+<code>x.y</code> operators. Follow this pattern in your own code to traverse
+from one struct to its array fields to their fields in turn.</li>
+<li>Note also the use of <code>printf()</code> and "rows" of the <code>data</code> field. For
+a 2D array like <code>char data[MAX_HEIGHT][MAX_WIDTH];</code> access has the
+following pointer semantics:
+<ul class="org-ul">
+<li><code>data</code> can be treated as a <code>char **</code></li>
+<li><code>data[i]</code> can be treated as a <code>char *</code> and can be used with the <code>%s</code>
+specifier in <code>printf()</code></li>
+<li><code>data[i][j]</code> is a <code>char</code> and can be used with the <code>%c</code> specifier
+in <code>printf()</code>.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org38a833b" class="outline-4">
+<h4 id="org38a833b">Printing Fontified</h4>
+<div class="outline-text-4" id="text-org38a833b">
+<p>
+Combine the data access pattern and the central algorithm of printing
+each row of each glyph to complete <code>print_fontified_oneline()</code>.  Keep
+in mind that the function <b>does not handle linebreaks</b> which is the
+subject of the next problem.  Instead, note the prototype has a
+<code>length</code> parameter:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">void print_fontified_oneline(char *msg, int length, font_t *font)
+</pre>
+</div>
+<p>
+Print from the beginning of <code>msg</code> up to but NOT INCLUDING the
+character at index <code>length</code>.
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgcc7512f" class="outline-3 grading 35">
+<h3 id="orgcc7512f"><span class="section-number-3">3.6</span> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="35">35</span></span></h3>
+<div class="outline-text-3" id="text-3-6">
+<p>
+The following criteria will be checked.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">AUTOMATED TESTS via <code>make test-prob1</code></td>
+</tr>
+
+<tr>
+<td class="org-right">15</td>
+<td class="org-left">Runs tests in <code>test_banlet_funcs1.org</code> on the first 4 functions in <code>banlet_funcs.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Runs all code under Valgrind to ensure that no memory errors are present.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">1 point per test passed</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">MANUAL INSPECTION</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Style</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Good indentation of code clearly denoting function/loop/conditional scopes</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Presence of some comments to indicate intent in gnarly code</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><code>string_replace_char()</code> and  <code>count_linebreaks()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Uses either <code>strlen()</code> or detects <code>\0</code> char to not go off the end of the string</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Uses simple iteration pattern with conditional to check for old chars and replace with new</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Uses square brace indexing to access characters in string</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><code>find_linebreaks()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Makes use of <code>count_linebreaks()</code> function</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Uses <code>malloc()</code> to dynamically allocate integer array for break positions</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Derefence-sets <code>nbreaks</code> parameter to change it to the count of breaks</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Does not free allocated array and returns a pointer to it</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><code>print_fontified_oneline()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Makes use of correct syntax of access ( <code>-&gt;</code> and  <code>[ ]</code> and  <code>.</code> ) to obtain font/glyph data</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Uses doubly-nested loop to iterate over font rows and characters in the message</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Respects the <code>length</code> parameter and does not write past its bound</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb0d2e5e" class="outline-2">
+<h2 id="orgb0d2e5e"><span class="section-number-2">4</span> <b>Problem 2</b>: Banlet Output and Input</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org4ec25b1" class="outline-3">
+<h3 id="org4ec25b1"><span class="section-number-3">4.1</span> Overview</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+This problem will combine several of the support functions from
+Problem 1 and implement a font-loading function in order to complete
+the Banlet program.  It implements several more functions in
+<code>banlet_funcs.c</code>.  These are used in the provided <code>banlet_main.c</code>
+program to produce commandline banner letters.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3cb625f" class="outline-3">
+<h3 id="org3cb625f"><span class="section-number-3">4.2</span> Printing Multiple Fontified Lines</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+The previous <code>print_fontified_oneline()</code> function did not handle
+multi-line message printing. Instead, this is handled in
+<code>print_fontified()</code>.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">void print_fontified(char *msg, font_t *font);
+// PROBLEM 2: Uses print_fontified_oneline() with find_linebreaks() to
+// correctly print 'msg' with 'font' even if there are linebreaks in
+// 'msg'.  Uses find_linebreaks() to find the end of each line in
+// 'msg' and then iterates over lines printing each.  Uses pointer
+// arithmetic to pass the starting position of each line into calls of
+// print_fontified(). Frees memory allocated (such as through use of
+// count_linebreaks()) before returning.
+//
+// EXAMPLE:
+//   print_fontified("apple\nB@N@N@\nCarr0^", &amp;font_standard);
+// Shows the following on standard output:
+//                      ,-,      
+//   __ _ ,_ __. ,_ __. | |  ___ 
+//  / _` || '_ \ | '_ \ | | /'_`\
+// | (_| || |_) || |_) || ||  __/
+//  \__,_|| .__/ | .__/ |_| \___|
+//        |_|    |_|             
+// ,____    ____  ._  ._.   ____  ._  ._.   ____  
+// | == )  / __ \ | \ | |  / __ \ | \ | |  / __ \ 
+// |  _ \ / / _` ||  \| | / / _` ||  \| | / / _` |
+// | |_)|| | (_| || |\  || | (_| || |\  || | (_| |
+// |____/ \ \__,.||_| \_| \ \__,.||_| \_| \ \__,.|
+//         \____/          \____/          \____/ 
+//   ____.                     ___   /\ 
+//  / ___|  __ _ ._ __.._ __. / _ \ |/\|
+// | |     / _` || `__|| `__|| | | |    
+// | |___.| (_| || |   | |   | |_| |    
+//  \____| \__,_||_|   |_|    \___/     
+</pre>
+</div>
+
+<p>
+This function works as follows.
+</p>
+<ul class="org-ul">
+<li>Use the <code>find_linebreaks()</code> function to locate the <code>\n</code> in
+the <code>msg</code> string. This gives the number of lines in the message and
+their starting positions in <code>msg</code>.</li>
+<li>Iterate over each "line" in the text calling
+<code>print_fontified_oneline()</code> on just that individual line. After
+printing each line, move to the next line.</li>
+<li>Use pointer arithmetic or addressing to pass different starting
+positions into <code>print_fontified()</code>.  For example, if there is a
+newline at position 14 in <code>msg</code>, then position 15 is the start of a
+new line and <code>msg+15</code> will give a <code>char *</code> pointing at that starting
+position.</li>
+<li>The length of each line can be determined using arithmetic on the
+indices in the linebreaks array from <code>find_linebreaks()</code></li>
+<li>Make sure that the array allocated by <code>find_linebreaks()</code> is
+<code>free()</code>'d before returning from this function to avoid a memory
+leak.</li>
+</ul>
+
+<p>
+Once this function is finished, the provided <code>banlet_main</code> program
+should be mostly functional.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; ./banlet_main $'Nice\nWork!'
+._  ._.               
+| \ | |(`)  ___.  ___ 
+|  \| ||'| / __| /'_`\
+| |\  || || (__ |  __/
+|_| \_||_| \___| \___|
+                      
+_.        ._             ,_,   ._.
+\ \      / /  ___  ._ __.| | __| |
+ \ \ /\ / /  / _ \ | `__|| |/ /| |
+  \ V  V /  | (_) || |   |   &lt; |_|
+   \_/\_/    \___/ |_|   |_|\_\(_)
+                                  
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org186c210" class="outline-3">
+<h3 id="org186c210"><span class="section-number-3">4.3</span> Loading Fonts</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+The real flexibility of any font system is being able to select
+different fonts easily to see how the same text renders.  There is a
+built-in font in Banlet defined in a set of C structs in
+<code>banlet_font_standard.c</code> but this is extremely cumbersome to specify
+and inappropriate for creating and using new fonts. New fonts in C
+files would require Banlet to be recompiled every time a new font is
+added. 
+</p>
+
+<p>
+Instead, it is better to allow a file format that specifies new fonts
+so that they can be created and loaded without modifying the source
+code of Banlet. This is the intent of the <code>font_load()</code> function.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">font_t *font_load(char *filename);
+</pre>
+</div>
+
+<p>
+This section details the format for font files and gives some details
+on the <code>font_load()</code> function which enables new fonts to be created in
+text files and loaded on the fly of use in Banlet.
+</p>
+</div>
+
+<div id="outline-container-org21a27c9" class="outline-4">
+<h4 id="org21a27c9">Font Files</h4>
+<div class="outline-text-4" id="text-org21a27c9">
+<p>
+A number of demonstration font files are in the <code>data/</code> directory for
+the project.  This includes the <code>font_standard.txt</code> file which is a
+file version of the builtin font. It makes a good example and the
+first portion is here using the <code>head</code> command which prints the first
+few lines in files, 30 lines in this case:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">&gt;&gt; head -30 data/font_alternate.txt
+height: 6
+32
+??
+??
+??
+??
+??
+??
+33
+?_?
+|?|
+|?|
+|_|
+(_)
+???
+34
+?_?_?
+(?|?)
+?V?V?
+?????
+?????
+?????
+35
+???_??_???
+?_|?||?|_?
+|_??..??_|
+|_??????_|
+??|_||_|??
+??????????
+36
+</pre>
+</div>
+
+<p>
+The first and most obvious strangeness is the presence of the many <code>?</code>
+characters.  Each <code>?</code> character will be replaced with a space
+character instead but reading data from the file is much easier
+without whitespace in it.  For example, the glyphs for 'ABC'
+appear in
+<code>data/font_standard.txt</code> adjacent to one another as follows:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">65
+????_????
+???/?\???
+??/?_?\??
+?/?___?\?
+/_/???\_\
+?????????
+66
+?____??
+|?__?)?
+|??_?\?
+|?|_)?|
+|____/?
+???????
+67
+??____?
+?/?___|
+|?|????
+|?|___?
+?\____|
+???????
+</pre>
+</div>
+<p>
+Using the <code>string_replace_char()</code> will eventually make these appear in
+a familiar fashion as:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">65
+    _    
+   / \   
+  / _ \  
+ / ___ \ 
+/_/   \_\
+         
+66
+ ____  
+| __ ) 
+|  _ \ 
+| |_) |
+|____/ 
+       
+67
+  ____ 
+ / ___|
+| |    
+| |___ 
+ \____|
+       
+</pre>
+</div>
+
+<p>
+Aside from the <code>?</code> characters, font files follow a simple pattern.
+</p>
+<ul class="org-ul">
+<li>Line 1 is <code>height: N</code> where N is the height of all glyphs in the
+font. This will always be less than <code>MAX_HEIGHT</code>.</li>
+<li>The next line will be a codepoint for some glyph like 32 (space) or
+65 ('A')</li>
+<li>After the codepoint will be N lines which comprise the <code>data</code> for
+the glyph; correct fonts will all be within the bounds set by
+<code>MAX_WIDTH</code>.</li>
+<li>The pattern then repeats with another codepoint and N lines of the
+glyph.</li>
+</ul>
+
+<p>
+Study the example font files in the <code>data</code> directory to make sure you
+have a good sense of the structure of those files.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org23c92a9" class="outline-4">
+<h4 id="org23c92a9">Allocating and Initializing Fonts/Glyph Arrays</h4>
+<div class="outline-text-4" id="text-org23c92a9">
+<p>
+You'll need to allocate a <code>font_t</code> using <code>malloc()</code> which will
+eventually be returned from <code>font_load()</code>.
+</p>
+
+<p>
+Glyph arrays should also be allocated using <code>malloc()</code>. Allocate
+<code>NUM_ASCII_GLYPHS</code> entries in the array but multiply this by the size
+of the <code>glyph_t</code> struct.
+</p>
+
+<p>
+Remember to "connect" font struct to the glyph array by assigning the
+<code>font-&gt;glyph</code> field to the <code>malloc()</code>'d array.
+</p>
+
+<p>
+On each glyph in the array, call the provided function <code>glyph_init()</code>
+function which will fill it with some default data. This will make it
+much easier to identify any mistakes made in printing glyphs that
+weren't initialized. Uninitialized glyphs will print like below with
+their codepoint on the first line of display.
+</p>
+<div class="org-src-container">
+<pre class="src src-text">78XXXX
+XXXXXX
+XXXXXX
+XXXXXX
+XXXXXX
+XXXXXX
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfd3573f" class="outline-4">
+<h4 id="orgfd3573f">Reading Font Files</h4>
+<div class="outline-text-4" id="text-orgfd3573f">
+<p>
+Make use of standard C I/O functions such as <code>fopen()</code> to open the
+glyph files and <code>fscanf()</code> to read from them. Note the following
+tricks associated with <code>fscanf()</code> are useful while parsing the font file.
+</p>
+
+<ul class="org-ul">
+<li><code>int x; fscanf(fin, "some text %d", &amp;x);</code> : this invocation will
+read <b>exactly</b> the characters <code>some text</code> then parse an integer and
+fill <code>x</code> in with it. Use this approach for the first line of the
+font files.</li>
+<li><code>int x; fscanf("%d", &amp;x);</code> : this invocation will skip whitespace
+until an integer is found.  This whitespace skipping includes moving
+to subsequent lines so no special inclusion of newline <code>\n</code> is
+needed.</li>
+<li><code>char str2d[ROWS][COLS];  fscanf("%s", str2d[2]);</code> : this invocation
+will read a string into the 2th row of <code>str2d</code> which itself is an
+array of <code>COLS</code> characters.  Useful for reading each row of a
+glyph. It is best to read directly into the
+<code>font-&gt;glyphs[codepoint].data[row]</code> area.</li>
+<li><code>int ret = fscanf("...",...); if(ret == EOF){ ... }</code> : reading data
+from a file can fail if there is no data left and the End of File
+(EOF) has been reached.  The special value <code>EOF</code> is returned by
+<code>fscanf()</code> in this case.  On attempting to read the next glyph's
+codepoint, check the return value of <code>fscanf()</code> as you'll need to
+break out of your reading loop on reaching the file end.</li>
+</ul>
+
+<p>
+Don't forget to <code>fclose()</code> the font file once you are finished with
+it. Often times Valgrind will report memory leaks for code that
+neglects to close files.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org7bf1953" class="outline-4">
+<h4 id="org7bf1953">Testing and <code>banlet_main</code></h4>
+<div class="outline-text-4" id="text-org7bf1953">
+<p>
+As in Problem 1, running <code>make test-prob2</code> will run the automated
+tests associated with the problem. These include testing functions
+from <code>banlet_funcs.c</code> and also running the provided <code>banlet_main</code>
+which uses those functions.  You can also test interactively using
+<code>banlet_main</code>: running it with 2 arguments treats the 1st argument as
+a font file and the 2nd as a message to print in that font.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; ./banlet_main ':-)'  data/font_alternate.txt
+          __  
+ _        \ \ 
+(_) _____  | |
+ _ |_____| | |
+(_)        | |
+          /_/ 
+&gt;&gt; ./banlet_main 'Success!' data/font_banner.txt 
+ #####                                            ### 
+#     # #    #  ####   ####  ######  ####   ####  ### 
+#       #    # #    # #    # #      #      #      ### 
+ #####  #    # #      #      #####   ####   ####   #  
+      # #    # #      #      #           #      #     
+#     # #    # #    # #    # #      #    # #    # ### 
+ #####   ####   ####   ####  ######  ####   ####  ### 
+                                                      
+&gt;&gt; ./banlet_main $'Problem 2 is so...\nDONE.\nI\'m movin\' on\nto the big one.' data/font_mini.txt
+ _                    _                
+|_)._   |_ | _ ._ _    )  o _   _      
+|  | (_)|_)|(/_| | |  /_  |_&gt;  _&gt;(_)ooo
+                                       
+ _  _      _ 
+| \/ \|\ ||_ 
+|_/\_/| \||_o
+             
+___                               
+ | /._ _   ._ _      o._ /     ._ 
+_|_ | | |  | | |(_)\/|| |   (_)| |
+                                  
+                                      
+_|_     _|_|_  _   |_ o _      ._  _  
+ |_(_)   |_| |(/_  |_)|(_|  (_)| |(/_o
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org59fba34" class="outline-4">
+<h4 id="org59fba34">Optional Enrichment for the Creatively Inclined</h4>
+<div class="outline-text-4" id="text-org59fba34">
+<p>
+Font design is an interesting art form and the Banlet framework gives
+you a little bit of space in which to play. If you are so inclined,
+consider copying and modifying some of the provided fonts or design
+your own. The <a href="http://www.figlet.org/">Figlet Homepage</a> has several more examples of
+fonts. Figlet inspired Banlet and most of the fonts here are
+adaptations of the fonts that are part of the Figlet distribution.
+</p>
+
+<p>
+There is no additional credit for font creation, just the satisfaction
+of an artist at work.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbe396c8" class="outline-3">
+<h3 id="orgbe396c8"><span class="section-number-3">4.4</span> Loading Text Files (slurp)</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+It will be convenient later for Banlet to be able to load text from a
+text file for printing. To that end the following function will be
+implemented.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// Read all characters from the file 'filename' into a dynamcally
+// allocated array. Terminates the array with the '\0' character to
+// form a valid C string and return that string. If the file cannot be
+// opened, return NULL.
+char *slurp_file(char *filename);
+</pre>
+</div>
+
+<p>
+An essential difficulty here is that the number of characters in a
+file is not known by the program ahead of time. There a variety of
+ways to do surmount this difficulty but the requirements for this
+project are to follow one of two paths. Neither of these is the most
+efficient route but both teach about how to handle some general
+situations. We will discuss an efficient alternative later.
+</p>
+</div>
+
+<div id="outline-container-orgb8f79c8" class="outline-4">
+<h4 id="orgb8f79c8">BASELINE: 2-Pass Input</h4>
+<div class="outline-text-4" id="text-orgb8f79c8">
+<p>
+<b>Start with this solution first.</b>
+</p>
+
+<p>
+As described in the <code>slurp_file()</code> comments, this approach does the
+input in 2 passes.
+</p>
+<ol class="org-ol">
+<li>Read the text file counting its characters. After reaching the end of
+the file, its size is no known so an array large enough to hold all
+characters can be allocated in the heap.</li>
+<li>Return to the beginning of the file then read each character again
+and store it in the allocated space.</li>
+</ol>
+
+<p>
+Some useful functions to keep in mind here are as follows.
+</p>
+<ul class="org-ul">
+<li><code>fscanf(fin,"%c",&amp;mychar)</code> reads a single character at a time
+advancing forwards in the FILE by 1 <code>char</code> on each read</li>
+<li><code>rewind(fin)</code> returns a FILE <code>fin</code> to its start allowing one to
+re-read the same input</li>
+</ul>
+
+<p>
+<b>Don't forget to null terminate the string</b>: there will not be any
+<code>\0</code> characters in the file if it is normal text. Instead, allocate
+enough space for this extra character and manually place it.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6a40741" class="outline-4">
+<h4 id="org6a40741">OPTIONAL MAKEUP CREDIT: Single Pass with Dynamic Array Growth</h4>
+<div class="outline-text-4" id="text-org6a40741">
+<p>
+<b>After you complete the baseline version</b> you may attempt the
+following approach to reading the input file. Below is a restatement
+of the constraints from the comments on the function which must all be
+met to earn the optional MAKEUP CREDIT.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// OPTIONAL MAKEUP CREDIT: Uses a single I/O pass and dynamically
+// expands memory to handle larger inputs. For full makeup credit,
+// this approach must abide by the following additional conditions:
+// - Does not use functions that determine the size of the file
+// - Does not allocate/copy memory each loop iteration
+// - Does not use the realloc() function, only malloc()/free()
+// - Has amortized linear time and linear space; the allocated array may
+//   not be any larger than 2x the number of characters in it
+// - Uses a mmeory allocation scheme similar to thos used with
+//   dynamic arrays to meet the above requirement; see
+//   https://en.wikipedia.org/wiki/Dynamic_array
+// WRITE COMMENTS DESCRIBING YOUR MAKEUP CREDIT APPROACH; solutions
+// without reasonably detailed comments will not receive any MAKEUP
+// credit.
+</pre>
+</div>
+
+<p>
+Completing this version will earn <a href="#orgd07c9ad">10 points of MAKEUP CREDIT</a> which
+will make up for mistakes on this project and future projects
+</p>
+
+<p>
+NOTE: Staff will not assist with this version of the function unless
+you have a BASELINE version that works.
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org4a6ab1c" class="outline-3 grading 40">
+<h3 id="org4a6ab1c"><span class="section-number-3">4.5</span> Grading Criteria for Problem 2&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="40">40</span></span></h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+The following criteria will be checked.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">AUTOMATED TESTS via <code>make test-prob2</code></td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Runs the tests provided in <code>test_banlet_funcs2.org</code> for last functions in <code>banlet_funcs.c</code> and <code>banlet_main</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Runs all code under Valgrind to ensure that no memory errors are present.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">1 point per test passed</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">MANUAL INSPECTION</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left"><code>print_fontified()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Uses previous functions like <code>print_fontified_oneline()</code> and <code>find_linebreaks()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear iteration pattern over all lines in the message</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Uses pointer arithmetic or addressing to refer to the start of each line with a <code>char *</code> pointer</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Frees memory allocated during operation to avoid memory leaks</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Commenting on what is happening in the code</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left"><code>font_load()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear checks for failure to open file and returns NULL in that case</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear allocation of font/glyph array on the heap with <code>malloc()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of <code>NUM_ASCII_GLYPHS</code> when allocating glyphs array</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of provided <code>glyph_init()</code> on each glyph in the array to give it default data</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear iteration pattern of parsing individual one glyph per loop iteration</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of <code>string_replace_char()</code> function to replace <code>@</code> chars with spaces after reading glyphs</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Commenting on what is happening in the code</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>slurp_file()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">BASELINE Implementation (2-pass Input)</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Uses a loop to count characters in the file</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Allocates an appropriate amount of space to hold the file contents AND a null termination character</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Uses a function like <code>rewind()</code> to return to the beginning of the file</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Reads characters from the file into the allocated space and null terminates it</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">+10</td>
+<td class="org-left">MAKEUP CREDIT Implementation (dynamic allocation)</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Uses only a single scan through the file to read its contents</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Does not use any means to determine the file size and pre-allocate memory</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Does not use the <code>realloc()</code> function, only <code>malloc() / free()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Appears to meet the documented linear runtime time requirements by avoiding allocation each iteration</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Appears to meet the documented linear space requirement by keeping buffers to no more than 2X the input size</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">PROVIDES COMMENTS/DOCUMENTATION explaining the approach and design decisions</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="outline-container-org241f409" class="outline-4">
+<h4 id="org241f409"><a id="orgd07c9ad"></a> MAKEUP CREDIT</h4>
+<div class="outline-text-4" id="text-org241f409">
+<p>
+MAKEUP CREDIT are additional points that allow students to exceed the
+total of points possible for the project. These points go into the
+overall pool of points earned on projects and will make up for lost
+credit on this or other projects.
+</p>
+
+<p>
+MAKEUP CREDIT is NOT EXTRA CREDIT: student scores on the project
+portion of the course will not exceed 100%. However, MAKEUP CREDIT
+allows for students to ensure they get full project credit even with
+some mistakes.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org56a1190" class="outline-2">
+<h2 id="org56a1190"><span class="section-number-2">5</span> <b>Problem 3</b>: Banlet Main</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-org3f82fa3" class="outline-3">
+<h3 id="org3f82fa3"><span class="section-number-3">5.1</span> Overview</h3>
+</div>
+<div id="outline-container-orgfd55aca" class="outline-3">
+<h3 id="orgfd55aca"><span class="section-number-3">5.2</span> Command Line Arguments</h3>
+</div>
+
+
+<div id="outline-container-org8316c2e" class="outline-3">
+<h3 id="org8316c2e"><span class="section-number-3">5.3</span> Handling Multiple Options</h3>
+</div>
+<div id="outline-container-orgea697b2" class="outline-3 grading 25">
+<h3 id="orgea697b2"><span class="section-number-3">5.4</span> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="25">25</span></span></h3>
+<div class="outline-text-3" id="text-5-4">
+<p>
+The following criteria will be checked.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">AUTOMATED TESTS via <code>make test-prob3</code></td>
+</tr>
+
+<tr>
+<td class="org-right">15</td>
+<td class="org-left">Runs tests in <code>test_banlet_funcs3.org</code> on the first 4 functions in <code>banlet_main</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Runs all code under Valgrind to ensure that no memory errors are present.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">1 point per test passed</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">MANUAL INSPECTION</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Style</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Good indentation of code clearly denoting function/loop/conditional scopes</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Presence of some comments to indicate intent in gnarly code</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Code handling the <code>--fontfile</code> and <code>--textfile</code> options</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of a loop to iterate over command line arguments and process multiple options</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of utility functions implemented in <code>banlet_funcs.c</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga82b005" class="outline-2">
+<h2 id="orga82b005"><span class="section-number-2">6</span> Project Submission</h2>
+<div class="outline-text-2" id="text-6">
+</div>
+
+<div id="outline-container-orgf0caafd" class="outline-3">
+<h3 id="orgf0caafd"><span class="section-number-3">6.1</span> <a id="orgc8dbcef"></a> Submit to Gradescope</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+Some of the pictures below are dated and contain out of sync info
+like:
+</p>
+<ul class="org-ul">
+<li>'Assignment' rather than'Project'</li>
+<li>Class code 'CSCI 2021' rather than 'CMSC216'</li>
+<li>Mention some files that are not part of the current project</li>
+<li>May indicate some other zip name when <code>p1-complete.zip</code> is that
+default name of the zip for completed projects.</li>
+</ul>
+<p>
+However, most students should have no trouble adapting these
+instructions which amount to: <code>make zip</code> then upload the zip to
+Gradescope. 
+</p>
+
+<ol class="org-ol">
+<li><p>
+In a terminal, change to your project code directory and type <b>make
+zip</b> which will create a zip file of your code. A session should
+look like this:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">   &gt; cd Desktop/216/p1-code      # location of assignment code
+
+   &gt; ls 
+   Makefile    banlet_main.c  banlet_funcs.c  data/
+   ...
+
+   &gt; make zip                     # create a zip file using Makefile target
+   rm -f p1-complete.zip
+   cd .. &amp;&amp; zip "p1-code/p1-complete.zip" -r "p1-code"
+     adding: p1-code/ (stored 0%)
+     adding: p1-code/Makefile (deflated 68%)
+     adding: p1-code/test_prob1.org (deflated 69%)
+     ...
+   Zip created in p1-complete.zip
+
+   &gt; ls p1-complete.zip
+   p1-complete.zip
+</pre>
+</div></li>
+<li><p>
+Log into <a href="https://www.gradescope.com/">Gradescope</a> and locate and click 'Project 1' which will
+open up submission
+</p>
+<div class="org-center">
+
+<div id="orgfb92bb1" class="figure">
+<p><img src="gradescope01.png" alt="gradescope01.png" style="max-width:100%;" />
+</p>
+</div>
+</div></li>
+<li><p>
+Click on the 'Drag and Drop' text which will open a file selection
+dialog; locate and choose your <code>p1-complete.zip</code> file
+</p>
+<div class="org-center">
+
+<div id="org6114ac8" class="figure">
+<p><img src="gradescope02.png" alt="gradescope02.png" style="max-width:100%;" />
+</p>
+</div>
+</div></li>
+<li><p>
+This will show the contents of the Zip file and should include your
+C source files along with testing files and directories. 
+</p>
+<div class="org-center">
+
+<div id="org481b961" class="figure">
+<p><img src="gradescope03.png" alt="gradescope03.png" style="max-width:100%;" />
+</p>
+</div>
+</div></li>
+<li><p>
+Click 'Upload' which will show progress uploading files.  It may
+take a few seconds before this dialog closes to indicate that the
+upload is successful. Note: there is a limit of 256 files per
+upload; normal submissions are not likely to have problems with
+this but you may want to make sure that nothing has gone wrong such
+as infinite loops creating many files or incredibly large files. 
+</p>
+
+<p>
+<b>WARNING</b>: There is a limit of 256 files per zip. Doing <code>make zip</code>
+will warn if this limit is exceeded but uploading to Gradescope
+will fail without any helpful messages if you upload more the 256
+files in a zip. 
+</p>
+
+<div class="org-center">
+
+<div id="org775fd47" class="figure">
+<p><img src="gradescope04.png" alt="gradescope04.png" style="max-width:100%;" />
+</p>
+</div>
+</div></li>
+
+<li><p>
+Once files have successfully uploaded, the Autograder will begin
+running the command line tests and recording results.  These are
+the same tests that are run via <code>make test</code>.   
+</p>
+<div class="org-center">
+
+<div id="orgf862920" class="figure">
+<p><img src="gradescope05.png" alt="gradescope05.png" style="max-width:100%;" />
+</p>
+</div>
+</div></li>
+<li><p>
+When the tests have completed, results will be displayed
+summarizing scores along with output for each batch of tests.
+</p>
+<div class="org-center">
+
+<div id="org6807272" class="figure">
+<p><img src="gradescope06.png" alt="gradescope06.png" style="max-width:100%;" />
+</p>
+</div>
+</div></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org52ee522" class="outline-3">
+<h3 id="org52ee522"><span class="section-number-3">6.2</span> Late Policies</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+You may wish to review the policy on late project submission which
+will cost 1 Engagement Point per day late. <b>No projects will be
+accepted more than 48 hours after the deadline.</b>
+</p>
+
+<p>
+<a href="https://www.cs.umd.edu/~profk/216/syllabus.html#late-submission">https://www.cs.umd.edu/~profk/216/syllabus.html#late-submission</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2024-02-09 Fri 15:35 <br/> </i>
+</div>
+</body>
+</html>
