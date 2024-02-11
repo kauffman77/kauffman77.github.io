@@ -1,0 +1,963 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-02-11 Sun 15:10 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMSC216 HW03: Basic I/O + Binary Integers</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2024-02-11 Sun 15:10</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CMSC216 HW03: Basic I/O + Binary Integers</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm 19-Feb-2024</b></li>
+<li><i>Approximately 0.83% of total grade</i></li>
+<li>Homework and Quizzes are open resource/open collaboration. You must
+submit your own work but you may freely discuss HW topics with other
+members of the class.</li>
+</ul>
+
+<div id="outline-container-org3275dfe" class="outline-4">
+<h4 id="org3275dfe">CODE DISTRIBUTION: <a href="hw03-code.zip">hw03-code.zip</a></h4>
+<div class="outline-text-4" id="text-org3275dfe">
+<ul class="org-ul">
+<li>Download the code distribution</li>
+<li>See further setup instructions below</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org9daac57" class="outline-4">
+<h4 id="org9daac57">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org9daac57">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org3261a4c">1. Rationale</a>
+<ul>
+<li><a href="#orga2b7017">Associated Reading / Preparation</a></li>
+<li><a href="#org97e3ecb">Grading Policy</a></li>
+</ul>
+</li>
+<li><a href="#org8e1e54b">2. Codepack</a></li>
+<li><a href="#org8a20cff">3. Two's Complement Arithmetic</a></li>
+<li><a href="#org4020d0e">4. Octal and Hexadecimal Representation of Numbers</a></li>
+<li><a href="#orgbc50e77">5. What to Understand</a></li>
+<li><a href="#org15555af">6. Questions</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3261a4c" class="outline-2">
+<h2 id="org3261a4c"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Reading data from files is an essential skill in any programming
+environment and can be a bit trickier in C due to its reliance on
+manual memory management via <code>malloc()</code>. This HW discusses a standard
+two-pass input strategy for dealing with such situations.
+</p>
+
+<p>
+Modern computers represent all data using bits, collections of 1's and
+0's.  Integer data pervades many applications so understanding the
+bit-level representation of integers lends insight into their
+strengths and limitations. The two's complement representation for
+integers is by far the most common used by hardware and is therefore
+considered specially in this HW. C provides facilities to manipulate
+data at the bit level using logical and shift operations which are
+also discussed.
+</p>
+</div>
+
+<div id="outline-container-orga2b7017" class="outline-3">
+<h3 id="orga2b7017">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-orga2b7017">
+<p>
+Most C references will contain information on C's standard I/O
+libraries which discuss functions like <code>fopen(), fscanf(), rewind()</code>
+and <code>fclose()</code>.
+</p>
+
+<p>
+Bryant and O'Hallaron: Ch 2.1-2.3 on binary representations of
+integers in unsigned and two's complement signed format. This page
+also includes a <a href="#orgdcfedfa">summary of the Two's Complement system</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org97e3ecb" class="outline-3">
+<h3 id="org97e3ecb">Grading Policy</h3>
+<div class="outline-text-3" id="text-org97e3ecb">
+<p>
+Credit for this HW is earned by taking the associated HW Quiz which is
+linked under <code>Gradescope</code>.  The quiz will ask similar questions as
+those that are present in the <code>QUESTIONS.txt</code> file and those that
+complete all answers in <code>QUESTIONS.txt</code> should have no trouble with
+the quiz.
+</p>
+
+<p>
+Homework and Quizzes are open resource/open collaboration. You must
+submit your own work but you may freely discuss HW topics with other
+members of the class.
+</p>
+
+<p>
+See the <a href="../syllabus.html">full policies in the course syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8e1e54b" class="outline-2">
+<h2 id="org8e1e54b"><span class="section-number-2">2</span> Codepack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The codepack for the HW contains the following files:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">Questions to answer</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>twopass.c</code></td>
+<td class="org-left">Code for Problem 1</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>nums1.txt / nums2.txt</code></td>
+<td class="org-left">Data files for Problem 2</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>convert.c</code></td>
+<td class="org-left">C file for Problem 4</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>twos_complement.c</code></td>
+<td class="org-left">Simple demonstration of C code for twos complement</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org8a20cff" class="outline-2">
+<h2 id="org8a20cff"><span class="section-number-2">3</span> <a id="orgdcfedfa"></a> Two's Complement Arithmetic</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Understanding two's complement is necessary to complete a problem
+<code>QUESTIONS.txt</code>. The short presentation below gives the basics of
+two's complement but you should study the material presented in our
+textbook and lecture to supplement it.
+</p>
+
+<p>
+The principles of two's complement representation for integers are as
+follows.
+</p>
+<ul class="org-ul">
+<li>Fix a number of bits to represent integers such as 8 bits or 32 bits</li>
+<li><p>
+Zero is the bit string of all 0s. In 8 bits this is
+</p>
+<pre class="example">
+0000 0000
+</pre></li>
+<li><p>
+Positive numbers always start with a 0. In 8 bits <code>+91</code> would be
+</p>
+<pre class="example">
+0101 1011
+</pre></li>
+<li><p>
+Negative numbers always start with a 1. In 8 bits, the following is
+a negative number
+</p>
+<pre class="example">
+1010 0101
+</pre></li>
+<li><p>
+To determine the value of negative number in two's complement or
+negate it:
+</p>
+<ol class="org-ol">
+<li>Invert the bits: ones become zeros, zeros to ones. The C operator
+invert is the tilde <code>~</code> symbol.</li>
+<li>Add 1</li>
+</ol>
+<p>
+This process on the above negative number is as follows.
+</p>
+<div class="org-src-container">
+<pre class="src src-text">  ~ 1010 0101 = negative number
+  -----------
+    0101 1010 = +90
+  +         1
+  -----------
+    0101 1011 = +91
+</pre>
+</div>
+<p>
+So the above negative number is <code>-91</code> as 91 is its twos complement.
+</p></li>
+<li><p>
+The same process works to convert from positive to negative.
+</p>
+<div class="org-src-container">
+<pre class="src src-text">  ~ 0101 1011 = +91
+  -----------
+  ~ 1010 0100 = negative number
+  +         1
+  -----------
+  ~ 1010 0101 = -91
+</pre>
+</div>
+<p>
+So the above negative number is <code>-91</code> as 91 is its twos complement.
+</p></li>
+<li><p>
+C's unary negation operator performs these two steps of inverting
+and adding 1:
+</p>
+<pre class="example">
+int p = 91;  // 0101 1011
+int n = -p;  // 1010 0101
+</pre></li>
+<li><p>
+The context for interpreting bits matters. When interpreting bits as
+an <b>unsigned</b> quantity, each bit represents a power of 2 that should
+be added.
+</p>
+<div class="org-src-container">
+<pre class="src src-text">  unsigned char p = 0b10100101;
+  //   1   0    1   0   0   1   0   1
+  // 128 + 0 + 32 + 0 + 0 + 4 + 0 + 1
+  // = 165
+</pre>
+</div></li>
+<li><p>
+In contrast, the same bits when interpreted in a signed context are
+a negative quantity. In the 2's complement representation, the
+highest order bit is associated with a negative power of two.
+</p>
+<div class="org-src-container">
+<pre class="src src-text">  char p = 0b10100101;  // signed quantity, negative due to leading 1
+  //    1   0    1   0   0   1   0   1
+  // -128 + 0 + 32 + 0 + 0 + 4 + 0 + 1
+  // = -91
+</pre>
+</div></li>
+<li><p>
+Due to 0 starting with a <code>0</code>, there is one more bit string available
+for negative numbers than for positive numbers. This explains the
+asymmetric range of C data types. 8-bit characters have a range of
+-128 to +127 which are the following bit strings
+</p>
+<div class="org-src-container">
+<pre class="src src-text">  +127 = 0111 1111
+  -128 = 1000 0000
+</pre>
+</div></li>
+<li><p>
+Arithmetic in twos complement has some nice properties such as going
+from 0 to -1:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">    0000 0000 = zero
+  + 1111 1111 = -1
+  -----------
+    1111 1111 = -1
+</pre>
+</div>
+<p>
+More details of arithmetic will be discussed later.
+</p></li>
+<li><p>
+For wider bit widths than 8, extend the sign bit for numbers left as
+in the following
+</p>
+<pre class="example">
+ 8-bit +91: 0101 1011
+16-bit +91: 0000 0000 0101 1011
+ 8-bit -91: 1010 0101
+16-bit -91: 1111 1111 1010 0101
+</pre></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org4020d0e" class="outline-2">
+<h2 id="org4020d0e"><span class="section-number-2">4</span> Octal and Hexadecimal Representation of Numbers</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+The base-10 numbering system is taught rigorously from an early age
+and is familiar to most students.  We have seen in the earlier Two's
+Complement system that numbers can also written in base-2 as
+Binary. This is indicative of numbers being independent of any
+particular notation or base.  Binary is frequently used in computer
+science but is cumbersome as it takes a LOT of digits to write a
+number.  When bits must be written, often they are written in a base-8
+Octal format or base-16 Hexadecimal format.  This is in part due to
+their compactness: the same bits are shown with fewer printed
+characters.  Here is a short example.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">|---------+--------------+----------------+----------------+-----------------+-----------------------|
+| Decimal | Byte = 8bits | Byte by 4      | Hexadecimal    | Byte by 3       | Octal                 |
+|---------+--------------+----------------+----------------+-----------------+-----------------------|
+|      87 |     01010111 | bin: 0101 0111 | 57 = 5*16 + 7  | bin: 01 010 111 | 127 = 1*8^2 + 2*8 + 7 |
+|         |              | hex: 5    7    | hex  dec       | oct: 1  2   7   | oct   dec             |
+|         |              |                |                |                 |                       |
+|      60 |     00111100 | bin: 0011 1100 | 3C = 3*16 + 12 | bin: 00 111 100 | 074 = 0*8^2 + 7*8 + 4 |
+|         |              | hex: 3    C=12 | hex  dec       | oct: 0  7   4   | oct   dec             |
+|         |              |                |                |                 |                       |
+|     226 |     11100010 | bin: 1110 0010 | E2 = 14*16 + 2 | bin: 11 100 010 | 342 = 3*8^2 + 4*8 + 2 |
+|         |              | hex: E=14 2    | hex  dec       | oct: 3  4   2   | oct   dec             |
+|---------+--------------+----------------+----------------+-----------------+-----------------------|
+</pre>
+</div>
+<p>
+Several items are of note:
+</p>
+<ul class="org-ul">
+<li>The same number is written in 4 forms, Decimal, Binary, Hexadecimal,
+and Octal</li>
+<li>A single Hexadecimal digit ranges from decimal 0-15. Values larger
+than 9 are written as letters: <code>A=10, B=11, C=12, D=13, E=14, F=15</code></li>
+<li>Converting between Binary and Hexadecimal is easiest when grouping
+bits by 4: each 4 bits corresponds to one hexadecimal digit</li>
+<li>Octal digits ranger from 0-7</li>
+<li>Converting between Binary and Octal is easiest when grouping bits by
+3: each 3 bits corresponds to one octal digit</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgbc50e77" class="outline-2">
+<h2 id="orgbc50e77"><span class="section-number-2">5</span> What to Understand</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Ensure that you understand
+</p>
+<ul class="org-ul">
+<li>Basics of reading data from files and allocating space for it</li>
+<li>Signed vs unsigned representations</li>
+<li>Two's complement representation of integers</li>
+<li>Conversions between binary, decimal, octal, and hexadecimal notation</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org15555af" class="outline-2">
+<h2 id="org15555af"><span class="section-number-2">6</span> Questions</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Analyze the files in the provided codepack and answer the questions
+given in <code>QUESTIONS.txt</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                           _________________
+
+                            HW 03 QUESTIONS
+                           _________________
+
+
+Write your answers to the questions below directly in this text file to
+prepare for the associated quiz. Credit for the HW is earned by
+completing the associated online quiz on Gradescope.
+
+
+PROBLEM 1: Two-Pass Input and malloc()
+======================================
+
+  One frequently encounters the following situation when reading files
+  - The file contains some data that is to be read into a dynamically
+    allocated array
+  - There is no indication of how much data is in the file
+
+  C programs commonly use a *two-pass* input strategy to handle this
+  situation
+  1. Read through the file once to count items in the file, the allocate
+     memory for an array of that size
+  2. Back up to the beginning of the file and read data from the file
+     into the array
+
+  The provided program `twopass.c' demonstrates this technique along
+  with several other input / formatting techniques.
+
+
+A
+~
+
+  Compile and run the `twopass.c' program on the two provided text files
+  `nums1.txt' and `nums2.txt'.  Paste the output the program produces
+  below.
+
+
+B
+~
+
+  Examine the function `read_all_doubles()' in `twopass.c' and describe
+  which lines/blocks of code carry out the following actions. Use the
+  provided comments in the file as a guide.
+
+  - Opens the file for reading and checks for errors
+  - Counts all the doubles in the file
+  - Allocates memory for doubles in the file
+  - Moves the file read position to the beginning of the file
+  - Closes the file when reading is complete
+
+
+C
+~
+
+  In your answer to the previous problem, you should have identified a
+  use of `malloc()' in `read_all_doubles()'.  Where is this memory
+  `free()''d and why? /Note: This question is similar to a lecture
+  exercise on when to free() memory that has been malloc()'d./
+
+
+D
+~
+
+  Examine how the doubles read from file are printed in the `main()'
+  function. Discuss below the format specifiers used by `printf()' and
+  the width/precision modifiers that are used to get a "table-like"
+  appearance.  You may wish to consult the Manual page on `printf()'
+  such as the one here:
+
+  &lt;https://man7.org/linux/man-pages/man3/printf.3.html&gt;
+
+
+Optional Enrichment: Reading without Storing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  One minor irritation in `read_all_doubles()' is the following code:
+  ,----
+  |   double tmp;                              // temporary space to read one double
+  |   ...;
+  |   while(1){                                // first input pass: indefinite loop to count doubles
+  |     int ret = fscanf(fin, "%lf", &amp;tmp);    // try to read a double
+  |     ...;
+  |   }
+  `----
+  This loop is counting the doubles in an input file but discarding
+  them.  Avoiding the need to allocate the `tmp' variable is desirable
+  and can be done using some more advanced format specifiers in
+  `fscanf() / scanf()' that indicate "read a double but do not store it
+  anywhere". This allows the counting loop to happen without need for
+  any additional space for doubles.
+
+  Look how to get `fscanf()' to parse items like doubles without
+  requiring space to store the result.
+
+
+PROBLEM 2: Number conversions
+=============================
+
+A
+~
+
+  Fill in the following table of equivalences.  Filling in the table
+  from top to bottom is advantageous as earlier rows can sometimes be
+  used to infer lower values. Feel free to make use of any ASCII table
+  or the table.c program provided in the week 3 lecture code pack.
+
+  ,----
+  | |-----+------+-----+-----------+--------------|
+  | | Dec | Hex  | Oct | Binary    | Char         |
+  | |-----+------+-----+-----------+--------------|
+  | |   9 | 0x09 |  11 | 0000 1001 | TAB          |
+  | |  10 | ?    |   ? | ?         | \n (newline) |
+  | |   ? | 0x20 |   ? | ?         | SPACE        |
+  | |   ? | ?    |   ? | 0011 0010 | ?            |
+  | |  65 | 0x41 | 101 | 0100 0001 | A            |
+  | |  66 | ?    |   ? | ?         | ?            |
+  | |   ? | 0x4F | 117 | ?         | O            |
+  | |  80 | ?    |   ? | ?         | P            |
+  | |  91 | ?    | 133 | 0101 1011 | [            |
+  | |  97 | 0x61 | 141 | ?         | ?            |
+  | |   ? | ?    | 172 | 0111 1010 | z            |
+  | | 145 | 0x91 | 221 | ?         | none         |
+  | | 160 | ?    |   ? | 1010 0000 | none         |
+  | | 180 | 0xB4 | 264 | ?         | none         |
+  | | 255 | ?    |   ? | ?         | none         |
+  | |-----+------+-----+-----------+--------------|
+  `----
+
+
+B
+~
+
+  Fill in the bits, hex, and decimal values for the given examples. The
+  first example is completed for you. Assume all of these are 32 bit
+  unsigned integers.
+  ,----
+  |   COMPLETED
+  |   Binary:   0000 0000  0000 0000  0001 1000  1110 1001  
+  |             0    0     0    0     1    8     E    9
+  |   Hex   :   0018E9
+  |   Decimal:  6377
+  | 
+  | 
+  |   NUMBER 1
+  |   Binary:   0000 0000  0010 1111  0011 1010  1000 1101  
+  |             ?
+  |   Hex   :   ??
+  |   Decimal:  ??
+  | 
+  | 
+  |   NUMBER 2
+  |   Binary:   ??  
+  |             7    F     8    3     5    A     0    B
+  |   Hex   :   7F835A0B
+  |   Decimal:  ??
+  `----
+
+
+PROBLEM 3: Signed Integer Conversions
+=====================================
+
+A
+~
+
+  Apply the steps involved in converting the following positive binary
+  number to it's two's complement negation in 8-bit signed
+  format. Recall the steps are
+  - Invert the bits
+  - Add one
+  Apply these steps to the following number:
+  ,----
+  | 0111 1100  = 0x7C = 124 (decimal)
+  `----
+
+  The result is the two's complement representation of -124.
+
+  Convert back to positive via the same process
+  - Invert the bits
+  - Add one
+  to show that the original bits are gotten back.
+
+
+B
+~
+
+  Complete the following table of equivalences assuming 8-bit
+  twos-complement signed integers. The rightmost column is the inverse
+  of the binary representation: flip 1's to 0's, and vice versa.
+
+  ,----
+  | |------+------+-----------+-----------|
+  | |  Dec |  Hex | Binary    | Inverse   |
+  | |------+------+-----------+-----------|
+  | |   +5 | 0x05 | 0000 0101 | 1111 1010 |
+  | |   -5 |    ? | 1111 1011 | ?         |
+  | |  +32 | 0x20 | ?         | ?         |
+  | |  -32 | 0xE0 | ?         | 0001 1111 |
+  | | +127 | 0x7F | ?         | ?         |
+  | | -127 | 0x81 | ?         | ?         |
+  | | -128 |    ? | 1000 0000 | ?         |
+  | |   +2 |    ? | ?         | ?         |
+  | |   -2 | 0xFE | ?         | ?         |
+  | |   +1 | 0x01 | 0000 0001 | ?         |
+  | |   -1 |    ? | 1111 1111 | ?         |
+  | |    0 |    ? | ?         | ?         |
+  | |------+------+-----------+-----------|
+  `----
+
+
+PROBLEM 4: Converting Strings to Numbers
+========================================
+
+  Inspect the program in the code pack called `convert.c'.  Compile and
+  run it using
+  ,----
+  | &gt; gcc convert.c
+  | &gt; ./a.out
+  `----
+
+  Describe briefly what kind of conversion is being done by the
+  `convert()' function given.
+  - A. What kind of data is input?
+  - B. What result is produced by the function?
+  - C. How is a success versus an error reported?
+  - D. Why is this kind of conversion needed?
+  - E. What built-in C function (useful for the assignment) does this
+    conversion function use and how is its calling convention different
+    from convert()?
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-02-11 Sun 15:10 <br/> </i>
+</div>
+</body>
+</html>
