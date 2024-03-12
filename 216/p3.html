@@ -1,0 +1,1761 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-03-11 Mon 23:59 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMSC216 Project 3: Assembly Coding and Debugging</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","homeputer>","grace10:","HM>"], // allowed interactive prompts
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"    , "language-c");
+lang_map.set("src-text" , "language-plaintext");
+lang_map.set("src-sh"   , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2024-03-11 Mon 23:59</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CMSC216 Project 3: Assembly Coding and Debugging</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Fri 29-Mar-2024</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><i>Approximately 3.0-4.0% of total grade</i></li>
+<li>Projects are <b>individual work</b>: no collaboration with other students
+is allowed. Seek help from course staff if you get stuck for too long.</li>
+</ul>
+
+<div id="outline-container-org63dc60a" class="outline-4">
+<h4 id="org63dc60a">CODE/TEST DISTRIBUTION: <a href="p3-code.zip">p3-code.zip</a></h4>
+</div>
+<div id="outline-container-orgaccaee6" class="outline-4">
+<h4 id="orgaccaee6">VIDEO OVERVIEW: <i>Not Yet Posted</i></h4>
+</div>
+<div id="outline-container-org1d43e51" class="outline-4">
+<h4 id="org1d43e51">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org1d43e51">
+</div>
+</div>
+
+<div id="outline-container-orgddffa9f" class="outline-4">
+<h4 id="orgddffa9f"></h4>
+<div class="outline-text-4" id="text-orgddffa9f">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orge340b33">1. Introduction</a></li>
+<li><a href="#org42eff82">2. Download Code and Setup</a></li>
+<li><a href="#org01bcdaf">3. <b>Problem 1</b>: Thermometer Assembly Functions</a>
+<ul>
+<li><a href="#org2456306">3.1. Hand-Code Your Assembly</a></li>
+<li><a href="#org713c01c">3.2. General Cautions when coding Assembly</a></li>
+<li><a href="#orgd88e680">3.3. Register Reference Diagram</a></li>
+<li><a href="#orgd7ae591">3.4. Structure of <code>thermo_update_asm.s</code></a></li>
+<li><a href="#org49a4681">3.5. <code>set_temp_from_ports</code></a></li>
+<li><a href="#org276b7d2">3.6. <code>set_display_from_temp</code></a></li>
+<li><a href="#orgbb2011b">3.7. <code>thermo_update</code></a></li>
+<li><a href="#org04db40a">3.8. Notes on Partial Credit</a></li>
+<li><a href="#orgdd3d275">3.9. Grading Criteria for Problem 1</a></li>
+</ul>
+</li>
+<li><a href="#org2b0d13e">4. <b>Problem 2</b>: The Puzzlebin</a>
+<ul>
+<li><a href="#org6e9959e">4.1. Overview</a></li>
+<li><a href="#orgdae5b68">4.2. Puzzlebin Scoring</a></li>
+<li><a href="#orgf6b0998">4.3. Advice</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge340b33" class="outline-2">
+<h2 id="orge340b33"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+This project will feel somewhat familiar in that it is nearly
+identical to the preceding project: there is a coding problem and a
+puzzle-solving problem.  The major change is that everything is at the
+assembly level:
+</p>
+<ul class="org-ul">
+<li>Problem 1 re-works the Thermometer functions from the previous project in
+x86-64 Assembly rather than C</li>
+<li>Problem 2 involves analyzing a binary executable to provide it with
+the correct input to "defuse" the executable much like the previous
+project's Puzzlebox problem</li>
+</ul>
+
+<p>
+Working with assembly will get you a much more acquainted with the
+low-level details of the x86-64 platform and give you a greater
+appreciation for "high-level" languages (like C).
+</p>
+</div>
+</div>
+
+<div id="outline-container-org42eff82" class="outline-2">
+<h2 id="org42eff82"><span class="section-number-2">2</span> <a id="org66bfa50"></a> Download Code and Setup</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Download the code pack linked at the top of the page. Unzip this which
+will create a project folder. Create new files in this
+folder. Ultimately you will re-zip this folder to submit it.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">State</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 Build file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>thermo.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 header file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>thermo_main.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 main() function</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>thermo_sim.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 thermometer simulator functions</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>thermo_update_asm.s</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Problem 1 Assembly functions, re-code C in x86-64, <b>main file to edit for problem 1</b></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>thermo_update.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Problem 1 C functions, COPY from Project 2 or see a staff member to discuss</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_thermo_update.c</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 testing program for <code>thermo_update_asm.c</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_thermo_update_asm.s</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 testing program for <code>thermo_update_asm.c</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_thermo_update.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 testing data file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 test running script</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>puzzlebin</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2 Executable for debugging</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>input.txt</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 2 Input for <code>puzzlebox</code>, fill this in</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org01bcdaf" class="outline-2">
+<h2 id="org01bcdaf"><span class="section-number-2">3</span> <b>Problem 1</b>: Thermometer Assembly Functions</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+The functions in this problem are identical to a previous assignment
+in which code to support digital thermometer was written. These
+functions are:
+</p>
+<dl class="org-dl">
+<dt><code>int set_temp_from_ports(temp_t *temp)</code></dt><dd>Read global variables corresponding to sensor and mode
+information and set the fields of a <code>temp_t</code> structure
+accordingly.</dd>
+<dt><code>int set_display_from_temp(temp_t temp, int *display)</code></dt><dd>Given a <code>temp_t</code> struct, reset and alter the bits pointed to by
+<code>display</code> to cause a proper temperature display.</dd>
+<dt><code>int thermo_update()</code></dt><dd>Update global <code>THERMO_DISPLAY_PORT</code> using the above functions.</dd>
+</dl>
+
+<p>
+The big change in this iteration will be that <b>the functions must be
+written in x86-64 assembly code</b>. As C functions each of these is
+short, 30-50 lines maximum. The assembly versions will be somewhat
+longer as each C line typically needs 1-4 lines of assembly code to
+implement fully. Coding these functions in assembly give you real
+experience writing working assembly code and working with it in
+combination with C.
+</p>
+
+<p>
+<b>The code setup and tests are identical</b> for this problem as for the
+previous C version of the problem.  <a href="p2.html">Refer to original Thermometer
+Problem description</a> for a broad overview of the thermometer simulator
+and files associated with it.
+</p>
+</div>
+
+
+<div id="outline-container-org2456306" class="outline-3">
+<h3 id="org2456306"><span class="section-number-3">3.1</span> Hand-Code Your Assembly</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+As discussed in class, one can generate assembly code from C code with
+appropriate compiler flags. This can be useful for getting oriented
+and as a beginning to the code your assembly versions of the
+functions.  However, <b>code that is clearly compiler-generated with no
+hand coding will receive 0 credit</b>.
+</p>
+<ul class="org-ul">
+<li>No credit will be given on manual inspection</li>
+<li>Penalties will be assessed for Automated Tests which lower credit to 0</li>
+</ul>
+<p>
+Do not let that dissuade you from looking at compiler-generated
+assembly code from you C solution to the functions.  Make sure that
+you take the following steps which are part of the manual inspection
+criteria.
+</p>
+</div>
+
+<div id="outline-container-org39edf68" class="outline-4">
+<h4 id="org39edf68">Base your Assembly code on your C code</h4>
+<div class="outline-text-4" id="text-org39edf68">
+<p>
+The files to be submitted for this problem include
+</p>
+<ul class="org-ul">
+<li><code>thermo_update.c</code>: C version of the functions</li>
+<li><code>thermo_update_asm.s</code>: Assembly version of the functions</li>
+</ul>
+<p>
+Graders may examine these for a correspondence between to the
+algorithm used in the C version to the Assembly version. Compiler
+generated assembly often does significant re-arrangements of assembly
+code with many intermediate labels that hand-written code will not
+have.
+</p>
+
+<p>
+<b>If you were not able to complete the C functions for the Project 2
+display problem from the previous project,</b> <b>see a course staff member
+during office hours</b> <b>who will help you get them up and running
+quickly.</b>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org740d4ab" class="outline-4">
+<h4 id="org740d4ab">Annotate your Assembly Thoroughly</h4>
+<div class="outline-text-4" id="text-org740d4ab">
+<p>
+Comment your assembly code A LOT. While good C code can be quite
+self-explanatory with descriptive variable names and clear control
+structures, assembly is rarely so easy to understand. Include clear
+commentary on your assembly. This should include
+</p>
+<ul class="org-ul">
+<li>Subdividing functions into smaller blocks with comments describing
+what the blocks accomplish.</li>
+<li>Descriptions of which "variables" from the C side are held in which
+registers.</li>
+<li>Descriptions of most assembly lines and their effect on the
+variables held in the registers.</li>
+<li>Descriptions of any data such as bitmasks stored in the assembly
+code.</li>
+<li>Use informative label names like <code>.ROUNDING_UP</code> to convey further
+meaning about what goals certain positions in code are
+accomplishing.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org05d1477" class="outline-4">
+<h4 id="org05d1477">Use Division</h4>
+<div class="outline-text-4" id="text-org05d1477">
+<p>
+While it is a slow instruction that is cumbersome to set up, using
+<code>idivX</code> division instruction is the most human-readable means to
+compute several results needed in the required functions. Compiler
+generated code uses many tricks to avoid integer division so a lack of
+<code>idivX</code> instructions along this line will be a clear sign little
+effort has been put into the assembly code.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org713c01c" class="outline-3">
+<h3 id="org713c01c"><span class="section-number-3">3.2</span> General Cautions when coding Assembly</h3>
+<div class="outline-text-3" id="text-3-2">
+<ol class="org-ol">
+<li>Get your editor set up to make coding assembly easier. If you are
+using VS Code, the following video will show you how to install an
+extension to do syntax highlighting and block comment/uncomment
+operations in assembly: <a href="https://youtu.be/AgmXUFOEgIw">https://youtu.be/AgmXUFOEgIw</a></li>
+<li>Be disciplined about your register use: comment what "variables" are
+in which registers as it is up to you to keep track. The #1 advice
+from past students to future students is "<b>Comment the Crap out of
+your assembly code</b>" on this project.</li>
+<li><p>
+Be Careful with constants: forgetting a <code>$</code> in constants will lead
+to a bare, absolute memory address which will likely segfault your
+program.  Contrast:
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">   movq    $0,%rax                 # rax = 0
+   movq    0, %rax                 # rax = *(0): segfault
+                                   # bare 0 is memory address 0 - out of bounds
+</pre>
+</div>
+<p>
+Running your programs, assembly code included, in Valgrind can help
+to identify these problems. In Valgrind output, look for a line
+number in the assembly code which has absolute memory addresses or a
+register that has an invalid address.
+</p></li>
+<li><p>
+Recognize that in x86-64 function parameters are passed in registers
+for up to 6 arguments. These are arranged as follows
+</p>
+<ol class="org-ol">
+<li><code>rdi / edi / di</code> (arg 1)</li>
+<li><code>rsi / esi / si</code> (arg 2)</li>
+<li><code>rdx / edx / dx</code> (arg 3)</li>
+<li><code>rcx / ecx / cx</code> (arg 4)</li>
+<li><code>r8 / r8d / r8w</code> (arg 5)</li>
+<li><code>r9 / r9d / r9w</code> (arg 6)</li>
+</ol>
+<p>
+and the specific register corresponds to how argument sizes (64 bit
+args in <code>rdi</code>, 32 bit in <code>edi</code>, etc). The functions you will write
+have few arguments so they will all be in registers.
+</p></li>
+<li><p>
+Use registers sparingly.  The following registers (64-bit names) are
+"scratch" registers or "caller save." Functions may alter them
+freely (though some may contain function arguments).
+</p>
+<pre class="example">
+rax rcx rdx rdi rsi r8 r9 r10 r11  # Caller save registers
+</pre>
+
+<p>
+No special actions need to be taken at the end of the function
+regarding these registers except that <code>rax</code> should contain the
+function return value.
+</p>
+
+<p>
+Remaining registers are "callee save": if used, their original
+values must be restored before returning from the function.
+</p>
+<pre class="example">
+rbx rbp r12 r13 r14 r15            # Callee save registers
+</pre>
+
+<p>
+This is typically done by pushing the callee registers to be used on
+the stack, using them, them popping them off the stack in reverse
+order. Avoid this if you can (and you probably can in our case).
+</p></li>
+<li>Be careful to adjust the stack pointer using <code>pushX/popX</code> or
+<code>subq/addq</code> . Keep in mind the stack must be aligned to 16-byte
+boundaries for function calls to work correctly.  Above all, don't
+treat <code>rsp</code> as a general purpose register.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgd88e680" class="outline-3">
+<h3 id="orgd88e680"><span class="section-number-3">3.3</span> Register Reference Diagram</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+For reference, here is a picture that appears in the lecture slides
+that summarizes the names and special uses for the registers in
+x86-64.
+</p>
+
+<div class="org-center">
+
+<div id="org4a9b81e" class="figure">
+<p><img src="registers.png" alt="registers.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Summary of general purpose register usages in x86-64.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd7ae591" class="outline-3">
+<h3 id="orgd7ae591"><span class="section-number-3">3.4</span> Structure of <code>thermo_update_asm.s</code></h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+Below is a rough outline of the structure of <code>thermo_updat_asm.s</code>.
+Consider copying this file as you get started and commenting parts of
+it out as needed.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-asm">### Begin with functions/executable code in the assmebly file via '.text' directive
+.text
+.global  set_temp_from_ports
+        
+## ENTRY POINT FOR REQUIRED FUNCTION
+set_temp_from_ports:
+        ## assembly instructions here
+
+        ## a useful technique for this problem
+        movX    SOME_GLOBAL_VAR(%rip), %reg
+        # load global variable into register
+        # Check the C type of the variable
+        #    char / short / int / long
+        # and use one of
+        #    movb / movw / movl / movq 
+        # and appropriately sized destination register                                            
+
+        ## DON'T FORGET TO RETURN FROM FUNCTIONS
+
+### Change to definint semi-global variables used with the next function 
+### via the '.data' directive
+.data
+	
+my_int:                         # declare location an single integer named 'my_int'
+        .int 1234               # value 1234
+
+other_int:                      # declare another int accessible via name 'other_int'
+        .int 0b0101             # binary value as per C
+
+my_array:                       # declare multiple ints sequentially starting at location
+        .int 20                 # 'my_array' for an array. Each are spaced 4 bytes from the
+        .int 0x00014            # next and can be given values using the same prefixes as 
+        .int 0b11110            # are understood by gcc.
+
+
+## WARNING: Don't forget to switch back to .text as below
+## Otherwise you may get weird permission errors when executing 
+
+.text
+.global  set_display_from_temp
+
+## ENTRY POINT FOR REQUIRED FUNCTION
+set_display_from_temp:  
+        ## assembly instructions here
+
+	## two useful techniques for this problem
+        movl    my_int(%rip),%eax    # load my_int into register eax
+        leaq    my_array(%rip),%rdx  # load pointer to beginning of my_array into rdx
+
+
+.text
+.global thermo_update
+        
+## ENTRY POINT FOR REQUIRED FUNCTION
+thermo_update:
+	## assembly instructions here
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org49a4681" class="outline-3">
+<h3 id="org49a4681"><span class="section-number-3">3.5</span> <code>set_temp_from_ports</code></h3>
+<div class="outline-text-3" id="text-3-5">
+<div class="org-src-container">
+<pre class="src src-c">int set_temp_from_ports(temp_t *temp);
+// Uses the two global variables (ports) THERMO_SENSOR_PORT and
+// THERMO_STATUS_PORT to set the fields of `temp`. If
+// THERMO_SENSOR_PORT is negative or above its maximum trusted value
+// (associated with +45.0 deg C), this function sets the
+// tenths_degrees to 0 and the temp_mode to 3 for `temp` before
+// returning 1.  Otherwise, converts the sensor value to deg C using
+// shift operations.  Further converts to deg F if indicated from
+// THERMO_STATUS_PORT. Sets the fields of `temp` to appropriate
+// values. `temp_mode` is 1 for Celsius, and 2 for Fahrenheit. Returns
+// 0 on success. This function DOES NOT modify any global variables
+// but may access them.
+//
+// CONSTRAINTS: Uses only integer operations. No floating point
+// operations are used as the target machine does not have a FPU. Does
+// not use any math functions such as abs().
+</pre>
+</div>
+
+<p>
+Note that this function uses a <code>temp_t</code> struct which is in <code>thermo.h</code>
+described here:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// Breaks temperature down into constituent parts
+typedef struct{
+  short tenths_degrees;     // actual temp in tenths of degrees
+  char temp_mode;           // 1 for celsius, 2 for fahrenheit, other values are errors
+} temp_t;
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgb050f10" class="outline-4">
+<h4 id="orgb050f10">Assembly Implementation Notes <code>set_temp_from_ports</code></h4>
+<div class="outline-text-4" id="text-orgb050f10">
+<ol class="org-ol">
+<li>The function takes a single argument, a pointer in <code>rdi</code>.</li>
+<li>Return values or functions are to be placed <code>eax</code> for 32 bit
+quantities as is the case here (<code>int</code>).</li>
+<li><p>
+To access global symbols/variables which are not defined in the
+assembly file, use the relative position from the instruction
+pointer register which allows the linker to handle the
+task. Specifically relevant examples are
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">   movw  THERMO_SENSOR_PORT(%rip), %dx   # copy global var to reg dx  (16-bit word)
+   movb  THERMO_STATUS_PORT(%rip), %cl   # copy global var to reg cl  (8-bit byte)
+   movl  %r8d,THERMO_DISPLAY_PORT(%rip)  # copy reg r8d to global var (32-bit long-word)
+   ### WARNING: Not all of the above instructions belong in
+   ### set_temp_from_ports. Determine which are relevant and which
+   ### are useful for this function and which belong elsewhere.
+</pre>
+</div></li>
+<li>Use comparisons and jump to a separate section of code that is
+clearly marked as "error" if you detect a bad arguments. Be careful
+to use appropriate assembly instructions for the type of data being
+compared.
+<ul class="org-ul">
+<li><code>cmpX</code> performs comparison based on subtraction; pick <code>cmpq /
+     cmpl / cmpw / cmpb</code> according to the size of data being compared.</li>
+<li>Jump instructions such as <code>jg</code> assume prior comparison was
+done on <b>signed quantities</b>.</li>
+<li>Jump instructions like <code>ja</code> assume prior comparison was done on
+<b>unsigned quantities</b>.</li>
+</ul></li>
+<li><p>
+To do the initial temperature conversion of the temperature sensor
+one must divide by 32. Avoid the division and <b>use a shift
+instead</b>.  The remainder can also be found by <b>masking / anding low
+order bits</b> that would be shifted off which will allow for
+rounding.
+</p>
+
+<p>
+As with your C version, convert to Celsius and perform rounding
+first. Then if needed, convert the rounded temperature to
+Fahrenheit. 
+</p></li>
+<li><p>
+If the temperature must be converted to Fahrenheit, make use of
+division instructions to achieve <code>fahrenheit = (9 * celsius) / 5 +
+   32</code>. Keep in mind that the <code>idivX</code> instruction must have <code>rax</code> as
+the dividend and <code>rdx</code> sign-extended from it. This may involve use
+of the following sequence of instructions:
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">   cwtl           # sign extend ax to long word
+   cltq           # sign extend eax to quad word
+   cqto           # sign extend rax to rdx
+</pre>
+</div>
+<p>
+Any register can contain the divisor.  After the instruction, <code>rax
+   / eax / ax</code> will hold the <code>quotient</code> and <code>rdx / edx / dx</code> the
+remainder.  In this function, a single division will be sufficient.
+</p></li>
+<li><p>
+A pointer to a <code>temp_t</code> struct can access its fields using the
+following offset table which assume that <code>%reg</code> holds a pointer to
+the struct (substitute an actual register name).
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">Destination</th>
+<th scope="col" class="org-left">Assembly</th>
+</tr>
+
+<tr>
+<th scope="col" class="org-left">C Field Access</th>
+<th scope="col" class="org-left">Offset</th>
+<th scope="col" class="org-left">Size</th>
+<th scope="col" class="org-left">Assign 5 to field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>temp-&gt;tenths_degrees</code></td>
+<td class="org-left">0 bytes</td>
+<td class="org-left">2 bytes</td>
+<td class="org-left"><code>movw $5,0(%reg)</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>temp-&gt;temp_mode</code></td>
+<td class="org-left">2 bytes</td>
+<td class="org-left">1 byte</td>
+<td class="org-left"><code>movb $5,2(%reg)</code></td>
+</tr>
+</tbody>
+</table>
+<p>
+You will need to use these offsets to set the fields of the struct
+near the end of the routine.
+</p></li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org276b7d2" class="outline-3">
+<h3 id="org276b7d2"><span class="section-number-3">3.6</span> <code>set_display_from_temp</code></h3>
+<div class="outline-text-3" id="text-3-6">
+<div class="org-src-container">
+<pre class="src src-c">int set_display_from_temp(temp_t temp, int *display);
+// Alters the bits of integer pointed to by display to reflect the
+// temperature in struct arg temp.  If temp has a temperature value
+// that is below minimum or above maximum temperature allowable or if
+// the temp_mode is not Celsius or Fahrenheit, sets the display to
+// read "ERR" and returns 1. Otherwise, calculates each digit of the
+// temperature and changes bits at display to show the temperature
+// according to the pattern for each digit.  This function DOES NOT
+// modify any global variables except if `display` points at one.
+// 
+// CONSTRAINTS: Uses only integer operations. No floating point
+// operations are used as the target machine does not have a FPU. Does
+// not use any math functions such as abs().
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org7ad280e" class="outline-4">
+<h4 id="org7ad280e">Assembly Implementation Notes <code>set_display_from_temp</code></h4>
+<div class="outline-text-4" id="text-org7ad280e">
+<ol class="org-ol">
+<li>Arguments will be
+<ul class="org-ul">
+<li>a packed <code>temp</code> struct in <code>rdi</code></li>
+<li>an integer pointer in <code>rsi</code></li>
+</ul></li>
+<li><p>
+The packed <code>temp_t</code> struct is entirely in the 64-bit <code>rdi</code> register
+which has the following layout.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-right">Bits</th>
+<th scope="col" class="org-left">Shift</th>
+<th scope="col" class="org-left">&#xa0;</th>
+</tr>
+
+<tr>
+<th scope="col" class="org-left">C Field Access</th>
+<th scope="col" class="org-right">in <code>rdi</code></th>
+<th scope="col" class="org-left">Required</th>
+<th scope="col" class="org-left">Size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>temp.tenths_degrees</code></td>
+<td class="org-right">00-15</td>
+<td class="org-left">None</td>
+<td class="org-left">2 bytes</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>temp.temp_mode</code></td>
+<td class="org-right">16-23</td>
+<td class="org-left">Right by 16</td>
+<td class="org-left">1 byte</td>
+</tr>
+</tbody>
+</table>
+<p>
+To access individual fields of the struct, you will need to do
+shifting and masking to extract the values from the <code>rdi</code> register.
+</p></li>
+<li>Use comparisons and jump to a separate section of code that is
+clearly marked as "error" if you detect bad fields in the <code>temp</code>
+struct argument such as temperature values that are outside the
+minimum/maximum values allowed for Fahrenheit or Celsius.</li>
+<li><p>
+As was the case in the C version of the problem, it is useful to
+create a table of bit masks corresponding to the bits that should be
+set for each display digit (e.g. digit "1" has bit pattern
+<code>0b0000110</code>). In assembly this is easiest to do by using a data
+section with successive integers. An example of how this can be done
+is below.
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">   .section .data
+   array:                          # an array of 3 ints
+           .int 0b101              # array[0] = 0b101
+           .int 0b010              # array[1] = 0b010
+           .int 0b111              # array[2] = 0b111
+   spcial_const:
+           .int 17                 # "special" constant
+    
+   .section .text
+   .globl func
+   func:
+           leaq array(%rip),%r8    # r8 points to array, rip used to enable relocation
+           movq $2,%r9             # r9 = 2, index into array
+           movl (%r8,%r9,4),%r10d  # r10d = array[2], note 32-bit movl and dest reg
+           movl const(%rip),%r11d  # r11d = 17 (const), rip used to enable relocation
+</pre>
+</div>
+<p>
+Adapt this example to create a table of useful bit masks for
+digits. The GCC assembler understands binary constants specified
+with the <code>0b0011011</code> style syntax.
+</p></li>
+<li>Make sure to check for a negative temperature and adjust the
+display to contain a negative sign in the correct position.  It may
+be useful to then negate a temperature below zero so that later
+divisions always result in positive values.</li>
+<li>Make use of division instructions to compute "digits" for the
+tenths, ones, tens, and hundreds place for the thermometer. With
+cleverness, you should only need 3-4 divisions. Use these digits to
+reference into the table of digit bit masks you create to
+progressively build up the correct bit pattern for the display.</li>
+<li>Use shifts and ORs to combine the digit bit patterns to create the
+final display bit pattern.</li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbb2011b" class="outline-3">
+<h3 id="orgbb2011b"><span class="section-number-3">3.7</span> <code>thermo_update</code></h3>
+<div class="outline-text-3" id="text-3-7">
+<div class="org-src-container">
+<pre class="src src-c">int thermo_update();
+// Called to update the thermometer display.  Makes use of
+// set_temp_from_ports() and set_display_from_temp() to access
+// temperature sensor then set the display. Always sets the display
+// even if the other functions returns an error. Returns 0 if both
+// functions complete successfully and return 0. Returns 1 if either
+// function or both return a non-zero values.
+// 
+// CONSTRAINT: Does not allocate any heap memory as malloc() is NOT
+// available on the target microcontroller.  Uses stack and global
+// memory only.
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgec85c5a" class="outline-4">
+<h4 id="orgec85c5a">Assembly Implementation Notes for <code>thermo_update</code></h4>
+<div class="outline-text-4" id="text-orgec85c5a">
+<ol class="org-ol">
+<li>No arguments come into the function.</li>
+<li>Use the syntax described earlier to access global symbols/variables
+such as <code>THERMO_SENSOR_PORT</code>.</li>
+<li>Call the two previous functions to create the struct and manipulate
+the bits of an the display. Capture the return value for each of
+these functions. If either of them fails (returns non-zero) then
+<code>therm_update()</code> will return <code>1</code>. Calling functions and retaining
+values in registers across the function calls requires some care.</li>
+<li>It is necessary to capture the return value from
+<code>set_temp_from_display()</code> and retain it while running
+<code>set_display_from_temp()</code>. This likely means using a callee-save
+register which is retained across function calls. Make sure to
+push/save any callee save register and then pop/restore them before
+returning from <code>thermo_update()</code>.</li>
+<li><p>
+Calling a function requires that the stack be aligned to 16-bytes;
+there is always an 8-byte quantity on the stack (previous value of
+the <code>rsp</code> stack pointer).  This means the stack must be extended
+via <code>pushq</code> or <code>subq</code> instruction before any calls. After aligning
+the stack, several function calls can be made such as in the
+following sequence.
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">   pushq/subq %rsp      # adjust the stack pointer to make space for local      
+                       # values AND align to a 16-byte boundary
+
+   call    some_func   # stack aligned, call function
+   ## return val from func in rax or eax
+
+   call    other_func  # stack still aligned, call other function
+   ## return val from func in rax or eax
+
+   popq/addq %rsp       # restore the stack pointer to its original value
+</pre>
+</div>
+<p>
+NOTE: the specific number of <code>pushq</code> instructions to use or <code>subq</code>
+values to decrease <code>%rsp</code> is dependent on the situation. Common
+total adjustments are 8 bytes, 24 bytes, and 40 bytes. Pick one
+that fits the situation here.
+</p></li>
+<li>In order to call the <code>set_temp_from_ports()</code> function, this
+function will need to allocate space on the stack for a <code>temp_t</code>.
+As described previously, this can be done via a stack adjustment,
+<code>pushq</code> or <code>subq X,%rsp</code> instructions. Once fresh stack space is
+pointed to by <code>%rsp</code>, it can be copied as arguments to functions
+that need main memory space for data such as a <code>temp_t</code> struct.</li>
+<li>Similarly, to call the <code>set_display_from_temp()</code> function, one will
+need a packed <code>temp_t</code> in a register. If the preceding
+<code>set_temp_from_ports()</code> call succeeded, this packed struct can be
+read from memory into a register with a <code>movX</code> instruction. That
+stack space can be re-used if needed.</li>
+<li>Keep in mind that you will need to do error checking of the return
+values from the two functions: if either of them return non-zero
+values, then <code>thermo_update()</code> must return a non-zero value. Make
+sure to retain earlier return values across function calls by using
+callee-save registers.</li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org04db40a" class="outline-3">
+<h3 id="org04db40a"><span class="section-number-3">3.8</span> Notes on Partial Credit</h3>
+<div class="outline-text-3" id="text-3-8">
+<p>
+Partial credit will be awarded in Manual Inspection for code that
+looks functional but did not pass tests.  However, keep in mind that
+tests for <code>thermo_update()</code> rely on the previous 2 functions working
+correctly and <code>thermo_main</code> requires all functions to work correctly in
+conjunction.  There is no partial credit available for these Automated
+Tests even if they may work but the preceding functions do not which
+causes tests to fail.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgdd3d275" class="outline-3 grading 60">
+<h3 id="orgdd3d275"><span class="section-number-3">3.9</span> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="60">60</span></span></h3>
+<div class="outline-text-3" id="text-3-9">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">AUTOMATED TESTS</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">AUOTMATED TESTS</td>
+</tr>
+
+<tr>
+<td class="org-right">20</td>
+<td class="org-left"><code>make test-prob1</code> runs 40 tests for correctness, 0.5 points per test</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>test_thermo_update.c</code> provides tests for functions in <code>thermo_update_asm.s</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">There are also tests of <code>thermo_main</code> which uses functions from <code>thermo_update_asm.c</code></td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">MANUAL INSPECTION</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">General Criteria for all Functions</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear signs of hand-crafted assembly are present.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Detailed documentation/comments are provided showing the algorithm used in the assembly</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">There is a clear relation of the code to the C algorithm used in <code>thermo_update.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">High-level variables and registers they occupy are described.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Error checking on the input values is done with clear "error" sections and labels</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left"><code>set_temp_from_ports()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">The initial division by 64 is done using a bitwise shift instruction.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Remainders from the division by 64 are obtained through bitwise-AND on the low-order bits.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Division is used to compute Fahrenheit temperature conversions.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">There is a clearly documented section which updates struct fields in memory</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">No function calls are made that would alter the stack contents</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">15</td>
+<td class="org-left"><code>set_display_from_temp()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">There is a clearly documented data section setting up useful tables of bitmasks</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Struct fields are unpacked from an argument register using shift operations</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Division is used to compute quotients and remainders that are needed.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">No function calls are made that would alter the stack contents</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left"><code>thermo_update()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">The stack is extended to create space for local variables that must be passed by address and the restored before returning</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">The stack is correctly aligned to a 16-byte boundary to be compatible with function calls</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Function calls to the earlier two functions are made with arguments passed in appropriate registers</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">The return value for the first function call is retained across the second function call in a callee save register or the stack</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">The return value is 1 if either function returns a 1 and zero otherwise</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">60</td>
+<td class="org-left">TOTAL for problem, 65 points possible</td>
+</tr>
+</tbody>
+</table>
+<p>
+<b>NOTE</b>: Passing all tests and earning all manual inspection criteria
+will earn up to <b>5 Points of Project Makeup Credit</b> which will offset
+past and future loss of credit on projects.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2b0d13e" class="outline-2">
+<h2 id="org2b0d13e"><span class="section-number-2">4</span> <b>Problem 2</b>: The Puzzlebin</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org6e9959e" class="outline-3">
+<h3 id="org6e9959e"><span class="section-number-3">4.1</span> Overview</h3>
+<div class="outline-text-3" id="text-4-1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">2021 GDB Quick Guide/Assembly</td>
+<td class="org-left"><a href="https://www-users.cs.umn.edu/~kauffman/tutorials/gdb.html">https://www-users.cs.umn.edu/~kauffman/tutorials/gdb.html</a></td>
+</tr>
+</tbody>
+</table>
+
+<p>
+The nature of this problem is similar to the previous project's
+<code>puzzlebox</code>: there is a program called <code>puzzlebin</code> which expects
+certain inputs from a parameter file or typed as input. If the inputs
+are "correct", a phase will be "passed" earning points and allowing
+access to a subsequent phases. The major change is that <code>puzzlebin</code> is
+in binary so must be debugged in assembly. The GDB guide above has a
+special section on debugging binaries which is worth reading.  The
+typical startup regime is:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; gdb -tui puzzlebin
+(gdb) set args input.txt      # set the command line arguments
+(gdb) layout asm              # show disassembled instructions
+(gdb) layout regs             # show the register file
+(gdb) break phase01           # break at the start of the first phase01
+(gdb) run                     # get cracking
+</pre>
+</div>
+
+<p>
+Below is a summary of useful information concerning the <code>puzzlebin</code>.
+</p>
+
+<dl class="org-dl">
+<dt>Input File</dt><dd>Data for input should be placed in the <code>input.txt</code>
+file.  The first value in this file will be the userID (first part
+of your UMD email address) which is 8 or fewer characters.</dd>
+<dt>UserID Randomization</dt><dd>Each phase has some randomization based on
+the UserID so that the specific answers of an one students will not
+necessarily work for another student.</dd>
+<dt>One Phase Input per Line</dt><dd>Place the input for each phase on its
+own line. Some input phases read a whole line and then dissect it
+for individual data. Putting each input on its own line ensures you
+won't confuse the input processing.</dd>
+<dt>Defusing Phases Earns Points</dt><dd>As with the earlier <code>puzzlebox</code>,
+points for this problem are earned based on how many phases are
+completed. Each phase that is completed will earn points.</dd>
+<dt>Use GDB to work with Puzzlebin</dt><dd>The debugger is the best tool to
+work with running the given program. It may be tempting to try to
+brute force the puzzlebin by trying many possible inputs but in most
+cases, a little exploration will suffice to solve most phases.</dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orgdae5b68" class="outline-3 grading 40">
+<h3 id="orgdae5b68"><span class="section-number-3">4.2</span> Puzzlebin Scoring&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="40">40</span></span></h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Scoring is done according to the following table.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Pts</th>
+<th scope="col" class="org-left">Phase</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Phase 1</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Phase 2</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">7</td>
+<td class="org-left">Phase 3</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">8</td>
+<td class="org-left">Phase 4</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">7</td>
+<td class="org-left">Phase 5</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">8</td>
+<td class="org-left">Phase 6</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Phase 7</td>
+<td class="org-left">Not Required</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">???</td>
+<td class="org-left">Additional Makeup credit if you can find it</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">40</td>
+<td class="org-left">60 Max</td>
+<td class="org-left">40 point for full credit, 20 MAKEUP Credit available</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgf6b0998" class="outline-3">
+<h3 id="orgf6b0998"><span class="section-number-3">4.3</span> Advice</h3>
+<div class="outline-text-3" id="text-4-3">
+<ul class="org-ul">
+<li><p>
+Most of the time you should run <code>puzzlebin</code> in <code>gdb</code> as in
+</p>
+<pre class="example">
+&gt; gdb -tui ./puzzlebin
+</pre>
+
+<p>
+Refer to the <a href="http://www-users.cs.umn.edu/~kauffman/tutorials/gdb">Quick Guide to GDB</a> if you have forgotten how to use
+<code>gdb</code> and pay particular attention to the sections on debugging
+assembly.
+</p></li>
+<li>Make use of other tools to analyze puzzlebin aside from the
+debugger.  Some of these are described at the end of the
+<a href="https://www-users.cs.umn.edu/~kauffman/tutorials/gdb.html">Quick Guide to GDB</a>. They will allow you to search for "interesting" data
+in the executable <code>puzzlebin</code>.</li>
+<li><b>Disassemble</b> the executable to look at its entire source assembly code
+as a text file. The Quick Guide to GDB shows how to use <code>objdump</code> to
+do this. Looking at the whole source code reveals that one cannot
+hide <b>secrets</b> easily in programs.</li>
+<li>Feel free to do some internet research.  There is a well-known
+"Binary Bomb Lab" assignment by Bryant and O'Hallaron, our textbook
+authors, that inspired Puzzlebin. It has a long history and there
+are some useful guides out there that can help you through rough
+patches. Keep in mind that your code will differ from any online
+tutorials BUT the techniques to defuse it may be similar to what is
+required to solve puzzles..</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-03-11 Mon 23:59 <br/> </i>
+</div>
+</body>
+</html>
