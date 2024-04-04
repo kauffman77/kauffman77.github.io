@@ -32,7 +32,7 @@ function get(e){
 
 // does the funky computation of engagement point score based on labs, bonus, late days;
 function updateEngagement(a){
-    var labidx = model.findIndex(as => as.Id=="Dis + Surveys");
+    var labidx = model.findIndex(as => as.Id=="Labs + Surveys");
     var labs   = model[labidx+0];
     var bonus  = model[labidx+1];
     var late   = model[labidx+2];
