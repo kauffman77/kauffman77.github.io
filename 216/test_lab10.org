@@ -1,0 +1,114 @@
+#+TITLE: Lab10 Tests
+#+TESTY: PREFIX="lab"
+#+TESTY: REPORT_FRACTION=1
+# #+TESTY: SHOW=1
+
+* QUIZ: QUESTIONS.txt
+This test determines if the answers in QUESTIONS.txt are correct. This
+file must be edited so that the correct ( ) choices are replaced with
+(X) AND no other changes are made to the file. If you are confident in
+your answers but think you may have made inadvertent changes to
+QUESTIONS.txt, you can try restoring it with the provided
+QUESTIONS.txt.bk file.
+
+The correct output for the test should be 
+>> ./test_quiz_filter QUESTIONS.txt | md5sum -C QUESTION.md5
+-: OK
+
+Note: the md5sum program is used for to verify and must be installed
+to work.
+
+#+TESTY: use_valgrind=0
+
+#+BEGIN_SRC sh
+>> ./test_quiz_filter QUESTIONS.txt | md5sum -c QUESTIONS.md5
+-: OK
+#+END_SRC
+
+
+* CODE for Problems 1 and 2
+** Problem 1 Makefile
+Run a series of make commands to test that the targets are
+present. All `make clean` calls have their output silenced (redirected
+to null) as not everyone will use the same command for this.
+
+#+TESTY: use_valgrind=0
+
+#+BEGIN_SRC sh
+>> cd prob1-makefile
+>> make clean > /dev/null
+>> make
+gcc -c list_main.c
+gcc -c list_funcs.c
+gcc -o list_main list_main.o list_funcs.o
+>> touch -d '-1 minute' *.c *.o list_main
+>> touch list_funcs.c
+>> make list_main
+gcc -c list_funcs.c
+gcc -o list_main list_main.o list_funcs.o
+>> make clean > /dev/null
+>> make list_funcs.o
+gcc -c list_funcs.c
+>> make all
+gcc -c list_main.c
+gcc -o list_main list_main.o list_funcs.o
+>> make clean > /dev/null
+>> make demo-list
+gcc -c list_main.c
+gcc -c list_funcs.c
+gcc -o list_main list_main.o list_funcs.o
+cat list_cmds.txt | ./list_main -echo
+Linked List Demo
+Commands:
+  print:          shows the current contents of the list
+  clear:          eliminates all elements from the list
+  exit:           exit the program
+  insert thing:   inserts the given string into the list
+  get index:      get the item at the given index
+  contains thing: determine if the given thing is in the list
+                  (NOT YET IMPLEMENTED)
+list> insert A
+list> insert B
+list> print
+0: A
+1: B
+list> get 1
+1: B
+list> exit
+>> make clean > /dev/null
+>> make pat-a-cake
+Pat-a-cake, pat-a-cake, bakers man.
+Bake me a cake as fast as you can.
+Roll it, pat it, and mark it with a B
+Put it in the oven for Baby and me.
+#+END_SRC
+
+** Problem 2 redirect_child
+Runs the program ~redirect_child~ in a few cases to ensure that it
+produces the correct output and has a child process that redirects its
+standard output into a file.
+
+Note: runs a couple times and checks that the command line argument
+argv[1] is used as the output file where the child writes its output.
+
+#+TESTY: program='./redirect_child test-results/out1.tmp'
+#+BEGIN_SRC sh
+Removing file 'test-results/out1.tmp' prior to run via a subshell
+Creating a child to do 'wc'
+Parent waiting for child to complete
+Child redirecting output to 'test-results/out1.tmp', then exec()'ing
+Child complete, return code 0
+Showing output of 'test-results/out1.tmp' via 'cat' command
+25 25 66 nums.txt
+#+END_SRC
+
+#+TESTY: program='./redirect_child test-results/out2.tmp'
+#+BEGIN_SRC sh
+Removing file 'test-results/out2.tmp' prior to run via a subshell
+Creating a child to do 'wc'
+Parent waiting for child to complete
+Child redirecting output to 'test-results/out2.tmp', then exec()'ing
+Child complete, return code 0
+Showing output of 'test-results/out2.tmp' via 'cat' command
+25 25 66 nums.txt
+#+END_SRC

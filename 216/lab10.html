@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-04-08 Mon 09:53 -->
+<!-- 2024-04-08 Mon 11:45 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Lab10: Makefiles and I/O Redirection</title>
@@ -477,7 +477,7 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2024-04-08 Mon 09:53</i>
+<i>Last Updated: 2024-04-08 Mon 11:45</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Lab10: Makefiles and I/O Redirection</h1>
@@ -486,9 +486,9 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-org99a4808" class="outline-4">
-<h4 id="org99a4808">CODE DISTRIBUTION: <a href="lab10-code.zip">lab10-code.zip</a></h4>
-<div class="outline-text-4" id="text-org99a4808">
+<div id="outline-container-org22dc745" class="outline-4">
+<h4 id="org22dc745">CODE DISTRIBUTION: <a href="lab10-code.zip">lab10-code.zip</a></h4>
+<div class="outline-text-4" id="text-org22dc745">
 <ul class="org-ul">
 <li>Download the code distribution</li>
 <li>See further setup instructions below</li>
@@ -496,10 +496,50 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </div>
 </div>
 
-<div id="outline-container-orga4605b7" class="outline-4">
-<h4 id="orga4605b7">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-orga4605b7">
+<div id="outline-container-orgfcded6f" class="outline-4">
+<h4 id="orgfcded6f">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-orgfcded6f">
 <dl class="org-dl">
+<dt>Mon Apr  8 11:40:17 AM EDT 2024</dt><dd><p>
+A bug was discovered in the
+<code>test_lab10.org</code> which may cause spurious test failures for Problem
+1 code on GRACE (Gradescope is less affected by this bug). To fix
+the bug, <a href="test_lab10.org">download a fresh copy of <code>test_lab10.org</code></a> or add the
+following line to it in the place indicated
+</p>
+<div class="org-src-container">
+<pre class="src src-text">    * CODE for Problems 1 and 2
+    ** Problem 1 Makefile
+    Run a series of make commands to test that the targets are
+    present. All `make clean` calls have their output silenced (redirected
+    to null) as not everyone will use the same command for this.
+    
+    #+TESTY: use_valgrind=0
+    
+    #+BEGIN_SRC sh
+    &gt;&gt; cd prob1-makefile
+    &gt;&gt; make clean &gt; /dev/null
+    &gt;&gt; make
+    gcc -c list_main.c
+    gcc -c list_funcs.c
+    gcc -o list_main list_main.o list_funcs.o
+    &gt;&gt; touch -d '-1 minute' *.c *.o list_main    ### THIS LINE IS MISSING
+    &gt;&gt; touch list_funcs.c
+    &gt;&gt; make list_main
+</pre>
+</div>
+<p>
+The line can be copied from <code>test_prob1_makefile.org</code> if desired.
+</p>
+
+<p>
+For the curious, this line is only necessary due to GRACE using the
+AFS file system rather than more mainstream file systems like NFS or
+EXT4.  GRACE's filesytem is configured to only have file
+modification timestamps at a 1-second resolution which complicates
+test cases which rely on timestamps.
+</p></dd>
+
 <dt>Mon Apr  8 09:38:56 AM EDT 2024</dt><dd><p>
 <code>QUESTIONS.txt</code> had a problem in
 it which causes <code>make test</code> and <code>make test-quiz</code> to fail even for
@@ -523,26 +563,26 @@ corrected.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgf644824">1. Rationale</a></li>
-<li><a href="#org18cbd86">2. Codepack</a></li>
-<li><a href="#orgd4a53cb">3. Problem 1: Makefiles</a>
+<li><a href="#org891ce66">1. Rationale</a></li>
+<li><a href="#org259ed0d">2. Codepack</a></li>
+<li><a href="#org12e8f8f">3. Problem 1: Makefiles</a>
 <ul>
-<li><a href="#org7c669fe">3.1. Structure of Makefiles</a></li>
-<li><a href="#org04b4c75">3.2. Variables and Shortcuts in Makefiles</a></li>
-<li><a href="#org67144a8">3.3. Dependency Detection</a></li>
+<li><a href="#org1bd92c5">3.1. Structure of Makefiles</a></li>
+<li><a href="#org6f07d12">3.2. Variables and Shortcuts in Makefiles</a></li>
+<li><a href="#org89a223d">3.3. Dependency Detection</a></li>
 </ul>
 </li>
-<li><a href="#org6d80e80">4. Problem 2: I/O Redirection</a></li>
-<li><a href="#org24f471d">5. QUESTIONS.txt File Contents</a></li>
-<li><a href="#orgea0eab1">6. Submission</a></li>
+<li><a href="#org128593e">4. Problem 2: I/O Redirection</a></li>
+<li><a href="#org61338b3">5. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org227739e">6. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgf644824" class="outline-2">
-<h2 id="orgf644824"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org891ce66" class="outline-2">
+<h2 id="org891ce66"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This lab covers two independent but short concepts in separate
@@ -568,9 +608,9 @@ how it is inherited by child processes.
 </p>
 </div>
 
-<div id="outline-container-org7fefece" class="outline-4">
-<h4 id="org7fefece">Grading Policy</h4>
-<div class="outline-text-4" id="text-org7fefece">
+<div id="outline-container-orga869d3f" class="outline-4">
+<h4 id="orga869d3f">Grading Policy</h4>
+<div class="outline-text-4" id="text-orga869d3f">
 <p>
 Credit for this exercise is earned by completing the code/asnwers here
 and submitting a Zip of the work to Gradescope. Students are
@@ -593,8 +633,8 @@ See the <a href="../syllabus.html">full policies in the course syllabus</a>.
 </div>
 </div>
 
-<div id="outline-container-org18cbd86" class="outline-2">
-<h2 id="org18cbd86"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org259ed0d" class="outline-2">
+<h2 id="org259ed0d"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for this exercise is linked at the top of this
@@ -703,8 +743,8 @@ the following files which are briefly described.
 </div>
 </div>
 
-<div id="outline-container-orgd4a53cb" class="outline-2">
-<h2 id="orgd4a53cb"><span class="section-number-2">3</span> Problem 1: Makefiles</h2>
+<div id="outline-container-org12e8f8f" class="outline-2">
+<h2 id="org12e8f8f"><span class="section-number-2">3</span> Problem 1: Makefiles</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Building programs often involves compiling separate source files and
@@ -717,8 +757,8 @@ covers the basics of how to create a <code>Makefile</code>.
 </p>
 </div>
 
-<div id="outline-container-org7c669fe" class="outline-3">
-<h3 id="org7c669fe"><span class="section-number-3">3.1</span> Structure of Makefiles</h3>
+<div id="outline-container-org1bd92c5" class="outline-3">
+<h3 id="org1bd92c5"><span class="section-number-3">3.1</span> Structure of Makefiles</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 The basic structure of a <code>Makefile</code> involves <b>rules</b> which relate
@@ -827,8 +867,8 @@ the program.
 </div>
 
 
-<div id="outline-container-org04b4c75" class="outline-3">
-<h3 id="org04b4c75"><span class="section-number-3">3.2</span> Variables and Shortcuts in Makefiles</h3>
+<div id="outline-container-org6f07d12" class="outline-3">
+<h3 id="org6f07d12"><span class="section-number-3">3.2</span> Variables and Shortcuts in Makefiles</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Makefiles support a large number of features such as explicit
@@ -874,8 +914,8 @@ the following invocation allows using a specific file other than that:
 </div>
 </div>
 
-<div id="outline-container-org67144a8" class="outline-3">
-<h3 id="org67144a8"><span class="section-number-3">3.3</span> Dependency Detection</h3>
+<div id="outline-container-org89a223d" class="outline-3">
+<h3 id="org89a223d"><span class="section-number-3">3.3</span> Dependency Detection</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 Makefiles are useful for larger projects to automatically detect
@@ -932,8 +972,8 @@ the exectuable program.
 </div>
 
 
-<div id="outline-container-org6d80e80" class="outline-2">
-<h2 id="org6d80e80"><span class="section-number-2">4</span> Problem 2: I/O Redirection</h2>
+<div id="outline-container-org128593e" class="outline-2">
+<h2 id="org128593e"><span class="section-number-2">4</span> Problem 2: I/O Redirection</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Programs often need to deal with open files for reading and
@@ -955,12 +995,12 @@ to assist students in understanding how programs like
 </p>
 </div>
 
-<div id="outline-container-org5ee1365" class="outline-4">
-<h4 id="org5ee1365">Fork and Child File Descriptors</h4>
-<div class="outline-text-4" id="text-org5ee1365">
+<div id="outline-container-org54ff0a8" class="outline-4">
+<h4 id="org54ff0a8">Fork and Child File Descriptors</h4>
+<div class="outline-text-4" id="text-org54ff0a8">
 <div class="org-center">
 
-<div id="org5e5bde1" class="figure">
+<div id="orga09f65a" class="figure">
 <p><img src="fork-fds.png" alt="fork-fds.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Effects of <code>open()</code>'ing a file then calling <code>fork()</code> : the child and parent both refer to the same open file.</p>
@@ -970,12 +1010,12 @@ to assist students in understanding how programs like
 </div>
 
 
-<div id="outline-container-orga6e76c2" class="outline-4">
-<h4 id="orga6e76c2">dup() and dup2() System calls</h4>
-<div class="outline-text-4" id="text-orga6e76c2">
+<div id="outline-container-orgfe7f1df" class="outline-4">
+<h4 id="orgfe7f1df">dup() and dup2() System calls</h4>
+<div class="outline-text-4" id="text-orgfe7f1df">
 <div class="org-center">
 
-<div id="org6c4311d" class="figure">
+<div id="org2589302" class="figure">
 <p><img src="fork-fds.png" alt="fork-fds.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 2: </span>LEFT: Effect of calling <code>dup()</code> to create a duplicate file descriptor table entry. RIGHT: Effect of calling <code>dup2()</code> to overwrite on file descriptor entry with another.</p>
@@ -985,8 +1025,8 @@ to assist students in understanding how programs like
 </div>
 </div>
 
-<div id="outline-container-org24f471d" class="outline-2">
-<h2 id="org24f471d"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org61338b3" class="outline-2">
+<h2 id="org61338b3"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the exercise.
@@ -1258,8 +1298,8 @@ CODE Problem 2: Complete redirect_child.c
 </div>
 </div>
 
-<div id="outline-container-orgea0eab1" class="outline-2">
-<h2 id="orgea0eab1"><span class="section-number-2">6</span> Submission</h2>
+<div id="outline-container-org227739e" class="outline-2">
+<h2 id="org227739e"><span class="section-number-2">6</span> Submission</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -1269,7 +1309,7 @@ how to upload your completed exercise zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-04-08 Mon 09:53 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-04-08 Mon 11:45 <br/> </i>
 </div>
 </body>
 </html>
