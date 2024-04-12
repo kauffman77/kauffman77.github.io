@@ -1,0 +1,1984 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-04-12 Fri 14:08 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMSC216 Project 4: Make me a Bake</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","homeputer>","grace10:","HM>"], // allowed interactive prompts
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"    , "language-c");
+lang_map.set("src-text" , "language-plaintext");
+lang_map.set("src-sh"   , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2024-04-12 Fri 14:08</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CMSC216 Project 4: Make me a Bake</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Wed 24-Apr-2024</b></li>
+<li><i>Approximately 3.0-4.0% of total grade</i></li>
+<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a></li>
+<li>Projects are <b>individual work</b>: no collaboration with other students
+is allowed. Seek help from course staff if you get stuck for too long.</li>
+</ul>
+
+<div id="outline-container-org42f3a6f" class="outline-4">
+<h4 id="org42f3a6f">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
+</div>
+
+<div id="outline-container-org837deab" class="outline-4">
+<h4 id="org837deab">VIDEO OVERVIEW: <i>Not Yet Available</i></h4>
+</div>
+<div id="outline-container-org374333b" class="outline-4">
+<h4 id="org374333b">CHANGELOG: Empty</h4>
+</div>
+
+<div id="outline-container-org3ec8aa3" class="outline-4">
+<h4 id="org3ec8aa3"></h4>
+<div class="outline-text-4" id="text-org3ec8aa3">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org70bbd8a">1. Overview</a></li>
+<li><a href="#org6e749fb">2. Download Code and Setup</a></li>
+<li><a href="#org7fdcd1c">3. Overview of Bake</a>
+<ul>
+<li><a href="#orgab20e3f">3.1. Bakefiles</a></li>
+<li><a href="#orgf1dc97e">3.2. Data Structures</a></li>
+<li><a href="#orgaed808c">3.3. Outline of <code>bake_funcs.c</code></a></li>
+<li><a href="#org001096e">3.4. Provided Utility Functions</a></li>
+<li><a href="#org850b687">3.5. Sample Usage</a></li>
+</ul>
+</li>
+<li><a href="#org380ef93">4. <b>Problem 1</b>: Service Functions for Bake</a>
+<ul>
+<li><a href="#orgbc35d5b">4.1. Slurping Files</a></li>
+<li><a href="#org1d83682">4.2. Looking up and Adding Rules</a></li>
+<li><a href="#org1a85c7b">4.3. Adding Implicit Rules</a></li>
+<li><a href="#org40753eb">4.4. Printing Commands</a></li>
+</ul>
+</li>
+<li><a href="#orgd5eca4c">5. <b>Problem 2</b>: Executing Commands</a>
+<ul>
+<li><a href="#orgcb53403">5.1. Fork / Exec / Wait</a></li>
+<li><a href="#orgb9047e3">5.2. Setting Up I/O Redirection</a></li>
+<li><a href="#org5e46ca7">5.3. Failure Detection</a></li>
+</ul>
+</li>
+<li><a href="#org0456f82">6. <b>Problem 3</b>: Walking the Bake DAG</a>
+<ul>
+<li><a href="#org3895061">6.1. Recursing on bake Structs</a></li>
+<li><a href="#orgc654dd5">6.2. Dealing with Files</a></li>
+<li><a href="#orgcd17213">6.3. Setting Update Flags</a></li>
+<li><a href="#org75d6d08">6.4. Performing Updates</a></li>
+</ul>
+</li>
+<li><a href="#org564f22a">7. <b>Problem 4</b>: Postprocessing and Main</a>
+<ul>
+<li><a href="#org6da581d">7.1. Post Processing</a></li>
+<li><a href="#org12a1f13">7.2. Main Function</a></li>
+</ul>
+</li>
+<li><a href="#org1d22297">8. Grading Criteria</a></li>
+<li><a href="#orgc840c49">9. Optional Makeup Credit</a></li>
+<li><a href="#org8a50536">10. Assignment Submission</a>
+<ul>
+<li><a href="#org4479ce1">10.1. Submit to Gradescope</a></li>
+<li><a href="#org5a80871">10.2. Late Policies</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org70bbd8a" class="outline-2">
+<h2 id="org70bbd8a"><span class="section-number-2">1</span> Overview</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Build systems pervade software development. They automate repetitive
+tasks and raise the quality of software by making it easier to create
+and test software efficiently. Make and its Makefiles is a venerable
+example of a build system that has stood the test of time. While it
+has some quirks, it is well worth knowing how to use Makefiles as well
+as know some details of the internal implementation of such systems.
+</p>
+
+<p>
+This project will build a simplified version of Make called <b>Bake</b>
+which uses <b>Bakefiles</b> that have a simplified syntax compared to
+Makefiles but implement the core principles of a build system. These
+principles include the following which are all related to systems
+programming:
+</p>
+<ul class="org-ul">
+<li>Creating child processes to execute external commands</li>
+<li>Examining files on the file system to determine attributes such as
+presence / absence and modification time</li>
+<li>Recursively traversing a data structure representing dependencies
+and executing commands to update targets or detecting that no such
+updates are needed.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org6e749fb" class="outline-2">
+<h2 id="org6e749fb"><span class="section-number-2">2</span> <a id="org2fd896e"></a> Download Code and Setup</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Download the code pack linked at the top of the page. Unzip this which
+will create a project folder. Create new files in this
+folder. Ultimately you will re-zip this folder to submit it.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">State</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>bake.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Header file for shellac</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>bake_util.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Utility functions provided</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>bake_funcs.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Functions that operate data in the Bake system</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>bake_main.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">main() function for the Bake</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">Build/Testing Files</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Build file to compile all programs</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running script</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_bake12.c</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Unit tests for Problems 1 &amp; 2</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_prob1.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for Problem 1</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_prob2.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for Problem 2</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_bake34.c</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Unit tests for Problems 3 &amp; 4 <i>Not yet Released</i></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_prob3.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for Problem 3 <i>Not yet Released</i></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_prob4.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for Problem 4 <i>Not yet Released</i></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test-data/</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Subdirectory with files / programs used during testing</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org7fdcd1c" class="outline-2">
+<h2 id="org7fdcd1c"><span class="section-number-2">3</span> Overview of Bake</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgab20e3f" class="outline-3">
+<h3 id="orgab20e3f"><span class="section-number-3">3.1</span> Bakefiles</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Bake/Bakefiles share many similiarities with Make/Makefiles. Readers
+are assumed to have some familiarity with Makefiles. If not, consult
+<a href="lab10.html">previous course materials</a> the introduce them and/or review <a href="https://www.gnu.org/software/make/manual/make.html">external
+manuals and documentation</a> that describe the essence of Makefiles.
+</p>
+
+<p>
+Below is a sample Bakefile provided in the <code>data/Bakefile3</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-makefile"><span class="linenr"> 1: </span># SampleBakefile: a sample Bakefile. Run this with
+<span class="linenr"> 2: </span># &gt;&gt; bake -f SampleBakefile
+<span class="linenr"> 3: </span>
+<span class="linenr"> 4: </span># lead target is 'demo' which will be used if
+<span class="linenr"> 5: </span># no target is specified on the command line.
+<span class="linenr"> 6: </span># Some of the commands have @ as their prefix which
+<span class="linenr"> 7: </span># silences the command.
+<span class="linenr"> 8: </span>demo : hello bye
+<span class="linenr"> 9: </span>	@ echo Running programs
+<span class="linenr">10: </span>	./hello
+<span class="linenr">11: </span>	./bye
+<span class="linenr">12: </span>	@ echo Done running programs
+<span class="linenr">13: </span>
+<span class="linenr">14: </span>all : hello bye
+<span class="linenr">15: </span>
+<span class="linenr">16: </span># this is program 1 / 2
+<span class="linenr">17: </span>hello : hello.o
+<span class="linenr">18: </span>	gcc -o hello hello.o
+<span class="linenr">19: </span>
+<span class="linenr">20: </span>hello.o : hello.c
+<span class="linenr">21: </span>	gcc -c hello.c
+<span class="linenr">22: </span>
+<span class="linenr">23: </span># this is program 2 / 2
+<span class="linenr">24: </span>bye : bye.o
+<span class="linenr">25: </span>	gcc -o bye bye.o
+<span class="linenr">26: </span>
+<span class="linenr">27: </span>bye.o : bye.c
+<span class="linenr">28: </span>	gcc -c bye.c
+<span class="linenr">29: </span>
+<span class="linenr">30: </span># this target removes built files
+<span class="linenr">31: </span>clean :
+<span class="linenr">32: </span>	rm -f hello.o bye.o hello bye
+<span class="linenr">33: </span>
+<span class="linenr">34: </span># END of SampleBakefile
+</pre>
+</div>
+
+<p>
+A few notes on the features / non-features of Bakefiles.
+</p>
+<ul class="org-ul">
+<li>Comments always start a line with <code>#</code>; comments are not
+allowed elsewhere (such as after other parts)</li>
+<li>Blank lines are allowed and have no effect on builds</li>
+<li>Any other line is presumed to start a Rules of the same type
+Makefiles use <code>target : dependencies</code> and the a list of
+space-indented commands</li>
+<li>It is required that <code>target</code> and <code>dependency</code> are space separated by
+the colon. <code>target : dep1 dep2</code> is fine, <code>target: dep1 dep2</code> is not
+supported.</li>
+<li>Commands that start with <code>@ cmd</code> will cause the command to be
+Silenced during builds. The Space after <code>@</code> is required.</li>
+<li>No variable substitution presently supported and no automatic
+variables such as <code>$@</code> are supported</li>
+</ul>
+
+<p>
+Generally Bakefiles are a subset of Makefiles so <code>make</code> should work
+for Bakefiles (e.g. <code>make -f Bakefile</code> should build) The output of
+<code>bake</code> will be a little different than <code>make</code> but accomplish the same
+task. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf1dc97e" class="outline-3">
+<h3 id="orgf1dc97e"><span class="section-number-3">3.2</span> Data Structures</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+There are 3 central data structures used in Bake which are found in
+the header <code>bake.h</code>.
+</p>
+<dl class="org-dl">
+<dt><code>cmd_t</code></dt><dd>Encodes information about a single command like <code>gcc -o myprog
+  x.o y.o</code> from a Bakefile.</dd>
+<dt><code>rule_t</code></dt><dd>Encodes an entire rule from a Bakefile including its
+target, dependencies, and an array of <code>cmd_t</code> structs for each of
+the commands to run.</dd>
+<dt><code>bake_t</code></dt><dd>Encodes the entire contents of a Bakefile. It's main
+feature is an array of <code>rule_t</code> structs and a <b>String Table</b>: a
+single large string with other parts of the data structure pointing
+into it for their own strings.</dd>
+</dl>
+
+<p>
+It is worthwhile spend some time acquainting yourself with some of the
+documentation on these structs provided in <code>bake.h</code>. Refer back to the
+header often as you need to recall parts of the data.
+</p>
+
+<p>
+<b>DESIGN NOTE</b>: The data structures are designed as a compromise
+between minimizing the need to <code>malloc()</code> memory while still providing
+reasonable flexibility to handle Bakefiles. One notable tradeoff that
+will affect your code
+</p>
+<ul class="org-ul">
+<li>The <code>rules[]</code> array in <code>bake_t</code> is <code>malloc()'d</code> so can grow via
+re-allocation. It therefore tracks both <code>rule_capcity</code> (size of the
+array) and <code>rule_count</code>, the number of elements in the array.</li>
+<li>Other arrays are fixed length: <code>deps[]</code> and <code>cmds[]</code> in <code>rule_t</code> and
+<code>tokens[]</code> in <code>cmd_t</code> have a fixed size. In a production setting,
+one might reconsider this but using fixed sizes here simplifies much
+of the parsing difficulty by pre-allocating space for these arrays.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgaed808c" class="outline-3">
+<h3 id="orgaed808c"><span class="section-number-3">3.3</span> Outline of <code>bake_funcs.c</code></h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+The primary implementation files required are <code>bake_funcs.c</code> and
+<code>bake_main.c</code>.  As the name suggests, <code>bake_main.c</code> will contain the
+<code>main()</code> function and is part of the final problem. 
+</p>
+
+<p>
+<code>bake_funcs.c</code> has a number of "service" functions which manipulate
+Bake data. Each of these is required and will be tested. The outline
+and some brief documentation for them is below.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// bake_funcs.c: required service functions for handling of Bakefiles
+
+////////////////////////////////////////////////////////////////////////////////
+// PROBLEM 1
+////////////////////////////////////////////////////////////////////////////////
+
+char *slurp_file_efficient(char *fname);
+// PROBLEM 1: Uses combination of stat() and read() to efficiently
+// read in the entire contents of a file into a malloc()'d block of
+// memory, null terminates it (\0). Returns a pointer to the file data
+// or NULL if the file could not be opened.
+
+rule_t *bake_target_rule(bake_t *bake, char *targname);
+// PROBLEM 1: Searches bake for a rule with a target that equals
+// `targname`. If found, returns a pointer to that rule. Otherwise
+// returns NULL if no rule with target `targname` exists.
+//
+// DESIGN NOTE: The curent design makes use of linear search for
+// target location, O(rule_count) for each lookup. Maintainting a hash
+// table of target-&gt;rule key/vals would allow O(1) lookup for rules
+// with given target names.
+
+rule_t *bake_add_empty_rule(bake_t *bake);
+// PROBLEM 1: Modifies `bake` to add a new, empty rule to it and
+// returns a pointer to that rule. If bake-&gt;rules[] is full
+// (rule_capacity and rule_count are equal) doubles the size of
+// rules[] via realloc() in order create room at its end for the new
+// empty rule. Returns a pointer to the new empty rule.
+//
+// CAUTION: Calling this function MAY invalidate any pointers to
+// existing rules as the array that houses the rules may move.
+// This sequence is dangerous:
+//   rule_t *rule  = bake_target_rule(bake, "sometarget");
+//   rule_t *empty = bake_add_empty_rule(bake);
+//   rule may now point to de-allocated memory
+
+int bake_add_implicit_rules(bake_t *bake);
+// PROBLEM 1: Iterate over all rules appending implicit rules for any
+// dependency that is not an explicit target. New rules added in this
+// way are marked with the RULE_IMPLICIT_BIT.
+//
+// CAUTION: Since bake-&gt;rules[] may expand, care must be taken when
+// referencing rules in this function to avoid inadvertently derefing
+// a pointer to free()'d memory.
+
+void bake_print_cmd(cmd_t *cmd);
+// PROBLEM 1: If the SILENCE_BIT is set, does nothing and immediately
+// returns. Otherwise, prints the given command token by token. If I/O
+// redirects are indicated by the fields of the command, prints the
+// after all tokens with "&lt; infile" for input followed by "&gt; outfile"
+// if present. This function is used to print out commands in
+// bake_execute_cmd().
+
+////////////////////////////////////////////////////////////////////////////////
+// PROBLEM 2
+////////////////////////////////////////////////////////////////////////////////
+
+int bake_execute_cmd(cmd_t *cmd);
+// PROBLEM 2: Called during bake_do_update(). Prints the command using
+// bake_print_cmd() unless its SILENCE bit is set. fork()'s a child
+// process which exec's the command specified in cmd-&gt;tokens.  Sets up
+// I/O redirection in child process if indicated by cmd flags and
+// fields. Uses a wait() call to wait until the child process is
+// done. If the child completes normally, its exit code is passed up,
+// 0 or non-zero. If the child process fails to complete normally or
+// prints an error message with line number of command
+// CMD_NONSTAND_EXIT. Non-zero returns from this function will usually
+// be handled in a build by cancelling the build whil 0 return will
+// cause the build to prceed and execute subsequent commands.
+//
+// During Input and Output redirection, if the requrested files cannot
+// be opened, the child process exits with code CMD_FAIL_INPREDI or
+// CMD_FAIL_OUTREDI. Additionally, if the child fails to exec() a
+// command, CMD_FAIL_EXEC is used as its return code. All of these are
+// non-zero and trigger builds to fail. In the above failure cases,
+// prints one of the below error messages appropriate to the error.
+// 
+// perror("ERROR: can't open file for output")
+// perror("ERROR: can't open file for output")
+// perror("ERROR: job failed to exec");
+
+////////////////////////////////////////////////////////////////////////////////
+// PROBLEM 3
+////////////////////////////////////////////////////////////////////////////////
+
+int bake_set_updates(bake_t *bake, char *targname);
+// PROBLEM 3: Starting at `targname`, recurses down the
+// target/dependency DAG setting the UPDATE bit in rule_flags to
+// indicate whether a target requires updates. Makes use of the
+// CLEAR_BIT(), CHECK_BIT(), and SET_BIT() macros when dealing with
+// bit-manipulations. For a given rule, first visits all its
+// dependencies to check if they require updates via recursion. Then
+// determines if `targname` requires an update. The conditions that
+// require an update are described in detail in the program
+// specification and shoudl be consulted while implementing this
+// function. Returns 1 if target needs to be updated so associated
+// rule commands should be run later. Returns 0 if the named target
+// does not need to be updated. Prints an error if targname is not
+// found and returns -1. If any dependency returns -1, an error
+// ocurred lower down the DAG. In case, nothing is printed nothing and
+// -1 is returned up the nested recursion.
+
+int bake_do_updates(bake_t *bake, char *targname);
+// PROBLEM 3: Starting at `targname`, run commands if the UPDATE bit
+// is set. Before running commands associated with `targname`,
+// recursively visit dependencies and if their UPDATE bit is set, run
+// their commands first. Returns number of rules that were updated or
+// -1 to indicate an error ocurred while running commands.
+
+////////////////////////////////////////////////////////////////////////////////
+// PROBLEM 4
+////////////////////////////////////////////////////////////////////////////////
+
+int bake_cmd_postprocess(bake_t *bake, cmd_t *cmd);
+// PROBLEM 4: Examines cmd-&gt;tokens to set cmd-&gt;flags and a few other
+// fields. Used to post-process the raw tokens of a command. Likely
+// uses the utility function array_shift() to ease the re-arrangment
+// of arrays.
+// 
+// 1. If tokens[0] = "@", eliminates this token by shifting all tokens
+// over and sets the SILENCED bit
+// 
+// 2. If tokens[i] = "&lt;", input redirection is desired; if tokens[i+1]
+// is not NULL, returns -1. Otherwise sets the INPREDI bit and
+// input_redirect field to tokens[i+1]. Then shifts all tokens over to
+// eliminate tokens[i] and tokens[i+1].
+// 
+// 3. If tokens[i] = "&gt;", output redirection is desired and performs
+// similar operations to #2 with the OUTREDI flag and output_redirect
+// fields.
+//
+// Correctly handles any order of "&lt; input" / "&gt; output" and other
+// tokens (ex: output redirection may appear first followed by normal
+// tokens followed by input redirection)
+// 
+// If multiple "&lt;" or "&gt;" tokens appear, the behavior of this function
+// is unspecified: it may return an error, segfault, or behave randomly.
+// 
+// Returns 0 on succesful completion.
+//
+// DESIGN NOTE: This function must be called prior to any commands
+// being run. The ideal location is during parsing to modify commands
+// as a bake_t structure is built. However, this functionality is
+// separated out to enable future functionality such as variable
+// substitution to be added to commands and tested separately from
+// parsing. Any additional context needed for such things will be part
+// of the 'bake' parameter (e.g. may contain a map of variable
+// names/values for substitutions).
+
+void bake_post_process(bake_t *bake);
+// PROBLEM 4: Applies postprocessing operations to the bake after
+// loading it from a file. Currently only iterates over all rules and
+// applies bake_cmd_postprocess() to each of their commands.
+//
+// DESIGN NOTE: This function is where additional operations could be
+// used to further modify the bakefile such as performing variable
+// substitutions on rules / targets, including other bakefiles. etc.
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org001096e" class="outline-3">
+<h3 id="org001096e"><span class="section-number-3">3.4</span> Provided Utility Functions</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+The emphasis of the project is on utilizing some system calls to
+achieve an interesting effect. To that end, some code is provided to
+focus attention on these aspects of the project. Most of these
+functions will be used by code in <code>bake_funcs.c</code> or the <code>main()</code>
+function so consult these enough to know how to use them.
+</p>
+
+<p>
+Notable functions are:
+</p>
+<dl class="org-dl">
+<dt><code>Dprintf()</code></dt><dd>Print a debugging message which is only shown if an
+environment variable is set. Extremely useful during debugging and
+alleviates the need to remove debugging messages after the fact.</dd>
+
+<dt><code>array_shift()</code></dt><dd>moves around elements in an array to "delete"
+one. Useful when post-processing the tokens in a <code>cmd_t</code>.</dd>
+
+<dt><code>bake_create_from_file()</code></dt><dd>reads the contents of a file and create
+a <code>bake_t</code> from it. This is tricky code worth studying but students
+are not required to modify it in any way, just use it in <code>main()</code> to
+load a specified file then post-process the data structure before
+operating on it. The function makes use <code>slurp_file_efficient()</code>
+which students will need to write.</dd>
+</dl>
+
+<div class="org-src-container">
+<pre class="src src-c">
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org850b687" class="outline-3">
+<h3 id="org850b687"><span class="section-number-3">3.5</span> Sample Usage</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+Below is an example use of the complete <code>bake</code> program to perform
+make-like activities in the provided <code>data/</code> directory.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span class="linenr">  1: </span># Demonstration of bake 
+<span class="linenr">  2: </span>&gt;&gt; cd p4-code
+<span class="linenr">  3: </span>
+<span class="linenr">  4: </span>&gt;&gt; make bake
+<span class="linenr">  5: </span>gcc -Wall -Wno-comment -Werror -g -Wno-format-security -c bake_funcs.c
+<span class="linenr">  6: </span>gcc -Wall -Wno-comment -Werror -g -Wno-format-security -c bake_main.c
+<span class="linenr">  7: </span>gcc -Wall -Wno-comment -Werror -g -Wno-format-security -c bake_util.c
+<span class="linenr">  8: </span>gcc -Wall -Wno-comment -Werror -g -Wno-format-security -o bake bake_funcs.o bake_main.o bake_util.o
+<span class="linenr">  9: </span>
+<span class="linenr"> 10: </span>&gt;&gt; cd data
+<span class="linenr"> 11: </span>
+<span class="linenr"> 12: </span>&gt;&gt; cat Bakefile1                          # show a sample Bakefile
+<span class="linenr"> 13: </span># this is a comment
+<span class="linenr"> 14: </span>
+<span class="linenr"> 15: </span>hello : hello.c
+<span class="linenr"> 16: </span>      gcc -o hello hello.c
+<span class="linenr"> 17: </span>
+<span class="linenr"> 18: </span># this is the end of the Bakefile
+<span class="linenr"> 19: </span>
+<span class="linenr"> 20: </span>&gt;&gt; ../bake -f Bakefile1                   # use bake to build the targets
+<span class="linenr"> 21: </span>bake: updating 'hello' via 1 command(s)
+<span class="linenr"> 22: </span>gcc -o hello hello.c 
+<span class="linenr"> 23: </span>bake complete, 1 update(s) performed
+<span class="linenr"> 24: </span>
+<span class="linenr"> 25: </span>&gt;&gt; ./hello                                # run the built program
+<span class="linenr"> 26: </span>Hello world!
+<span class="linenr"> 27: </span>
+<span class="linenr"> 28: </span>&gt;&gt; ../bake -f Bakefile1                   # build again but there's no action needed
+<span class="linenr"> 29: </span>bake: file 'hello' is up to date
+<span class="linenr"> 30: </span>
+<span class="linenr"> 31: </span>&gt;&gt; rm hello                               # delete hello program
+<span class="linenr"> 32: </span>
+<span class="linenr"> 33: </span>&gt;&gt; cp Bakefile1 Bakefile                  # copy to the default name 'Bakefile'
+<span class="linenr"> 34: </span>
+<span class="linenr"> 35: </span>&gt;&gt; ../bake                                # build using default 'Bakefile'
+<span class="linenr"> 36: </span>bake: updating 'hello' via 1 command(s)
+<span class="linenr"> 37: </span>gcc -o hello hello.c 
+<span class="linenr"> 38: </span>bake complete, 1 update(s) performed
+<span class="linenr"> 39: </span>
+<span class="linenr"> 40: </span>&gt;&gt; ../bake                                # again, rebuilding need take no action
+<span class="linenr"> 41: </span>bake: file 'hello' is up to date
+<span class="linenr"> 42: </span>
+<span class="linenr"> 43: </span>&gt;&gt; cat Bakefile3                          # show a more complex Bakefile
+<span class="linenr"> 44: </span># this is a leading comment
+<span class="linenr"> 45: </span>
+<span class="linenr"> 46: </span># this target uses the program that is built
+<span class="linenr"> 47: </span># and runs it printing messages around it
+<span class="linenr"> 48: </span>demo : hello bye
+<span class="linenr"> 49: </span>	@ echo Running programs
+<span class="linenr"> 50: </span>	./hello
+<span class="linenr"> 51: </span>	./bye
+<span class="linenr"> 52: </span>	@ echo Done running programs
+<span class="linenr"> 53: </span>
+<span class="linenr"> 54: </span>all : hello bye
+<span class="linenr"> 55: </span>
+<span class="linenr"> 56: </span># this is program 1 / 2
+<span class="linenr"> 57: </span>hello : hello.o
+<span class="linenr"> 58: </span>	gcc -o hello hello.o
+<span class="linenr"> 59: </span>
+<span class="linenr"> 60: </span>hello.o : hello.c
+<span class="linenr"> 61: </span>	gcc -c hello.c
+<span class="linenr"> 62: </span>
+<span class="linenr"> 63: </span># this is program 2 / 2
+<span class="linenr"> 64: </span>bye : bye.o
+<span class="linenr"> 65: </span>	gcc -o bye bye.o
+<span class="linenr"> 66: </span>
+<span class="linenr"> 67: </span>bye.o : bye.c
+<span class="linenr"> 68: </span>	gcc -c bye.c
+<span class="linenr"> 69: </span>
+<span class="linenr"> 70: </span># this target removes built files
+<span class="linenr"> 71: </span>clean :
+<span class="linenr"> 72: </span>	rm -f hello.o bye.o hello bye
+<span class="linenr"> 73: </span>
+<span class="linenr"> 74: </span># END OF THE Bakefile3
+<span class="linenr"> 75: </span>
+<span class="linenr"> 76: </span>&gt;&gt; ../bake -f Bakefile3 clean             # clean up any targets that exist
+<span class="linenr"> 77: </span>bake: updating 'clean' via 1 command(s)
+<span class="linenr"> 78: </span>rm -f hello.o bye.o hello bye 
+<span class="linenr"> 79: </span>bake complete, 1 update(s) performed
+<span class="linenr"> 80: </span>
+<span class="linenr"> 81: </span>&gt;&gt; ../bake -f Bakefile3 all               # build with a named target 'all'
+<span class="linenr"> 82: </span>bake: updating 'hello.o' via 1 command(s)
+<span class="linenr"> 83: </span>gcc -c hello.c 
+<span class="linenr"> 84: </span>bake: updating 'hello' via 1 command(s)
+<span class="linenr"> 85: </span>gcc -o hello hello.o 
+<span class="linenr"> 86: </span>bake: updating 'bye.o' via 1 command(s)
+<span class="linenr"> 87: </span>gcc -c bye.c 
+<span class="linenr"> 88: </span>bake: updating 'bye' via 1 command(s)
+<span class="linenr"> 89: </span>gcc -o bye bye.o 
+<span class="linenr"> 90: </span>bake: updating 'all' via 0 command(s)
+<span class="linenr"> 91: </span>bake complete, 5 update(s) performed
+<span class="linenr"> 92: </span>
+<span class="linenr"> 93: </span>&gt;&gt; ../bake -f Bakefile3                   # build with the default 1st target 'demo'
+<span class="linenr"> 94: </span>bake: updating 'demo' via 4 command(s)
+<span class="linenr"> 95: </span>Running programs
+<span class="linenr"> 96: </span>./hello 
+<span class="linenr"> 97: </span>Hello world!
+<span class="linenr"> 98: </span>./bye 
+<span class="linenr"> 99: </span>See you, space cowboy
+<span class="linenr">100: </span>Done running programs
+<span class="linenr">101: </span>bake complete, 1 update(s) performed
+<span class="linenr">102: </span>
+<span class="linenr">103: </span>&gt;&gt; ../bake -f Bakefile3 clean             # clean up the build
+<span class="linenr">104: </span>bake: updating 'clean' via 1 command(s)
+<span class="linenr">105: </span>rm -f hello.o bye.o hello bye 
+<span class="linenr">106: </span>bake complete, 1 update(s) performed
+<span class="linenr">107: </span>
+<span class="linenr">108: </span>&gt;&gt; ../bake -f Bakefile3 bye               # build the target 'bye'
+<span class="linenr">109: </span>bake: updating 'bye.o' via 1 command(s)
+<span class="linenr">110: </span>gcc -c bye.c 
+<span class="linenr">111: </span>bake: updating 'bye' via 1 command(s)
+<span class="linenr">112: </span>gcc -o bye bye.o 
+<span class="linenr">113: </span>bake complete, 2 update(s) performed
+<span class="linenr">114: </span>
+<span class="linenr">115: </span>&gt;&gt; ./bye                                  # run bye program
+<span class="linenr">116: </span>See you, space cowboy
+<span class="linenr">117: </span>
+<span class="linenr">118: </span>&gt;&gt; ../bake -f Bakefile3 no-target         # show the behavior on a missing target
+<span class="linenr">119: </span>No rule to create target 'no-target'
+<span class="linenr">120: </span>bake failed
+<span class="linenr">121: </span>
+<span class="linenr">122: </span>&gt;&gt; ../bake -f Bakefile3 all               # build everything
+<span class="linenr">123: </span>bake: updating 'hello.o' via 1 command(s)
+<span class="linenr">124: </span>gcc -c hello.c 
+<span class="linenr">125: </span>bake: updating 'hello' via 1 command(s)
+<span class="linenr">126: </span>gcc -o hello hello.o 
+<span class="linenr">127: </span>bake: updating 'all' via 0 command(s)
+<span class="linenr">128: </span>bake complete, 3 update(s) performed
+<span class="linenr">129: </span>
+<span class="linenr">130: </span>&gt;&gt; ../bake -f Bakefile3 all               # verify no updates are needed
+<span class="linenr">131: </span>bake: nothing to be done for target 'all'
+<span class="linenr">132: </span>
+<span class="linenr">133: </span>&gt;&gt; touch -d '-1min' hello hello.o         # change timestamp on program / .o
+<span class="linenr">134: </span>&gt;&gt; touch hello.c                          # to be older than the source file
+<span class="linenr">135: </span>
+<span class="linenr">136: </span>&gt;&gt; ../bake -f Bakefile3 all               # bake deteces the need to update hello but not bye
+<span class="linenr">137: </span>bake: updating 'hello.o' via 1 command(s)
+<span class="linenr">138: </span>gcc -c hello.c 
+<span class="linenr">139: </span>bake: updating 'hello' via 1 command(s)
+<span class="linenr">140: </span>gcc -o hello hello.o 
+<span class="linenr">141: </span>bake: updating 'all' via 0 command(s)
+<span class="linenr">142: </span>bake complete, 3 update(s) performed
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org380ef93" class="outline-2">
+<h2 id="org380ef93"><span class="section-number-2">4</span> <b>Problem 1</b>: Service Functions for Bake</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+The functions here are meant to acquaint students with some of the
+data types and functionalities required in Bake. None of the functions
+is terribly long and should be considered a "warm-up" for later work.
+</p>
+</div>
+
+<div id="outline-container-orgbc35d5b" class="outline-3">
+<h3 id="orgbc35d5b"><span class="section-number-3">4.1</span> Slurping Files</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Code is provided in <code>bake_create_from_file()</code> to parse a Bakefile and
+create a <code>bake_t</code> from its contents. This requires that the entire
+file be loaded into memory via a "slurp". This will be provided by the
+following function.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">char *slurp_file_efficient(char *fname);
+// PROBLEM 1: Uses combination of stat() and read() to efficiently
+// read in the entire contents of a file into a malloc()'d block of
+// memory, null terminates it (\0). Returns a pointer to the file data
+// or NULL if the file could not be opened.
+</pre>
+</div>
+<p>
+As the documentation suggests, the goal here is efficiency. 
+</p>
+<ul class="org-ul">
+<li>Make use of the <code>stat()</code> system call to determine the size of the
+file in bytes and use a single <code>malloc()</code> to allocate enough space
+for it</li>
+<li>Use an <code>open()</code> call and as few <code>read()</code> calls as possible to read
+the entire contents of the file into the allocated memory</li>
+</ul>
+
+<p>
+While in many cases it is not efficient to read the entire contents of
+a file into memory, Bakefiles tend to a have a memory footprint that
+is similar to the int-memory data structure reflecting the file
+contents so this approach is justified.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1d83682" class="outline-3">
+<h3 id="org1d83682"><span class="section-number-3">4.2</span> Looking up and Adding Rules</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+The main data of Bakefiles is stored in the <code>bake_t</code> <code>rules[]</code>
+array. Two functions are needed to interact with this array sensibly:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">rule_t *bake_target_rule(bake_t *bake, char *targname);
+// PROBLEM 1: Searches bake for a rule with a target that equals
+// `targname`. If found, returns a pointer to that rule. Otherwise
+// returns NULL if no rule with target `targname` exists.
+//
+// DESIGN NOTE: The curent design makes use of linear search for
+// target location, O(rule_count) for each lookup. Maintainting a hash
+// table of target-&gt;rule key/vals would allow O(1) lookup for rules
+// with given target names.
+
+rule_t *bake_add_empty_rule(bake_t *bake);
+// PROBLEM 1: Modifies `bake` to add a new, empty rule to it and
+// returns a pointer to that rule. If bake-&gt;rules[] is full
+// (rule_capacity and rule_count are equal) doubles the size of
+// rules[] via realloc() in order create room at its end for the new
+// empty rule. Returns a pointer to the new empty rule.
+//
+// CAUTION: Calling this function MAY invalidate any pointers to
+// existing rules as the array that houses the rules may move.
+// This sequence is dangerous:
+//   rule_t *rule  = bake_target_rule(bake, "sometarget");
+//   rule_t *empty = bake_add_empty_rule(bake);
+//   rule may now point to de-allocated memory
+</pre>
+</div>
+<p>
+The first function allows a rule associated with a target to be
+located programmatically. As the Design Note mentions, adjusting to
+use a hash table would make the overall operation more efficient but a
+simple linear search is sufficient for now.
+</p>
+
+<p>
+The second function allows expansion of the array to a new rule. This
+is used during parsing and when adding Implicit rules in the next
+function.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1a85c7b" class="outline-3">
+<h3 id="org1a85c7b"><span class="section-number-3">4.3</span> Adding Implicit Rules</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Rules that appear in Bakefiles are Explicit in that they are written
+down. For example there are 3 rules in the below Bakefile.
+</p>
+<div class="org-src-container">
+<pre class="src src-makefile">progA : src1.o src2.o		# EXPLICIT RULE 1
+	gcc src1.o src2.o
+
+src1.o : src1.c			# EXPLICIT RULE 2
+	gcc -c src1.c
+
+src2.o : src2.c			# EXPLICIT RULE 3
+	gcc -c src2.c
+</pre>
+</div>
+<p>
+However, there is also an <b>Implicit Rule</b> that the files <code>src1.c</code> and
+<code>src2.c</code> must be present. If they are not, builds will fail.
+</p>
+
+<p>
+To make the data <code>bake_t</code> structure more regular, these Implicit rules
+will be added. This is somewhat equivalent to re-writing the Bakefile
+above as
+</p>
+<div class="org-src-container">
+<pre class="src src-makefile">progA : src1.o src2.o		# EXPLICIT RULE 1
+	gcc src1.o src2.o
+
+src1.o : src1.c			# EXPLICIT RULE 2
+	gcc -c src1.c
+
+src2.o : src2.c			# EXPLICIT RULE 3
+	gcc -c src2.c
+
+src1.c :			# IMPLICIT RULE 4
+
+src2.c :			# IMPLICIT RULE 5
+</pre>
+</div>
+<p>
+so that the Bakefile actually has 5 rules. 
+</p>
+
+<p>
+Implicit rules have no dependencies and are marked with a special
+<code>RULE_IMPLICIT_BIT</code> in their <code>rule_flags</code> field. This allows them to
+behave slightly differently during builds: implicit rules always
+succeed unless the file named as the target is missing.
+</p>
+
+<p>
+When working with bits in the flag fields of structs, you are
+encouraged to use the following 3 macros which are provided in the
+<code>bake.h</code> header. This will make your code more readable and less
+error-prone. 
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// Macros to deal with bits in flags
+#define SET_BIT(flag,   bitmask) (flag |=  bitmask)
+#define CLEAR_BIT(flag, bitmask) (flag &amp;= ~bitmask)
+#define CHECK_BIT(flag, bitmask) (flag &amp;   bitmask)
+</pre>
+</div>
+
+
+<p>
+When a Bakefile is loaded, initially it only has Explicit rules in it.
+The following required will be called after loading to add Implicit
+rules.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">int bake_add_implicit_rules(bake_t *bake);
+// PROBLEM 1: Iterate over all rules appending implicit rules for any
+// dependency that is not an explicit target. New rules added in this
+// way are marked with the RULE_IMPLICIT_BIT.
+//
+// CAUTION: Since bake-&gt;rules[] may expand, care must be taken when
+// referencing rules in this function to avoid inadvertently derefing
+// a pointer to free()'d memory.
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org40753eb" class="outline-3">
+<h3 id="org40753eb"><span class="section-number-3">4.4</span> Printing Commands</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+Aside from <code>rule_t</code> structs, the other major struct is <code>cmd_t</code>. This
+struct encodes a command to run including aspects such as
+</p>
+<ul class="org-ul">
+<li><p>
+The <b>Tokens</b> for the command: a command like 
+</p>
+<pre class="example">
+gcc -o program -g file1.c file2.c
+</pre>
+
+<p>
+would have a <code>tokens[]</code> array that looks like
+</p>
+<pre class="example">
+tokens[] = {"gcc"","-o","program","-g","file1.c","file2.c",NULL}
+</pre>
+
+<p>
+Tokens will serve the role of <code>argv[]</code> when <code>exec()</code>'ing the
+command. 
+</p></li>
+<li>Whether or not the command is "silenced": started with the <code>@</code>
+symbol in the source file which suppresses printing. This is in
+<code>cmd_flags</code> as presence/absence of <code>CMD_SILENCE_BIT</code>.</li>
+<li>Whether to redirect input or output for the command. These attributes
+show up in the fields <code>input_redirect / output_redirect</code> and within
+<code>cmd_flags</code>.</li>
+<li>The source file line the command came from, useful when reporting
+errors.</li>
+</ul>
+
+<p>
+Commands are printed when the are run unless silenced and the
+following function is responsible for formatting them.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">void bake_print_cmd(cmd_t *cmd);
+// PROBLEM 1: If the SILENCE_BIT is set, does nothing and immediately
+// returns. Otherwise, prints the given command token by token. If I/O
+// redirects are indicated by the fields of the command, prints the
+// after all tokens with "&lt; infile" for input followed by "&gt; outfile"
+// if present. This function is used to print out commands in
+// bake_execute_cmd().
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd5eca4c" class="outline-2">
+<h2 id="orgd5eca4c"><span class="section-number-2">5</span> <b>Problem 2</b>: Executing Commands</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+It is typical during builds to run commands that may compile code,
+transform inputs, or run tests. The <code>cmd_t</code> struct encodes a single
+command to run. It is used to execute the command and then check the
+results.
+</p>
+<ul class="org-ul">
+<li>If the command is successful, further commands may be run and
+dependent targets can be updated</li>
+<li>If the command fails, then it is likely the build cannot
+proceed. Any dependent targets should be notified that they NOT run
+their commands.</li>
+</ul>
+
+<p>
+The central function of this problem executes commands.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">int bake_execute_cmd(cmd_t *cmd);
+// PROBLEM 2: Called during bake_do_update(). Prints the command using
+// bake_print_cmd() unless its SILENCE bit is set. fork()'s a child
+// process which exec's the command specified in cmd-&gt;tokens.  Sets up
+// I/O redirection in child process if indicated by cmd flags and
+// fields. Uses a wait() call to wait until the child process is
+// done. If the child completes normally, its exit code is passed up,
+// 0 or non-zero. If the child process fails to complete normally or
+// prints an error message with line number of command
+// CMD_NONSTAND_EXIT. Non-zero returns from this function will usually
+// be handled in a build by cancelling the build whil 0 return will
+// cause the build to prceed and execute subsequent commands.
+//
+// During Input and Output redirection, if the requrested files cannot
+// be opened, the child process exits with code CMD_FAIL_INPREDI or
+// CMD_FAIL_OUTREDI. Additionally, if the child fails to exec() a
+// command, CMD_FAIL_EXEC is used as its return code. All of these are
+// non-zero and trigger builds to fail. In the above failure cases,
+// prints one of the below error messages appropriate to the error.
+// 
+// perror("ERROR: can't open file for output")
+// perror("ERROR: can't open file for output")
+// perror("ERROR: job failed to exec");
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgcb53403" class="outline-3">
+<h3 id="orgcb53403"><span class="section-number-3">5.1</span> Fork / Exec / Wait</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+As the documentation indicates, the central idea of the function is to
+<code>fork()</code> a child process to execute the command.
+</p>
+
+<p>
+The child will <code>exec()</code> the command described in the <code>cmd_t tokens[]</code>
+array.  <code>tokens[0]</code> can be used as a command name like <code>gcc</code> with the
+entirety of <code>tokens[]</code> comprising an <code>argv[]</code> for the command to be
+executed.
+</p>
+
+<p>
+The parent process <code>bake</code> will <code>wait()</code> for this child to finish its
+execution then check the status of its completion. If the child exists
+normally and has a 0-return code, it will have completed successfully
+and the function returns 0. If things go wrong, a non-zero value is
+returned.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb9047e3" class="outline-3">
+<h3 id="orgb9047e3"><span class="section-number-3">5.2</span> Setting Up I/O Redirection</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+If the fields / flags for the command indicate as much, Input and/or
+Output redirection for the command should be set up.  This needs to
+occur <b>only in the child process</b> and should happen prior to an
+<code>exec()</code> call.
+</p>
+<ul class="org-ul">
+<li>Input redirection will alter Standard Input to read from a file
+named in <code>cmd-&gt;input_redirect</code></li>
+<li>Out redirection will alter Standard Output to write to a file
+named in <code>cmd-&gt;output_redirect</code></li>
+</ul>
+
+<p>
+The <code>dup2()</code> system call is useful for this and should be reviewed as
+it has been presented in lab and lecture.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5e46ca7" class="outline-3">
+<h3 id="org5e46ca7"><span class="section-number-3">5.3</span> Failure Detection</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+There are a number of things that can go wrong in a child process that
+need to be detected and reported. Specific error messages and return
+codes are required for each of the following situations. Each
+condition is something that the child process may detect. When these
+arise, the child should print the indicated message with <code>perror()</code>
+and call the <code>exit(ERRCODE)</code> function to immediately exit with the
+specified Error Code. The parent process will pass this Error Exit
+Code up as its return value. In the case that a child command has a
+non-standard exit (e.g. segfault) this will be detected in the parent
+which does not print anything but does return the indicated error code.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Situation</th>
+<th scope="col" class="org-left">In</th>
+<th scope="col" class="org-left">Error Code</th>
+<th scope="col" class="org-left"><code>perror()</code> Message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Input Redirection Fails</td>
+<td class="org-left">Child</td>
+<td class="org-left"><code>CMD_FAIL_INPREDI</code></td>
+<td class="org-left"><code>ERROR: can't open file for input</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Output Redirection Fails</td>
+<td class="org-left">Child</td>
+<td class="org-left"><code>CMD_FAIL_OUTREDI</code></td>
+<td class="org-left"><code>ERROR: can't open file for output</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Exec Fails</td>
+<td class="org-left">Child</td>
+<td class="org-left"><code>CMD_FAIL_EXEC</code></td>
+<td class="org-left"><code>ERROR: command failed to exec</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Nonstandard Child Exit Detected</td>
+<td class="org-left">Parent</td>
+<td class="org-left"><code>CMD_NONSTAND_EXIT</code></td>
+<td class="org-left">None</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org0456f82" class="outline-2">
+<h2 id="org0456f82"><span class="section-number-2">6</span> <b>Problem 3</b>: Walking the Bake DAG</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+This section will be completed soon.
+</p>
+</div>
+<div id="outline-container-org3895061" class="outline-3">
+<h3 id="org3895061"><span class="section-number-3">6.1</span> Recursing on bake Structs</h3>
+</div>
+<div id="outline-container-orgc654dd5" class="outline-3">
+<h3 id="orgc654dd5"><span class="section-number-3">6.2</span> Dealing with Files</h3>
+<div class="outline-text-3" id="text-6-2">
+</div>
+</div>
+<div id="outline-container-orgcd17213" class="outline-3">
+<h3 id="orgcd17213"><span class="section-number-3">6.3</span> Setting Update Flags</h3>
+</div>
+<div id="outline-container-org75d6d08" class="outline-3">
+<h3 id="org75d6d08"><span class="section-number-3">6.4</span> Performing Updates</h3>
+</div>
+</div>
+
+<div id="outline-container-org564f22a" class="outline-2">
+<h2 id="org564f22a"><span class="section-number-2">7</span> <b>Problem 4</b>: Postprocessing and Main</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+This section will be completed soon.
+</p>
+</div>
+<div id="outline-container-org6da581d" class="outline-3">
+<h3 id="org6da581d"><span class="section-number-3">7.1</span> Post Processing</h3>
+<div class="outline-text-3" id="text-7-1">
+</div>
+</div>
+
+<div id="outline-container-org12a1f13" class="outline-3">
+<h3 id="org12a1f13"><span class="section-number-3">7.2</span> Main Function</h3>
+<div class="outline-text-3" id="text-7-2">
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1d22297" class="outline-2 grading 100">
+<h2 id="org1d22297"><span class="section-number-2">8</span> Grading Criteria&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="100">100</span></span></h2>
+<div class="outline-text-2" id="text-8">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">AUTOMATED TESTS: 1 point per test</td>
+</tr>
+
+<tr>
+<td class="org-right">50</td>
+<td class="org-left">TOTAL</td>
+</tr>
+
+<tr>
+<td class="org-right">15</td>
+<td class="org-left">Problem 1: <code>make test-prob1</code> runs tests from <code>test_prob1.org</code> for correctness</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Problem 2: <code>make test-prob2</code> runs tests from <code>test_prob2.org</code> for correctness</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Problem 3: <code>make test-prob3</code> runs tests from <code>test_prob3.org</code> for correctness</td>
+</tr>
+
+<tr>
+<td class="org-right">15</td>
+<td class="org-left">Problem 4: <code>make test-prob3</code> runs tests from <code>test_prob4.org</code> for correctness</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><i>Note: Problem 3 &amp; 4 tests are not part of the initial project release.</i></td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">MANUAL INSPECTION</td>
+</tr>
+
+<tr>
+<td class="org-right">50</td>
+<td class="org-left">TOTAL</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Problem 1 <code>bake_funcs.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>slurp_file_efficient()</code>: Clear use of <code>stat</code> to determine size of file and single <code>malloc()</code> used</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>slurp_file_efficient()</code>: Detecting failure to <code>open()</code> files and reporting appropriately</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>bake_target_rule()</code>: Iteration over <code>bake_t</code> data structure, use of <code>strcmp()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>bake_add_empty_rule()</code>: Identifies full array and uses <code>realloc()</code> to double size of array</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>bake_add_add_implicit_rule()</code>: Correct iteration across rules array and dependencies for rules</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>bake_add_add_implicit_rule()</code>: Use of <code>bake_add_empty_rule()</code> function to add rules</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>bake_add_add_implicit_rule()</code>: Use of and <code>SET_BIT()</code> macro to adjust implicit bit in flags</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>bake_print_cmd()</code>: Use of and <code>CHECK_BIT()</code> macro to inspect <code>SILENCE_BIT</code>, clear code to print I/O redirects</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">CODE STYLE</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Sane indentation, reasonable variable naming</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Presence of commentary to guide readers through complex code</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Problem 2 <code>bake_funcs.c</code> <code>bake_execute_cmd()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of <code>bake_print_cmd()</code> to output command if needed</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of <code>fork()</code> to create a child process, code split between parent/child</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Parent uses <code>wait() / waitpid()</code> to block until child is done, identifies normal/abnormal child exit</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Child sets up input/output redirection via <code>dup2()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Chile uses an <code>exec()</code>-family function to execute the given command</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Child does error checking for failure of I/O redirection or exec and returns appropriate Exit Codes</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">CODE STYLE</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Sane indentation, reasonable variable naming</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Presence of commentary to guide readers through complex code</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Presence of commentary to guide readers through complex code</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Problem 3 <code>bake_funcs.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">TBD</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left">CODE STYLE</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Sane indentation, reasonable variable naming</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Presence of commentary to guide readers through complex code</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Presence of commentary to guide readers through complex code</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Problem 4 <code>bake_funcs.c</code> and <code>bake_main.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">TBD</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left">CODE STYLE</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Sane indentation, reasonable variable naming</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Presence of commentary to guide readers through complex code</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Presence of commentary to guide readers through complex code</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+
+<div id="outline-container-orgc840c49" class="outline-2">
+<h2 id="orgc840c49"><span class="section-number-2">9</span> Optional Makeup Credit</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+Some additional project extensions will be appended which will be
+worth some MAKEUP credit (e.g. points that may fill in for lost points
+on previous projects but do not count as extra credit). An
+announcement will be posted on these and information added in this
+section.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8a50536" class="outline-2">
+<h2 id="org8a50536"><span class="section-number-2">10</span> Assignment Submission</h2>
+<div class="outline-text-2" id="text-10">
+</div>
+<div id="outline-container-org4479ce1" class="outline-3">
+<h3 id="org4479ce1"><span class="section-number-3">10.1</span> <a id="org47bce63"></a> Submit to Gradescope</h3>
+<div class="outline-text-3" id="text-10-1">
+<p>
+Refer to the Project 1 instructions and adapt them for details of how
+to submit to Gradescope. In summary they are
+</p>
+
+<ol class="org-ol">
+<li>Type <code>make zip</code> in the project directory to create <code>p4-comlete.zip</code></li>
+<li>Log into <a href="https://www.gradescope.com/">Gradescope</a>, select Project 4, and upload <code>p4-complete.zip</code></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org5a80871" class="outline-3">
+<h3 id="org5a80871"><span class="section-number-3">10.2</span> Late Policies</h3>
+<div class="outline-text-3" id="text-10-2">
+<p>
+You may wish to review the policy on late project submission which
+will cost 1 Engagement Point per day late. <b>No projects will be
+accepted more than 48 hours after the deadline.</b>
+</p>
+
+
+<p>
+<a href="https://www.cs.umd.edu/~profk/216/syllabus.html#late-submission">https://www.cs.umd.edu/~profk/216/syllabus.html#late-submission</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-04-12 Fri 14:08 <br/> </i>
+</div>
+</body>
+</html>
