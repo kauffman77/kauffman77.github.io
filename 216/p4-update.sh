@@ -11,7 +11,7 @@ mv --backup=numbered Makefile test_* testy data data34 .backup
 echo Downloading new files
 rm -f p4-update.zip
 wget https://www.cs.umd.edu/~profk/216/p4-update.zip
-unzip p4-update.zip
+unzip -qq p4-update.zip
 rm -f p4-update.zip
 
 echo Project Updated
