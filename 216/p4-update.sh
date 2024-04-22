@@ -6,7 +6,7 @@ mv --backup=numbered p4-complete.zip ../safety-p4-complete.zip
 
 echo Moving old file versions to .backup/
 mkdir -p .backup
-mv --backup=numbered Makefile test_* testy data data34 .backup bake_util.c
+mv --backup=numbered Makefile test_* testy data data34 data5 bake_util.c .backup
 
 echo Downloading new files
 rm -f p4-update.zip
