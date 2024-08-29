@@ -1,0 +1,1038 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-08-28 Wed 16:47 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMSC216 Project 1: C Programming</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","HM>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:"], // allowed interactive prompts
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"    , "language-c");
+lang_map.set("src-text" , "language-plaintext");
+lang_map.set("src-sh"   , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
+<style type="text/css">
+th.org-left   { text-align: left;   }
+</style>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2024-08-28 Wed 16:47</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CMSC216 Project 1: C Programming</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Mon 23-Sep</b></li>
+<li><i>Approximately 5.0% of total grade</i></li>
+<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a></li>
+<li>Submit to <a href="https://canvas.umn.edu/"><b>Canvas</b></a></li>
+<li>Projects are <b>individual work</b>: no collaboration with other students
+is allowed. Seek help from course staff if you get stuck for too long.</li>
+</ul>
+
+<div id="outline-container-orgf646b7d" class="outline-4">
+<h4 id="orgf646b7d">CODE DISTRIBUTION: <a href="p1-code.zip">p1-code.zip</a></h4>
+</div>
+<div id="outline-container-org866c1bd" class="outline-4">
+<h4 id="org866c1bd">VIDEO OVERVIEW: <i>Not Yet Available</i></h4>
+</div>
+
+<div id="outline-container-orgf5d3f09" class="outline-4">
+<h4 id="orgf5d3f09">CHANGELOG: Empty</h4>
+</div>
+
+<div id="outline-container-org10556ed" class="outline-4">
+<h4 id="org10556ed"></h4>
+<div class="outline-text-4" id="text-org10556ed">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org9723f5e">1. Introduction</a>
+<ul>
+<li><a href="#orgbcfe37a">1.1. Simplified Rules for Ranked Choice Voting</a></li>
+<li><a href="#orga7cfab7">1.2. An Example Election</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9723f5e" class="outline-2">
+<h2 id="org9723f5e"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a href="https://en.wikipedia.org/wiki/Instant-runoff_voting">Ranked Choice Voting (RCV) (also called Instant Runoff Voting (IRV))</a>
+is an election system in which each voter ranks candidates for a
+position according to preference rather than selecting only their
+first choice. This is the source of the "ranked choice" name.
+Election results are calculated in <b>rounds</b> in which candidates with
+the lowest vote count are dropped.  If a voter's first-choice is
+dropped, their vote moves to their next highest choice. This is the
+source of the "instant runoff" name: a runoff election is when
+low-vote candidates are eliminated and voters choices are
+restricted. With RCV run-offs can be done "instantly" based on the
+rankings of candidates by voters.
+</p>
+
+<p>
+RCV is generally considered advantageous over other voting schemes and
+have started to see use in some <a href="https://en.wikipedia.org/wiki/Ranked-choice_voting_in_the_United_States">local and state-wide election across
+the USA</a> <a href="https://en.wikipedia.org/wiki/Takoma_Park,_Maryland#Voting">municipal elections in Takoma Park in Montgomery County, MD.</a>
+It means that voters are free to cast votes for unpopular candidates
+who strongly align with their views knowing that if their favorite is
+eliminated, their vote will not be lost but transfer to their next
+best choice.
+</p>
+
+<p>
+A couple videos explaining Ranked Choice Voting:
+</p>
+<ul class="org-ul">
+<li><a href="https://www.youtube.com/watch?v=53z9feUiqdg">City of Minneapolis description if Ranked Choice Voting (Youtube, 2:00min)</a></li>
+<li><a href="https://www.youtube.com/watch?v=oHRPMJmzBBw">MPR Overview of Instant Runoff Voting (Youtube, 1:10min)</a></li>
+</ul>
+
+<p>
+This project will center on calculating the results of elections which
+use RCV.  
+</p>
+<ul class="org-ul">
+<li>The RCV algorithm is iterative in nature with several termination
+criteria so looping and conditionals will be essential.</li>
+<li>Votes and Intermediate results must be encoded using C <code>structs</code> and
+data structures (linked lists) in order to efficiently calculate
+vote re-distribution</li>
+<li>Voting information will be loaded from files necessitating some file
+I/O to be used</li>
+</ul>
+</div>
+
+<div id="outline-container-orgbcfe37a" class="outline-3">
+<h3 id="orgbcfe37a"><span class="section-number-3">1.1</span> Simplified Rules for Ranked Choice Voting</h3>
+<div class="outline-text-3" id="text-1-1">
+<ol class="org-ol">
+<li><b>Active Candidates</b>: Each candidate in the election starts out
+Active but may be dropped (eliminated) during a round due to having
+the fewest votes.</li>
+<li><b>Minimum Vote Candidates</b>: Each round, the candidates with the
+minimum number of votes is noted as such and is subject to being
+dropped at the beginning of the next round.</li>
+<li><b>Dropped Candidates</b>: Barring other conditions, candidates with the
+minimum number of votes are dropped from the election and their
+votes are re-assigned to Active candidates.</li>
+<li><b>Winning</b>: If at any time, only a single candidate is Active, they
+are the winner. This may be due to all other candidates being
+Dropped or having Minimum votes. The single Active candidate is the
+Winner and the election ends.</li>
+<li><b>Multi-way Ties</b>: If at any time, all Active candidates are
+identified as having the Minimum votes, a tie has occurred. This
+may be a 2-way, 3-way, 4-way, etc. tie and will be referred to as a
+"Multi-way Tie". If this occurs, the election ends with a Tie
+Result. (If this occurs in real elections, there must be some
+law/policy on how to proceed with either breaking the tie or
+sharing power between the tied candidates).</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orga7cfab7" class="outline-3">
+<h3 id="orga7cfab7"><span class="section-number-3">1.2</span> An Example Election</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Below is a sample of how an RCV election is tabulated. 
+</p>
+</div>
+
+<div id="outline-container-org1045682" class="outline-4">
+<h4 id="org1045682">Candidates and Votes</h4>
+<div class="outline-text-4" id="text-org1045682">
+<p>
+4 candidates
+</p>
+<ul class="org-ul">
+<li>0:Francis</li>
+<li>1:Claire</li>
+<li>2:Heather</li>
+<li>3:Viktor</li>
+</ul>
+
+<p>
+12 Ballots
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Ballot#</th>
+<th scope="col" class="org-left">Candidate</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">&#xa0;</th>
+</tr>
+
+<tr>
+<th scope="col" class="org-right">&#xa0;</th>
+<th scope="col" class="org-left">Order</th>
+<th scope="col" class="org-left">1st Choice</th>
+<th scope="col" class="org-left">2nd Choice</th>
+<th scope="col" class="org-left">3rd Choice</th>
+<th scope="col" class="org-left">4th Choice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0001</td>
+<td class="org-left">0 3 2 1</td>
+<td class="org-left">0:Francis</td>
+<td class="org-left">3:Viktor</td>
+<td class="org-left">2:Heather</td>
+<td class="org-left">1:Claire</td>
+</tr>
+
+<tr>
+<td class="org-right">0002</td>
+<td class="org-left">1 0 2 3</td>
+<td class="org-left">1:Claire</td>
+<td class="org-left">0:Francis</td>
+<td class="org-left">2:Heather</td>
+<td class="org-left">3:Viktor</td>
+</tr>
+
+<tr>
+<td class="org-right">0003</td>
+<td class="org-left">2 1 0 3</td>
+<td class="org-left">2:Heather</td>
+<td class="org-left">1:Claire</td>
+<td class="org-left">0:Francis</td>
+<td class="org-left">3:Viktor</td>
+</tr>
+
+<tr>
+<td class="org-right">0004</td>
+<td class="org-left">2 1 0 3</td>
+<td class="org-left">2:Heather</td>
+<td class="org-left">1:Claire</td>
+<td class="org-left">0:Francis</td>
+<td class="org-left">3:Viktor</td>
+</tr>
+
+<tr>
+<td class="org-right">0005</td>
+<td class="org-left">1 0 2 3</td>
+<td class="org-left">1:Claire</td>
+<td class="org-left">0:Francis</td>
+<td class="org-left">2:Heather</td>
+<td class="org-left">3:Viktor</td>
+</tr>
+
+<tr>
+<td class="org-right">0006</td>
+<td class="org-left">0 2 1 3</td>
+<td class="org-left">0:Francis</td>
+<td class="org-left">2:Heather</td>
+<td class="org-left">1:Claire</td>
+<td class="org-left">3:Viktor</td>
+</tr>
+
+<tr>
+<td class="org-right">0007</td>
+<td class="org-left">0 1 2 3</td>
+<td class="org-left">0:Francis</td>
+<td class="org-left">1:Claire</td>
+<td class="org-left">2:Heather</td>
+<td class="org-left">3:Viktor</td>
+</tr>
+
+<tr>
+<td class="org-right">0008</td>
+<td class="org-left">2 1 0 3</td>
+<td class="org-left">2:Heather</td>
+<td class="org-left">1:Claire</td>
+<td class="org-left">0:Francis</td>
+<td class="org-left">3:Viktor</td>
+</tr>
+
+<tr>
+<td class="org-right">0009</td>
+<td class="org-left">2 0 1 3</td>
+<td class="org-left">2:Heather</td>
+<td class="org-left">0:Francis</td>
+<td class="org-left">1:Claire</td>
+<td class="org-left">3:Viktor</td>
+</tr>
+
+<tr>
+<td class="org-right">0010</td>
+<td class="org-left">3 0 2 1</td>
+<td class="org-left">3:Viktor</td>
+<td class="org-left">0:Francis</td>
+<td class="org-left">2:Heather</td>
+<td class="org-left">1:Claire</td>
+</tr>
+
+<tr>
+<td class="org-right">0011</td>
+<td class="org-left">0 1 2 3</td>
+<td class="org-left">0:Francis</td>
+<td class="org-left">1:Claire</td>
+<td class="org-left">2:Heather</td>
+<td class="org-left">3:Viktor</td>
+</tr>
+
+<tr>
+<td class="org-right">0012</td>
+<td class="org-left">2 0 1 3</td>
+<td class="org-left">2:Heather</td>
+<td class="org-left">0:Francis</td>
+<td class="org-left">1:Claire</td>
+<td class="org-left">3:Viktor</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgefe5a42" class="outline-4">
+<h4 id="orgefe5a42">Round 1 Tally</h4>
+<div class="outline-text-4" id="text-orgefe5a42">
+<p>
+No candidates dropped to start the first round.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">NUM</th>
+<th scope="col" class="org-right">COUNT</th>
+<th scope="col" class="org-right">PERC</th>
+<th scope="col" class="org-left">NAME</th>
+<th scope="col" class="org-left">STATUS</th>
+<th scope="col" class="org-left">VOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">4</td>
+<td class="org-right">33.3</td>
+<td class="org-left">Francis</td>
+<td class="org-left">Active</td>
+<td class="org-left">#0011:&lt;0&gt; 1  2  3 #0007:&lt;0&gt; 1  2  3 #0006:&lt;0&gt; 2  1  3 #0001:&lt;0&gt; 3  2  1</td>
+</tr>
+
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">2</td>
+<td class="org-right">16.7</td>
+<td class="org-left">Claire</td>
+<td class="org-left">Active</td>
+<td class="org-left">#0005:&lt;1&gt; 0  2  3 #0002:&lt;1&gt; 0  2  3</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">5</td>
+<td class="org-right">41.7</td>
+<td class="org-left">Heather</td>
+<td class="org-left">Active</td>
+<td class="org-left">#0012:&lt;2&gt; 0  1  3 #0009:&lt;2&gt; 0  1  3 #0008:&lt;2&gt; 1  0  3 #0004:&lt;2&gt; 1  0  3 #0003:&lt;2&gt; 1  0  3</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">1</td>
+<td class="org-right">8.3</td>
+<td class="org-left">Viktor</td>
+<td class="org-left">MinVotes</td>
+<td class="org-left">#0010:&lt;3&gt; 0  2  1</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+NOTE: The votes are listed next to each candidate with the currently
+selected candidate indicated by a token like <code>&lt;2&gt;</code>. Votes are
+initially assigned to all voters' first choice but as candidates are
+Dropped, votes are transferred to the next choice on the ballot.
+</p>
+
+<p>
+Heather starts in 1st place with Francis and Claire trailing.  Viktor
+is the candidate with the Minimum votes so will be dropped in the next
+round with Ballot #0010 moving to its next candidate.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org030f964" class="outline-4">
+<h4 id="org030f964">Round 2 Tally</h4>
+<div class="outline-text-4" id="text-org030f964">
+<p>
+Viktor had the minimum votes so Ballot #0010 is transferred to Francis
+and Viktor is dropped from the election. This leaves the following new
+Tally.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">NUM</th>
+<th scope="col" class="org-right">COUNT</th>
+<th scope="col" class="org-right">PERC</th>
+<th scope="col" class="org-left">NAME</th>
+<th scope="col" class="org-left">STATUS</th>
+<th scope="col" class="org-left">VOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">5</td>
+<td class="org-right">41.7</td>
+<td class="org-left">Francis</td>
+<td class="org-left">Active</td>
+<td class="org-left">#0010: 3 &lt;0&gt; 2  1 #0011:&lt;0&gt; 1  2  3 #0007:&lt;0&gt; 1  2  3 #0006:&lt;0&gt; 2  1  3 #0001:&lt;0&gt; 3  2  1</td>
+</tr>
+
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">2</td>
+<td class="org-right">16.7</td>
+<td class="org-left">Claire</td>
+<td class="org-left">MinVotes</td>
+<td class="org-left">#0005:&lt;1&gt; 0  2  3 #0002:&lt;1&gt; 0  2  3</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">5</td>
+<td class="org-right">41.7</td>
+<td class="org-left">Heather</td>
+<td class="org-left">Active</td>
+<td class="org-left">#0012:&lt;2&gt; 0  1  3 #0009:&lt;2&gt; 0  1  3 #0008:&lt;2&gt; 1  0  3 #0004:&lt;2&gt; 1  0  3 #0003:&lt;2&gt; 1  0  3</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">-</td>
+<td class="org-right">-</td>
+<td class="org-left">Viktor</td>
+<td class="org-left">Droppped</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Note that the first vote listed for Francis reads <code>#0010: 3 &lt;0&gt; 2  1</code>:
+it was transferred from 3:Viktor to 0:Francis when Viktor was dropped.
+</p>
+
+<p>
+Claire is now identified as having the Minimum Votes and will be
+dropped in the next round. Francis and Heather are tied now but do not
+have Minimum Votes so another round will take place. 
+</p>
+</div>
+</div>
+
+
+
+<div id="outline-container-org28d84df" class="outline-4">
+<h4 id="org28d84df">Round 3 Tally</h4>
+<div class="outline-text-4" id="text-org28d84df">
+<p>
+Claire had the Minimum Votes and so the two ballots for her (#0005 and
+#0002) are transferred to their next candidate which happens to be
+Francis. Claire is then dropped which leaves the new tally as follows.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">NUM</th>
+<th scope="col" class="org-left">COUNT</th>
+<th scope="col" class="org-left">PERC</th>
+<th scope="col" class="org-left">NAME</th>
+<th scope="col" class="org-left">STATUS</th>
+<th scope="col" class="org-left">VOTES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0</td>
+<td class="org-left">7</td>
+<td class="org-left">58.3</td>
+<td class="org-left">Francis</td>
+<td class="org-left">Active</td>
+<td class="org-left">#0002: 1 &lt;0&gt; 2  3 #0005: 1 &lt;0&gt; 2  3 #0010: 3 &lt;0&gt; 2  1 #0011:&lt;0&gt; 1  2  3 #0007:&lt;0&gt; 1  2  3 #0006:&lt;0&gt; 2  1  3 #0001:&lt;0&gt; 3  2  1</td>
+</tr>
+
+<tr>
+<td class="org-right">1</td>
+<td class="org-left">-</td>
+<td class="org-left">-</td>
+<td class="org-left">Claire</td>
+<td class="org-left">Dropped</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">5</td>
+<td class="org-left">41.7</td>
+<td class="org-left">Heather</td>
+<td class="org-left">MinVotes</td>
+<td class="org-left">#0012:&lt;2&gt; 0  1  3 #0009:&lt;2&gt; 0  1  3 #0008:&lt;2&gt; 1  0  3 #0004:&lt;2&gt; 1  0  3 #0003:&lt;2&gt; 1  0  3</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left">-</td>
+<td class="org-left">-</td>
+<td class="org-left">Viktor</td>
+<td class="org-left">Dropped</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Heather is then identified as having the Minimum Votes leaving only a
+single Active candidate: Francis. This makes Francis the winner
+despite him having fewer 1st choice votes initially than Heather, just
+as one would expect from an Underwood.
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-08-28 Wed 16:47 <br/> </i>
+</div>
+</body>
+</html>
