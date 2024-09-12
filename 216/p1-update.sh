@@ -1,18 +1,19 @@
 #!/bin/bash
 
-echo No updates at this time
-# echo Making a safety zip
-# make zip > /dev/null
-# mv --backup=numbered p4-complete.zip ../safety-p4-complete.zip
+# echo 'No updates at this time'
+echo 'Creating a backup zip in ../p1-backup.zip'
+make zip > /dev/null
+mv --backup=numbered p4-complete.zip ../p1-backup.zip
 
-# echo Moving old file versions to .backup/
-# mkdir -p .backup
-# mv --backup=numbered Makefile test_* testy data data34 data5 bake_util.c .backup
+# echo 'Removing provided files that will be updated'
+# for f in data Makefile test_rcv_makeup.org; do
+#     rm -rf $f
+# done
 
-# echo Downloading new files
-# rm -f p4-update.zip
-# wget https://www.cs.umd.edu/~profk/216/p4-update.zip
-# unzip -qq p4-update.zip
-# rm -f p4-update.zip
+echo 'Retrieving and unpacking new versions of provided files'
 
-# echo Project Updated
+wget https://www.cs.umd.edu/~profk/216/p1-update.zip
+unzip -o -B p1-update.zip
+rm -f p1-update.zip
+
+echo 'Project Update Complete'
