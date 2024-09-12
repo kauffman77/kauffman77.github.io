@@ -3,7 +3,7 @@
 # echo 'No updates at this time'
 echo 'Creating a backup zip in ../p1-backup.zip'
 make zip > /dev/null
-mv --backup=numbered p4-complete.zip ../p1-backup.zip
+mv --backup=numbered p1-complete.zip ../p1-complete-backup.zip
 
 # echo 'Removing provided files that will be updated'
 # for f in data Makefile test_rcv_makeup.org; do
