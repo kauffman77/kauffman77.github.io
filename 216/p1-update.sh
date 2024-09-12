@@ -11,9 +11,9 @@ mv --backup=numbered p4-complete.zip ../p1-backup.zip
 # done
 
 echo 'Retrieving and unpacking new versions of provided files'
-
+rm -rf data/   # special case to remove the crummy data directory
 wget https://www.cs.umd.edu/~profk/216/p1-update.zip
-unzip -o -B p1-update.zip
+unzip -o p1-update.zip
 rm -f p1-update.zip
 
 echo 'Project Update Complete'
