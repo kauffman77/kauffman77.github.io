@@ -10,9 +10,11 @@ mv --backup=numbered p1-complete.zip ../p1-complete-backup.zip
 #     rm -rf $f
 # done
 
-echo 'Retrieving and unpacking new versions of provided files'
+echo 'Retrieving zip of updated provided files'
 rm -rf data/   # special case to remove the crummy data directory
-wget https://www.cs.umd.edu/~profk/216/p1-update.zip
+wget -q https://www.cs.umd.edu/~profk/216/p1-update.zip
+
+echo 'Unpacking updated versions of provided files'
 unzip -qq -o p1-update.zip
 rm -f p1-update.zip
 
