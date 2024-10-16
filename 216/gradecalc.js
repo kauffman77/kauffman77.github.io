@@ -68,6 +68,8 @@ function updateOnInput(){
 	total += a.WeightedScore;
     }
     get("total").value = new Number(total).toFixed(2);
+    get("warning").innerHTML = "";
+    warn_on_project_overage();
     warn_on_bad_total_weight();
 }
 
@@ -120,9 +122,27 @@ function warn_on_bad_total_weight(){
 
     if(Math.abs(total_weight - 100.0) > 1e-3){
         var warning_div = get("warning");
-        warning_div.innerHTML = "WARNING: Total weight is "+total_weight;
+        var msg = "WARNING: Total weight is "+total_weight;
+        warning_div.innerHTML = warning_div.innerHTML.concat(msg);
     }
 }
+
+function warn_on_project_overage(){
+    var proj_total = 0;
+    for(var i=0; i<model.length; i++){
+        if(model[i].Id.startsWith("Project")){
+            proj_total += model[i].Score;
+        }
+    }
+
+    if(proj_total > 500){
+        var warning_div = get("warning");
+        var msg = "WARNING: Project total is "+proj_total+" which exceeds 500 point cap"
+        warning_div.innerHTML = warning_div.innerHTML.concat(msg);
+    }
+}
+
+
 
 
 // Create the grade table
