@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-10-17 Thu 16:04 -->
+<!-- 2024-10-17 Thu 16:05 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 HW07: Assembly Debugging and Stack Security</title>
@@ -344,7 +344,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2024-10-17 Thu 16:04</i>
+<i>Last Updated: 2024-10-17 Thu 16:05</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 HW07: Assembly Debugging and Stack Security</h1>
@@ -356,9 +356,9 @@ submit your own work but you may freely discuss HW topics with other
 members of the class.</li>
 </ul>
 
-<div id="outline-container-org8534ccc" class="outline-4">
-<h4 id="org8534ccc">CODE DISTRIBUTION: <a href="hw07-code.zip">hw07-code.zip</a></h4>
-<div class="outline-text-4" id="text-org8534ccc">
+<div id="outline-container-org6b838a9" class="outline-4">
+<h4 id="org6b838a9">CODE DISTRIBUTION: <a href="hw07-code.zip">hw07-code.zip</a></h4>
+<div class="outline-text-4" id="text-org6b838a9">
 <ul class="org-ul">
 <li>Download the code distribution</li>
 <li>See further setup instructions below</li>
@@ -366,9 +366,9 @@ members of the class.</li>
 </div>
 </div>
 
-<div id="outline-container-orgde51c4a" class="outline-4">
-<h4 id="orgde51c4a">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-orgde51c4a">
+<div id="outline-container-org8b1544e" class="outline-4">
+<h4 id="org8b1544e">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org8b1544e">
 <dl class="org-dl">
 <dt>Thu Oct 17 03:59:02 PM EDT 2024</dt><dd><p>
 <a href="https://piazza.com/class/lzzvmm0hu9v228/post/m2cf8v266we77x">Post 938</a> reports a problem
@@ -383,40 +383,41 @@ To see the stack smashing behavior (or lack thereof), students will
 need to use some newly-added pre-compiled versions of these programs
 that come from a Linux with a properly installed GCC. They are now
 part of the HW07 codepack or can be downloaded via
-</p></dd>
-</dl>
+</p>
 <div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; wget
+<pre class="src src-sh">  &gt;&gt; wget https://www.cs.umd.edu/~profk/216/smash1_static
+  &gt;&gt; wget https://www.cs.umd.edu/~profk/216/smash2_static
 </pre>
-</div>
+</div></dd>
+</dl>
 </div>
 </div>
 
 
-<div id="outline-container-org70c2ef2" class="outline-4">
-<h4 id="org70c2ef2"></h4>
-<div class="outline-text-4" id="text-org70c2ef2">
+<div id="outline-container-org413b9be" class="outline-4">
+<h4 id="org413b9be"></h4>
+<div class="outline-text-4" id="text-org413b9be">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org9df740f">1. Rationale</a>
+<li><a href="#org3d263de">1. Rationale</a>
 <ul>
-<li><a href="#orgd061656">Associated Reading / Preparation</a></li>
-<li><a href="#org5a7a1c8">Grading Policy</a></li>
+<li><a href="#org1b9dfee">Associated Reading / Preparation</a></li>
+<li><a href="#org64670b3">Grading Policy</a></li>
 </ul>
 </li>
-<li><a href="#org50c29d4">2. Codepack</a></li>
-<li><a href="#orgc2eac77">3. What to Understand</a></li>
-<li><a href="#orgff9b7fd">4. Questions</a></li>
+<li><a href="#org946e948">2. Codepack</a></li>
+<li><a href="#org9d6f001">3. What to Understand</a></li>
+<li><a href="#orgf3c913b">4. Questions</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org9df740f" class="outline-2">
-<h2 id="org9df740f"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org3d263de" class="outline-2">
+<h2 id="org3d263de"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Code that deals with linked data structures such as lists,
@@ -437,9 +438,9 @@ programs crashing. This HW studies such a case.
 </p>
 </div>
 
-<div id="outline-container-orgd061656" class="outline-3">
-<h3 id="orgd061656">Associated Reading / Preparation</h3>
-<div class="outline-text-3" id="text-orgd061656">
+<div id="outline-container-org1b9dfee" class="outline-3">
+<h3 id="org1b9dfee">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-org1b9dfee">
 <ul class="org-ul">
 <li>Bryant and O'Hallaron: Ch 3.1-3.9 on assembly code instructions in
 x86-64 are essential for understanding how to follow assembly code
@@ -454,9 +455,9 @@ code is available.</li>
 </div>
 
 
-<div id="outline-container-org5a7a1c8" class="outline-3">
-<h3 id="org5a7a1c8">Grading Policy</h3>
-<div class="outline-text-3" id="text-org5a7a1c8">
+<div id="outline-container-org64670b3" class="outline-3">
+<h3 id="org64670b3">Grading Policy</h3>
+<div class="outline-text-3" id="text-org64670b3">
 <p>
 Credit for this HW is earned by taking the associated HW Quiz which is
 linked under <code>Gradescope</code>.  The quiz will ask similar questions as
@@ -478,8 +479,8 @@ See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies 
 </div>
 </div>
 
-<div id="outline-container-org50c29d4" class="outline-2">
-<h2 id="org50c29d4"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org946e948" class="outline-2">
+<h2 id="org946e948"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -541,8 +542,8 @@ The codepack for the HW contains the following files:
 </div>
 </div>
 
-<div id="outline-container-orgc2eac77" class="outline-2">
-<h2 id="orgc2eac77"><span class="section-number-2">3</span> What to Understand</h2>
+<div id="outline-container-org9d6f001" class="outline-2">
+<h2 id="org9d6f001"><span class="section-number-2">3</span> What to Understand</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Ensure that you understand
@@ -558,8 +559,8 @@ clobbered if when writing of the end of stack arrays</li>
 </div>
 </div>
 
-<div id="outline-container-orgff9b7fd" class="outline-2">
-<h2 id="orgff9b7fd"><span class="section-number-2">4</span> Questions</h2>
+<div id="outline-container-orgf3c913b" class="outline-2">
+<h2 id="orgf3c913b"><span class="section-number-2">4</span> Questions</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Analyze the files in the provided codepack and answer the questions
@@ -851,7 +852,7 @@ stack smashing detected ***: terminated
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-10-17 Thu 16:04 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-10-17 Thu 16:05 <br/> </i>
 </div>
 </body>
 </html>
