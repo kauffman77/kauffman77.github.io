@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-# Release: Mon Sep 16 01:56:46 PM EDT 2024
+# Release: Mon Nov  4 09:59:13 AM EST 2024
 """Testy: run test cases on command line programs"""
 
 ### Imports
 import sys                                # argv etc
 from io import StringIO                   # StringIO
+import os                                 # directly do fork() / exec(), avoid subprocess
+import signal                             # for SIGKILL
 import os.path                            # joining output file paths
 import re                                 # regexes
 import argparse                           # command args
@@ -14,24 +16,22 @@ import time                               # time.monotonic()
 import codecs                             # characeter coding translattions
 import select                             # poll
 from select import POLLIN,POLLOUT,POLLHUP,POLLERR,POLLNVAL
-import subprocess                         # run() shell commands
-from subprocess import Popen,PIPE,STDOUT  # subprocess communication
 from difflib import SequenceMatcher       # diffing actual/expect output
 import logging as log                     # for loggers / debug messages
-import logging
 import multiprocessing as multiproc
+import subprocess
 
 ################################################################################
 ### Module level initialization
 
-LOGFORMAT = "==%(levelname)s== [%(filename)s:%(lineno)d %(funcName)s] %(message)s"
+LOGFORMAT = "==%(process)d %(levelname)s== [%(filename)s:%(lineno)d %(funcName)s] %(message)s"
 """Format for debug messages"""
 
+# Register translation mechanisms for bad ASCII characters in test
+# output. These are passed as the 'errors' argument to Popen() when
+# ASCII encoding is in use for output.
 codecs.register_error('as_question_marks', lambda e: ('?',e.start + 1))
 codecs.register_error('as_nonascii', lambda e: (':nonascii:',e.start + 1))
-""""Register translation mechanisms for bad ASCII characters in test
-output. These are passed as the 'errors' argument to Popen() when
-ASCII encoding is in use for output."""
 
 # default valgrind program
 VALGRIND_ERROR_CODE = 13
@@ -48,9 +48,8 @@ VALGRIND_PROG = [
 
 STDBUF_PROG = ["stdbuf","-i","0","-o","0","-e","0"]
 """stdbuf invocation broken down by options"""
-  
 
-SIGNAL_DESCRIPTIONS = {
+SIGNAL_DESCRIPTIONS = {                         # may wish to use the sys.SIGxx versions of the numbers
    1 : "<SIGHUP> : controlling terminal has closed",
    2 : "<SIGINT> : interrupted through user interaction",
    3 : "<SIGQUIT> : user-triggered quit with core dump requested",
@@ -152,7 +151,7 @@ class Suite:
     result_formatter.add_suite_result(self)
     result_formatter.make_suite_result_file(self)
     progress_reporter.report_suite_done(self)
-    
+
 
   def get_proc_pool(self):
     """Create a pool of processes for multiple test processing
@@ -170,7 +169,7 @@ class Suite:
       pool_size = os.cpu_count()
     log.debug(f"parallel is {self.parallel}, setting pool_size to {pool_size}")
     return multiproc.Pool(pool_size)
-    
+
   def run_parallel(self, progress_reporter, result_formatter):
     """Run tests in parallel using multiple proceses
 
@@ -196,7 +195,7 @@ class Suite:
       for test in pool.imap(run_test, args, 1):     # imap for lazy returns
         self.tests[test.testnum] = test             # copy test over
         self.tests_torun.append(test)               # rebuild torun list
-        progress_reporter.report_test_done(test)             
+        progress_reporter.report_test_done(test)
         if test.passed:
           self.passed_tests  += 1
           self.points_earned += test.points
@@ -217,8 +216,8 @@ class Suite:
       var = var.lower()
       if var in env:
         val = env[var]
-        try:
-          val = eval(val)                    # try converting to internal python
+        try:                                 # try converting to internal python
+          val = eval(val)
         except Exception:
           pass                               # if it fails, leave as a string
         log.debug(f"{var}={val} option set from environment")
@@ -230,7 +229,7 @@ class Suite:
 class Test:
   """Encapsulates a single test which may have multiple segments"""
 
-  def __init__(self,options={}):
+  def __init__(self,options=None):
     """Initialize a default empty Test"""
     # these fields are set during parsing / initialization
     self.title = None                  # title of the test
@@ -257,9 +256,10 @@ class Test:
     self.result_filename = None        # file where result for the test is stored, None if no file has been created
 
     # propagate fields from options to object
-    for key,val in options.items():
-      if key in self.__dict__:
-        self.__dict__[key] = val
+    if options:
+      for key,val in options.items():
+        if key in self.__dict__:
+          self.__dict__[key] = val
 
 
   def run(self):
@@ -314,10 +314,12 @@ class Segment:
     self.force_ascii_output = True     # translate non-ascii characters in test results to ascii
     self.timeout = 5                   # timeout in (fractional) second to be used before segment is killed
     self.max_out_bytes = 2**20         # maximum size of output from tested program, kill if this is exceeded
+    self.infinite_diff_limit = 100     # limit diff output to this many entries on a timeout / maxout
     self.post_filter = None            # filter to run on output after test completes, before verifying output
     self.test_directory = None         # directory to use for this test or None if run in the working directory
     self.diff_ignore_whitespace = True # Whitespace on a line is treated as single spaces when diffing
     self.diff_ignore_blanklines = True # Blank lines do not affect diff results
+    self.diff_ignore_trail_ws = True   # Any trailing whitespace is stripped / ignored when doing diffs
     self.diff_sym_equal = "."          # Symbol to use in side-by-side diff for equal lines
 
     # these fields are set after the segment is run
@@ -356,49 +358,80 @@ class Segment:
     if self.passed is False:                    # already failed in setup
       return
 
-    # NOTE: Don't use any of Python's convenience functions to covert
-    # the stdin/out from raw bytes to strings; this leads to a
-    # buffered TextIOWrapper being used instead of plain read() calls
-    # and that can mess up the limited_communicate() function causing
-    # stalls on infinite loops or subtly missing I/O.
-    subp = Popen(self.full_program,             # start a subprocess to run the tested program
-                 stdin=PIPE, stdout=PIPE,       # communicate with pipes
-                 stderr=STDOUT,                 # merge stderr with stdout
-                 bufsize=0)                     # limit buffering to gain full control in poll()
-    self.pid = subp.pid
+    sys.stdout.flush()                          # flush pending output prior to fork()
+    sys.stderr.flush()                          # to prevent duplicate output in parent/child
+    (to_child_r,to_child_w) = os.pipe()         # for communication between parent and child
+    (fr_child_r,fr_child_w) = os.pipe()
+
+    log.debug(f"to_child_r: {to_child_r} {os.get_inheritable(to_child_r)} to_child_w: {to_child_w} {os.get_inheritable(to_child_w)}")
+    log.debug(f"fr_child_r: {fr_child_r} {os.get_inheritable(fr_child_r)} fr_child_w: {fr_child_w} {os.get_inheritable(fr_child_w)}")
+
+    self.pid = os.fork()                        # create child process
+
+    # CHILD PROCESS
+    if self.pid == 0:
+      os.close(to_child_w)
+      os.close(fr_child_r)
+      # NOTE: intentionally using constants 0,1,2 below. Previously
+      # had calls like sys.stdin.fileno() BUT Python multiprocessing
+      # messes with these may yield and they may be something other
+      # than 0,1,2 that the child process will expect. This can lead
+      # to weird child process behavior such as inability to send
+      # input to the child. Thus, the constants 0,1,2 for stdin,
+      # stdout, stderr file descriptor entries.
+      os.dup2(to_child_r, 0)                    # redirect stdin, stdout, stderr to pipes
+      os.dup2(fr_child_w, 1)                    # then execute a child process
+      os.dup2(fr_child_w, 2)
+      os.execvp(self.full_program[0],self.full_program)
+      # child process does not return
+
+    # PARENT PROCESS
+    os.close(fr_child_w)
+    os.close(to_child_r)
     log.debug(f"started program PID {self.pid}: [{' '.join(self.full_program)}]")
+
     (stdout_bytes,timed_out,maxed_out) = \
-      limited_communicate(subp,self.input_str,  # limit time/bytes for completion
+      limited_communicate(to_child_w,           # limit time/bytes for completion
+                          fr_child_r,
+                          self.input_str,
                           timeout=self.timeout,
                           max_out_bytes=self.max_out_bytes)
-    if timed_out or maxed_out:
-      log.debug(f"timed out: {timed_out} / maxed_out: {maxed_out}, killing {self.pid}")
-      subp.kill()                               # misbehaving, kill it
-    subp.wait()                                 # should return almost immediately
 
-    self.retcode = subp.returncode
     if self.force_ascii_output:                 # possibly transform output to ascii
       out_encoding = 'ascii'
       out_errors = 'as_question_marks'
     else:
       out_encoding = 'utf-8'
       out_errors = 'as_question_marks'
-    stdout_str = stdout_bytes.decode(encoding=out_encoding, errors=out_errors);
+    stdout_str = stdout_bytes.decode(encoding=out_encoding, errors=out_errors)
 
-    if self.retcode<0:                          # if signalled, append a message to output
-      signum = -self.retcode                    # indicating as much
+    if timed_out or maxed_out:                  # check for error conditions
+      log.debug(f"timed out: {timed_out} / maxed_out: {maxed_out}, killing {self.pid}")
+      os.kill(self.pid, signal.SIGKILL)         # misbehaving, kill it
+
+    log.debug(f"waiting on child process {self.pid}")
+    (pid,waitstatus) = os.waitpid(self.pid, 0)  # should return almost immediately
+    log.debug(f"wait complete for child process {self.pid}, returned ({pid},{waitstatus})")
+
+    # NOTE: using local version of this function as older versions of
+    # python do not have it; replace with equivalent os module
+    # function at a later date
+    self.retcode = testy_waitstatus_to_exitcode(waitstatus)
+    # self.retcode = os.waitstatus_to_exitcode(waitstatus)
+
+    if self.retcode<0:                          # if signalled, append a message to output indicating as much
+      signum = -self.retcode
       sigdesc = SIGNAL_DESCRIPTIONS.get(signum,"")
       stdout_str = f'{stdout_str}\nSignal {signum} {sigdesc}'
-    self.timed_out = timed_out
-    self.maxed_out = maxed_out
 
+    self.timed_out = timed_out                  # store info on ending status of process
+    self.maxed_out = maxed_out
     self.output_original = stdout_str
     self.output_actual = stdout_str
     self.post_run_setup()                       # finalize remaining fields
     if self.test_directory:
       log.debug(f"returning to workdir: {workdir}")
       os.chdir(workdir)
-      
     return
 
   def prerun_setup(self):
@@ -471,13 +504,13 @@ class Segment:
 
   def go_to_testdir(self):
     """Change into the testing directory"""
-    
+
   def run_shell_precommands(self):
     """Execute specified shell commands prior to segment"""
     for cmd in self.shell_precommands:
       log.debug(f"running shell command [{cmd}]")
-      result = subprocess.run(cmd, shell=True)  # shell is important to support pipes, etc.
-    
+      subprocess.run(cmd, shell=True, check=True)            # shell=True important to support pipes, etc.
+
   ### Post-run functions
   def diff_output(self):
     """Calculate the diff of the output"""
@@ -487,10 +520,13 @@ class Segment:
     aseq = alines
     bseq = blines
     if self.diff_ignore_whitespace:                          # all whitespace treated as 1 whitespace
-      aseq = [re.subn(r"\s+"," ",x)[0] for x in alines]      # modify sequence elements to compare to 
-      bseq = [re.subn(r"\s+"," ",x)[0] for x in blines]      # facilitate matching
-    blank_func = lambda x: False
+      aseq = [re.subn(r"\s+"," ",x)[0] for x in aseq]        # modify sequence elements to compare to
+      bseq = [re.subn(r"\s+"," ",x)[0] for x in bseq]        # facilitate matching
+    if self.diff_ignore_trail_ws:
+      aseq = [x.rstrip() for x in aseq]                      # strip all trailing whitespace to
+      bseq = [x.rstrip() for x in bseq]                      # facilitate matching
 
+    blank_func = lambda x: False
     if self.diff_ignore_blanklines:                          # mark blank lines as blank which
       blank_func = lambda x: x==""                           # will allow for 0-cost gaps on them
 
@@ -500,6 +536,18 @@ class Segment:
                          for (_,_,x,_) in align])            # sequences are not equal
     self.diff_passed = seq_equal
 
+
+    diff_limit = None
+    if len(align) > self.infinite_diff_limit and self.timed_out or self.maxed_out:
+      diff_limit = self.infinite_diff_limit                  #
+      last = align[-1]                                       # likely the kill signal
+      align = align[:diff_limit]
+      align.append(last)
+
+    # diff_limit = min(self.infinite_diff_limit,len(align))    # on a timeout / maxout, limit the number
+    # if self.timed_out or self.maxed_out:                     # of diff entries as they are expected
+    #   align = align[:diff_limit]                             # to be repeating and uninformative
+
     self.sbs_diff = sbs_diff(align, alines, blines,          # compute side-by-side diff string
                              sym_equal=self.diff_sym_equal,
                              titles=("===EXPECT===","===ACTUAL==="))
@@ -507,6 +555,9 @@ class Segment:
     self.lbl_diff = lbl_diff(align, alines, blines,
                              titles=("EXPECT","ACTUAL"))
 
+    if diff_limit:                                           # append messages to indicate truncation
+      self.sbs_diff = f"{self.sbs_diff}Diff Truncated after {diff_limit} entries due to timeout / maxout\n"
+      self.lbl_diff = f"{self.lbl_diff}Diff Truncated after {diff_limit} entries due to timeout / maxout\n"
 
   def check_passed(self):
     """Determines if the segment passed according to fields set during testing"""
@@ -558,21 +609,26 @@ class Segment:
     """Run output_actual through a specified filter to modify it"""
     if not self.post_filter:
       return
-    result = subprocess.run(self.post_filter,          # subprocess for filter program
-                            input=self.output_actual,  # input is program output
-                            text=True,                 # text only
-                            shell=True,                # run in a shell: no shell lex
-                            check=True,                # exception if filter fails
-                            capture_output=True)       # save the output in the process
-    self.output_actual = result.stdout
 
-  ## End Segment class
-    
+    # older versions of python do not support the text/capture_output
+    # parameters to subprocess.run() so work-arounds are used
+    instr = bytes(self.output_actual,'utf-8')           # apparently must feed intput as bytes...
+    result = subprocess.run(self.post_filter,           # subprocess for filter program
+                            input=instr,                # input is program output
+                            stdout=subprocess.PIPE,     # capture output via a pipe
+                            stderr=subprocess.STDOUT,   # merge stderr and stdout
+                            shell=True,                 # run in a shell: no shell lex
+                            # capture_output=True,        # ADDED: python 3.6 (save the output in the process)
+                            # text=True,                  # ADDED: python 3.6 (text only)
+                            check=True)                 # exception if filter fails
+    self.output_actual = result.stdout.decode('utf-8')  # return a normal string
+################################################################################
+## End Segment class
 
 
 ################################################################################
 ### Global Utility Functions
-def limited_communicate(subp,to_str=None,timeout=None,max_out_bytes=None):
+def limited_communicate(to_fd,from_fd,to_str=None,timeout=None,max_out_bytes=None):
   """Communicate on a to/from pipe with limits
 
   Write to_str to the to_fd in chunks and receive data from from_fd in
@@ -580,13 +636,11 @@ def limited_communicate(subp,to_str=None,timeout=None,max_out_bytes=None):
   bail. If more than from_bytes are read, bail. Returns a tuple of
     (from_str, timed_out T/F, maxed_out T/F)
 
+  Both to_fd and from_fd are closed by the end of this routine.
+
   Makes use of poll() under the hood to synchornously handle the I/O
   and avoid blocking for too long.
   """
-  to_fd = subp.stdin
-  from_fd = subp.stdout
-  log.debug(f"to_fd: {to_fd} from_fd: {from_fd}")
-
   poll_timeout_millis = 100              # timeout for poll calls
   block_size = 4096                      # size of blocks of data to communicate
 
@@ -607,11 +661,12 @@ def limited_communicate(subp,to_str=None,timeout=None,max_out_bytes=None):
     to_bytes = bytes(to_str,'utf-8')
 
   (loop_count,write_count,read_count) = 0,0,0  # for debugging
-  log.debug(f"communicate loop start: to_fd {to_fd.fileno()} from_fd {from_fd.fileno()} POLLIN {POLLIN} POLLOUT {POLLOUT} POLLERR {POLLERR} POLLHUP {POLLHUP}")
+  log.debug(f"communicate loop start: to_fd {to_fd} from_fd {from_fd} POLLIN {POLLIN} POLLOUT {POLLOUT} POLLERR {POLLERR} POLLHUP {POLLHUP}")
 
-  while (not from_eof and                                          # other from still has data
+  while ((from_fd > 0) and                                         # other from still has data
          (not timeout or total_time <= timeout) and                # still within timeout
          (not max_out_bytes or len(from_bytes) <= max_out_bytes)): # still under max bytes read
+
     loop_count += 1
     fileops = pollset.poll(poll_timeout_millis)
     log.debug(f"fileops: {fileops}")
@@ -621,24 +676,23 @@ def limited_communicate(subp,to_str=None,timeout=None,max_out_bytes=None):
     # allows for easier checking of error conditions and ensures easy
     # handling of the POLLIN even before POLLHUP
     for (fd,event) in fileops:
-      if (not to_fd.closed and                         # can write to other side
-          fd==to_fd.fileno() and event&POLLOUT):
+      if (fd==to_fd and event&POLLOUT):                # can write to other side
         if to_bytes and to_pos < len(to_bytes):        # have some left to write, do so
           log.debug(f"to_fd {fd} ready; writing to it")
           write_count += 1
           end_pos = min(len(to_bytes),to_pos+block_size)
-          to_pos += to_fd.write(to_bytes[to_pos:end_pos])
+          to_pos += os.write(to_fd,to_bytes[to_pos:end_pos])
         else:                                          # IMPORTANT: close outward stream
           log.debug(f"to_fd {fd} ready but end of output; closing it")
           pollset.unregister(to_fd)                    # when all data written so the
-          to_fd.close()                                # other side knows it's done
+          os.close(to_fd)                              # other side knows it's done
 
-      elif fd==from_fd.fileno() and event&POLLIN:      # can read from inward stream
+      elif fd==from_fd and event&POLLIN:               # can read from inward stream
         read_count += 1
-        block = from_fd.read(block_size)
+        block = os.read(from_fd,block_size)
         from_bytes.extend(block)
         log.debug(f"from_fd {fd} input ready, read {len(block)} bytes from it")
-        if len(block)>0:                               # non-zero read length; reset count of 
+        if len(block)>0:                               # non-zero read length; reset count of
           zero_read_limit = 0                          # zer-read length. A 0-read length
         else:                                          # MAY indicate inward stream closed
           zero_read_count += 1                         # Some UNIX platforms use POLLIN with a 0
@@ -646,14 +700,18 @@ def limited_communicate(subp,to_str=None,timeout=None,max_out_bytes=None):
             from_eof = True                            # POLLHUP; count a few 0-len reads to check
             log.debug(f"from_fd {fd} 0-read count limit reached, closing")
 
-      elif fd==from_fd.fileno() and event&POLLHUP:     # inward stream definitely closed, terminate
+      elif fd==from_fd and event&POLLHUP:              # inward stream definitely closed, terminate
         from_eof = True                                # I/O loop
         log.debug(f"from_fd {fd} POLLHUP found, closing")
+        os.close(from_fd)
+        from_fd = -1
 
       else:
         log.debug(f"Uknown event: fd {fd} even {event}")
     total_time = time.monotonic() - beg_time
 
+  if from_fd > 0:                                      # pipe still open so likely timeout/maxout
+    os.close(from_fd)                                  # close this side of the pipe
   log.debug(f"communicate loop done")
   log.debug(f"loop_count: {loop_count} write_count: {write_count} read_count: {read_count}")
   log.debug(f"total_time: {total_time:.4f} len(from_bytes): {len(from_bytes)}")
@@ -695,7 +753,7 @@ def global_alignment(seqA, seqB,
   from RQR to QR or R the comparisons get more accurate at comparing
   lines at the cost of increasing the comutation time. For standard
   diff-like behavior, RQR with the other default parameters is pretty
-  close. 
+  close.
 
   score_min and score_max scale the scoring of matches
   (equal/replace). The ratio()-based function used are normalied to
@@ -742,7 +800,7 @@ def global_alignment(seqA, seqB,
       scoremat[0][j] = (scoremat[0][j-1][0],(0,j-1,"insblank",0))
     else:
       scoremat[0][j] = (scoremat[0][j-1][0]+gap_cost,(0,j-1,"insert",0))
-  
+
   # MAIN SCORING ALGORITHM
   for i in range(1, m+1):
     seqmatcher = SequenceMatcher(None,"",seqA[i-1])  # seqmatcher optimized for stable seq2, vary seq1 more frequentyly
@@ -750,18 +808,18 @@ def global_alignment(seqA, seqB,
       if seqA[i-1]==seqB[j-1]:                       # equal elems score a 1.0
         (tag,raw_score) = ("equal",1.0)
       else:                                          # unequal elems score in range -0.2 to 1.0
-        seqmatcher.set_seq1(seqB[j-1])               # use seqmatcher for comparison 
+        seqmatcher.set_seq1(seqB[j-1])               # use seqmatcher for comparison
         (tag,raw_score) = ("replace",match_score(seqmatcher))
       mscore = raw_score*score_scale + score_min                             # scale the score in range
-      scores = [(scoremat[i-1][j-1][0] + mscore,(i-1,j-1,tag,mscore)),       # match seq1/2 elem  
-                (scoremat[i-1][j][0] + gap_cost,(i-1,j,"delete",gap_cost)),  # delete seq1 elem   
-                (scoremat[i][j-1][0] + gap_cost,(i,j-1,"insert",gap_cost))]  # insert seq2 elem   
+      scores = [(scoremat[i-1][j-1][0] + mscore,(i-1,j-1,tag,mscore)),       # match seq1/2 elem
+                (scoremat[i-1][j][0] + gap_cost,(i-1,j,"delete",gap_cost)),  # delete seq1 elem
+                (scoremat[i][j-1][0] + gap_cost,(i,j-1,"insert",gap_cost))]  # insert seq2 elem
       if ablank[i-1]:
         scores.append((scoremat[i-1][j][0],(i-1,j,"delblank",0)))
       if bblank[j-1]:
         scores.append((scoremat[i][j-1][0],(i,j-1,"insblank",0)))
       scoremat[i][j] = max(scores)
-  
+
   # TRACEBACK COMPUTATION
   align_score = scoremat[-1][-1][0]              # overall score of the global alignmnet
   align = []                                     # traceback alignment, elements (seq1,seq2,tag,cost)
@@ -789,26 +847,26 @@ def sbs_diff(align,alines,blines,
     bwidth = max(bwidth,len(titles[1]))
   with StringIO() as diff:
     if titles != (None,None):
-      writeline(diff,f'{titles[0]:{awidth}}   {titles[1]:{bwidth}}')
+      writeline(diff,f'{titles[0]:{awidth}}   {titles[1]}')
     for (ai,bj,tag,_) in align:
       if tag=="delete":
-        writeline(diff,f"{alines[ai]:{awidth}} {sym_delete} {'':{bwidth}}")
+        writeline(diff,f"{alines[ai]:{awidth}} {sym_delete} {''}")
       elif tag=="delblank":
-        writeline(diff,f"{alines[ai]:{awidth}} {sym_delblank} {'':{bwidth}}")
+        writeline(diff,f"{alines[ai]:{awidth}} {sym_delblank} {''}")
       elif tag=="insert":
-        writeline(diff,f"{'':{awidth}} {sym_insert} {blines[bj]:{bwidth}}")
+        writeline(diff,f"{'':{awidth}} {sym_insert} {blines[bj]}")
       elif tag=="insblank":
-        writeline(diff,f"{'':{awidth}} {sym_insblank} {blines[bj]:{bwidth}}")
+        writeline(diff,f"{'':{awidth}} {sym_insblank} {blines[bj]}")
       else:
         sym = sym_equal if tag=="equal" else sym_replace
-        writeline(diff,f"{alines[ai]:{awidth}} {sym} {blines[bj]:{bwidth}}")
+        writeline(diff,f"{alines[ai]:{awidth}} {sym} {blines[bj]}")
     return diff.getvalue()
 
 
 def lbl_diff(align,alines,blines, titles=("OLD","NEW")):
   """Create a line-by-line diff showing only non-matching lines from alignment
 
-  The comparison is literally line-by-line rather than block-by-block as is the case 
+  The comparison is literally line-by-line rather than block-by-block as is the case
   """
   (atit,btit) = (titles[0],titles[1])
   twidth = max(len(atit),len(btit))
@@ -889,9 +947,29 @@ def run_test(arg):
   result_formatter.make_test_rawfiles(test)
   return test                                                # return completed test
 
+def testy_waitstatus_to_exitcode(ws):
+  """Converts a wait status to the exit code of a program or negative
+  number if the program was signalled.
+
+  This is a compatibility function for Python ver<3.9 when this
+  function was added to the os module as
+  os.waitstatus_to_exitcode(w). The below implementation follows the C
+  code in cpython/Modules/posixmodule.c to produce similar effects."""
+
+  if os.WIFEXITED(ws):
+    return os.WEXITSTATUS(ws)
+  elif os.WIFSIGNALED(ws):
+    return -os.WTERMSIG(ws)
+  elif os.WIFSTOPPED(ws):
+    raise ValueError(f"process stopped by delivery of signal {os.WSTOPSIG(ws)}")
+  else:
+    raise ValueError(f"invalid wait status: {ws}")
+  
+
 ################################################################################
 ### Parsing classes and hierarchy
 class ParseError(Exception):
+
   """Exception to throw when a parsing error occurred"""
 
 class FilePos:
@@ -948,7 +1026,7 @@ class OrgSuiteParser:
     preamble = tc_list[0]                                # everything before first '* title'
     test_titles_contents = \
       [(t,c) for (t,c)                                   # title/content together for iteration
-       in zip(tc_list[1:tc_len:2], tc_list[2:tc_len:2]) 
+       in zip(tc_list[1:tc_len:2], tc_list[2:tc_len:2])
        if not t.startswith('* COMMENT')]                 # filter commented tests
     filepos = FilePos(filename)                          # track global file position
     try:                                                 # try block for parsing errors
@@ -1139,7 +1217,7 @@ class LineProgressReporter(ProgressReporter):
       else:
         result_string = f"FAIL -> see {test.result_filename}"
     print(f"{test.testnum:{self.testnum_width}}) {test.title:{self.test_title_width}} : {result_string}")
-    
+
   def report_suite_done(self,suite):
     """Prints out number of tests passed / points earned."""
     # TODO: Add SHOW output here
@@ -1168,11 +1246,11 @@ class ShortProgressReporter(ProgressReporter):
     """Print header information of the suite after parsing"""
     print(f"Running {len(suite.tests_torun)} / {len(suite.tests)} tests")
     print("|",end="")
-    for i in range(5,min(40,self.total_tests)+1,5):  
+    for i in range(5,min(40,self.total_tests)+1,5):
       print(f"{i:5d}",end="")                          # print a numeric guide for tests
     print(f"{'':{self.total_tests%5}}|")
     print("|",end="",flush=True)
-    
+
   def report_test_done(self,test):
     """Print . for pass and F for fail"""
     if test.passed:
@@ -1181,11 +1259,11 @@ class ShortProgressReporter(ProgressReporter):
       print("F",end="",flush=True)                     # F for fails
     self.tests_run += 1
     if self.tests_run == self.total_tests:             # end the with vertical bar
-      print("|")                                       
+      print("|")
     elif self.tests_run%40 == 0:                       # every 40 carry to another line
-      print("|")                                       
+      print("|")
       print("|",flush=True)
-    
+
   def report_suite_done(self,suite):
     """Print number of tests passed / points earned and failing test files"""
     if suite.use_points:
@@ -1205,8 +1283,8 @@ class ShortProgressReporter(ProgressReporter):
         if test.result_filename:
           result_string = f"FAIL -> see {test.result_filename}"
         print(f"{test.testnum:{testnum_width}}) {test.title:{test_title_width}} : {result_string}")
-  # END class ShortProgressReporter 
-    
+  # END class ShortProgressReporter
+
 ################################################################################
 ### Result Formatting
 class ResultFormatter:
@@ -1216,13 +1294,13 @@ class ResultFormatter:
     """Initialize any state needed based on the suite"""
 
   def add_test_result(self,test):
-    """Add result field to the test after running it""" 
+    """Add result field to the test after running it"""
 
   def make_test_result_file(self,test):
     """Create a result file for this individual test if indicated by its fields"""
 
   def add_suite_result(self,suite):
-    """Add result field to the suite after running it""" 
+    """Add result field to the suite after running it"""
 
   def make_suite_result_file(self,test):
     """Create a result file for the entire suite"""
@@ -1299,7 +1377,7 @@ class OrgResultFormatter(ResultFormatter):
       writeline(res, f'{seg.lbl_diff}',end="")
       writeline(res, f'#+END_SRC')
     writeline(res, f'')
-    
+
     if not seg.use_valgrind:
       writeline(res, f'** VALGRIND Not in Use')
     else:
@@ -1363,6 +1441,15 @@ class OrgResultFormatter(ResultFormatter):
       writeline(res, f'')
       # TODO: get line-by-line differences
 
+      writeline(res, f'*** LINE-BY-LINE DIFF of Expected vs Actual')
+      if not seg.lbl_diff:
+        writeline(res, f'No differences found')
+      else:
+        writeline(res, f'#+BEGIN_SRC text')
+        writeline(res, f'{seg.lbl_diff}',end="")
+        writeline(res, f'#+END_SRC')
+      writeline(res, f'')
+
       if not seg.use_valgrind:
         writeline(res,f'*** VALGRIND Not in Use')
       else:
@@ -1398,7 +1485,7 @@ class OrgResultFormatter(ResultFormatter):
       self.single_seg_test_result(test)
     else:
       self.multiple_seg_test_result(test)
-  
+
   def make_test_result_file(self,test):
     """Create an Org result file for this individual test if indicated by its fields"""
     # TODO: Add creation of raw files if requsted
@@ -1428,7 +1515,7 @@ class OrgResultFormatter(ResultFormatter):
     suite.result_filename = f'{basename}-results.org'
     with open(suite.result_filename,'w') as f:
       f.write(suite.result)
-  
+
 ################################################################################
 
 
@@ -1450,7 +1537,7 @@ def md_write_heading(stringio,level,heading):
     writeline(stringio, underline*len(heading))
     if level==1:
       writeline(stringio, '')
-  
+
 class MarkdownResultFormatter(ResultFormatter):
   """Create Markdown output.  Suite result is just a concatenation for
   all results. This version favors 'underlined' headlines to make them
@@ -1507,7 +1594,7 @@ class MarkdownResultFormatter(ResultFormatter):
       writeline(res, f'{seg.lbl_diff}',end="")
       writeline(res, f'```')
     writeline(res, f'')
-    
+
     if not seg.use_valgrind:
       md_write_heading(res,2,f'VALGRIND Not in Use')
     else:
@@ -1569,7 +1656,15 @@ class MarkdownResultFormatter(ResultFormatter):
       writeline(res, f'{seg.sbs_diff}')
       writeline(res, f'```')
       writeline(res, f'')
-      # TODO: get line-by-line differences
+
+      md_write_heading(res,3,f'LINE-BY-LINE DIFF of Expected vs Actual')
+      if not seg.lbl_diff:
+        writeline(res, f'No differences found')
+      else:
+        writeline(res, f'```')
+        writeline(res, f'{seg.lbl_diff}',end="")
+        writeline(res, f'```')
+      writeline(res, f'')
 
       if not seg.use_valgrind:
         md_write_heading(res,3,f'VALGRIND Not in Use')
@@ -1607,7 +1702,7 @@ class MarkdownResultFormatter(ResultFormatter):
       self.single_seg_test_result(test)
     else:
       self.multiple_seg_test_result(test)
-  
+
   def make_test_result_file(self,test):
     """Create an Org result file for this individual test if indicated by its fields"""
     # TODO: Add creation of raw files if requsted
@@ -1637,7 +1732,7 @@ class MarkdownResultFormatter(ResultFormatter):
     suite.result_filename = f'{basename}-results.md'
     with open(suite.result_filename,'w') as f:
       f.write(suite.result)
-  
+
 ################################################################################
 ### Junk that can be ignored
 
@@ -1681,7 +1776,7 @@ wrong. Below is an example from the examples/ directory:
 def main(cmd_args):
   """main entry point for command line runs of """
   # cmd_args explicit makes it easier to do debugging sessions in
-  # python interactive loop; must remove script name from the args 
+  # python interactive loop; must remove script name from the args
 
 
   # set up arg parsing, don't line-wrap descriptions
@@ -1711,7 +1806,7 @@ def main(cmd_args):
 
   args = argparser.parse_args(cmd_args)
   if args.debug or "TESTYDEBUG" in os.environ:
-    log.basicConfig(format=LOGFORMAT,level=logging.DEBUG,encoding='utf-8')
+    log.basicConfig(format=LOGFORMAT,level=log.DEBUG,encoding='utf-8')
     log.debug("Debugging messages enabled")
 
   log.debug(f"'{args.input_type}' input_type selected")
