@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-10 Sun 15:51 -->
+<!-- 2024-11-11 Mon 11:56 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Lab10: I/O Redirection and File Statistics</title>
@@ -477,7 +477,7 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2024-11-10 Sun 15:51</i>
+<i>Last Updated: 2024-11-11 Mon 11:56</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Lab10: I/O Redirection and File Statistics</h1>
@@ -486,9 +486,9 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-orgaf01da0" class="outline-4">
-<h4 id="orgaf01da0">CODE DISTRIBUTION: <a href="lab10-code.zip">lab10-code.zip</a></h4>
-<div class="outline-text-4" id="text-orgaf01da0">
+<div id="outline-container-orgd1bd691" class="outline-4">
+<h4 id="orgd1bd691">CODE DISTRIBUTION: <a href="lab10-code.zip">lab10-code.zip</a></h4>
+<div class="outline-text-4" id="text-orgd1bd691">
 <ul class="org-ul">
 <li>Download the code distribution</li>
 <li>See further setup instructions below</li>
@@ -496,31 +496,49 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </div>
 </div>
 
-<div id="outline-container-org8ae1e4d" class="outline-4">
-<h4 id="org8ae1e4d">CHANGELOG: Empty</h4>
+<div id="outline-container-orgfb48c9a" class="outline-4">
+<h4 id="orgfb48c9a">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-orgfb48c9a">
+<dl class="org-dl">
+<dt>Mon Nov 11 11:50:54 AM EST 2024</dt><dd><p>
+A bug in the provided <code>Makefile</code>
+was identified which affects the command <code>make test-prob1</code>.  The
+following in <code>Makefile</code> should be corrected as indicated:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">  68: test-prob1 : test-setup redirect_child
+  69:	./testy test_redirect_child.org  # CORECT: add "_child" to existin test_redirect.org
+  #     ./testy test_redirect.org        # INCORRECT
+</pre>
+</div>
+<p>
+The <code>Makefile</code> has been updated in the current codepack.
+</p></dd>
+</dl>
+</div>
 </div>
 
-<div id="outline-container-org16c018d" class="outline-4">
-<h4 id="org16c018d"></h4>
-<div class="outline-text-4" id="text-org16c018d">
+<div id="outline-container-org50a6474" class="outline-4">
+<h4 id="org50a6474"></h4>
+<div class="outline-text-4" id="text-org50a6474">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org5851fc2">1. Rationale</a></li>
-<li><a href="#org9766b81">2. Codepack</a></li>
-<li><a href="#org1026799">3. Problem 1: I/O Redirection</a></li>
-<li><a href="#org4bbfff6">4. Problem 2: <code>stat()</code> and <code>access()</code> System Calls</a></li>
-<li><a href="#org2886e49">5. QUESTIONS.txt File Contents</a></li>
-<li><a href="#orgecc7983">6. Submission</a></li>
+<li><a href="#orgcd60206">1. Rationale</a></li>
+<li><a href="#org45ffe2b">2. Codepack</a></li>
+<li><a href="#orgadd4c81">3. Problem 1: I/O Redirection</a></li>
+<li><a href="#orgfdc5cb4">4. Problem 2: <code>stat()</code> and <code>access()</code> System Calls</a></li>
+<li><a href="#org25778ec">5. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org0acfd93">6. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org5851fc2" class="outline-2">
-<h2 id="org5851fc2"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orgcd60206" class="outline-2">
+<h2 id="orgcd60206"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This lab covers two independent but short concepts in separate
@@ -545,9 +563,9 @@ in a few simple tasks to acquaint students with their use.
 </p>
 </div>
 
-<div id="outline-container-orgf009875" class="outline-4">
-<h4 id="orgf009875">Grading Policy</h4>
-<div class="outline-text-4" id="text-orgf009875">
+<div id="outline-container-org6806047" class="outline-4">
+<h4 id="org6806047">Grading Policy</h4>
+<div class="outline-text-4" id="text-org6806047">
 <p>
 Credit for this exercise is earned by completing the code/asnwers here
 and submitting a Zip of the work to Gradescope. Students are
@@ -570,8 +588,8 @@ See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies 
 </div>
 </div>
 
-<div id="outline-container-org9766b81" class="outline-2">
-<h2 id="org9766b81"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org45ffe2b" class="outline-2">
+<h2 id="org45ffe2b"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for this exercise is linked at the top of this
@@ -674,8 +692,8 @@ the following files which are briefly described.
 </div>
 </div>
 
-<div id="outline-container-org1026799" class="outline-2">
-<h2 id="org1026799"><span class="section-number-2">3</span> Problem 1: I/O Redirection</h2>
+<div id="outline-container-orgadd4c81" class="outline-2">
+<h2 id="orgadd4c81"><span class="section-number-2">3</span> Problem 1: I/O Redirection</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Programs often need to deal with open files for reading and
@@ -697,12 +715,12 @@ to assist students in understanding how programs like
 </p>
 </div>
 
-<div id="outline-container-org349b249" class="outline-4">
-<h4 id="org349b249">Fork and Child File Descriptors</h4>
-<div class="outline-text-4" id="text-org349b249">
+<div id="outline-container-org92de82a" class="outline-4">
+<h4 id="org92de82a">Fork and Child File Descriptors</h4>
+<div class="outline-text-4" id="text-org92de82a">
 <div class="org-center">
 
-<div id="org7c6f990" class="figure">
+<div id="orgfa583d6" class="figure">
 <p><img src="fork-fds.png" alt="fork-fds.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Effects of <code>open()</code>'ing a file then calling <code>fork()</code> : the child and parent both refer to the same open file.</p>
@@ -712,12 +730,12 @@ to assist students in understanding how programs like
 </div>
 
 
-<div id="outline-container-orgdf02d11" class="outline-4">
-<h4 id="orgdf02d11">dup() and dup2() System calls</h4>
-<div class="outline-text-4" id="text-orgdf02d11">
+<div id="outline-container-org8a54c2c" class="outline-4">
+<h4 id="org8a54c2c">dup() and dup2() System calls</h4>
+<div class="outline-text-4" id="text-org8a54c2c">
 <div class="org-center">
 
-<div id="org5970029" class="figure">
+<div id="orge54b276" class="figure">
 <p><img src="dup-and-dup2.png" alt="dup-and-dup2.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 2: </span>LEFT: Effect of calling <code>dup()</code> to create a duplicate file descriptor table entry. RIGHT: Effect of calling <code>dup2()</code> to overwrite on file descriptor entry with another.</p>
@@ -729,8 +747,8 @@ to assist students in understanding how programs like
 
 
 
-<div id="outline-container-org4bbfff6" class="outline-2">
-<h2 id="org4bbfff6"><span class="section-number-2">4</span> Problem 2: <code>stat()</code> and <code>access()</code> System Calls</h2>
+<div id="outline-container-orgfdc5cb4" class="outline-2">
+<h2 id="orgfdc5cb4"><span class="section-number-2">4</span> Problem 2: <code>stat()</code> and <code>access()</code> System Calls</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Basic file statistics such as file size, modification times, and
@@ -750,8 +768,8 @@ complete a program that uses them.
 </div>
 </div>
 
-<div id="outline-container-org2886e49" class="outline-2">
-<h2 id="org2886e49"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org25778ec" class="outline-2">
+<h2 id="org25778ec"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the exercise.
@@ -1080,8 +1098,8 @@ CODE PROBLEM 2: newer_file.c Program
 </div>
 </div>
 
-<div id="outline-container-orgecc7983" class="outline-2">
-<h2 id="orgecc7983"><span class="section-number-2">6</span> Submission</h2>
+<div id="outline-container-org0acfd93" class="outline-2">
+<h2 id="org0acfd93"><span class="section-number-2">6</span> Submission</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -1091,7 +1109,7 @@ how to upload your completed exercise zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-11-10 Sun 15:51 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-11-11 Mon 11:56 <br/> </i>
 </div>
 </body>
 </html>
