@@ -1,0 +1,2417 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-11-13 Wed 01:22 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMSC216 Project 4: Chester, a C High-level Tester</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","HM>","TM>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:"], // allowed interactive prompts
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"    , "language-c");
+lang_map.set("src-text" , "language-plaintext");
+lang_map.set("src-sh"   , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2024-11-13 Wed 01:22</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CMSC216 Project 4: Chester, a C High-level Tester</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Fri 22-Nov-2024</b></li>
+<li><i>Approximately 4.0% of total grade</i></li>
+<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a> <i>(Now Available)</i></li>
+<li>Projects are <b>individual work</b>: no collaboration with other students
+is allowed. Seek help from course staff if you get stuck for too long.</li>
+</ul>
+
+<div id="outline-container-org0b5ae74" class="outline-4">
+<h4 id="org0b5ae74">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
+</div>
+
+<div id="outline-container-org1c096db" class="outline-4">
+<h4 id="org1c096db">VIDEO OVERVIEW: <i>Not Yet Available</i></h4>
+</div>
+<div id="outline-container-orgd35b3b4" class="outline-4">
+<h4 id="orgd35b3b4">CHANGELOG:</h4>
+</div>
+<div id="outline-container-orgfdd03d4" class="outline-4">
+<h4 id="orgfdd03d4"></h4>
+<div class="outline-text-4" id="text-orgfdd03d4">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgfebbb3c">1. Overview</a></li>
+<li><a href="#org244daf3">2. Download Code and Setup</a></li>
+<li><a href="#orge5e3438">3. Overview of Chester</a>
+<ul>
+<li><a href="#org8bcea57">3.1. Chester Testing Files</a></li>
+<li><a href="#org8d31aaa">3.2. Data Structures</a></li>
+<li><a href="#orgde43571">3.3. Strings in Chester</a></li>
+<li><a href="#org07ef25f">3.4. Outline of <code>chester_funcs.c</code></a></li>
+<li><a href="#org7dc54c0">3.5. Provided Utility Functions</a></li>
+<li><a href="#orgcf32ced">3.6. Sample Usage</a></li>
+</ul>
+</li>
+<li><a href="#org485445a">4. <b>Problem 1</b>: Test Service Functions</a>
+<ul>
+<li><a href="#orgc1ee8d5">4.1. Creating the Test Directory</a></li>
+<li><a href="#orga6f7e48">4.2. Setting the Output File Name</a></li>
+<li><a href="#org1ee4b27">4.3. Creating Input Files</a></li>
+<li><a href="#orgd7e0902">4.4. Reading Output Files</a></li>
+</ul>
+</li>
+<li><a href="#org8fd3a33">5. <b>Problem 2</b>: Start/Finish Tests</a>
+<ul>
+<li><a href="#orga9ba065">5.1. Starting Tests</a></li>
+<li><a href="#org7e6df79">5.2. Finishing Tests</a></li>
+</ul>
+</li>
+<li><a href="#orgbe5a57b">6. <b>Problem 3</b>: Creating Test Results</a>
+<ul>
+<li><a href="#orgc4fe4d7">6.1. String Comparison Utilities</a></li>
+<li><a href="#orgaee110a">6.2. Results Files</a></li>
+</ul>
+</li>
+<li><a href="#org8a37307">7. <b>Problem 4</b>: Running Suite Tests</a></li>
+<li><a href="#org53c7103">8. <b>Problem 5</b>: Chester Main</a></li>
+<li><a href="#org13aed0c">9. Grading Criteria</a></li>
+<li><a href="#makeup">10. <b>Optional Makeup Credit</b></a></li>
+<li><a href="#org0cb1486">11. Assignment Submission</a>
+<ul>
+<li><a href="#org740671d">11.1. Submit to Gradescope</a></li>
+<li><a href="#org609c50e">11.2. Late Policies</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfebbb3c" class="outline-2">
+<h2 id="orgfebbb3c"><span class="section-number-2">1</span> Overview</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Software testing has gained a central role in the maintenance and
+development of reliable computing systems. By automating the task of
+check at least some aspects of correctness as code evolves, testing
+frameworks enable new features to be added while guaranteeing old
+functionality is not compromised.
+</p>
+
+<p>
+This project will build a simple testing framework in C. It is a
+"high-level" tester which allows the tests to be specified in a
+textual format and focuses on testing full programs. The being a C,
+High-level Tester, it is dubbed <b>Chester</b>.
+</p>
+
+<p>
+To complete Chester, a variety of systems programming techniques will
+be utilized including the following.
+</p>
+<ul class="org-ul">
+<li>Creating child processes to execute external commands</li>
+<li>Coordination of child processes with the Chester parent process</li>
+<li>Creation of files and directories</li>
+<li>Redirection of input/output</li>
+<li>Reading and writing data from files to evaluate test results</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org244daf3" class="outline-2">
+<h2 id="org244daf3"><span class="section-number-2">2</span> <a id="orgcb5c055"></a> Download Code and Setup</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Download the code pack linked at the top of the page. Unzip this which
+will create a project folder. Create new files in this
+folder. Ultimately you will re-zip this folder to submit it.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">State</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Source Files</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>chester.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Header file for Chester</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>chester_util.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Utility functions provided</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>chester_parse.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Parsing functions provided to read input files</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>chester_parse.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Header for parsing functions</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>chester_parse.peg</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Parser generator used to create the parser</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>chester_funcs.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Functions that operate data in the Chester system</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>chester_main.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">main() function for the Chester</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">Build/Testing Files</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Build file to compile all programs</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running script</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_chester.c</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Unit tests for Chester</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_prob1.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for Problem 1</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_prob2.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for Problem 2</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_prob3.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for Problem 3</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_prob4.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for Problem 4</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_prob5.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for Problem 5</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>data/</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Subdirectory with files / programs used during testing</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>data/four_tests.md</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">One of several sample input files</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orge5e3438" class="outline-2">
+<h2 id="orge5e3438"><span class="section-number-2">3</span> Overview of Chester</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org8bcea57" class="outline-3">
+<h3 id="org8bcea57"><span class="section-number-3">3.1</span> Chester Testing Files</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Chester uses input files that contain the tests to run with each test
+containing description, a program to run, expected output for the
+program, optional input for the program, and options that adjust
+Chester behavior. The file format is roughly in <a href="https://www.markdownguide.org/basic-syntax/">Markdown format</a> with
+each heading titling a test and code blocks used for input/output for
+the test. An example comes from <code>data/two_tests.md</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-markdown"><span class="linenr"> 1: </span>!prefix=two-tests
+<span class="linenr"> 2: </span>!testdir=chester-test-two-tests
+<span class="linenr"> 3: </span>
+<span class="linenr"> 4: </span># Basic bash Test
+<span class="linenr"> 5: </span>Checks that bash properly produces output.
+<span class="linenr"> 6: </span>
+<span class="linenr"> 7: </span>!program=bash -c 'echo Chester is; echo a Tester'
+<span class="linenr"> 8: </span>
+<span class="linenr"> 9: </span>```output
+<span class="linenr">10: </span>Chester is
+<span class="linenr">11: </span>a Tester
+<span class="linenr">12: </span>```
+<span class="linenr">13: </span>
+<span class="linenr">14: </span># Count chars with wc
+<span class="linenr">15: </span>Checks that wc (word count) works with provided
+<span class="linenr">16: </span>input.
+<span class="linenr">17: </span>
+<span class="linenr">18: </span>!program=wc
+<span class="linenr">19: </span>
+<span class="linenr">20: </span>```input
+<span class="linenr">21: </span>This is a test.
+<span class="linenr">22: </span>This is only a test.
+<span class="linenr">23: </span>Keep calm and carry on.
+<span class="linenr">24: </span>```
+<span class="linenr">25: </span>
+<span class="linenr">26: </span>```output
+<span class="linenr">27: </span> 3 14 61
+<span class="linenr">28: </span>```
+</pre>
+</div>
+
+<p>
+The file specifies two tests
+</p>
+<ul class="org-ul">
+<li><p>
+Test 0: <code>Basic bash Tests</code> runs the program 
+</p>
+<pre class="example">
+bash -c 'echo Chester is; echo a Tester'
+</pre>
+
+<p>
+and checks that the output matches the output indicated in the
+<code>output</code> block
+</p></li>
+<li>Test 1: <code>Count chars with wc</code> runs the <code>wc</code> program on the provided
+input to count the lines, words, and characters in the provided
+<code>input</code> block. The expected <code>output</code> is given.</li>
+</ul>
+
+<p>
+On completion, running the completed Chester program on this test
+file, the tests are run and checked against the expected output which
+will produce the following output and results files.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; chester data/two_tests.md               ## RUN CHESTER
+data/two_tests.md : running 2 / 2 tests
+Running with single process: .. Done
+ 0) Basic bash Test      : ok
+ 1) Count chars with wc  : ok
+Overall: 2 / 2 tests passed
+
+&gt;&gt; ls chester-test-two-tests               ## SHOW TESTING DIRECTORY CONTENTS 
+two-tests-input-01.txt	 two-tests-output-01.txt  two-tests-result-01.md
+two-tests-output-00.txt  two-tests-result-00.md
+
+                                           ## SHOW ONE OF THE RESULTS FILE
+&gt;&gt; cat chester-test-two-tests/two-tests-result-00.md
+# TEST 0: Basic bash Test (ok)
+## DESCRIPTION
+Checks that bash properly produces output.
+
+## PROGRAM: bash -c 'echo Chester is; echo a Tester'
+
+## INPUT: None
+
+## OUTPUT: ok
+
+## EXIT CODE: ok
+
+## RESULT: ok
+&gt;&gt; 
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>All of the tests pass here but this will not always be so</li>
+<li><p>
+Note that the top of <code>two_tests.md</code> file contains the directives
+</p>
+<div class="org-src-container">
+<pre class="src src-text">  !prefix=two-tests
+  !testdir=chester-test-two-tests
+</pre>
+</div>
+<p>
+These cause files associated with testing to be created in the
+directory <code>chester-test-two-tests</code>, referred to as the <b>Test
+Directory</b> and all files within it to be named with the prefix
+<code>two-tests</code> 
+</p></li>
+</ul>
+
+<p>
+This setup should feel familiar: it is modeled after the behavior of
+the testing framework used throughout the course so far to perform
+automated tests on all submitted programs.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8d31aaa" class="outline-3">
+<h3 id="org8d31aaa"><span class="section-number-3">3.2</span> Data Structures</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+There are 2 central data structures used in Chester which are found in
+the header <code>chester.h</code>.
+</p>
+<dl class="org-dl">
+<dt><code>test_t</code></dt><dd>Contains all information about a specific test to run
+such as the program to run in the test, input for the program,
+expected and actual output, files associated with testing, and the
+results of running the test.</dd>
+<dt><code>suite_t</code></dt><dd>A collection of tests along with which of them to run
+and where to store the testing results. The most important field in
+a suite is its <code>tests[]</code> array which contains an array of <code>test_t</code>
+structs which are possible tests to run.</dd>
+</dl>
+
+<p>
+It is worthwhile spend some time acquainting yourself with some of the
+documentation on these structs provided in <code>chester.h</code>. Refer back to the
+header often as you need to recall parts of the data. Both structs
+have quite a few fields but almost all of them will be used at some
+point during the project.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgde43571" class="outline-3">
+<h3 id="orgde43571"><span class="section-number-3">3.3</span> Strings in Chester</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+The data structures contain many <code>char *</code> fields which are pointers to
+strings.  <b>All strings associated with structs are <code>malloc()'d</code> and
+need to be <code>free()</code>'d eventually.</b> Expect to do this in the following
+way.
+</p>
+<ul class="org-ul">
+<li><p>
+ALLOCATION: Most strings will initially be stored in non-heap locations can be
+quickly copied using the <code>strdup()</code> function. An example for the
+<code>suite_t</code> <code>infile_name</code> field appears in <code>chester_util.c</code> in the
+following function:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">  int suite_init_from_file_peg(suite_t *suite, char *fname){
+    suite_init(suite);
+    FILE *infile = fopen(fname,"r");
+    if(infile == NULL){
+      printf("Unable to open file '%s'\n",fname);
+      return -1;
+    }
+    suite-&gt;infile_name = strdup(fname); // malloc() a copy of the string 
+    ...;
+</pre>
+</div>
+<p>
+Here <code>strdup()</code> is used to create a heap-allocated copy of the
+string the "belongs" to the suite structure.
+</p></li>
+<li><p>
+DEALLOCATION: Later, the provided <code>suite_dealloc()</code> function is used
+to deallocate memory associated with the suite. Any fields that are
+non-NULL will be <code>free()</code>'d:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">  void suite_dealloc(suite_t *suite){
+    if(suite-&gt;infile_name != NULL) free(suite-&gt;infile_name);
+    if(suite-&gt;prefix != NULL)      free(suite-&gt;prefix);
+    ...;
+</pre>
+</div></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org07ef25f" class="outline-3">
+<h3 id="org07ef25f"><span class="section-number-3">3.4</span> Outline of <code>chester_funcs.c</code></h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+The primary implementation files required are <code>chester_funcs.c</code> and
+<code>chester_main.c</code>.  As the name suggests, <code>chester_main.c</code> will contain the
+<code>main()</code> function and is part of the final problem. 
+</p>
+
+<p>
+<code>chester_funcs.c</code> has a number of "service" functions which manipulate
+Suite and Tests data. Each of these is required and will be
+tested. The outline and some brief documentation for them is below.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// chester_funcs.c: Service functions for chester primarily operating
+// upon suite_t structs.
+
+#include "chester.h"
+
+////////////////////////////////////////////////////////////////////////////////
+// PROBLEM 1 Functions
+////////////////////////////////////////////////////////////////////////////////
+
+int suite_create_testdir(suite_t *suite);
+// PROBLEM 1: Creates the testing results directory according to the
+// name in the suite `testdir` field. If testdir does not exist, it is
+// created as directory with permisions of User=read/write/execute
+// then returns 1. If testdir already exists and is a directory, does
+// nothing and returns 0. If a non-directory file named testdir
+// already exists, print an error message and return -1 to indicate
+// testing cannot proceed. The error message is:
+//
+// ERROR: Could not create test directory 'XXX'
+//        Non-directory file with that name already exists
+//
+// with XXX substituted with the value of testdir
+//
+// CONSTRAINT: This function must be implemented using low-level
+// system calls. Use of high-level calls like system("cmd") will be
+// reduced to 0 credit. Review system calls like stat() and mkdir()
+// for use here. The access() system call may be used but keep in mind
+// it does not distinguish between regular files and directories.
+
+int suite_test_set_outfile_name(suite_t *suite, int testnum);
+// PROBLEM 1: Sets the field `outfile_name` for the numbered
+// tests. The filename is constructed according to the pattern
+//
+// TESTDIR/PREFIX-05-output.txt
+//
+// with TESTDIR and PREFIX replaced by the testdir and prefix fields
+// in the suite and the 05 replaced by the test number. The test
+// number is formatted as indicated: printed in a width of 2 with 0
+// padding for single-digit test numbers. The sprintf() or snprintf()
+// functions are useful to create the string. The string is then
+// duplicated into the heap via strdup() and a pointer to it saved in
+// `outfile_name`. The file is not created but the name will be used
+// when starting a test as output will be redirected into
+// outfile_name. This function should always return 0.
+
+int suite_test_create_infile(suite_t *suite, int testnum);
+// PROBLEM 1: Creates a file that is used as input for the numbered
+// test. The file will contain the contents of the `input` field. If
+// that field is NULL, this function immediately returns. Otherwise, a
+// file named like
+//
+//   TESTDIR/PREFIX-05-input.txt
+//
+// is created with TESTDIR and PREFIX replaced by the `testdir` field
+// and `prefix` fields of the suite and the 05 replaced by the test
+// number. A copy of this filename is duplicated and retained in the
+// `infile_name` field for the test. After opening this file, the
+// contents of the `input` field are then written to this file before
+// closing the file and returning
+// 0. The testing directory is assumed to exist by this function. The
+// options associated with the file are to be the following:
+// - Open write only
+// - Create the file if it does not exist
+// - Truncate the file if it does exist
+// - Created files have the User Read/Write permission set
+// If the function cannot create the input file due to open() failing,
+// an error message is printed and -1 is returned; the error message is
+// printed using perror() and will appear as:
+//
+//   Could not create input file : CAUSE
+//
+// with the portion to the right being added by perror() to show the
+// system cause
+
+int suite_test_read_output_actual(suite_t *suite, int testnum);
+// PROBLEM 1: Reads the contents of the file named in field
+// `outfile_name` for the given testnum into heap-allocated space and
+// assigns the output_actual field to that space. Uses a combination
+// of stat() and read() to efficiently read in the entire contents of
+// a file into a malloc()'d block of memory, null terminates it (\0)
+// so that the contents may treatd as a valid C string. Returns the
+// total number of bytes read from the file on on success (this is
+// also the length of the `output_actual` string). If the file could
+// not be opened or read, the `output_actual` field is not changed and
+// -1 is returned.
+//
+// CONSTRAINT: This function should perform at most 1 heap allocation;
+// use of the realloc() function is barred. System calls like stat()
+// MUST be used to determine the amount of memory needed before
+// allocation, Failure to do so will lead to loss of credit.
+
+////////////////////////////////////////////////////////////////////////////////
+// PROBLEM 2 Functions
+////////////////////////////////////////////////////////////////////////////////
+
+int suite_test_start(suite_t *suite, int testnum);
+// PROBLEM 2: Start a child process that will run program in the
+// indicated test number. The parent process first sets the
+// outfile_name and creates infile_name with the program input. It
+// then creates a child process, sets the test field `child_pid` to
+// the child process ID and returns 0.
+//
+// The child sets up output redirection so that the standard out AND
+// standard error streams for the child process is channeled into the
+// file named in field `outfile_name`. Note that standard out and
+// standard error are "merged" so that they both go to the same
+// `outfile_name`. This file should have the same options used when
+// opening it as described in suite_test_create_infile(). If
+// infile_name is non-NULL, input redirection is also set up with
+// input coming from the file named in field `infile_name`. Uses the
+// split_into_argv() function to create an argv[] array which is
+// passed to an exec()-family system call.
+//
+// Any errors in the child during input redirection setup, output
+// redirection setup, or exec()'ing print error messages and cause an
+// immediate exit() with an associated error code. These are as
+// follows:
+//
+// | CONDITION            | EXIT WITH CODE         |
+// |----------------------+------------------------|
+// | Input redirect fail  | exit(TESTFAIL_INPUT);  |
+// | Output redirect fail | exit(TESTFAIL_OUTPUT); |
+// | Exec failure         | exit(TESTFAIL_EXEC);   |
+//
+// Since output redirection is being set up, printing error messages
+// in the child process becomes unreliable. Instead, the exit_code for
+// the child process should be checked for one of the above values to
+// determine what happened.
+//
+// NOTE: When correctly implemented, this function should never return
+// in the child process though the compiler may require a `return ??`
+// at the end to match the int return type. NOT returning from this
+// function in the child is important as if a child manages to return,
+// there will now be two instances of chester running with the child
+// starting its own series of tests which will not end well...
+
+int suite_test_finish(suite_t *suite, int testnum, int status);
+// PROBLEM 2
+//
+// Processes a tests after its child process has completed and
+// determines whether the tests passes / fails.
+//
+// The `status` parameter comes from a wait()-style call and is use to
+// set the `exit_code_actual` of the test. `exit_code_actual` is one
+// of the following two possibilities:
+// - 0 or positive integer: test program exited normally and the exit
+//   code/status is stored.
+// - Negative integer: The tested program exited abnormally due to
+//   being signaled and the negative of the signal number is
+//   stored. Ex: child received SIGSEGV=11 so exit_code_actual is -11.
+// If `status` indicated neither a normal nor abnormal exit, this
+// function prints an error and returns (this case is not tested).
+//
+// Output produced by the test is read into the `output_actual` field
+// using previously written functions.
+//
+// The test's `state` field is set to one of TEST_PASSED or
+// TEST_FAILED. Comparisons are done between the fields:
+// - output_expect vs output_actual (strings)
+// - exit_code_expect vs exit_code_actual (int)
+//
+// If there is a mismatch with these, the test has failed and its
+// `state` is set to TEST_FAILED. If both sets of fields match, the
+// state of the test becomes `TEST_PASSED` and the suite's
+// `tests_passed` field is incremented.
+//
+// Special Case: if output_expect is NULL, there is no expected output
+// and comparison to output_actual should be skipped. This covers
+// testing cases where a program is being run to examine only whether
+// it returns the correct exit code or avoids segfaults.
+
+////////////////////////////////////////////////////////////////////////////////
+// PROBLEM 1 Functions
+////////////////////////////////////////////////////////////////////////////////
+
+void print_window(FILE *out, char *str, int center, int lrwidth);
+// PROBLEM 3
+// 
+// Print part of the string that contains index center to the given
+// out file. Print characters in the string between
+// [center-lrwidth,center+lrwidth] with the upper bound being
+// inclusive. If either the start or stop point is out of bounds,
+// truncate the printing: the minimum starting point is index 0, the
+// maximum stopping point is the string length.
+//
+// EXAMPLES:
+// char *s = "ABCDEFGHIJKL";
+// //         012345678901
+// print_window(stdout, s, 4, 3);
+// // BCDEFGH
+// // 1234567
+// print_window(stdout, s, 2, 5);
+// // ABCDEFGH
+// // 01234567
+// print_window(stdout, s, 8, 4);
+// // EFGHIJKL
+// // 45678901
+//
+// NOTE: this function is used when creating test results to show
+// where expected and actual output differ
+
+int differing_index(char *strA, char *strB);
+// PROBLEM 3
+// 
+// Finds the lowest index where different characters appear in strA and
+// strB. If the strings are identical except that one is longer than
+// the other, the index returned is the length of the shorter
+// string. If the strings are identical, returns -1.
+//
+// EXAMPLES:
+// differing_index("01234567","0123x567") -&gt; 4
+// differing_index("012345","01234567")   -&gt; 6
+// differing_index("012345","01x34567")   -&gt; 2
+// differing_index("012345","012345")     -&gt; -1
+// 
+// NOTE: this function is used when creating test results to show
+// where expected and actual output differ
+
+int suite_test_make_resultfile(suite_t *suite, int testnum);
+// PROBLEM 3
+//
+// Creates a result file for the given test. The general format is shown in the example below.
+//   # TEST 6: wc 1 to 10 (FAIL)              // testnum and test title, print "ok" for passed tests
+//   ## DESCRIPTION
+//   Checks that wc works with input          // description field of test
+//
+//   ## PROGRAM: wc                           // program field of test
+//
+//   ## INPUT:                                // input field of test, "INPUT: None" for NULL input
+//   1
+//   2
+//   3
+//   4
+//   5
+//   6
+//   7
+//   8
+//   9
+//   10
+//                                            // if output_expect is NULL, print "OUTPUT: skipped check"
+//   ## OUTPUT: MISMATCH at char position 3   // results of differing_index() between 
+//   ### Expect                               // output_expect and output_actual fields
+//   10 10 21                                 // output_expect via calls to print_window()
+//
+//   ### Actual
+//   10  9 20                                 // output_actual via calls to print_window()
+//                                            // if no MISMATCH in output, prints ## OUTPUT: ok
+//
+//   ## EXIT CODE: ok                         // MISMATCH if exit_code_expect and actual don't match and
+//                                            // prints Expect/Actual values
+//   ## RESULT: FAIL                          // "ok" for passed tests
+//
+// The file to create is named according to the pattern
+//
+// TESTDIR/PREFIX-05-result.md
+//
+// with TESTDIR / PREFIX and 05 substituted for the `testdir` and
+// `prefix` fields of suite and 05 for the testnum (width 2 and
+// 0-padded). Note the use of the .md extension to identify the output
+// as Markdown formatted text.
+//
+// The output file starts with a heading which prints the a heading
+// with the testnum and title in it along with ok/FAIL based on the
+// `state` of the test. Then 6 sections are printed which are
+// 1. DESCRIPTION
+// 2. PROGRAM
+// 3. INPUT
+// 4. OUTPUT (comparing output_expect and output_actual)
+// 5. EXIT CODE (comparing exit_code_expect and exit_code_actual)
+// 6. RESULT
+//
+// In the OUTPUT section, if a difference is detected at position N
+// via the differing_index() function, then a window around position N
+// is printed into the file for both the expected and actual
+// output. The window width used is defined in the header via the
+// constant TEST_DIFFWIDTH and is passed to print_window() function.
+//
+// If the output_expect field is NULL, the OUTPUT section header has
+// the message "skipped check" printed next to it.
+//
+// In the EXIT CODE section, if there is a mismatch between the
+// expected and actual exit_code, then they are both printed as in:
+// ## EXIT CODE: MISMATCH
+// - Expect: 0
+// - Actual: 1
+//
+// The final RESULT section prints either ok / FAIL depending on the
+// test state.
+//
+// If the result file cannot be opened/created, this file prints the
+// error message
+//   ERROR: Could not create result file 'XXX'
+// with XXX substituted for the file name and returns -1. Otherwise
+// the function returns 0 on successfully creating the resultfile.
+
+////////////////////////////////////////////////////////////////////////////////
+// PROBLEM 4 Functions
+////////////////////////////////////////////////////////////////////////////////
+
+int suite_run_tests_singleproc(suite_t *suite);
+// PROBLEM 4
+//
+// Runs tests in the suite one at time. Before begining the tests,
+// creates the testing directory with a call to
+// suite_create_testdir().  If the directory cannot be created, this
+// function returns -1 without further action.
+//
+// The tests with indices in the field `tests_torun[]` are run in the
+// order that they appear there. This is done in a loop.
+// `suite_test_start(..)` is used to start tests and wait()-style
+// system calls are used to suspend execution until the child process
+// is finished. Additional functions previously written are then used
+// to
+// - Assign the exit_code for the child
+// - Read the actual output into the test struct
+// - Set the pass/fail state
+// - Produce a results file for the test
+//
+// Prints the "Running with single process:" and each test that
+// completes prints a "." on the screen to give an indication of
+// progress. "Done" is printed when all tests complete so that a full
+// line which runs 8 tests looks like
+//
+//    Running with single process: ........ Done
+//
+// If errors arise such as with waiting for a child process, failures
+// with getting the test output, or other items, error messages should
+// be printed but the loop should continue. No specific error messages
+// are required and no testing is done; error messages are solely to
+// aid with debugging problems.
+
+void suite_print_results_table(suite_t *suite);
+// PROBLEM 4
+//
+// Prints a table of test results formatted like the following.
+//
+//  0) echo check           : FAIL -&gt; see chester-test/prob1-result-00.txt
+//  1) sleep 2s             : ok
+//  2) pwd check            : FAIL -&gt; see chester-test/prob1-result-02.txt
+//  3) seq check            : ok
+//  4) ls check             : FAIL -&gt; see chester-test/prob1-result-04.txt
+//  5) ls not there         : ok
+//  6) wc 1 to 10           : FAIL -&gt; see chester-test/prob1-result-06.txt
+//  7) date runs            : ok
+//
+// The test number at the beginning of the line is printed with width
+// 2 and space padded. The Test title is printed with a width of 20,
+// left-aligned using capabilities of printf().  If the test passes,
+// the message "ok" is added while if it fails, a FAIL appears and the
+// result file associated with the test is indicated. This function
+// honors the `tests_torun[]` array and will only print table results
+// for tests with indices in this array.
+
+////////////////////////////////////////////////////////////////////////////////
+// PROBLEM 5 Functions
+////////////////////////////////////////////////////////////////////////////////
+
+int main(int argc, char *argv[]);
+
+// PROBLEM 5
+//
+// Defined in the file chester_main.c. Entry point for the Chester
+// application which may be invoked with one of the following command
+// line forms along with expected output.
+//
+// &gt;&gt; ./chester tests.md        # RUNS ALL TESTS
+// tests.md : running 8 / 8 tests
+// Running with single process: ........ Done
+//  0) echo check           : FAIL -&gt; see chester-test/prob1-result-00.txt
+//  1) sleep 2s             : ok
+//  2) pwd check            : FAIL -&gt; see chester-test/prob1-result-02.txt
+//  3) seq check            : ok
+//  4) ls check             : FAIL -&gt; see chester-test/prob1-result-04.txt
+//  5) ls not there         : ok
+//  6) wc 1 to 10           : FAIL -&gt; see chester-test/prob1-result-06.txt
+//  7) date runs            : ok
+// Overall: 4 / 8 tests passed
+//
+// &gt;&gt; ./chester tests.md 2 4 6  # RUNS ONLY 3 TESTS NUMBERED 2 4 6
+// tests.md : running 3 / 8 tests
+// Running with single process: ... Done
+//  2) pwd check            : FAIL -&gt; see chester-test/prob1-result-02.txt
+//  4) ls check             : FAIL -&gt; see chester-test/prob1-result-04.txt
+//  6) wc 1 to 10           : FAIL -&gt; see chester-test/prob1-result-06.txt
+// Overall: 0 / 3 tests passed
+//
+// main() parses the indicated input file to create a test suite
+// struct. It then determines if all tests or only specified tests
+// will be run by analyzing the command line argument structure. The
+// `suite.tests_torun[]` and `suite.test_torun_count` fields are set
+// according to which tests will be run: either specified tests only
+// or 0..tests_count-1 for all tests. 
+//
+// Before running tests, output lines are printed indicating the test
+// file and number of tests to be run versus the total number of tests
+// in the file. The tests are then run and an output table is produced
+// using appropriate functions. The "Overall" line is printed with the
+// count of tests passed and that were actually run.
+//
+// MAKEUP CREDIT: Support the following additional invocations that
+// support concurrent test execution.
+//
+// &gt;&gt; ./chester -max_procs 4 tests.md         # RUN ALL TESTS WITH
+// tests.md : running 8 / 8 tests             # 4 CONCURRENT PROCESSES
+// Running with 4 processes: ........ Done
+//  0) echo check           : FAIL -&gt; see chester-test/prob1-result-00.txt
+//  1) sleep 2s             : ok
+//  2) pwd check            : FAIL -&gt; see chester-test/prob1-result-02.txt
+//  3) seq check            : ok
+//  4) ls check             : FAIL -&gt; see chester-test/prob1-result-04.txt
+//  5) ls not there         : ok
+//  6) wc 1 to 10           : FAIL -&gt; see chester-test/prob1-result-06.txt
+//  7) date runs            : ok
+// Overall: 4 / 8 tests passed
+//
+// &gt;&gt; ./chester -max_procs 3 tests.md 2 4 6   # RUN 3 SELECTED TESTS WITH
+// tests.md : running 3 / 8 tests             # 3 CONCURRENT PROCESSES
+// Running with 3 processes: ... Done
+//  2) pwd check            : FAIL -&gt; see chester-test/prob1-result-02.txt
+//  4) ls check             : FAIL -&gt; see chester-test/prob1-result-04.txt
+//  6) wc 1 to 10           : FAIL -&gt; see chester-test/prob1-result-06.txt
+// Overall: 0 / 3 tests passed
+//
+// Concurrently running processes are run via the associated
+// `suite_run_tests_multiproc()` program.  The `-max_procs` command
+// line flag sets the `suite.max_procs` field which is used in
+// `suite_run_tests_multiproc()` to launch multiple processes to speed
+// up test completion.
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7dc54c0" class="outline-3">
+<h3 id="org7dc54c0"><span class="section-number-3">3.5</span> Provided Utility Functions</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+The emphasis of the project is on utilizing some system calls to
+achieve an interesting effect. To that end, some code is provided to
+focus attention on these aspects of the project. Provided code is in
+the <code>chester_util.c</code> file and the functions there may be used
+elsewhere to ease the implementation of the remainder of the program.
+</p>
+
+<p>
+Notable functions are:
+</p>
+<dl class="org-dl">
+<dt><code>Dprintf()</code></dt><dd>Print a debugging message which is only shown if an
+environment variable is set. Extremely useful during debugging and
+alleviates the need to remove debugging messages after the fact.</dd>
+
+<dt><code>split_into_argv()</code></dt><dd>Splits a string into an array of tokens that
+may be used as the <code>argv[]</code> in an <code>exec()</code> call</dd>
+
+<dt><code>suite_init() / suite_dealloc90</code></dt><dd>Initializes <code>suite_t</code> structs to
+default values and deallocate memory associated with it.</dd>
+
+<dt><code>suite_init_from_file_peg()</code></dt><dd>Reads a file and initializes a
+<code>suite_t</code> struct with its contents.</dd>
+
+<dt><code>suite_do_global_directive() / suite_do_local_directive()</code></dt><dd>Functions used when parsing Chester input files to process
+directives like <code>!testdir=some-directory</code>. These functions would
+only possibly be used by students if the implement optional MAKEUP
+problems described later.</dd>
+</dl>
+
+<p>
+Below is an outline of the provided function. The full source can be
+viewed in the indicated source file.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// chester_util.c: Provided functions that do not require
+// implementation.
+
+#include "chester.h"
+
+#include "chester_parse.h"
+
+void Dprintf(const char* format, ...);
+// Prints out a message if the environment variable DEBUG is set;
+// Try running as `DEBUG=1 ./some_program`
+
+int split_into_argv(char *line, char *argv[], int *argc_ptr);
+// Splits `line` into tokens with pointers to each token stored in
+// argv[] and argc_ptr set to the number of tokens found. This
+// function is in the style of strtok() and destructively modifies
+// `line`. A limited amount of "quoting" is supported to allow single-
+// or double-quoted strings to be present. The function is useful for
+// splitting lines into an argv[] / argc pair in preparation for an
+// exec() call.  0 is returned on success while an error message is
+// printed and 1 is returned if splitting fails due to problems with
+// the string.
+//
+// EXAMPLES:
+// char line[128] = "Hello world 'I feel good' today";
+// char *set_argv[32];
+// int set_argc;
+// int ret = split_into_argv(line, set_argv, &amp;set_argc);
+// // set_argc: 4
+// // set_argv[0]: Hello
+// // set_argv[1]: world
+// // set_argv[2]: I feel good
+// // set_argv[3]: today
+
+char *test_state_str(test_state_t state);
+// Returns a string constant representing the test_state_t for
+// easy printing
+
+void suite_init(suite_t *suite);
+// Initialize fields of `suite` to default values.
+
+void suite_dealloc(suite_t *suite);
+// Deallocate internal memory in the suite. All strings must be
+// free()'d in the suite
+
+int suite_init_from_file_peg(suite_t *suite, char *fname);
+// Initialize `suite` from a file using the instructor-provided PEG
+// parser. The file `fname` is copied strdup()'d to the appropriate
+// field as are various other fields.
+
+int suite_do_global_directive(suite_t *suite, const char *key, const char *val);
+// Processes a global directive which changes attributes of the suite
+// struct. This function is used during parsing for !key=val
+// diretictives in the global directive section.
+
+int suite_do_local_directive(suite_t *suite, const char *key, const char *val);
+// Processes a local directive in the suite that changes attributes of
+// the tests[] entry at index suite.tests_count.
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcf32ced" class="outline-3">
+<h3 id="orgcf32ced"><span class="section-number-3">3.6</span> Sample Usage</h3>
+<div class="outline-text-3" id="text-3-6">
+<p>
+Below is an example use of the complete <code>chester</code> program to perform
+testing activities using input files in the provided <code>data/</code> directory.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span class="linenr"> 1: </span># Demonstration of chester 
+<span class="linenr"> 2: </span>&gt;&gt; cd p4-code
+<span class="linenr"> 3: </span>
+<span class="linenr"> 4: </span>&gt;&gt; make chester
+<span class="linenr"> 5: </span>gcc -Wall -Wno-comment -Werror -g  -c chester_main.c
+<span class="linenr"> 6: </span>gcc -Wall -Wno-comment -Werror -g  -c chester_funcs.c
+<span class="linenr"> 7: </span>gcc -Wall -Wno-comment -Werror -g  -c chester_util.c
+<span class="linenr"> 8: </span>gcc -Wall -Wno-comment -Werror -g  -c chester_parse.c
+<span class="linenr"> 9: </span>gcc -Wall -Wno-comment -Werror -g  -o chester chester_main.o chester_funcs.o chester_util.o chester_parse.o
+<span class="linenr">10: </span>
+<span class="linenr">11: </span>&gt;&gt; chester data/four_tests.md                      # RUN TESTS IN four_tests.md
+<span class="linenr">12: </span>data/four_tests.md : running 4 / 4 tests
+<span class="linenr">13: </span>Running with single process: .... Done
+<span class="linenr">14: </span> 0) seq check            : ok                      # USE DIRECTORY  chester-test BY DEFAULT
+<span class="linenr">15: </span> 1) wc 1 to 10           : FAIL -&gt; see chester-test/four-tests-result-01.md
+<span class="linenr">16: </span> 2) bash with output     : ok
+<span class="linenr">17: </span> 3) tail with input      : FAIL -&gt; see chester-test/four-tests-result-03.md
+<span class="linenr">18: </span>Overall: 2 / 4 tests passed
+<span class="linenr">19: </span>
+<span class="linenr">20: </span>&gt;&gt; cat chester-test/four-tests-result-01.md        # SHOW RESULTS OF ONE TEST THAT FAILED
+<span class="linenr">21: </span># TEST 1: wc 1 to 10 (FAIL)
+<span class="linenr">22: </span>## DESCRIPTION
+<span class="linenr">23: </span>Checks that wc works with input; should fail as the input is slightly
+<span class="linenr">24: </span>mangled.
+<span class="linenr">25: </span>
+<span class="linenr">26: </span>## PROGRAM: wc
+<span class="linenr">27: </span>
+<span class="linenr">28: </span>## INPUT:
+<span class="linenr">29: </span>1
+<span class="linenr">30: </span>2
+<span class="linenr">31: </span>3
+<span class="linenr">32: </span>4
+<span class="linenr">33: </span>
+<span class="linenr">34: </span>6
+<span class="linenr">35: </span>7
+<span class="linenr">36: </span>8
+<span class="linenr">37: </span>9
+<span class="linenr">38: </span>10
+<span class="linenr">39: </span>
+<span class="linenr">40: </span>## OUTPUT: MISMATCH at char position 3
+<span class="linenr">41: </span>### Expect
+<span class="linenr">42: </span>10 10 21
+<span class="linenr">43: </span>
+<span class="linenr">44: </span>### Actual
+<span class="linenr">45: </span>10  9 20
+<span class="linenr">46: </span>
+<span class="linenr">47: </span>
+<span class="linenr">48: </span>## EXIT CODE: ok
+<span class="linenr">49: </span>
+<span class="linenr">50: </span>## RESULT: FAIL
+<span class="linenr">51: </span>
+<span class="linenr">52: </span>&gt;&gt; chester data/special_cases.md                   # RUN special_cases.md TESTS
+<span class="linenr">53: </span>data/special_cases.md : running 9 / 9 tests
+<span class="linenr">54: </span>Running with single process: ......... Done        # DIRECTIVE USES A DIFFERENT TEST DIRECTORY
+<span class="linenr">55: </span> 0) Segfault Test A      : FAIL -&gt; see chester-test-special/special-cases-result-00.md
+<span class="linenr">56: </span> 1) Segfault Test B      : ok
+<span class="linenr">57: </span> 2) Error Redirect       : ok
+<span class="linenr">58: </span> 3) Empty Input          : ok
+<span class="linenr">59: </span> 4) Term Signal A        : FAIL -&gt; see chester-test-special/special-cases-result-04.md
+<span class="linenr">60: </span> 5) Term Signal B        : FAIL -&gt; see chester-test-special/special-cases-result-05.md
+<span class="linenr">61: </span> 6) Term Signal C        : ok
+<span class="linenr">62: </span> 7) Ignore Output        : ok
+<span class="linenr">63: </span> 8) Empty Description    : ok
+<span class="linenr">64: </span>Overall: 6 / 9 tests passed
+<span class="linenr">65: </span>                                                   # SHOW A FAILED TEST RESULT
+<span class="linenr">66: </span>&gt;&gt; cat chester-test-special/special-cases-result-00.md
+<span class="linenr">67: </span># TEST 0: Segfault Test A (FAIL)
+<span class="linenr">68: </span>## DESCRIPTION
+<span class="linenr">69: </span>Checks that the data/raise_sigsegv.sh program runs and the return code
+<span class="linenr">70: </span>is properly handled. The test should fail.
+<span class="linenr">71: </span>
+<span class="linenr">72: </span>## PROGRAM: bash data/raise_sigsegv.sh
+<span class="linenr">73: </span>
+<span class="linenr">74: </span>## INPUT: None
+<span class="linenr">75: </span>
+<span class="linenr">76: </span>## OUTPUT: ok
+<span class="linenr">77: </span>
+<span class="linenr">78: </span>## EXIT CODE: MISMATCH
+<span class="linenr">79: </span>- Expect: 0
+<span class="linenr">80: </span>- Actual: -11                                      # SEGFAULT IN PROGRAM DETECTED
+<span class="linenr">81: </span>
+<span class="linenr">82: </span>## RESULT: FAIL
+<span class="linenr">83: </span>
+<span class="linenr">84: </span>&gt;&gt; chester data/special_cases.md 2 4 7             # SPECIFY ONLY 3 TESTS TO RUN ON
+<span class="linenr">85: </span>data/special_cases.md : running 3 / 9 tests        # THE COMMAND LINE RATHER THAN ALL
+<span class="linenr">86: </span>Running with single process: ... Done
+<span class="linenr">87: </span> 2) Error Redirect       : ok
+<span class="linenr">88: </span> 4) Term Signal A        : FAIL -&gt; see chester-test-special/special-cases-result-04.md
+<span class="linenr">89: </span> 7) Ignore Output        : ok
+<span class="linenr">90: </span>Overall: 2 / 3 tests passed
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org485445a" class="outline-2">
+<h2 id="org485445a"><span class="section-number-2">4</span> <b>Problem 1</b>: Test Service Functions</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+The functions here are meant to acquaint students with some of the
+data types and functionalities required in Chester and the conventions
+around string usage. None of the functions is terribly long and should
+be considered a "warm-up" for later work.
+</p>
+</div>
+
+<div id="outline-container-orgc1ee8d5" class="outline-3">
+<h3 id="orgc1ee8d5"><span class="section-number-3">4.1</span> Creating the Test Directory</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Chester requires creation of a variety of files for each test
+</p>
+<ul class="org-ul">
+<li>Input to the program</li>
+<li>Output from the program</li>
+<li>Results of the test</li>
+</ul>
+<p>
+To keep a source code directory reasonably clean, these are stored in
+a <b>Test Directory</b> that is created by Chester. The following function
+is used to create the testing directory early on in a Chester run.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">int suite_create_testdir(suite_t *suite);
+// PROBLEM 1: Creates the testing results directory according to the
+// name in the suite `testdir` field. If testdir does not exist, it is
+// created as directory with permisions of User=read/write/execute
+// then returns 1. If testdir already exists and is a directory, does
+// nothing and returns 0. If a non-directory file named testdir
+// already exists, print an error message and return -1 to indicate
+// testing cannot proceed. The error message is:
+//
+// ERROR: Could not create test directory 'XXX'
+//        Non-directory file with that name already exists
+//
+// with XXX substituted with the value of testdir
+//
+// CONSTRAINT: This function must be implemented using low-level
+// system calls. Use of high-level calls like system("cmd") will be
+// reduced to 0 credit. Review system calls like stat() and mkdir()
+// for use here. The access() system call may be used but keep in mind
+// it does not distinguish between regular files and directories.
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga6f7e48" class="outline-3">
+<h3 id="orga6f7e48"><span class="section-number-3">4.2</span> Setting the Output File Name</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+The output for all tests will be captured in files. The following
+function sets the field with the name for this file. It introduces the
+use of formatting strings using <code>sprintf() / snprintf()</code> and then
+copying data using <code>strdup()</code> will recur throughout the project.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">int suite_test_set_outfile_name(suite_t *suite, int testnum);
+// PROBLEM 1: Sets the field `outfile_name` for the numbered
+// tests. The filename is constructed according to the pattern
+//
+// TESTDIR/PREFIX-05-output.txt
+//
+// with TESTDIR and PREFIX replaced by the testdir and prefix fields
+// in the suite and the 05 replaced by the test number. The test
+// number is formatted as indicated: printed in a width of 2 with 0
+// padding for single-digit test numbers. The sprintf() or snprintf()
+// functions are useful to create the string. The string is then
+// duplicated into the heap via strdup() and a pointer to it saved in
+// `outfile_name`. The file is not created but the name will be used
+// when starting a test as output will be redirected into
+// outfile_name. This function should always return 0.
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1ee4b27" class="outline-3">
+<h3 id="org1ee4b27"><span class="section-number-3">4.3</span> Creating Input Files</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+If a test has input, then parsing will place it in a <code>test_t</code> in the
+<code>input</code> field. The following function creates a file with the contents
+of the input. This file will be used later to feed input to a tested
+program. 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">int suite_test_create_infile(suite_t *suite, int testnum);
+// PROBLEM 1: Creates a file that is used as input for the numbered
+// test. The file will contain the contents of the `input` field. If
+// that field is NULL, this function immediately returns. Otherwise, a
+// file named like
+//
+//   TESTDIR/PREFIX-05-input.txt
+//
+// is created with TESTDIR and PREFIX replaced by the `testdir` field
+// and `prefix` fields of the suite and the 05 replaced by the test
+// number. A copy of this filename is duplicated and retained in the
+// `infile_name` field for the test. After opening this file, the
+// contents of the `input` field are then written to this file before
+// closing the file and returning
+// 0. The testing directory is assumed to exist by this function. The
+// options associated with the file are to be the following:
+// - Open write only
+// - Create the file if it does not exist
+// - Truncate the file if it does exist
+// - Created files have the User Read/Write permission set
+// If the function cannot create the input file due to open() failing,
+// an error message is printed and -1 is returned; the error message is
+// printed using perror() and will appear as:
+//
+//   Could not create input file : CAUSE
+//
+// with the portion to the right being added by perror() to show the
+// system cause
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd7e0902" class="outline-3">
+<h3 id="orgd7e0902"><span class="section-number-3">4.4</span> Reading Output Files</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+The output from a program will be stored in a file. In order to
+determine if the program produced the correct output, the its output
+is read from that file into memory and compared against the expected
+output.  The below function is responsible for reading in the contents
+of an output file and filling in the <code>output_actual</code> field. It is
+required to use certain system programming techniques outline in the
+documentation string to ensure it operates as efficiently as possible. 
+</p>
+
+<p>
+HINT: <code>stat()</code> is essential to use to complete this function
+correctly. 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">int suite_test_read_output_actual(suite_t *suite, int testnum);
+// PROBLEM 1: Reads the contents of the file named in field
+// `outfile_name` for the given testnum into heap-allocated space and
+// assigns the output_actual field to that space. Uses a combination
+// of stat() and read() to efficiently read in the entire contents of
+// a file into a malloc()'d block of memory, null terminates it (\0)
+// so that the contents may treatd as a valid C string. Returns the
+// total number of bytes read from the file on on success (this is
+// also the length of the `output_actual` string). If the file could
+// not be opened or read, the `output_actual` field is not changed and
+// -1 is returned.
+//
+// CONSTRAINT: This function should perform at most 1 heap allocation;
+// use of the realloc() function is barred. System calls like stat()
+// MUST be used to determine the amount of memory needed before
+// allocation, Failure to do so will lead to loss of credit.
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8fd3a33" class="outline-2">
+<h2 id="org8fd3a33"><span class="section-number-2">5</span> <b>Problem 2</b>: Start/Finish Tests</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-orga9ba065" class="outline-3">
+<h3 id="orga9ba065"><span class="section-number-3">5.1</span> Starting Tests</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+Tests are run by forking a child process and later executing the
+program indicated in the <code>program</code> field of the test struct. Before
+executing the program, several items of setup are done.
+</p>
+<ul class="org-ul">
+<li>The parent process must first create the input file for the tested program</li>
+<li>Once a child is forked, the parent process retains the PID for the
+child process and sets its <code>state</code> to <code>TEST_RUNNING</code></li>
+<li>The child process redirects its standard input to come from the
+input file and standard output/error to go into the specified output
+file. This requires the use of system calls like <code>open()</code> and
+<code>dup2()</code></li>
+<li>In order to Execute the program, the child must also set up an
+<code>argv[]</code> array using provided split functions.</li>
+</ul>
+<p>
+Along the way a variety of things may go wrong in which case the child
+process may exit prematurely with exit codes to indicate the problems
+that arose.
+</p>
+
+<p>
+The function below is meant to manage this whole process.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">int suite_test_start(suite_t *suite, int testnum);
+// PROBLEM 2: Start a child process that will run program in the
+// indicated test number. The parent process first sets the
+// outfile_name and creates infile_name with the program input. It
+// then creates a child process, sets the test field `child_pid` to
+// the child process ID and returns 0.
+//
+// The child sets up output redirection so that the standard out AND
+// standard error streams for the child process is channeled into the
+// file named in field `outfile_name`. Note that standard out and
+// standard error are "merged" so that they both go to the same
+// `outfile_name`. This file should have the same options used when
+// opening it as described in suite_test_create_infile(). If
+// infile_name is non-NULL, input redirection is also set up with
+// input coming from the file named in field `infile_name`. Uses the
+// split_into_argv() function to create an argv[] array which is
+// passed to an exec()-family system call.
+//
+// Any errors in the child during input redirection setup, output
+// redirection setup, or exec()'ing print error messages and cause an
+// immediate exit() with an associated error code. These are as
+// follows:
+//
+// | CONDITION            | EXIT WITH CODE         |
+// |----------------------+------------------------|
+// | Input redirect fail  | exit(TESTFAIL_INPUT);  |
+// | Output redirect fail | exit(TESTFAIL_OUTPUT); |
+// | Exec failure         | exit(TESTFAIL_EXEC);   |
+//
+// Since output redirection is being set up, printing error messages
+// in the child process becomes unreliable. Instead, the exit_code for
+// the child process should be checked for one of the above values to
+// determine what happened.
+//
+// NOTE: When correctly implemented, this function should never return
+// in the child process though the compiler may require a `return ??`
+// at the end to match the int return type. NOT returning from this
+// function in the child is important as if a child manages to return,
+// there will now be two instances of chester running with the child
+// starting its own series of tests which will not end well...
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7e6df79" class="outline-3">
+<h3 id="org7e6df79"><span class="section-number-3">5.2</span> Finishing Tests</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+After a child process completes running a program, the parent process
+will need to collect information about the test results. This happens
+after a <code>wait()</code>-style system call has indicated the child has
+finished. Actives here include gather the program output, comparing it
+and the child exit code to expected values, and setting the state
+of the test to either <code>TEST_PASSED</code> or <code>TEST_FAILED</code>. The following
+function handles these activities.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">int suite_test_finish(suite_t *suite, int testnum, int status);
+// PROBLEM 2
+//
+// Processes a tests after its child process has completed and
+// determines whether the tests passes / fails.
+//
+// The `status` parameter comes from a wait()-style call and is use to
+// set the `exit_code_actual` of the test. `exit_code_actual` is one
+// of the following two possibilities:
+// - 0 or positive integer: test program exited normally and the exit
+//   code/status is stored.
+// - Negative integer: The tested program exited abnormally due to
+//   being signaled and the negative of the signal number is
+//   stored. Ex: child received SIGSEGV=11 so exit_code_actual is -11.
+// If `status` indicated neither a normal nor abnormal exit, this
+// function prints an error and returns (this case is not tested).
+//
+// Output produced by the test is read into the `output_actual` field
+// using previously written functions.
+//
+// The test's `state` field is set to one of TEST_PASSED or
+// TEST_FAILED. Comparisons are done between the fields:
+// - output_expect vs output_actual (strings)
+// - exit_code_expect vs exit_code_actual (int)
+//
+// If there is a mismatch with these, the test has failed and its
+// `state` is set to TEST_FAILED. If both sets of fields match, the
+// state of the test becomes `TEST_PASSED` and the suite's
+// `tests_passed` field is incremented.
+//
+// Special Case: if output_expect is NULL, there is no expected output
+// and comparison to output_actual should be skipped. This covers
+// testing cases where a program is being run to examine only whether
+// it returns the correct exit code or avoids segfaults.
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbe5a57b" class="outline-2">
+<h2 id="orgbe5a57b"><span class="section-number-2">6</span> <b>Problem 3</b>: Creating Test Results</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+It is handy for folks running tests to receive both summary
+information about tests being run and detailed results for individual
+tests. The functions in this problem deal with the latter: they
+construct a results file for a individual tests indicating whether it
+passed and if not the reasons for its failure.
+</p>
+</div>
+
+<div id="outline-container-orgc4fe4d7" class="outline-3">
+<h3 id="orgc4fe4d7"><span class="section-number-3">6.1</span> String Comparison Utilities</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+When comparing expected and actual test output, the following two
+functions will be used to hone in on differences between them. These
+functions are used in the next one to produce the results file for a
+test.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">void print_window(FILE *out, char *str, int center, int lrwidth);
+// PROBLEM 3
+// 
+// Print part of the string that contains index center to the given
+// out file. Print characters in the string between
+// [center-lrwidth,center+lrwidth] with the upper bound being
+// inclusive. If either the start or stop point is out of bounds,
+// truncate the printing: the minimum starting point is index 0, the
+// maximum stopping point is the string length.
+//
+// EXAMPLES:
+// char *s = "ABCDEFGHIJKL";
+// //         012345678901
+// print_window(stdout, s, 4, 3);
+// // BCDEFGH
+// // 1234567
+// print_window(stdout, s, 2, 5);
+// // ABCDEFGH
+// // 01234567
+// print_window(stdout, s, 8, 4);
+// // EFGHIJKL
+// // 45678901
+//
+// NOTE: this function is used when creating test results to show
+// where expected and actual output differ
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-c">int differing_index(char *strA, char *strB);
+// PROBLEM 3
+// 
+// Finds the lowest index where different characters appear in strA and
+// strB. If the strings are identical except that one is longer than
+// the other, the index returned is the length of the shorter
+// string. If the strings are identical, returns -1.
+//
+// EXAMPLES:
+// differing_index("01234567","0123x567") -&gt; 4
+// differing_index("012345","01234567")   -&gt; 6
+// differing_index("012345","01x34567")   -&gt; 2
+// differing_index("012345","012345")     -&gt; -1
+// 
+// NOTE: this function is used when creating test results to show
+// where expected and actual output differ
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaee110a" class="outline-3">
+<h3 id="orgaee110a"><span class="section-number-3">6.2</span> Results Files</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+Results files for individual tests are stored in the Testing Directory
+and are named according to the test number and prefix for the
+suite. An example result file with some comments is shown below. This
+is the same example that appears in the documentation comments for the
+following function. Result files are in Markdown format just like
+input files.
+</p>
+<div class="org-src-container">
+<pre class="src src-markdown"># TEST 6: wc 1 to 10 (FAIL)              &lt;!--- testnum and test title, print "ok" for passed tests --&gt;
+## DESCRIPTION
+Checks that wc works with input          &lt;!--- description field of test --&gt;
+
+## PROGRAM: wc                           &lt;!--- program field of test --&gt;
+
+## INPUT:                                &lt;!--- input field of test, "INPUT: None" for NULL input --&gt;
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+                                         &lt;!--- if output_expect is NULL, print "OUTPUT: skipped check" --&gt;
+## OUTPUT: MISMATCH at char position 3   &lt;!--- results of differing_index() between  --&gt;
+### Expect                               &lt;!--- output_expect and output_actual fields --&gt;
+10 10 21                                 &lt;!--- output_expect via calls to print_window() --&gt;
+
+### Actual
+10  9 20                                 &lt;!--- output_actual via calls to print_window() --&gt;
+                                         &lt;!--- if no MISMATCH in output, prints ## OUTPUT: ok --&gt;
+
+## EXIT CODE: ok                         &lt;!--- MISMATCH if exit_code_expect and actual don't match and --&gt;
+                                         &lt;!--- prints Expect/Actual values --&gt;
+## RESULT: FAIL                          &lt;!--- "ok" for passed tests --&gt;
+</pre>
+</div>
+
+
+<p>
+The function below produces a result file for a given test.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">int suite_test_make_resultfile(suite_t *suite, int testnum);
+// PROBLEM 3
+//
+// Creates a result file for the given test. The general format is shown in the example below.
+//   # TEST 6: wc 1 to 10 (FAIL)              // testnum and test title, print "ok" for passed tests
+//   ## DESCRIPTION
+//   Checks that wc works with input          // description field of test
+//
+//   ## PROGRAM: wc                           // program field of test
+//
+//   ## INPUT:                                // input field of test, "INPUT: None" for NULL input
+//   1
+//   2
+//   3
+//   4
+//   5
+//   6
+//   7
+//   8
+//   9
+//   10
+//                                            // if output_expect is NULL, print "OUTPUT: skipped check"
+//   ## OUTPUT: MISMATCH at char position 3   // results of differing_index() between 
+//   ### Expect                               // output_expect and output_actual fields
+//   10 10 21                                 // output_expect via calls to print_window()
+//
+//   ### Actual
+//   10  9 20                                 // output_actual via calls to print_window()
+//                                            // if no MISMATCH in output, prints ## OUTPUT: ok
+//
+//   ## EXIT CODE: ok                         // MISMATCH if exit_code_expect and actual don't match and
+//                                            // prints Expect/Actual values
+//   ## RESULT: FAIL                          // "ok" for passed tests
+//
+// The file to create is named according to the pattern
+//
+// TESTDIR/PREFIX-05-result.md
+//
+// with TESTDIR / PREFIX and 05 substituted for the `testdir` and
+// `prefix` fields of suite and 05 for the testnum (width 2 and
+// 0-padded). Note the use of the .md extension to identify the output
+// as Markdown formatted text.
+//
+// The output file starts with a heading which prints the a heading
+// with the testnum and title in it along with ok/FAIL based on the
+// `state` of the test. Then 6 sections are printed which are
+// 1. DESCRIPTION
+// 2. PROGRAM
+// 3. INPUT
+// 4. OUTPUT (comparing output_expect and output_actual)
+// 5. EXIT CODE (comparing exit_code_expect and exit_code_actual)
+// 6. RESULT
+//
+// In the OUTPUT section, if a difference is detected at position N
+// via the differing_index() function, then a window around position N
+// is printed into the file for both the expected and actual
+// output. The window width used is defined in the header via the
+// constant TEST_DIFFWIDTH and is passed to print_window() function.
+//
+// If the output_expect field is NULL, the OUTPUT section header has
+// the message "skipped check" printed next to it.
+//
+// In the EXIT CODE section, if there is a mismatch between the
+// expected and actual exit_code, then they are both printed as in:
+// ## EXIT CODE: MISMATCH
+// - Expect: 0
+// - Actual: 1
+//
+// The final RESULT section prints either ok / FAIL depending on the
+// test state.
+//
+// If the result file cannot be opened/created, this file prints the
+// error message
+//   ERROR: Could not create result file 'XXX'
+// with XXX substituted for the file name and returns -1. Otherwise
+// the function returns 0 on successfully creating the resultfile.
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8a37307" class="outline-2">
+<h2 id="org8a37307"><span class="section-number-2">7</span> <b>Problem 4</b>: Running Suite Tests</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+Running the tests in a suite is performed by the following
+function. Note that it uses the <code>tests_torun[]</code> array to determine
+which tests to run: this array contains indices of tests to run and
+may be a subset of all tests.  The array is set before running the
+function such as during the <code>main()</code> function.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">int suite_run_tests_singleproc(suite_t *suite);
+// PROBLEM 4
+//
+// Runs tests in the suite one at time. Before begining the tests,
+// creates the testing directory with a call to
+// suite_create_testdir().  If the directory cannot be created, this
+// function returns -1 without further action.
+//
+// The tests with indices in the field `tests_torun[]` are run in the
+// order that they appear there. This is done in a loop.
+// `suite_test_start(..)` is used to start tests and wait()-style
+// system calls are used to suspend execution until the child process
+// is finished. Additional functions previously written are then used
+// to
+// - Assign the exit_code for the child
+// - Read the actual output into the test struct
+// - Set the pass/fail state
+// - Produce a results file for the test
+//
+// Prints the "Running with single process:" and each test that
+// completes prints a "." on the screen to give an indication of
+// progress. "Done" is printed when all tests complete so that a full
+// line which runs 8 tests looks like
+//
+//    Running with single process: ........ Done
+//
+// If errors arise such as with waiting for a child process, failures
+// with getting the test output, or other items, error messages should
+// be printed but the loop should continue. No specific error messages
+// are required and no testing is done; error messages are solely to
+// aid with debugging problems.
+</pre>
+</div>
+
+<p>
+After the specified tests are run, a summary table is useful and can
+be printed using the following function.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">void suite_print_results_table(suite_t *suite);
+// PROBLEM 4
+//
+// Prints a table of test results formatted like the following.
+//
+//  0) echo check           : FAIL -&gt; see chester-test/prob1-result-00.txt
+//  1) sleep 2s             : ok
+//  2) pwd check            : FAIL -&gt; see chester-test/prob1-result-02.txt
+//  3) seq check            : ok
+//  4) ls check             : FAIL -&gt; see chester-test/prob1-result-04.txt
+//  5) ls not there         : ok
+//  6) wc 1 to 10           : FAIL -&gt; see chester-test/prob1-result-06.txt
+//  7) date runs            : ok
+//
+// The test number at the beginning of the line is printed with width
+// 2 and space padded. The Test title is printed with a width of 20,
+// left-aligned using capabilities of printf().  If the test passes,
+// the message "ok" is added while if it fails, a FAIL appears and the
+// result file associated with the test is indicated. This function
+// honors the `tests_torun[]` array and will only print table results
+// for tests with indices in this array.
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org53c7103" class="outline-2">
+<h2 id="org53c7103"><span class="section-number-2">8</span> <b>Problem 5</b>: Chester Main</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+The final step in constructing Chester is to provide a <code>main()</code> function
+in <code>chester_main.c</code> which sequences all the previous functionality
+properly. 
+</p>
+</div>
+
+<div id="outline-container-org232b329" class="outline-4">
+<h4 id="org232b329">Parsing the Input File</h4>
+<div class="outline-text-4" id="text-org232b329">
+<p>
+A function is provided in <code>chester_util.c</code> to parse input files and
+fill in a <code>suite_t</code> struct which should be used to avoid the need to
+do manual parsing. A typical invocation will be:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">{
+  char *infilename = ...;
+  suite_t mysuite;
+  int ret = suite_init_from_file(&amp;suite, infilename);
+  if(ret == -1){
+    // error case;
+  }
+  ...
+}
+</pre>
+</div>
+<p>
+Note that this opts to place the suite in the stack which is typical
+but not required.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org97b7af5" class="outline-4">
+<h4 id="org97b7af5">Command Line options</h4>
+<div class="outline-text-4" id="text-org97b7af5">
+<p>
+For convenience, <code>chester</code> can be run with two variations:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; chester tests.md             # (A) run all tests in the input file
+&gt;&gt; chester tests.md 2 5 9 11    # (B) specify which tests to run on the command line
+</pre>
+</div>
+<p>
+Processing of the command line options will need to take place in
+<code>main()</code> to set up the <code>tests_torun[]</code> array to reflect these two
+possibilities. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1676def" class="outline-4">
+<h4 id="org1676def">Output</h4>
+<div class="outline-text-4" id="text-org1676def">
+<p>
+The main program should print a title message like:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">&gt;&gt; chester data/special_cases.md 2 4 7
+data/special_cases.md : running 3 / 9 tests
+...
+</pre>
+</div>
+<p>
+The title message indicates the input file name and how many tests are
+being run versus how many are in the input file.
+</p>
+
+<p>
+The program should then call <code>suite_run_tests_singleproc()</code> to run the
+indicated tests and use <code>suite_print_results_table()</code> to print a
+results table. Errors uncounted while running tests may cause the
+program to bail early and not print any test results such as if the
+testing directory could not be created.
+</p>
+
+<p>
+At the end of teasing, a summary message should be printed like the
+following:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">Overall: 2 / 3 tests passed
+</pre>
+</div>
+<p>
+which is the number of test passed versus the number that were run.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org13aed0c" class="outline-2 grading 100">
+<h2 id="org13aed0c"><span class="section-number-2">9</span> Grading Criteria&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="100">100</span></span></h2>
+<div class="outline-text-2" id="text-9">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">AUTOMATED TESTS: 1 point per test</td>
+</tr>
+
+<tr>
+<td class="org-right">50</td>
+<td class="org-left">TOTAL</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Problem 1: <code>make test-prob1</code> runs tests from <code>test_prob1.org</code> for correctness</td>
+</tr>
+
+<tr>
+<td class="org-right">15</td>
+<td class="org-left">Problem 2: <code>make test-prob2</code> runs tests from <code>test_prob2.org</code> for correctness</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Problem 3: <code>make test-prob3</code> runs tests from <code>test_prob3.org</code> for correctness</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">Problem 4: <code>make test-prob4</code> runs tests from <code>test_prob4.org</code> for correctness</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Problem 5: <code>make test-prob5</code> runs tests from <code>test_prob5.org</code> for correctness</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">MANUAL INSPECTION</td>
+</tr>
+
+<tr>
+<td class="org-right">50</td>
+<td class="org-left">TOTAL</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">TBD: Specific grading criteria for Manual Inspection will be released shortly</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+
+<div id="outline-container-org41d00bb" class="outline-2">
+<h2 id="makeup"><a id="org41d00bb"></a><span class="section-number-2">10</span> <a id="orgfa26c72"></a> <b>Optional Makeup Credit</b></h2>
+<div class="outline-text-2" id="text-makeup">
+<p>
+This section will be filled in after the initial project release to
+describe how MAKEUP credit may be earned in the project.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org0cb1486" class="outline-2">
+<h2 id="org0cb1486"><span class="section-number-2">11</span> Assignment Submission</h2>
+<div class="outline-text-2" id="text-11">
+</div>
+<div id="outline-container-org740671d" class="outline-3">
+<h3 id="org740671d"><span class="section-number-3">11.1</span> <a id="org0a45ea4"></a> Submit to Gradescope</h3>
+<div class="outline-text-3" id="text-11-1">
+<p>
+Refer to the Project 1 instructions and adapt them for details of how
+to submit to Gradescope. In summary they are
+</p>
+
+<ol class="org-ol">
+<li>Type <code>make zip</code> in the project directory to create <code>p4-comlete.zip</code></li>
+<li>Log into <a href="https://www.gradescope.com/">Gradescope</a>, select Project 4, and upload <code>p4-complete.zip</code></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org609c50e" class="outline-3">
+<h3 id="org609c50e"><span class="section-number-3">11.2</span> Late Policies</h3>
+<div class="outline-text-3" id="text-11-2">
+<p>
+You may wish to review the policy on late project submission which
+will cost 1 Engagement Point per day late. <b>No projects will be
+accepted more than 48 hours after the deadline.</b>
+</p>
+
+
+<p>
+<a href="https://www.cs.umd.edu/~profk/216/syllabus.html#late-submission">https://www.cs.umd.edu/~profk/216/syllabus.html#late-submission</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-11-13 Wed 01:22 <br/> </i>
+</div>
+</body>
+</html>
