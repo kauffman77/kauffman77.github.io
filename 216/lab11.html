@@ -1,0 +1,1291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-11-13 Wed 16:50 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMSC216 Lab11: File Stats and Timing Strides</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","HM>","TM>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:"], // allowed interactive prompts
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"    , "language-c");
+lang_map.set("src-text" , "language-plaintext");
+lang_map.set("src-sh"   , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2024-11-13 Wed 16:50</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CMSC216 Lab11: File Stats and Timing Strides</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Mon 22-Apr-2024</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><i>Approximately 1.00% of total grade</i></li>
+</ul>
+
+<div id="outline-container-orga972d5a" class="outline-4">
+<h4 id="orga972d5a">CODE DISTRIBUTION: <a href="lab11-code.zip">lab11-code.zip</a></h4>
+</div>
+
+<div id="outline-container-org065af6f" class="outline-4">
+<h4 id="org065af6f">CHANGELOG: Empty</h4>
+</div>
+
+<div id="outline-container-orgab0a8f3" class="outline-4">
+<h4 id="orgab0a8f3"></h4>
+<div class="outline-text-4" id="text-orgab0a8f3">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org08ddcc9">1. Rationale</a></li>
+<li><a href="#orgda79128">2. Codepack</a></li>
+<li><a href="#orgf13d921">3. Problem 1 Background: Makefiles</a>
+<ul>
+<li><a href="#org3cd3359">Structure of Makefiles</a></li>
+<li><a href="#org3b5e322">Variables and Shortcuts in Makefiles</a></li>
+<li><a href="#org3bef362">Dependency Detection</a></li>
+</ul>
+</li>
+<li><a href="#org6e8ea7a">4. Problem 2 Background: The <code>clock()</code> Function</a></li>
+<li><a href="#org485093b">5. QUESTIONS.txt File Contents</a>
+<ul>
+<li><a href="#org79cd193">Submission</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org08ddcc9" class="outline-2">
+<h2 id="org08ddcc9"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Frequently systems programs must check for the existence of file and
+interrogate their properties. The first exercise studies two common
+system calls for this task, <code>access()</code> and <code>stat()</code>. It employs them
+in a few simple tasks to acquaint students with their use.
+</p>
+
+<p>
+While command line utilities like <code>time</code> can provide overall
+information on how long a program takes to run, often one wishes to
+time individual sections of code. The <code>clock()</code> function enables this
+through reporting the current "moment" in time for the user CPU
+clock.  It is typically used via the pattern:
+</p>
+<ol class="org-ol">
+<li>Call <code>clock()</code> to get the START time</li>
+<li>Do some sort of computation that takes a while</li>
+<li>Call <code>clock()</code> to get the FINISH time</li>
+<li>Compute ELAPSED = FINISH - START</li>
+</ol>
+<p>
+This pattern can be repeated throughout a code and is often used in
+benchmarks to time and compare approaches to a problem.
+</p>
+
+<p>
+The second exercise introduces the use of <code>clock()</code> on a problem
+involving <code>structs</code> that are arranged differently in memory. The
+timing allows one to observe how <code>struct</code> layout affects performance
+which reinforces the central idea of efficient memory access:
+sequential access patterns are faster than better than strided or
+random access patterns.
+</p>
+</div>
+
+<div id="outline-container-org963bfc2" class="outline-4">
+<h4 id="org963bfc2">Grading Policy</h4>
+<div class="outline-text-4" id="text-org963bfc2">
+<p>
+Credit for this exercise is earned by completing the code/asnwers here
+and submitting a Zip of the work to Gradescope. Students are
+responsible to check that the results produced locally via <code>make test</code>
+are reflected on Gradescope after submitting their completed
+Zip. Successful completion earns 1 Engagement Point.
+</p>
+
+<p>
+Lab Exercises are open resource/open collaboration and <b>students are
+encouraged to cooperate on labs.</b> Students may submit work as groups
+of up to 5 to Gradescope: one person submits then adds the names of
+their group members to the submission.
+</p>
+
+<p>
+See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies in the course syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgda79128" class="outline-2">
+<h2 id="orgda79128"><span class="section-number-2">2</span> Codepack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The codepack for the HW contains the following files:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Questions to answer: fill in the multiple choice selections in this file.</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>demo-makefile-little</code></td>
+<td class="org-left">Study</td>
+<td class="org-left">Problem 1: Example Makefiles to study</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>demo-makefile-big</code></td>
+<td class="org-left">Study</td>
+<td class="org-left">Problem 1: Example Makefiles to study</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>prob1-makefile/Makefile</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 1: Template Makefile to complete for problem 1</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>clock_demo.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2 demo on how the <code>clock()</code> function is used</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>struct_stride.c</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 2 code used to observe CPU timing differences</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Build</td>
+<td class="org-left">Enables <code>make test</code> and <code>make zip</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>QUESTIONS.txt.bk</code></td>
+<td class="org-left">Backup</td>
+<td class="org-left">Backup copy of the original file to help revert if needed</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>QUESTIONS.md5</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Checksum for answers in questions file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_quiz_filter</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Filter to extract answers from Questions file, used in testing</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_lab11.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for this lab</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running scripts</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgf13d921" class="outline-2">
+<h2 id="orgf13d921"><span class="section-number-2">3</span> Problem 1 Background: Makefiles</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Building programs often involves compiling separate source files and
+eventually combining them through linking to create an executable.
+There are often associated tasks such as running automated tests,
+creating distribution files, and generating documentation that may be
+supported by the build system as well.  Among the oldest build systems
+still in use is <code>make</code> and its associated <code>Makefiles</code>.  This problem
+covers the basics of how to create a <code>Makefile</code>.
+</p>
+</div>
+
+<div id="outline-container-org3cd3359" class="outline-3">
+<h3 id="org3cd3359">Structure of Makefiles</h3>
+<div class="outline-text-3" id="text-org3cd3359">
+<p>
+The basic structure of a <code>Makefile</code> involves <b>rules</b> which relate
+<b>targets, dependencies, and commands</b>. Simple <code>Makefiles</code> comprise a
+list of rules.
+</p>
+<div class="org-src-container">
+<pre class="src src-makefile"># comment above Rule 1
+target1 : dependency1A depency1B
+	command1A
+	command1B
+	command1C
+
+# comment above Rule 2
+target2 : dependency2A
+	command2A
+	command2B
+
+# comment above Rule 3
+target3 : dependency3A dependency3B dependency3B
+	command3A
+	command3B
+</pre>
+</div>
+<p>
+When invoked, <code>make target3</code> will load the contents of the <code>Makefile</code>
+and examine the relationship between <code>target3</code> and its
+dependencies. If <code>make</code> determines it is necessary, it may run
+<code>command3A, command3B</code> in sequence to "update" <code>target3</code>. In other
+cases, <code>make</code> may determine that there is no need to run additional
+commands as <code>target3</code> is already up to date.  Similarly, running <code>make
+target1</code> will possibly run <code>command1A, command1B, command1C</code>.
+</p>
+
+<p>
+NOTE: Commands associated with a rule <b>MUST BE INDENTED WITH A
+TAB</b>. This is a notoriously bad "feature" of make which can
+occasionally cause problems. Be aware: leading whitespace for commands
+should be TAB characters.
+</p>
+
+<p>
+The most common kind of target is a file that should be created such
+as a <code>.o</code> file or an executable program. The directory
+<code>demo-makefile-little</code> has an example <code>Makefile</code> showing this:
+</p>
+<div class="org-src-container">
+<pre class="src src-makefile"><span class="linenr"> 1: </span># Simle Makefile to build program main_prog
+<span class="linenr"> 2: </span>
+<span class="linenr"> 3: </span># first rule in the file is the default: typing `make` is the same as
+<span class="linenr"> 4: </span># typing `make main_prog`
+<span class="linenr"> 5: </span>
+<span class="linenr"> 6: </span># rule 1
+<span class="linenr"> 7: </span>main_prog : main_func.o func_01.o
+<span class="linenr"> 8: </span>	gcc -o main_prog main_func.o func_01.o
+<span class="linenr"> 9: </span>
+<span class="linenr">10: </span># rule 2
+<span class="linenr">11: </span>main_func.o : main_func.c
+<span class="linenr">12: </span>	gcc -c main_func.c
+<span class="linenr">13: </span>
+<span class="linenr">14: </span># rule 3
+<span class="linenr">15: </span>func_01.o : func_01.c
+<span class="linenr">16: </span>	gcc -c func_01.c
+<span class="linenr">17: </span>
+<span class="linenr">18: </span># rule 4
+<span class="linenr">19: </span>clean : 
+<span class="linenr">20: </span>	rm -f *.o
+<span class="linenr">21: </span>	rm -f main_prog
+</pre>
+</div>
+
+<p>
+The rules that appear are
+</p>
+<ol class="org-ol">
+<li><code>main_prog</code> depends on the <code>main_func.o</code> and <code>func_01.o</code>; the
+program is created by invoking GCC on these files</li>
+<li><code>main_func.o</code> depends on <code>main_func.c</code> which is created by running
+GCC</li>
+<li><code>func_01.o</code> depends on <code>func_01.c</code> and is created by running GCC</li>
+<li><code>clean</code> is a "phony" target with no dependencies which will remove
+compile artifacts by using the <code>rm</code> command</li>
+</ol>
+
+<p>
+When one types <code>make</code> or <code>make main_prog</code> in that directory, the
+following will appear:
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">&gt;&gt; cd demo-makefile-little/
+&gt;&gt; make
+gcc -c main_func.c
+gcc -c func_01.c
+gcc -o main_prog main_func.o func_01.o
+</pre>
+</div>
+<p>
+Observe that <code>make</code> detects that the two dependencies for Rule 1 are
+incomplete: <code>main_func.o</code> and <code>func_01.o</code> are not present. To create
+them, it will generate them as targets according to for the rules that
+have them as targets, Rule 2 and Rule 3.  After running the commands
+for these two rules, the commands for Rule 1 are executed to generate
+the program.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org3b5e322" class="outline-3">
+<h3 id="org3b5e322">Variables and Shortcuts in Makefiles</h3>
+<div class="outline-text-3" id="text-org3b5e322">
+<p>
+Makefiles support a large number of features such as explicit
+variables, automatic variables, pattern-based rules, and many
+others. A few of these are described in the sample file
+<code>demo-makefile-little/Makefile-shortcuts</code>. It accomplishes the same
+task as the <code>Makefile</code> but utilizes some features which are useful to
+know about. The comments in this file describe some of these features.
+</p>
+<div class="org-src-container">
+<pre class="src src-makefile"><span class="linenr"> 1: </span># Simle Makefile to build program main_prog
+<span class="linenr"> 2: </span>
+<span class="linenr"> 3: </span># first rule in the file is the default: typing `make` is the same as
+<span class="linenr"> 4: </span># typing `make main_prog`
+<span class="linenr"> 5: </span>
+<span class="linenr"> 6: </span># rule 1
+<span class="linenr"> 7: </span>main_prog : main_func.o func_01.o
+<span class="linenr"> 8: </span>	gcc -o main_prog main_func.o func_01.o
+<span class="linenr"> 9: </span>
+<span class="linenr">10: </span># rule 2
+<span class="linenr">11: </span>main_func.o : main_func.c
+<span class="linenr">12: </span>	gcc -c main_func.c
+<span class="linenr">13: </span>
+<span class="linenr">14: </span># rule 3
+<span class="linenr">15: </span>func_01.o : func_01.c
+<span class="linenr">16: </span>	gcc -c func_01.c
+<span class="linenr">17: </span>
+<span class="linenr">18: </span># rule 4
+<span class="linenr">19: </span>clean : 
+<span class="linenr">20: </span>	rm -f *.o
+<span class="linenr">21: </span>	rm -f main_prog
+</pre>
+</div>
+
+<p>
+By default, typing <code>make</code> will search for a file named <code>Makefile</code> but
+the following invocation allows using a specific file other than that:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; make -f Makefile-shortcuts
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3bef362" class="outline-3">
+<h3 id="org3bef362">Dependency Detection</h3>
+<div class="outline-text-3" id="text-org3bef362">
+<p>
+Makefiles are useful for larger projects to automatically detect
+dependencies which must be updated.  The example in
+<code>demo-makefile-big/</code> shows a "larger" project with more files. Observe
+the following:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; make                # COMPILE 1
+gcc -c main_func.c
+gcc -c func_01.c
+gcc -c func_02.c
+gcc -c func_03.c
+gcc -c func_04.c
+gcc -c func_05.c
+gcc -c func_06.c
+gcc -c func_07.c
+gcc -c func_08.c
+gcc -c func_09.c
+gcc -c func_10.c
+gcc -c func_11.c
+gcc -c func_12.c
+gcc -c func_13.c
+gcc -c func_14.c
+gcc -c func_15.c
+gcc -c func_16.c
+gcc -c func_17.c
+gcc -c func_18.c
+gcc -c func_19.c
+gcc -c func_20.c
+gcc -o main_prog main_func.o func_01.o func_02.o func_03.o func_04.o func_05.o func_06.o func_07.o func_08.o func_09.o func_10.o func_11.o func_12.o func_13.o func_14.o func_15.o func_16.o func_17.o func_18.o func_19.o func_20.o
+
+&gt;&gt; make                # COMPILE 2
+make: Nothing to be done for 'all'.
+
+&gt;&gt; rm func_12.o        # delete a .o
+&gt;&gt; touch func_05.c     # make func_05.c look like it has been edited
+
+&gt;&gt; make                # COMPILE 3
+gcc -c func_05.c       # only out of sync or
+gcc -c func_12.c       # missing targets are regenerated
+gcc -o main_prog main_func.o func_01.o func_02.o func_03.o func_04.o func_05.o func_06.o func_07.o func_08.o func_09.o func_10.o func_11.o func_12.o func_13.o func_14.o func_15.o func_16.o func_17.o func_18.o func_19.o func_20.o
+</pre>
+</div>
+<p>
+The lesson above is in <code>COMPILE 3</code>: make detects that most of the <code>.o</code>
+files are in sync with their source files. Only the missing / out of
+sync targets have their rules applied to regenerated them and update
+the exectuable program.
+</p>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-org6e8ea7a" class="outline-2">
+<h2 id="org6e8ea7a"><span class="section-number-2">4</span> Problem 2 Background: The <code>clock()</code> Function</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+The code block below illustrates the basic usage pattern for the
+<code>clock()</code> function.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">#include &lt;time.h&gt;               // for clock() and clock_t
+
+{
+  clock_t begin = clock();      // current cpu moment
+
+  Perform computation that takes a while;
+
+  clock_t end = clock();        // later cpu moment
+
+  double cpu_time =             // convert into seconds
+    ((double) (end-begin)) / CLOCKS_PER_SEC;
+
+  printf("Elapsed CPU Time: %f second\n", cpu_time);
+}
+</pre>
+</div>
+<p>
+A few caveats are worth pointing out.
+</p>
+<ul class="org-ul">
+<li>The <code>clock_t</code> type is often a large integer type like <code>unsigned
+  long</code> which is why one can perform subtraction using it.  Don't rely
+on this being the case and just use the type indicated as shown.</li>
+<li><code>clock()</code> itself returns a number corresponding to the number of CPU
+"ticks" which have occurred while the program runs. This requires
+conversion into the number of seconds shown above. It makes use of
+the <code>CLOCKS_PER_SECOND</code> constant which is included via <code>time.h</code>.</li>
+<li>The time computed by this method is equivalent to the <code>user</code> time
+reported by the <code>time</code> utility: it is how much CPU time the user
+program has used. It is relevant to timing computational loops but
+is complemented by "wall time" which requires use of different
+timing functions like <code>gettimeofday()</code> to compute.</li>
+<li><p>
+WARNING: Timing code runs is inherently noisy and will vary from one
+run to the next. <code>clock()</code> is reliable for timing computations that
+take around 0.001 seconds (a thousandth of a second). For times
+shorter than that, the variations in timing will likely be nearly as
+large as the total time which makes timing shorter activities
+unreliable.
+</p>
+
+<p>
+<b>Adjust program parameters like the number of loop iterations so
+reported times are at least 1e-03 seconds.</b> Ideally times should be
+larger, in the 1e-01 second range to be trustworthy.
+</p></li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org485093b" class="outline-2">
+<h2 id="org485093b"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
+Follow the instructions in it to complete the QUIZ and CODE questions
+for the lab.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                           _________________
+
+                            LAB11 QUESTIONS
+                           _________________
+
+
+
+
+
+Exercise Instructions
+=====================
+
+  Follow the instructions below to experiment with topics related to
+  this exercise.
+  - For sections marked QUIZ, fill in an (X) for the appropriate
+    response in this file. Use the command `make test-quiz' to see if
+    all of your answers are correct.
+  - For sections marked CODE, complete the code indicated. Use the
+    command `make test-code' to check if your code is complete.
+  - DO NOT CHANGE any parts of this file except the QUIZ sections as it
+    may interfere with the tests otherwise.
+  - If your `QUESTIONS.txt' file seems corrupted, restore it by copying
+    over the `QUESTIONS.txt.bk' backup file.
+  - When you complete the exercises, check your answers with `make test'
+    and if all is well, create a zip file with `make zip' and upload it
+    to Gradescope. Ensure that the Autograder there reflects your local
+    results.
+  - IF YOU WORK IN A GROUP only one member needs to submit and then add
+    the names of their group.
+
+
+QUIZ Problem 1: Questions on Makefiles
+======================================
+
+  Review the presentation of `Makefile' basics in the lab description
+  and analyze the examples provided in the demo directories
+  `demo-makefile-little' and `demo-makefile-big'. Then answer the
+  following questions.
+
+
+Command Execution
+~~~~~~~~~~~~~~~~~
+
+  Which of the following best describes when the commands for a rule are
+  run?
+  - ( ) The commands for all targets in the Makefile are all run every
+    time make is used
+  - ( ) Only the commands associated with the target named on the
+    command line are run; e.g. `make targ5` will run commands associated
+    with targ5
+  - ( ) Commands for a given rule execute only if make detects a its
+    target is needed and then only if the target is missing or older
+    than its dependencies
+
+
+Rule Syntax
+~~~~~~~~~~~
+
+  Which of the following Rules correctly lays out the syntax for target,
+  dependencies, and commands in a Makefile.
+  ,----
+  | # RULE A
+  | target : dependency1 dependency2
+  | 	command1
+  | 	command2
+  | 	command3
+  | 
+  | # RULE B
+  | target : dependency1 dependency2
+  | command1
+  | command2
+  | command3
+  | 
+  | # RULE C
+  | dependency1 dependency2 : target 
+  | 	command1
+  | 	command2
+  | 	command3
+  | 
+  | # RULE D
+  | target :
+  | 	command1
+  | 	command2
+  | 	command3
+  | : dependency1 dependency2
+  `----
+  - ( ) RULE A
+  - ( ) RULE B
+  - ( ) RULE C
+  - ( ) RULE D
+
+
+Variance in Makefiles
+~~~~~~~~~~~~~~~~~~~~~
+
+  Check ALL that are true about Makefile features
+  - ( ) Rules may have 0 dependencies
+  - ( ) Rules may have 0 commands
+  - ( ) Rules have no more than 1 command
+  - ( ) Rules have no more than 1 dependency
+  - ( ) Makefiles can set up explicit variables for use in rules
+  - ( ) Makefiles provide a variety of automatic variables for use in
+    rules
+  - ( ) A Makefile can have deeply nested decencies: targA depends on
+    targB depends on targC depends on targD etc.
+
+
+CODE Problem 2: prob1-makefile
+==============================
+
+  Complete the template in the subdirectory `prob1-makefile/Makefile'
+  according to the comments there.  The essential idea is to build the
+  linked list program from an earlier lab and add a few other targets.
+  Once you add rules for certain targets, you can test them
+  interactively via commands like `make' and `make clean' in that
+  directory. You can also run the automated tests of this via a problem
+  test:
+
+  ,----
+  | &gt;&gt; cd lab10-code
+  | &gt;&gt; make test-prob1   # run tests for Makefile under prob1-makefile
+  | ...
+  `----
+
+
+PROBLEM 2: clock_demo.c Program
+===============================
+
+  Demoers will walk through the `clock_demo.c' program to show how the
+  `clock()' function is used in practice.  Students should look
+  carefully at the techniques used to time the two different sections of
+  code and print that timing info. These will be needed to fill in the
+  subsequent programs.
+
+  Running the `clock_demo' program on the command line will produce
+  results that look like the following:
+  ,----
+  | &gt;&gt; make clock_demo
+  | gcc -Wall -Werror -g -Og -Wall -Werror -g -Og    clock_demo.c   -o clock_demo
+  | 
+  | &gt;&gt; ./clock_demo 
+  | usage: ./clock_demo &lt;arrlen&gt; &lt;repeats&gt;
+  | 
+  | &gt;&gt; ./clock_demo 1000 1000
+  | Summing array length 1000 with 1000 repeats, ascending
+  | Summing array length 1000 with 1000 repeats, descending
+  | method:  sum ascending CPU time: 2.3750e-03 sec   sum: 499500
+  | method: sum descending CPU time: 1.5760e-03 sec   sum: 499500
+  | 
+  | &gt;&gt; ./clock_demo 100000 1000
+  | Summing array length 100000 with 1000 repeats, ascending
+  | Summing array length 100000 with 1000 repeats, descending
+  | method:  sum ascending CPU time: 6.6969e-02 sec   sum: 704982704
+  | method: sum descending CPU time: 6.2286e-02 sec   sum: 704982704
+  | 
+  | &gt;&gt; ./clock_demo 100000 10000
+  | Summing array length 100000 with 10000 repeats, ascending
+  | Summing array length 100000 with 10000 repeats, descending
+  | method:  sum ascending CPU time: 6.2730e-01 sec   sum: 704982704
+  | method: sum descending CPU time: 6.1995e-01 sec   sum: 704982704
+  `----
+
+
+PROBLEM 2 CODE: `struct_stride.c' Program
+=========================================
+
+  The provided `struct_stride.c' program has a number of TODO items in
+  it related to timing several computations and reporting their results.
+  It is best to complete these items first and then attempt to answer
+  the quiz questions as some questions require running the program and
+  observing timing results.
+
+  Use the lab's description of how the `clock()' function works to
+  complete TODO items and print the results.
+
+  When completed, the program can be run as show below:
+  ,----
+  | &gt;&gt; ./struct_stride 
+  | usage: ./struct_stride &lt;arr_length&gt; &lt;num_iters&gt;
+  | 
+  | &gt;&gt; ./struct_stride 10000000 100
+  | method: int_field_base CPU time: 1.2345e-01 sec   sum: 0
+  | method: arr_field_base CPU time: 1.2345e-01 sec   sum: 0
+  | method: int_field_optm CPU time: 1.2345e-01 sec   sum: 0
+  | method: arr_field_optm CPU time: 1.2345e-01 sec   sum: 0
+  `----
+
+  NOTE: the timing information has intentionally been changed to read
+  1.2345e-01 as calculating this timing information is part of the lab.
+
+
+PROBLEM 2 QUIZ: Timing `struct_stride.c' Runs
+=============================================
+
+  NOTE: timing code varies from one machine to the next. The answers
+  below were tested on GRACE and appear to be stable but system load may
+  affect the outcome.
+
+
+Relative Speed of Struct Layouts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  After adding in calls to `clock()' and code the print times, run the
+  `struct_strid' program.
+
+  Run the program with a large array and a modest amount of array
+  iterations such as using the following parameters:
+  ,----
+  | ./struct_stride 6000000 100
+  `----
+
+  Examine the times reported.
+
+  Which option below reflects the relative speeds of the
+  layout/algorithm combinations?
+  ,----
+  |   ------SLOWEST--------------------------------------------FASTEST-----
+  | - ( ) arr_field_base &gt; arr_field_optm &gt; int_field_base &gt; int_field_optm 
+  | - ( ) int_field_base &gt; int_field_optm &gt; arr_field_base &gt; arr_field_optm
+  | - ( ) arr_field_base &gt; int_field_base &gt; arr_field_optm &gt; int_field_optm 
+  | - ( ) int_field_base &gt; arr_field_base &gt; int_field_optm &gt; arr_field_optm
+  `----
+
+
+int_field_base VS arr_field_base
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Examine the differences between the two types of structs that are used
+  in `struct_stride.c' called `int_field_t' and `arr_field_t'.
+
+  Now examine the first 2 code blocks that use these structs called,
+  `int_field_base' and `arr_field_base'. Both involve arrays and structs
+  which store an equal number of positive and negative
+  integers. However, they differ in the overall layout of those
+  integers.  Both use loops sum the "a" numbers first then sum the "b"
+  numbers, then combine them for the total sum.
+
+  Which of the following are possible explanations for the timing
+  difference between `int_field_base' and `arr_field_base'?
+  - ( ) `int_field_base' must perform more loop iterations than
+    `arr_field_base' which will making it slower.
+  - ( ) `arr_field_base' uses more memory to store then number than
+    `int_field_base' and this additional memory increases speed.
+  - ( ) `int_field_base' has a memory layout that is ABABABAB so when
+    adding A elements, there is a "stride" through
+    memory. `arr_field_base' has a layout like AAAAABBBBB so adding
+    elements has no stride.
+  - ( ) `int_field_base' uses struct field access. The assembly
+    instructions to access array fields are slower than the assembly
+    instructions that access array elements. This makes `arr_field_base'
+    faster due to its use of plain integer arrays.
+
+
+BASE vs OPTM versions
+~~~~~~~~~~~~~~~~~~~~~
+
+  The last two layout/algorithm sections are labeled "optm" as they
+  perform a simple code transformation from their "base" version.
+
+  Select ALL of the items below that are accomplished with this
+  transformation.
+
+  - ( ) Fewer loop checks/increments are needed as there is only one
+    loop instead of 2.
+  - ( ) The number of loop iterations is lowered for all loops in the
+    optm version.
+  - ( ) The memory stride is eliminated for the int_field_optm as both
+    a/b elements are added each iteration.
+  - ( ) The algorithmic complexity is reduced from O(N^2) in the "base"
+    to O(N) in the "optm" version.
+</pre>
+</div>
+</div>
+
+
+<div id="outline-container-org79cd193" class="outline-3">
+<h3 id="org79cd193">Submission</h3>
+<div class="outline-text-3" id="text-org79cd193">
+<p>
+Follow the instructions at the end of <a href="../lab01.html">Lab01</a> if you need a refresher on
+how to upload your completed exercise zip to Gradescope.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-11-13 Wed 16:50 <br/> </i>
+</div>
+</body>
+</html>
