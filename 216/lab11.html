@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-13 Wed 16:50 -->
+<!-- 2024-11-16 Sat 09:56 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Lab11: File Stats and Timing Strides</title>
@@ -477,43 +477,43 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2024-11-13 Wed 16:50</i>
+<i>Last Updated: 2024-11-16 Sat 09:56</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Lab11: File Stats and Timing Strides</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Mon 22-Apr-2024</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm Mon 25-Nov-2024</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-orga972d5a" class="outline-4">
-<h4 id="orga972d5a">CODE DISTRIBUTION: <a href="lab11-code.zip">lab11-code.zip</a></h4>
+<div id="outline-container-org5aa7cc3" class="outline-4">
+<h4 id="org5aa7cc3">CODE DISTRIBUTION: <a href="lab11-code.zip">lab11-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org065af6f" class="outline-4">
-<h4 id="org065af6f">CHANGELOG: Empty</h4>
+<div id="outline-container-org6ddabda" class="outline-4">
+<h4 id="org6ddabda">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-orgab0a8f3" class="outline-4">
-<h4 id="orgab0a8f3"></h4>
-<div class="outline-text-4" id="text-orgab0a8f3">
+<div id="outline-container-org0b07436" class="outline-4">
+<h4 id="org0b07436"></h4>
+<div class="outline-text-4" id="text-org0b07436">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org08ddcc9">1. Rationale</a></li>
-<li><a href="#orgda79128">2. Codepack</a></li>
-<li><a href="#orgf13d921">3. Problem 1 Background: Makefiles</a>
+<li><a href="#orgc415782">1. Rationale</a></li>
+<li><a href="#org1158baf">2. Codepack</a></li>
+<li><a href="#org841b15b">3. Problem 1 Background: Makefiles</a>
 <ul>
-<li><a href="#org3cd3359">Structure of Makefiles</a></li>
-<li><a href="#org3b5e322">Variables and Shortcuts in Makefiles</a></li>
-<li><a href="#org3bef362">Dependency Detection</a></li>
+<li><a href="#org9b1dacd">Structure of Makefiles</a></li>
+<li><a href="#orgafdd6bf">Variables and Shortcuts in Makefiles</a></li>
+<li><a href="#orgf374ae0">Dependency Detection</a></li>
 </ul>
 </li>
-<li><a href="#org6e8ea7a">4. Problem 2 Background: The <code>clock()</code> Function</a></li>
-<li><a href="#org485093b">5. QUESTIONS.txt File Contents</a>
+<li><a href="#org446981b">4. Problem 2 Background: The <code>clock()</code> Function</a></li>
+<li><a href="#orga3a5104">5. QUESTIONS.txt File Contents</a>
 <ul>
-<li><a href="#org79cd193">Submission</a></li>
+<li><a href="#orgadac519">Submission</a></li>
 </ul>
 </li>
 </ul>
@@ -522,32 +522,20 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </div>
 </div>
 
-<div id="outline-container-org08ddcc9" class="outline-2">
-<h2 id="org08ddcc9"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orgc415782" class="outline-2">
+<h2 id="orgc415782"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-Frequently systems programs must check for the existence of file and
-interrogate their properties. The first exercise studies two common
-system calls for this task, <code>access()</code> and <code>stat()</code>. It employs them
-in a few simple tasks to acquaint students with their use.
+This lab covers two independent but short concepts in separate
+problems.
 </p>
 
 <p>
-While command line utilities like <code>time</code> can provide overall
-information on how long a program takes to run, often one wishes to
-time individual sections of code. The <code>clock()</code> function enables this
-through reporting the current "moment" in time for the user CPU
-clock.  It is typically used via the pattern:
-</p>
-<ol class="org-ol">
-<li>Call <code>clock()</code> to get the START time</li>
-<li>Do some sort of computation that takes a while</li>
-<li>Call <code>clock()</code> to get the FINISH time</li>
-<li>Compute ELAPSED = FINISH - START</li>
-</ol>
-<p>
-This pattern can be repeated throughout a code and is often used in
-benchmarks to time and compare approaches to a problem.
+Build systems are essential to program development to automate
+repetitive tasks such as compiling code, running tests, and tracking
+changes which would necessitate running such tasks.  The <code>make</code> build
+system is among the oldest build system and is ubiquitous across Unix
+systems making it a useful to know a few basics about it.
 </p>
 
 <p>
@@ -560,9 +548,43 @@ random access patterns.
 </p>
 </div>
 
-<div id="outline-container-org963bfc2" class="outline-4">
-<h4 id="org963bfc2">Grading Policy</h4>
-<div class="outline-text-4" id="text-org963bfc2">
+<div id="outline-container-orga9261ec" class="outline-4">
+<h4 id="orga9261ec">Associated Reading / Preparation</h4>
+<div class="outline-text-4" id="text-orga9261ec">
+<p>
+Background material and sample codes are provided in this
+document. Those interested in more detail might consider the following
+online resources:
+</p>
+<ul class="org-ul">
+<li><a href="https://www.oreilly.com/openbook/make3/book/index.csp">Managing Projects with GNU Make, Third Edition</a> by Robert
+Mecklenburg. A now-free book that covers the most common Make system
+implementation by the GNU Project. The subtitle <i>"The Power of GNU
+Make for Building Anything"</i> resonates with Prof Kauffman as this
+document was built by running <code>make</code>: it's not just for code.</li>
+<li>Links resulting from internet searches like <i>"comparison of build
+systems"</i> which will contrast Make to other newer alternatives such
+as CMake, Apache Ant, Gradle, and others that appear in any
+<a href="https://en.wikipedia.org/wiki/List_of_build_automation_software">listing of build automatition software</a>.</li>
+<li>In addition to <code>clock()</code> which is among the oldest time-measuring
+functions in the standard C library, there are many variations
+available which allow measuring what kind of time is desired.
+<ul class="org-ul">
+<li><a href="https://man7.org/linux/man-pages/man2/settimeofday.2.html"><code>gettimeofday()</code></a> which returns Real Time (Wall Time) rather than
+CPU time</li>
+<li><a href="https://man7.org/linux/man-pages/man2/clock_gettime.2.html"><code>clock_gettime()</code></a> which accepts parameters which control which of
+CPU or Real time is desired</li>
+<li><a href="https://man7.org/linux/man-pages/man2/getrusage.2.html"><code>getrusage()</code></a> which provides resource usage in of the running
+process including CPU time, memory allocated, etc. CPU time is
+split between the User and System times.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org45e1a27" class="outline-4">
+<h4 id="org45e1a27">Grading Policy</h4>
+<div class="outline-text-4" id="text-org45e1a27">
 <p>
 Credit for this exercise is earned by completing the code/asnwers here
 and submitting a Zip of the work to Gradescope. Students are
@@ -585,8 +607,8 @@ See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies 
 </div>
 </div>
 
-<div id="outline-container-orgda79128" class="outline-2">
-<h2 id="orgda79128"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org1158baf" class="outline-2">
+<h2 id="org1158baf"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -699,8 +721,8 @@ The codepack for the HW contains the following files:
 </div>
 </div>
 
-<div id="outline-container-orgf13d921" class="outline-2">
-<h2 id="orgf13d921"><span class="section-number-2">3</span> Problem 1 Background: Makefiles</h2>
+<div id="outline-container-org841b15b" class="outline-2">
+<h2 id="org841b15b"><span class="section-number-2">3</span> Problem 1 Background: Makefiles</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Building programs often involves compiling separate source files and
@@ -713,9 +735,9 @@ covers the basics of how to create a <code>Makefile</code>.
 </p>
 </div>
 
-<div id="outline-container-org3cd3359" class="outline-3">
-<h3 id="org3cd3359">Structure of Makefiles</h3>
-<div class="outline-text-3" id="text-org3cd3359">
+<div id="outline-container-org9b1dacd" class="outline-3">
+<h3 id="org9b1dacd">Structure of Makefiles</h3>
+<div class="outline-text-3" id="text-org9b1dacd">
 <p>
 The basic structure of a <code>Makefile</code> involves <b>rules</b> which relate
 <b>targets, dependencies, and commands</b>. Simple <code>Makefiles</code> comprise a
@@ -823,9 +845,9 @@ the program.
 </div>
 
 
-<div id="outline-container-org3b5e322" class="outline-3">
-<h3 id="org3b5e322">Variables and Shortcuts in Makefiles</h3>
-<div class="outline-text-3" id="text-org3b5e322">
+<div id="outline-container-orgafdd6bf" class="outline-3">
+<h3 id="orgafdd6bf">Variables and Shortcuts in Makefiles</h3>
+<div class="outline-text-3" id="text-orgafdd6bf">
 <p>
 Makefiles support a large number of features such as explicit
 variables, automatic variables, pattern-based rules, and many
@@ -870,9 +892,9 @@ the following invocation allows using a specific file other than that:
 </div>
 </div>
 
-<div id="outline-container-org3bef362" class="outline-3">
-<h3 id="org3bef362">Dependency Detection</h3>
-<div class="outline-text-3" id="text-org3bef362">
+<div id="outline-container-orgf374ae0" class="outline-3">
+<h3 id="orgf374ae0">Dependency Detection</h3>
+<div class="outline-text-3" id="text-orgf374ae0">
 <p>
 Makefiles are useful for larger projects to automatically detect
 dependencies which must be updated.  The example in
@@ -929,8 +951,8 @@ the exectuable program.
 
 
 
-<div id="outline-container-org6e8ea7a" class="outline-2">
-<h2 id="org6e8ea7a"><span class="section-number-2">4</span> Problem 2 Background: The <code>clock()</code> Function</h2>
+<div id="outline-container-org446981b" class="outline-2">
+<h2 id="org446981b"><span class="section-number-2">4</span> Problem 2 Background: The <code>clock()</code> Function</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 The code block below illustrates the basic usage pattern for the
@@ -988,8 +1010,8 @@ larger, in the 1e-01 second range to be trustworthy.
 </div>
 
 
-<div id="outline-container-org485093b" class="outline-2">
-<h2 id="org485093b"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-orga3a5104" class="outline-2">
+<h2 id="orga3a5104"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -1222,6 +1244,63 @@ Relative Speed of Struct Layouts
   `----
 
 
+Order of Memory Access
+~~~~~~~~~~~~~~~~~~~~~~
+
+  Below are several memory layouts of A/B elements to consider.
+  -------------------------------------------------------------------------
+   Byte Offset  +00  +04  +08  +12  +16       +80  +84  +88  +92  +96      
+   LAYOUT1       A0   A1   A2   A3   A4  ...   B0   B1   B2   B3   B4  ... 
+  -------------------------------------------------------------------------
+
+  -------------------------------------------------------------------
+   Byte Offset  +00  +04  +08  +12  +16  +20  +24  +28  32  +36      
+   LAYOUT 2      A0   B0   A1   B1   A2   B2   A3   B3  A4   B4  ... 
+  -------------------------------------------------------------------
+
+  For each of following, indicate the best suited option.
+
+  The `int_field_base' approach code that is timed..
+  - ( ) Uses memory LAYOUT 1 and visit elements in the order A0, B0, A1,
+    B1, A2, B2, etc.
+  - ( ) Uses memory LAYOUT 1 and visit elements in the order A0, A1, A2,
+    ... B0, B1, B2, etc.
+  - ( ) Uses memory LAYOUT 2 and visit elements in the order A0, B0, A1,
+    B1, A2, B2, etc.
+  - ( ) Uses memory LAYOUT 2 and visit elements in the order A0, A1, A2,
+    ... B0, B1, B2, etc.
+
+  The `arr_field_base' approach code that is timed..
+  - ( ) Uses memory LAYOUT 1 and visit elements in the order A0, B0, A1,
+    B1, A2, B2, etc.
+  - ( ) Uses memory LAYOUT 1 and visit elements in the order A0, A1, A2,
+    ... B0, B1, B2, etc.
+  - ( ) Uses memory LAYOUT 2 and visit elements in the order A0, B0, A1,
+    B1, A2, B2, etc.
+  - ( ) Uses memory LAYOUT 2 and visit elements in the order A0, A1, A2,
+    ... B0, B1, B2, etc.
+
+  The `int_field_optm' approach code that is timed..
+  - ( ) Uses memory LAYOUT 1 and visit elements in the order A0, B0, A1,
+    B1, A2, B2, etc.
+  - ( ) Uses memory LAYOUT 1 and visit elements in the order A0, A1, A2,
+    ... B0, B1, B2, etc.
+  - ( ) Uses memory LAYOUT 2 and visit elements in the order A0, B0, A1,
+    B1, A2, B2, etc.
+  - ( ) Uses memory LAYOUT 2 and visit elements in the order A0, A1, A2,
+    ... B0, B1, B2, etc.
+
+  The `arr_field_optm' approach code that is timed..
+  - ( ) Uses memory LAYOUT 1 and visit elements in the order A0, B0, A1,
+    B1, A2, B2, etc.
+  - ( ) Uses memory LAYOUT 1 and visit elements in the order A0, A1, A2,
+    ... B0, B1, B2, etc.
+  - ( ) Uses memory LAYOUT 2 and visit elements in the order A0, B0, A1,
+    B1, A2, B2, etc.
+  - ( ) Uses memory LAYOUT 2 and visit elements in the order A0, A1, A2,
+    ... B0, B1, B2, etc.
+
+
 int_field_base VS arr_field_base
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1273,9 +1352,9 @@ BASE vs OPTM versions
 </div>
 
 
-<div id="outline-container-org79cd193" class="outline-3">
-<h3 id="org79cd193">Submission</h3>
-<div class="outline-text-3" id="text-org79cd193">
+<div id="outline-container-orgadac519" class="outline-3">
+<h3 id="orgadac519">Submission</h3>
+<div class="outline-text-3" id="text-orgadac519">
 <p>
 Follow the instructions at the end of <a href="../lab01.html">Lab01</a> if you need a refresher on
 how to upload your completed exercise zip to Gradescope.
@@ -1285,7 +1364,7 @@ how to upload your completed exercise zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-11-13 Wed 16:50 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-11-16 Sat 09:56 <br/> </i>
 </div>
 </body>
 </html>
