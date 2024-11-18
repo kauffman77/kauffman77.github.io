@@ -11,7 +11,7 @@ mv --backup=numbered p4-complete.zip ../p4-complete-backup.zip
 # done
 
 echo 'Retrieving zip of updated provided files'
-# rm -rf data/   # special case to remove the crummy data directory
+rm -rf data/   # special case to remove the crummy data directory
 wget -q https://www.cs.umd.edu/~profk/216/p4-update.zip
 
 echo 'Unpacking updated versions of provided files'
