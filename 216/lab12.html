@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-12-02 Mon 11:12 -->
+<!-- 2024-12-02 Mon 21:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Lab12: Matrices and Memory Optimization</title>
@@ -344,7 +344,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2024-12-02 Mon 11:12</i>
+<i>Last Updated: 2024-12-02 Mon 21:37</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Lab12: Matrices and Memory Optimization</h1>
@@ -353,14 +353,27 @@ text-align: justify;
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-orgb03e328" class="outline-4">
-<h4 id="orgb03e328">CODE DISTRIBUTION: <a href="lab12-code.zip">lab12-code.zip</a></h4>
+<div id="outline-container-orgfcc5afc" class="outline-4">
+<h4 id="orgfcc5afc">CODE DISTRIBUTION: <a href="lab12-code.zip">lab12-code.zip</a></h4>
 </div>
 
-<div id="outline-container-orgd514fc4" class="outline-4">
-<h4 id="orgd514fc4">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-orgd514fc4">
+<div id="outline-container-org5bdd582" class="outline-4">
+<h4 id="org5bdd582">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org5bdd582">
 <dl class="org-dl">
+<dt>Mon Dec  2 09:32:44 PM EST 2024</dt><dd><p>
+More bugs with the testing code
+were identified which cause running tests repeatedly to spuriously
+fail with a <code>Cannot create directory: file exists</code> error.  This has
+been corrected in the current code pack. Students can adjust the
+<code>test_lab12.org</code> file manually by finding and editing the following
+line
+</p>
+<div class="org-src-container">
+<pre class="src src-text">  40: &gt;&gt; mkdir -p test-results           ## LINE 40: ADD THE -p OPTION TO mkdir
+</pre>
+</div></dd>
+
 <dt>Mon Dec  2 11:09:14 AM EST 2024</dt><dd><p>
 A minor bug was reported in
 discussion which causes the first run of <code>make test-code</code> to fail
@@ -394,27 +407,27 @@ is not affected, this bug will not affect results on Gradescope.
 </div>
 </div>
 
-<div id="outline-container-org927215c" class="outline-4">
-<h4 id="org927215c"></h4>
-<div class="outline-text-4" id="text-org927215c">
+<div id="outline-container-orga6ec434" class="outline-4">
+<h4 id="orga6ec434"></h4>
+<div class="outline-text-4" id="text-orga6ec434">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org9c5286a">1. Rationale</a></li>
-<li><a href="#org2be4b5c">2. Codepack</a></li>
-<li><a href="#org2326a95">3. Overview and Background</a></li>
-<li><a href="#org9a3e837">4. Basic Overview of Threads</a></li>
-<li><a href="#org237e9c0">5. QUESTIONS.txt File Contents</a></li>
-<li><a href="#orge6039a6">6. Submission</a></li>
+<li><a href="#org1d04cbd">1. Rationale</a></li>
+<li><a href="#org085f27b">2. Codepack</a></li>
+<li><a href="#org68c9865">3. Overview and Background</a></li>
+<li><a href="#orgf55d312">4. Basic Overview of Threads</a></li>
+<li><a href="#org89450f2">5. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org111a76a">6. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org9c5286a" class="outline-2">
-<h2 id="org9c5286a"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org1d04cbd" class="outline-2">
+<h2 id="org1d04cbd"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Threads are frequently used to improve the performance of applications
@@ -426,18 +439,18 @@ shared result.
 </p>
 </div>
 
-<div id="outline-container-org489085b" class="outline-4">
-<h4 id="org489085b">Associated Reading / Preparation</h4>
-<div class="outline-text-4" id="text-org489085b">
+<div id="outline-container-orgead46e6" class="outline-4">
+<h4 id="orgead46e6">Associated Reading / Preparation</h4>
+<div class="outline-text-4" id="text-orgead46e6">
 <p>
 Bryant and O'Hallaron: Ch 12.3-6 covers threaded programming.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org5096062" class="outline-4">
-<h4 id="org5096062">Grading Policy</h4>
-<div class="outline-text-4" id="text-org5096062">
+<div id="outline-container-org61bc075" class="outline-4">
+<h4 id="org61bc075">Grading Policy</h4>
+<div class="outline-text-4" id="text-org61bc075">
 <p>
 Credit for this exercise is earned by completing the code/asnwers here
 and submitting a Zip of the work to Gradescope. Students are
@@ -460,8 +473,8 @@ See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies 
 </div>
 </div>
 
-<div id="outline-container-org2be4b5c" class="outline-2">
-<h2 id="org2be4b5c"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org085f27b" class="outline-2">
+<h2 id="org085f27b"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the lab contains the following files:
@@ -555,8 +568,8 @@ The codepack for the lab contains the following files:
 </div>
 </div>
 
-<div id="outline-container-org2326a95" class="outline-2">
-<h2 id="org2326a95"><span class="section-number-2">3</span> Overview and Background</h2>
+<div id="outline-container-org68c9865" class="outline-2">
+<h2 id="org68c9865"><span class="section-number-2">3</span> Overview and Background</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 This lab deals with matrices and vectors again similar to a previous
@@ -572,8 +585,8 @@ implementation.
 </div>
 </div>
 
-<div id="outline-container-org9a3e837" class="outline-2">
-<h2 id="org9a3e837"><span class="section-number-2">4</span> Basic Overview of Threads</h2>
+<div id="outline-container-orgf55d312" class="outline-2">
+<h2 id="orgf55d312"><span class="section-number-2">4</span> Basic Overview of Threads</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Threads allow the creation of multiple "threads of execution" within
@@ -609,8 +622,8 @@ function calls used to facilitate it.
 </div>
 </div>
 
-<div id="outline-container-org237e9c0" class="outline-2">
-<h2 id="org237e9c0"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org89450f2" class="outline-2">
+<h2 id="org89450f2"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -815,8 +828,8 @@ CODE: Complete col_sums_thread()
 </div>
 </div>
 
-<div id="outline-container-orge6039a6" class="outline-2">
-<h2 id="orge6039a6"><span class="section-number-2">6</span> Submission</h2>
+<div id="outline-container-org111a76a" class="outline-2">
+<h2 id="org111a76a"><span class="section-number-2">6</span> Submission</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -826,7 +839,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-12-02 Mon 11:12 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-12-02 Mon 21:37 <br/> </i>
 </div>
 </body>
 </html>
