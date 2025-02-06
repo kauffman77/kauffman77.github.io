@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-02-03 Mon 07:54 -->
+<!-- 2025-02-06 Thu 09:34 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Lab02: Basic C Application Coding</title>
@@ -341,10 +341,143 @@ text-align: justify;
 }
 }
 </style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","HM>","TM>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"    , "language-c");
+lang_map.set("src-text" , "language-plaintext");
+lang_map.set("src-sh"   , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2025-02-03 Mon 07:54</i>
+<i>Last Updated: 2025-02-06 Thu 09:34</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Lab02: Basic C Application Coding</h1>
@@ -353,14 +486,19 @@ text-align: justify;
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-org5bbb901" class="outline-4">
-<h4 id="org5bbb901">CODE DISTRIBUTION: <a href="lab02-code.zip">lab02-code.zip</a></h4>
+<div id="outline-container-org5d6f364" class="outline-4">
+<h4 id="org5d6f364">CODE DISTRIBUTION: <a href="lab02-code.zip">lab02-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org29a8cc2" class="outline-4">
-<h4 id="org29a8cc2">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org29a8cc2">
+<div id="outline-container-orgc762411" class="outline-4">
+<h4 id="orgc762411">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-orgc762411">
 <dl class="org-dl">
+<dt>Thu Feb  6 09:27:43 AM EST 2025</dt><dd><a href="https://piazza.com/class/m69s0i6labk3eb/post/55">Post 55</a> inquired about the
+purpose of the <code>-echo</code> command. <a href="#org5a9fa41">A new section</a> has been added to
+motivate the utility of command echoing which is useful for
+scripting and testing applications like <code>list_main</code>.</dd>
+
 <dt>Mon Feb  3 07:52:42 AM EST 2025</dt><dd><a href="https://piazza.com/class/m69s0i6labk3eb/post/34">Post 34</a> reported a minor bug in
 the testing files. This has been corrected in the most recent
 <code>lab02-code.zip</code>; it only involves placing an extra Newline at the
@@ -370,25 +508,26 @@ desired.</dd>
 </div>
 </div>
 
-<div id="outline-container-orgdc81734" class="outline-4">
-<h4 id="orgdc81734"></h4>
-<div class="outline-text-4" id="text-orgdc81734">
+<div id="outline-container-orgf3ee40f" class="outline-4">
+<h4 id="orgf3ee40f"></h4>
+<div class="outline-text-4" id="text-orgf3ee40f">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org9232964">1. Rationale</a></li>
-<li><a href="#org531a7e1">2. Codepack</a></li>
-<li><a href="#org7f8a42f">3. QUESTIONS.txt File Contents</a></li>
-<li><a href="#orge65eccb">4. Submission</a></li>
+<li><a href="#orge20e69c">1. Rationale</a></li>
+<li><a href="#org09191d9">2. Codepack</a></li>
+<li><a href="#orgaccef74">3. QUESTIONS.txt File Contents</a></li>
+<li><a href="#echo">4. Command Echoing via <code>-echo</code></a></li>
+<li><a href="#orgbb321a5">5. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org9232964" class="outline-2">
-<h2 id="org9232964"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orge20e69c" class="outline-2">
+<h2 id="orge20e69c"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This exercise demonstrates a number of C programming conventions through a
@@ -411,9 +550,9 @@ Ritchie.
 </p>
 </div>
 
-<div id="outline-container-orgc71c54a" class="outline-4">
-<h4 id="orgc71c54a">Grading Policy</h4>
-<div class="outline-text-4" id="text-orgc71c54a">
+<div id="outline-container-orgaf996dd" class="outline-4">
+<h4 id="orgaf996dd">Grading Policy</h4>
+<div class="outline-text-4" id="text-orgaf996dd">
 <p>
 Credit for this exercise is earned by completing the code/asnwers here
 and submitting a Zip of the work to Gradescope. Students are
@@ -436,8 +575,8 @@ See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies 
 </div>
 </div>
 
-<div id="outline-container-org531a7e1" class="outline-2">
-<h2 id="org531a7e1"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org09191d9" class="outline-2">
+<h2 id="org09191d9"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for this exercise is linked at the top of this
@@ -528,8 +667,9 @@ the following files which are briefly described.
 </div>
 </div>
 
-<div id="outline-container-org7f8a42f" class="outline-2">
-<h2 id="org7f8a42f"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
+
+<div id="outline-container-orgaccef74" class="outline-2">
+<h2 id="orgaccef74"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 For a quick overview of work involved with each discussion exercise, refer to the
@@ -848,9 +988,137 @@ Additional Practice
 </div>
 </div>
 
-<div id="outline-container-orge65eccb" class="outline-2">
-<h2 id="orge65eccb"><span class="section-number-2">4</span> Submission</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-org6f531ea" class="outline-2">
+<h2 id="echo"><a id="org6f531ea"></a><span class="section-number-2">4</span> <a id="org5a9fa41"></a> Command Echoing via <code>-echo</code></h2>
+<div class="outline-text-2" id="text-echo">
+<p>
+The provided <code>list_main</code> program features an <code>-echo</code> option. When
+supplied, the program will "echo" commands that are entered by
+printing them back on the screen. Here is a brief shell session
+demonstrating the difference in behavior that running with <code>-echo</code>
+produces:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"># Running normally (no -echo option)
+&gt;&gt; ./list_main
+...
+list&gt; insert Apple
+list&gt; insert Banana
+list&gt; print
+0: Apple
+1: Banana
+list&gt; contains Banana
+'Banana' is present
+list&gt; contains Orange
+not found
+list&gt; exit
+
+# Running with -echo (command echoing enabled)
+&gt;&gt; ./list_main -echo
+...
+list&gt; insert Apple
+insert Apple                    # echoed
+list&gt; insert Banana
+insert Banana                   # echoed
+list&gt; contains Banana
+contains Banana                 # echoed
+'Banana' is present
+list&gt; contains Orange
+contains Orange                 # echoed
+not found
+list&gt; exit
+exit                            # echoed
+</pre>
+</div>
+
+<p>
+At first the echoing feature seems pointless. Its strength comes from
+it use in "scripting" the program to allow commands to be read from a
+file rather than typed in directly. The <code>-echo</code> option is useful to
+produce output that resembles an interactive session and is easier to
+understand. Below is a session demonstrating the use of echoing with a
+script to produce good looking results.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"># show contents of a "script", list commands that are in a text file
+&gt;&gt; file script.txt
+script.txt: ASCII text
+
+&gt;&gt; cat script.txt
+insert Apple
+insert Banana
+contains Banana
+contains Orange
+exit
+
+# run list_main reading commands from script.txt rather than typed input
+# since input commands are not printed by default, the output looks crummy
+&gt;&gt; ./list_main &lt; script.txt
+Linked List Demo
+Commands:
+  print:          shows the current contents of the list
+  clear:          eliminates all elements from the list
+  exit:           exit the program
+  insert thing:   inserts the given string into the list
+  get index:      get the item at the given index
+  contains thing: determine if the given thing is in the list
+                  (NOT YET IMPLEMENTED)
+list&gt; list&gt; list&gt; 'Banana' is present
+list&gt; not found
+list&gt; &gt;&gt; 
+
+# run list_main with input from script.txt with command echoing enabled
+# repeating the commands makes the output look like an interactive session
+&gt;&gt; ./list_main -echo &lt; script.txt
+Linked List Demo
+Commands:
+  print:          shows the current contents of the list
+  clear:          eliminates all elements from the list
+  exit:           exit the program
+  insert thing:   inserts the given string into the list
+  get index:      get the item at the given index
+  contains thing: determine if the given thing is in the list
+                  (NOT YET IMPLEMENTED)
+list&gt; insert Apple
+list&gt; insert Banana
+list&gt; contains Banana
+'Banana' is present
+list&gt; contains Orange
+not found
+list&gt; exit
+&gt;&gt; 
+</pre>
+</div>
+
+<p>
+Command echoing like this for scripted input is common for Read / Eval
+/ Print Loops (REPLs) like shells, Python, R, Lua, Scheme, Racket, and
+many others.  It is also extremely useful in testing as one can see
+in a test cast the input command along with the output and judge
+whether it is correct. This tactic is used in the testing program for
+the lab.
+</p>
+
+<p>
+The above example also demonstrates <b>I/O redirection</b> using the shell
+syntax <code>&lt; script.txt</code>. This capability will be discussed later in the
+course. It allows input that must normally be typed to come from
+elsewhere, such as a file, without any modifications to the program.
+</p>
+
+<p>
+Echoing will be a required feature of a future project and students
+will be encouraged to examine this Lab again to replicate the
+technique demonstrated here.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgbb321a5" class="outline-2">
+<h2 id="orgbb321a5"><span class="section-number-2">5</span> Submission</h2>
+<div class="outline-text-2" id="text-5">
 <p>
 Follow the instructions at the end of <a href="https://cs.umd.edu/~profk/216/lab01.html#submission%20">Lab01</a> if you need a refresher on
 how to upload your completed lab zip to Gradescope.
@@ -859,7 +1127,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-02-03 Mon 07:54 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-02-06 Thu 09:34 <br/> </i>
 </div>
 </body>
 </html>
