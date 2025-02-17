@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-10-18 Tue 13:27 -->
+<!-- 2025-02-17 Mon 16:48 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CSCI 2021 Quick Guide to gdb: The GNU Debugger</title>
+<title>Quick Guide to gdb: The GNU Debugger</title>
 <meta name="author" content="Chris Kauffman" />
 <meta name="generator" content="Org Mode" />
 <style>
@@ -197,8 +197,8 @@
 <style type="text/css">
 @media screen {
 :root {
---heading-bg-color:#e8c62e;
---heading-fg-color:#7a0019;
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
 }
 html {
 font-family: serif;
@@ -330,6 +330,7 @@ margin-left: 0.5em;
 }
 }
 .linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
 }
 
 @media print {
@@ -341,70 +342,219 @@ text-align: justify;
 }
 }
 </style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(gdb)","(shellac)","HM>","TM>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+hljs.COMMENT(/#+/, /$/),     // and a sequence of hashes
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2022-10-18 Tue 13:27</i>
+<i>Last Updated: 2025-02-17 Mon 16:48</i>
 </div>
 <div id="content" class="content">
-<h1 class="title">CSCI 2021 Quick Guide to gdb: The GNU Debugger</h1>
+<h1 class="title">Quick Guide to gdb: The GNU Debugger</h1>
 
-<div id="outline-container-org4680e64" class="outline-4">
-<h4 id="org4680e64"></h4>
-<div class="outline-text-4" id="text-org4680e64">
+<div id="outline-container-orgd09bce1" class="outline-4">
+<h4 id="orgd09bce1"></h4>
+<div class="outline-text-4" id="text-orgd09bce1">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org6fc2542">1. Starting the Debugger</a>
+<li><a href="#org5591f6e">1. Starting the Debugger</a>
 <ul>
-<li><a href="#orgcc838a0">1.1. TUI Mode (recommended)</a></li>
-<li><a href="#orgd957a52">1.2. Normal Mode</a></li>
-<li><a href="#org61568e7">1.3. Switching Modes</a></li>
+<li><a href="#org4dec548">1.1. TUI Mode (recommended)</a></li>
+<li><a href="#org49e80cb">1.2. Normal Mode</a></li>
+<li><a href="#orgd346a45">1.3. Switching Modes</a></li>
 </ul>
 </li>
-<li><a href="#org5deeb96">2. A Typical Start to <code>puzzlebox</code></a></li>
-<li><a href="#org3e2e52c">3. Standard <code>gdb</code> Commands</a>
+<li><a href="#orgc9333e7">2. A Typical Start to <code>puzzlebox</code></a></li>
+<li><a href="#orgb95a1b8">3. Standard <code>gdb</code> Commands</a>
 <ul>
-<li><a href="#org271da34">3.1. Setting breakpoints in <code>gdb</code></a></li>
-<li><a href="#org7879f9f">3.2. Arguments and Running</a></li>
-<li><a href="#org77ea5c4">3.3. Stepping</a></li>
-<li><a href="#orgb7294c8">3.4. Printing Values in Memory and Stack</a></li>
-<li><a href="#org38fe256">3.5. Command History and Screen Management in TUI Mode</a></li>
-<li><a href="#org00b85f1">3.6. Other Resources</a></li>
+<li><a href="#org714e35d">3.1. GDB's Help System</a></li>
+<li><a href="#orgf94c8ce">3.2. Setting breakpoints in <code>gdb</code></a></li>
+<li><a href="#org5957984">3.3. Arguments and Running</a></li>
+<li><a href="#org24f0f43">3.4. Stepping</a></li>
+<li><a href="#orge30040b">3.5. Printing Values in Memory and Stack</a></li>
+<li><a href="#orgbd6281c">3.6. Command History and Screen Management in TUI Mode</a></li>
+<li><a href="#org5e39edc">3.7. Other Resources</a></li>
 </ul>
 </li>
 <li><a href="#gdb-assembly">4. Debugging Assembly in GDB</a>
 <ul>
-<li><a href="#org20c17e9">4.1. Overview</a></li>
-<li><a href="#orgc6b5b14">4.2. Compile and Run Assembly Files (source available)</a></li>
-<li><a href="#org77b185f">4.3. Debug Binaries (no source available)</a></li>
-<li><a href="#org62a7779">4.4. Additional TUI Commands</a></li>
+<li><a href="#org22d12cc">4.1. Overview</a></li>
+<li><a href="#org560f1a7">4.2. Compile and Run Assembly Files (source available)</a></li>
+<li><a href="#org945f344">4.3. Debug Binaries (no source available)</a></li>
+<li><a href="#org890f15a">4.4. Additional TUI Commands</a></li>
 </ul>
 </li>
-<li><a href="#org9591853">5. Breakpoints in Binary Files</a>
+<li><a href="#org86da49d">5. Breakpoints in Binary Files</a>
 <ul>
-<li><a href="#org7a7ca2c">5.1. Break at Function Symbols/Labels</a></li>
-<li><a href="#orge5c98bf">5.2. Break at Specific Instruction Addresses</a></li>
+<li><a href="#org57b33db">5.1. Break at Function Symbols/Labels</a></li>
+<li><a href="#orgab6a6e0">5.2. Break at Specific Instruction Addresses</a></li>
 </ul>
 </li>
-<li><a href="#org7d760c7">6. Other GDB Guides</a></li>
-<li><a href="#org9d8e5b7">7. Other Useful Tools for working with Binary Files</a></li>
-<li><a href="#orgec15649">8. CHANGELOG</a></li>
+<li><a href="#org5b8ead0">6. Other GDB Guides</a></li>
+<li><a href="#org26c186a">7. Other Useful Tools for working with Binary Files</a></li>
+<li><a href="#org9b61f48">8. CHANGELOG</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org6fc2542" class="outline-2">
-<h2 id="org6fc2542"><span class="section-number-2">1</span> Starting the Debugger</h2>
+<div id="outline-container-org524b3f8" class="outline-4">
+<h4 id="org524b3f8">Intended Audience</h4>
+<div class="outline-text-4" id="text-org524b3f8">
+<p>
+This tutorial is for folks in courses like the UMN's CSCI 2021 or
+UMD's CMSC 216 which require use of GDB to work programs and perform
+debugging exercises like Bryant and O'Hallarons notorious "Binary
+Bomb" project.  Others may benefit from the guide as well if they are
+looking to get oriented using GDB.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5591f6e" class="outline-2">
+<h2 id="org5591f6e"><span class="section-number-2">1</span> Starting the Debugger</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 In a terminal, run <code>gdb</code> with a "text user interface"
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">&gt; make puzzlebox
+<pre class="src src-sh">&gt;&gt; make puzzlebox
 gcc -Wall -g -c puzzlebox.c
 gcc -Wall -g -o puzzlebox puzzlebox.o
 
@@ -412,13 +562,13 @@ gcc -Wall -g -o puzzlebox puzzlebox.o
 # the debugger: very useful
 
 # Start gdb with the text user interface on program puzzlebox
-&gt; gdb -tui ./puzzlebox
+&gt;&gt; gdb -tui ./puzzlebox
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgcc838a0" class="outline-3">
-<h3 id="orgcc838a0"><span class="section-number-3">1.1</span> TUI Mode (recommended)</h3>
+<div id="outline-container-org4dec548" class="outline-3">
+<h3 id="org4dec548"><span class="section-number-3">1.1</span> TUI Mode (recommended)</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 The <i>Text User Interface</i> (TUI) is enabled by running <code>gdb</code> with the <code>-tui</code> option. It shows
@@ -434,7 +584,7 @@ pressing <code>Control-L</code> which will force a redraw of the terminal screen
 
 <div class="org-center">
 
-<div id="org12c29ee" class="figure">
+<div id="org2200124" class="figure">
 <p><img src="gdb-tui.png" alt="gdb-tui.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span><code>gdb -tui ./puzzlebox</code>, the text user interface mode</p>
@@ -443,8 +593,8 @@ pressing <code>Control-L</code> which will force a redraw of the terminal screen
 </div>
 </div>
 
-<div id="outline-container-orgd957a52" class="outline-3">
-<h3 id="orgd957a52"><span class="section-number-3">1.2</span> Normal Mode</h3>
+<div id="outline-container-org49e80cb" class="outline-3">
+<h3 id="org49e80cb"><span class="section-number-3">1.2</span> Normal Mode</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 This is in contrast to the normal mode of <code>gdb</code> which does not show
@@ -455,7 +605,7 @@ of another editor such as <code>emacs</code>.
 
 <div class="org-center">
 
-<div id="org5030a24" class="figure">
+<div id="orgac1227f" class="figure">
 <p><img src="gdb-normal.png" alt="gdb-normal.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 2: </span><code>gdb ./puzzlebox</code>, the normal "quiet" mode. Source code is only shown after <code>list</code> commands.</p>
@@ -464,8 +614,8 @@ of another editor such as <code>emacs</code>.
 </div>
 </div>
 
-<div id="outline-container-org61568e7" class="outline-3">
-<h3 id="org61568e7"><span class="section-number-3">1.3</span> Switching Modes</h3>
+<div id="outline-container-orgd346a45" class="outline-3">
+<h3 id="orgd346a45"><span class="section-number-3">1.3</span> Switching Modes</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 If in normal mode, one can enter TUI mode with the command
@@ -484,8 +634,8 @@ tui disable
 </div>
 </div>
 
-<div id="outline-container-org5deeb96" class="outline-2">
-<h2 id="org5deeb96"><span class="section-number-2">2</span> A Typical Start to <code>puzzlebox</code></h2>
+<div id="outline-container-orgc9333e7" class="outline-2">
+<h2 id="orgc9333e7"><span class="section-number-2">2</span> A Typical Start to <code>puzzlebox</code></h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The below sample run in <code>gdb</code> illustrates the basics of running
@@ -494,7 +644,7 @@ commands like <code>next / run / break</code>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">&gt; gdb -tui ./puzzlebox                                # Start gdb with text user interface on the puzzlebox
+<pre class="src src-sh">&gt;&gt; gdb -tui ./puzzlebox                               # Start gdb with text user interface on the puzzlebox
 GNU gdb (GDB) 8.1
 ...
 Reading symbols from ./puzzlebox...done.
@@ -587,8 +737,8 @@ $4 = 2                                                 # probably need to make i
 </div>
 
 
-<div id="outline-container-org3e2e52c" class="outline-2">
-<h2 id="org3e2e52c"><span class="section-number-2">3</span> Standard <code>gdb</code> Commands</h2>
+<div id="outline-container-orgb95a1b8" class="outline-2">
+<h2 id="orgb95a1b8"><span class="section-number-2">3</span> Standard <code>gdb</code> Commands</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Like most debuggers, <code>gdb</code> gives a variety of ways to control program
@@ -597,9 +747,44 @@ execution and inspect values. Below is a summary but the extensive
 </p>
 </div>
 
-<div id="outline-container-org271da34" class="outline-3">
-<h3 id="org271da34"><span class="section-number-3">3.1</span> Setting breakpoints in <code>gdb</code></h3>
+<div id="outline-container-org714e35d" class="outline-3">
+<h3 id="org714e35d"><span class="section-number-3">3.1</span> GDB's Help System</h3>
 <div class="outline-text-3" id="text-3-1">
+<p>
+GDB has an extensive built-in help accessible via <code>help COMMAND</code> which
+will print information on the commands. Below is a demo of getting
+help on several common commands:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">(gdb) help x
+Examine memory: x/FMT ADDRESS.
+ADDRESS is an expression for the memory address to examine.
+FMT is a repeat count followed by a format letter and a size letter.
+Format letters are o(octal), x(hex), d(decimal), u(unsigned decimal),
+  t(binary), f(float), a(address), i(instruction), c(char), s(string)
+  and z(hex, zero padded on the left).
+Size letters are b(byte), h(halfword), w(word), g(giant, 8 bytes).
+The specified number of objects of the specified size are printed
+according to the format.  If a negative number is specified, memory is
+examined backward from the address.
+
+Defaults for format and size letters are those previously used.
+Default count is 1.  Default address is following last thing printed
+with this command or "print".
+
+(gdb) help step
+step, s
+Step program until it reaches a different source line.
+Usage: step [N]
+Argument N means step N times (or till program stops for another reason).
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf94c8ce" class="outline-3">
+<h3 id="orgf94c8ce"><span class="section-number-3">3.2</span> Setting breakpoints in <code>gdb</code></h3>
+<div class="outline-text-3" id="text-3-2">
 <p>
 A <i>breakpoint</i> indicates a place that execution will be stopped in a
 program by the debugger. They can be created in a variety of ways and
@@ -688,7 +873,7 @@ removed when no longer needed.
 <tr>
 <td class="org-left"><code>break *0x1248f2</code></td>
 <td class="org-left">Break at specific instruction address</td>
-<td class="org-left">See info in <a href="#org520fc80">Binary Files</a> Section</td>
+<td class="org-left">See info in <a href="#org391c2f3">Binary Files</a> Section</td>
 </tr>
 
 <tr>
@@ -707,9 +892,9 @@ removed when no longer needed.
 </div>
 </div>
 
-<div id="outline-container-org7879f9f" class="outline-3">
-<h3 id="org7879f9f"><span class="section-number-3">3.2</span> Arguments and Running</h3>
-<div class="outline-text-3" id="text-3-2">
+<div id="outline-container-org5957984" class="outline-3">
+<h3 id="org5957984"><span class="section-number-3">3.3</span> Arguments and Running</h3>
+<div class="outline-text-3" id="text-3-3">
 <p>
 After loading a program and setting a breakpoint or two, typically one
 runs it. Command line arguments are also often necessary.
@@ -773,9 +958,9 @@ runs it. Command line arguments are also often necessary.
 </div>
 </div>
 
-<div id="outline-container-org77ea5c4" class="outline-3">
-<h3 id="org77ea5c4"><span class="section-number-3">3.3</span> Stepping</h3>
-<div class="outline-text-3" id="text-3-3">
+<div id="outline-container-org24f0f43" class="outline-3">
+<h3 id="org24f0f43"><span class="section-number-3">3.4</span> Stepping</h3>
+<div class="outline-text-3" id="text-3-4">
 <p>
 When a breakpoint is hit, single steps forward are possible in the
 debugger to trace which path of execution is taken. Use <code>step</code> to move
@@ -847,9 +1032,9 @@ stepping over function calls.
 </div>
 </div>
 
-<div id="outline-container-orgb7294c8" class="outline-3">
-<h3 id="orgb7294c8"><span class="section-number-3">3.4</span> Printing Values in Memory and Stack</h3>
-<div class="outline-text-3" id="text-3-4">
+<div id="outline-container-orge30040b" class="outline-3">
+<h3 id="orge30040b"><span class="section-number-3">3.5</span> Printing Values in Memory and Stack</h3>
+<div class="outline-text-3" id="text-3-5">
 <p>
 Inspecting values is often necessary to see what is going on in a
 program. The debugger can display data in a variety of formats
@@ -984,14 +1169,20 @@ manipulated.
 <td class="org-left">Print 3 32-bit numbers at the top of the stack (starting at <code>rsp</code>)</td>
 <td class="org-left">&#xa0;</td>
 </tr>
+
+<tr>
+<td class="org-left"><code>x /3bd $rsp</code></td>
+<td class="org-left">Print 3 8-bit numbers at the top of the stack (starting at <code>rsp</code>)</td>
+<td class="org-left">&#xa0;</td>
+</tr>
 </tbody>
 </table>
 </div>
 </div>
 
-<div id="outline-container-org38fe256" class="outline-3">
-<h3 id="org38fe256"><span class="section-number-3">3.5</span> Command History and Screen Management in TUI Mode</h3>
-<div class="outline-text-3" id="text-3-5">
+<div id="outline-container-orgbd6281c" class="outline-3">
+<h3 id="orgbd6281c"><span class="section-number-3">3.6</span> Command History and Screen Management in TUI Mode</h3>
+<div class="outline-text-3" id="text-3-6">
 <p>
 A bit of basic editing discipline is useful in gdb. The Text User
 Interface <code>-tui</code> mode alter keys so that arrows don't work
@@ -1075,9 +1266,9 @@ upper area of the terminal which most folks find to be helpful.
 </div>
 </div>
 
-<div id="outline-container-org00b85f1" class="outline-3">
-<h3 id="org00b85f1"><span class="section-number-3">3.6</span> Other Resources</h3>
-<div class="outline-text-3" id="text-3-6">
+<div id="outline-container-org5e39edc" class="outline-3">
+<h3 id="org5e39edc"><span class="section-number-3">3.7</span> Other Resources</h3>
+<div class="outline-text-3" id="text-3-7">
 <ul class="org-ul">
 <li>A long listing of <code>gdb</code> commands: <a href="https://ccrma.stanford.edu/~jos/stkintro/Useful_commands_gdb.html">https://ccrma.stanford.edu/~jos/stkintro/Useful_commands_gdb.html</a></li>
 <li>Some preface material on commands: <a href="https://www.cs.rochester.edu/~nelson/courses/csc_173/review/gdb.html">https://www.cs.rochester.edu/~nelson/courses/csc_173/review/gdb.html</a></li>
@@ -1086,13 +1277,13 @@ upper area of the terminal which most folks find to be helpful.
 </div>
 </div>
 
-<div id="outline-container-orge943cf9" class="outline-2">
-<h2 id="gdb-assembly"><a id="orge943cf9"></a><span class="section-number-2">4</span> <a id="org59501d9"></a> Debugging Assembly in GDB</h2>
+<div id="outline-container-orgba4dffa" class="outline-2">
+<h2 id="gdb-assembly"><a id="orgba4dffa"></a><span class="section-number-2">4</span> <a id="org35e9a17"></a> Debugging Assembly in GDB</h2>
 <div class="outline-text-2" id="text-gdb-assembly">
 </div>
 
-<div id="outline-container-org20c17e9" class="outline-3">
-<h3 id="org20c17e9"><span class="section-number-3">4.1</span> Overview</h3>
+<div id="outline-container-org22d12cc" class="outline-3">
+<h3 id="org22d12cc"><span class="section-number-3">4.1</span> Overview</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 GDB has no trouble handling assembly code when it is included or when
@@ -1176,7 +1367,7 @@ like this.
 
 <div class="org-center">
 
-<div id="orgcedcd0d" class="figure">
+<div id="org1360bd7" class="figure">
 <p><img src="gdb-assembly.png" alt="gdb-assembly.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 3: </span><code>gdb</code> running on some assembly code. Register contents are displayed in the top frame, assembly in the middle, and commands on the bottom.</p>
@@ -1185,8 +1376,8 @@ like this.
 </div>
 </div>
 
-<div id="outline-container-orgc6b5b14" class="outline-3">
-<h3 id="orgc6b5b14"><span class="section-number-3">4.2</span> Compile and Run Assembly Files (source available)</h3>
+<div id="outline-container-org560f1a7" class="outline-3">
+<h3 id="org560f1a7"><span class="section-number-3">4.2</span> Compile and Run Assembly Files (source available)</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 Compiling an assembly file with debug flags on will cause gdb to show
@@ -1195,27 +1386,27 @@ that assembly code by default in the TUI source window and cause the
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">&gt; gcc -g collatz.s              # compile assembly code with debug symbols
-&gt; gdb ./a.out                   # run gdb on executable
-gdb&gt; tui enable                 # enable text user interface mode
-gdb&gt; break main                 # set a break point at main
-gdb&gt; run                        # run to the break point
-gdb&gt; step                       # step a couple times to see position in assembly
-gdb&gt; s                          # shorthand for step
-gdb&gt; layout regs                # start displaying registers 
-gdb&gt; step                       # step to see changes in registers
-gdb&gt; break collatz.s:15         # break at another source line
-gdb&gt; continue                   # run to the source line
-gdb&gt; step                       # step
-gdb&gt; winheight regs +2          # show more of the register window for eflags
-gdb&gt; quit                       # exit the debugger
+<pre class="src src-sh">&gt;&gt; gcc -g collatz.s              # compile assembly code with debug symbols
+&gt;&gt; gdb ./a.out                   # run gdb on executable
+(gdb) tui enable                 # enable text user interface mode
+(gdb) break main                 # set a break point at main
+(gdb) run                        # run to the break point
+(gdb) step                       # step a couple times to see position in assembly
+(gdb) s                          # shorthand for step
+(gdb) layout regs                # start displaying registers 
+(gdb) step                       # step to see changes in registers
+(gdb) break collatz.s:15         # break at another source line
+(gdb) continue                   # run to the source line
+(gdb) step                       # step
+(gdb) winheight regs +2          # show more of the register window for eflags
+(gdb) quit                       # exit the debugger
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org77b185f" class="outline-3">
-<h3 id="org77b185f"><span class="section-number-3">4.3</span> <a id="org963c7a1"></a> Debug Binaries (no source available)</h3>
+<div id="outline-container-org945f344" class="outline-3">
+<h3 id="org945f344"><span class="section-number-3">4.3</span> <a id="orga169cc0"></a> Debug Binaries (no source available)</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 Without debug symbols, <code>gdb</code> does not know what source to
@@ -1227,32 +1418,32 @@ operation to execute which may be several assembly instructions.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">&gt; gcc collatz.s                 # compile assembly code without debug symbols
-&gt; gdb ./a.out                   # run gdb on executable
-gdb&gt; tui enable                 # enable text user interface mode
+<pre class="src src-sh">&gt;&gt; gcc collatz.s                 # compile assembly code without debug symbols
+&gt;&gt; gdb ./a.out                   # run gdb on executable
+(gdb) tui enable                 # enable text user interface mode
 
-gdb&gt; layout asm                 # SHOW ASSEMBLY CODE IN SOURCE WINDOW
+(gdb) layout asm                 # SHOW ASSEMBLY CODE IN SOURCE WINDOW
 
-gdb&gt; break main                 # set a break point at main
-gdb&gt; run                        # run to the break point
+(gdb) break main                 # set a break point at main
+(gdb) run                        # run to the break point
 
-gdb&gt; stepi                      # STEP A SINGLE ASSMEBLY INSTRUCTION
-gdb&gt; si                         # shorthand for stepi
+(gdb) stepi                      # STEP A SINGLE ASSMEBLY INSTRUCTION
+(gdb) si                         # shorthand for stepi
 
-gdb&gt; layout regs                # start displaying registers 
-gdb&gt; stepi                      # step to see changes in registers
-gdb&gt; break *main + 14           # break at instruction 14 bytes after main
-gdb&gt; continue                   # run to the source line
-gdb&gt; stepi                      # step
-gdb&gt; winheight regs +2          # show more of the register window for eflags
-gdb&gt; quit                       # exit the debugger
+(gdb) layout regs                # start displaying registers 
+(gdb) stepi                      # step to see changes in registers
+(gdb) break *main + 14           # break at instruction 14 bytes after main
+(gdb) continue                   # run to the source line
+(gdb) stepi                      # step
+(gdb) winheight regs +2          # show more of the register window for eflags
+(gdb) quit                       # exit the debugger
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org62a7779" class="outline-3">
-<h3 id="org62a7779"><span class="section-number-3">4.4</span> Additional TUI Commands</h3>
+<div id="outline-container-org890f15a" class="outline-3">
+<h3 id="org890f15a"><span class="section-number-3">4.4</span> Additional TUI Commands</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 The official list of <code>gdb</code> TUI commands and configuration is here:
@@ -1273,8 +1464,8 @@ forward which makes one feel <b>very</b> cool</li>
 </div>
 </div>
 
-<div id="outline-container-org9591853" class="outline-2">
-<h2 id="org9591853"><span class="section-number-2">5</span> <a id="org760983c"></a> Breakpoints in Binary Files</h2>
+<div id="outline-container-org86da49d" class="outline-2">
+<h2 id="org86da49d"><span class="section-number-2">5</span> <a id="org043d191"></a> Breakpoints in Binary Files</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Setting breakpoints with C and Assembly source files is easily done by
@@ -1284,8 +1475,8 @@ some tricks.
 </p>
 </div>
 
-<div id="outline-container-org7a7ca2c" class="outline-3">
-<h3 id="org7a7ca2c"><span class="section-number-3">5.1</span> Break at Function Symbols/Labels</h3>
+<div id="outline-container-org57b33db" class="outline-3">
+<h3 id="org57b33db"><span class="section-number-3">5.1</span> Break at Function Symbols/Labels</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 At the assembly level, function names at higher language levels are
@@ -1295,14 +1486,14 @@ symbol are "program text". Setting break points at these is common.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">&gt; nm bomb                            # show symbols in binary bomb
+<pre class="src src-sh">&gt;&gt; nm bomb                           # show symbols in binary bomb
 ...                                  # functions marked with "T"
 0000000000400df6 T main              # there is a main function
 ...
 0000000000400f2d T phase_1           # there are phase functions
 0000000000400f49 T phase_2
 ...
-&gt; gdb ./bomb                         # run binary in debugger
+&gt;&gt; gdb ./bomb                        # run binary in debugger
 ...
 Reading symbols from bomb...done.
 
@@ -1328,8 +1519,8 @@ Breakpoint 2, 0x0000000000400f2d in phase_1 () # second breakpoint in phase_1, n
 </div>
 </div>
 
-<div id="outline-container-orge5c98bf" class="outline-3">
-<h3 id="orge5c98bf"><span class="section-number-3">5.2</span> <a id="org520fc80"></a> Break at Specific Instruction Addresses</h3>
+<div id="outline-container-orgab6a6e0" class="outline-3">
+<h3 id="orgab6a6e0"><span class="section-number-3">5.2</span> <a id="org391c2f3"></a> Break at Specific Instruction Addresses</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 As binaries don't have line numbers, one cannot set a breakpoint at a
@@ -1418,8 +1609,8 @@ End of assembler dump.
 </div>
 
 
-<div id="outline-container-org7d760c7" class="outline-2">
-<h2 id="org7d760c7"><span class="section-number-2">6</span> Other GDB Guides</h2>
+<div id="outline-container-org5b8ead0" class="outline-2">
+<h2 id="org5b8ead0"><span class="section-number-2">6</span> Other GDB Guides</h2>
 <div class="outline-text-2" id="text-6">
 <ul class="org-ul">
 <li><a href="http://beej.us/guide/bggdb/">Beej's Quick Guide to GDB</a>: Beej's guides are accurate, short, and
@@ -1430,8 +1621,8 @@ information</li>
 </div>
 </div>
 
-<div id="outline-container-org9d8e5b7" class="outline-2">
-<h2 id="org9d8e5b7"><span class="section-number-2">7</span> <a id="orgf1d3413"></a> Other Useful Tools for working with Binary Files</h2>
+<div id="outline-container-org26c186a" class="outline-2">
+<h2 id="org26c186a"><span class="section-number-2">7</span> <a id="orgd84180d"></a> Other Useful Tools for working with Binary Files</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 The following programs are available on most Unix systems and can
@@ -1478,22 +1669,22 @@ can provide some information on what to look for.
 </div>
 </div>
 
-<div id="outline-container-orgec15649" class="outline-2">
-<h2 id="orgec15649"><span class="section-number-2">8</span> CHANGELOG</h2>
+<div id="outline-container-org9b61f48" class="outline-2">
+<h2 id="org9b61f48"><span class="section-number-2">8</span> CHANGELOG</h2>
 <div class="outline-text-2" id="text-8">
 <dl class="org-dl">
 <dt>Tue Oct 18 01:08:26 PM CDT 2022</dt><dd>Minor typo fixes and additions.</dd>
 <dt>Fri Jan 11 17:08:41 CST 2019</dt><dd>Minor typo fixes and additions.</dd>
-<dt>Tue Feb 27 10:56:51 CST 2018</dt><dd>Added a section on setting <a href="#org760983c">breakpoints in binary files</a> which is
+<dt>Tue Feb 27 10:56:51 CST 2018</dt><dd>Added a section on setting <a href="#org043d191">breakpoints in binary files</a> which is
 relevant to work on the binary bomb assignment.</dd>
-<dt>Wed Feb 21 15:19:21 CST 2018</dt><dd>Added a section on <a href="#org59501d9">debugging binaries/assembly with <code>gdb</code></a>
-including debugging <a href="#org963c7a1">binaries without source code</a>.</dd>
+<dt>Wed Feb 21 15:19:21 CST 2018</dt><dd>Added a section on <a href="#org35e9a17">debugging binaries/assembly with <code>gdb</code></a>
+including debugging <a href="#orga169cc0">binaries without source code</a>.</dd>
 </dl>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2022-10-18 Tue 13:27 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-02-17 Mon 16:48 <br/> </i>
 </div>
 </body>
 </html>
