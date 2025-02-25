@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-10-04 Fri 10:41 -->
+<!-- 2025-02-24 Mon 15:13 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Project 2: Bit Ops, Debugging, Data Structures</title>
@@ -330,6 +330,7 @@ margin-left: 0.5em;
 }
 }
 .linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
 }
 
 @media print {
@@ -446,11 +447,12 @@ return {
 name: 'interactive',           // language name
 keywords: {
 $pattern: /[^ \t\n]+/,       // lex based on non-whitespace
-keyword: [">>","(shellac)","HM>","TM>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:"], // allowed interactive prompts
+keyword: [">>","(shellac)","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
 },
 contains: [
 // hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
 hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+hljs.COMMENT(/#+/, /$/),     // and a sequence of hashes
 ]
 };
 };
@@ -458,9 +460,10 @@ hljs.registerLanguage('interactive', interactive_lang);     // register custom l
 
 // Add highlighjs CSS classes to elemens marked with relevant org classes
 lang_map = new Map();              // map of org to hljs languages
-lang_map.set("src-c"    , "language-c");
-lang_map.set("src-text" , "language-plaintext");
-lang_map.set("src-sh"   , "language-interactive");
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
 function add_class(el) {           // applied to each pre.src element
 for (let [org_lang, hljs_lang] of lang_map) {
 if(el.classList.contains(org_lang)){
@@ -477,83 +480,77 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2024-10-04 Fri 10:41</i>
+<i>Last Updated: 2025-02-24 Mon 15:13</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Project 2: Bit Ops, Debugging, Data Structures</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Fri 11-Oct-2024</b></li>
+<li><b>Due: 11:59pm Fri 14-Mar-2025</b></li>
 <li><i>Approximately 4.0% of total grade</i></li>
 <li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a></li>
 <li>Projects are <b>individual work</b>: no collaboration with other students
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-org571a203" class="outline-4">
-<h4 id="org571a203">CODE/TEST DISTRIBUTION: <a href="p2-code.zip">p2-code.zip</a></h4>
+<div id="outline-container-org3893060" class="outline-4">
+<h4 id="org3893060">CODE/TEST DISTRIBUTION: <a href="p2-code.zip">p2-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org53dbf97" class="outline-4">
-<h4 id="org53dbf97">VIDEO OVERVIEW: <a href="https://youtu.be/xAHOlPjnkZs">https://youtu.be/xAHOlPjnkZs</a></h4>
+<div id="outline-container-org49bbc2f" class="outline-4">
+<h4 id="org49bbc2f">VIDEO OVERVIEW: <a href="https://youtu.be/xAHOlPjnkZs">https://youtu.be/xAHOlPjnkZs</a></h4>
 </div>
-<div id="outline-container-org96d82df" class="outline-4">
-<h4 id="org96d82df">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org96d82df">
-<dl class="org-dl">
-<dt>Thu Oct  3 03:46:55 PM EDT 2024</dt><dd>A video overview of Project 2 is
-now available here: <a href="https://youtu.be/xAHOlPjnkZs">https://youtu.be/xAHOlPjnkZs</a>.</dd>
-
-<dt>Thu Oct  3 02:40:48 PM EDT 2024</dt><dd>A few early parts of the project
-spec referred to a "hash map" incorrectly: the data structure at the
-center of Problem 3 is a Tree Map, a mapping of keys to values using
-a binary search tree.</dd>
-</dl>
+<div id="outline-container-org29bc06b" class="outline-4">
+<h4 id="org29bc06b">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org29bc06b">
 </div>
 </div>
 
-<div id="outline-container-org459b18a" class="outline-4">
-<h4 id="org459b18a"></h4>
-<div class="outline-text-4" id="text-org459b18a">
+<div id="outline-container-org3e3c9c1" class="outline-4">
+<h4 id="org3e3c9c1"></h4>
+<div class="outline-text-4" id="text-org3e3c9c1">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgab2c606">1. Introduction</a></li>
-<li><a href="#orgd09692f">2. Download Code and Setup</a></li>
-<li><a href="#org84b3e1d">3. <b>Problem 1</b>: Digital Clock Simulation</a>
+<li><a href="#org4f81da1">1. Introduction</a></li>
+<li><a href="#org19506be">2. Download Code and Setup</a></li>
+<li><a href="#org627caec">3. <b>Problem 1</b>: Digital Clock Simulation</a>
 <ul>
-<li><a href="#org1434c13">3.1. Overview</a></li>
-<li><a href="#org6bb29ef">3.2. Diagrams of Digits</a></li>
-<li><a href="#org0a8c9b6">3.3. Diagram of Time Display</a></li>
-<li><a href="#org32a00c1">3.4. <code>clock_update.c</code>: Updating the Display with User Code</a></li>
-<li><a href="#org7e2e677">3.5. Clock Simulator</a></li>
-<li><a href="#org61ae4cf">3.6. Sample Runs of <code>clock_main</code></a></li>
-<li><a href="#orgc0775ff">3.7. Problem 1 Grading Criteria</a></li>
+<li><a href="#org785a0e1">3.1. Overview</a></li>
+<li><a href="#orgf9b491f">3.2. Diagrams of Digits</a></li>
+<li><a href="#orgd72abb3">3.3. Diagram of Time Display</a></li>
+<li><a href="#orgdd1ecc1">3.4. <code>clock_update.c</code>: Updating the Display with User Code</a></li>
+<li><a href="#orgd28fa8d">3.5. Clock Simulator</a></li>
+<li><a href="#orgf538def">3.6. Sample Runs of <code>clock_main</code></a></li>
+<li><a href="#org97b93bb">3.7. Problem 1 Grading Criteria</a></li>
 </ul>
 </li>
-<li><a href="#org69aed44">4. <b>Problem 2</b>: Debugging the Puzzlebox</a>
+<li><a href="#orgb442011">4. <b>Problem 2</b>: Debugging the Puzzlebox</a>
 <ul>
-<li><a href="#org79b0e2b">4.1. Overview</a></li>
-<li><a href="#org17d9ef7">4.2. <code>input.txt</code> Input File</a></li>
-<li><a href="#org2df58de">4.3. <code>gdb</code> The GNU Debugger</a></li>
-<li><a href="#orge95a5e2">4.4. Typical Cycle</a></li>
-<li><a href="#orgd520048">4.5. Kinds of Puzzles</a></li>
-<li><a href="#orgebd0667">4.6. Tests for <code>puzzlebox.c</code></a></li>
+<li><a href="#org86ecc15">4.1. Overview</a></li>
+<li><a href="#org2eeab8d">4.2. <code>input.txt</code> Input File</a></li>
+<li><a href="#org25ea43e">4.3. <code>gdb</code> The GNU Debugger</a></li>
+<li><a href="#orgf6ce444">4.4. Typical Cycle</a></li>
+<li><a href="#org259df50">4.5. Kinds of Puzzles</a></li>
+<li><a href="#org47d3ffe">4.6. Tests for <code>puzzlebox.c</code></a></li>
 </ul>
 </li>
-<li><a href="#org5d8a469">5. <b>Problem 3</b>: Tree Maps in C</a>
+<li><a href="#org41ed9b9">5. <b>Problem 3</b>: Hash Tables in C</a>
 <ul>
-<li><a href="#orgba9dc3f">5.1. Overview</a></li>
-<li><a href="#org76719c0">5.2. <code>treemap_main</code> Demonstration</a></li>
-<li><a href="#org205e6e5">5.3. <code>treemap_funcs.c</code>: Binary Tree Functions</a></li>
-<li><a href="#org48ef8f6">5.4. <code>treemap_main.c</code>: main function / application</a></li>
-<li><a href="#org456a86b">5.5. Grading Criteria for P3</a></li>
+<li><a href="#org4eb2e55">5.1. Overview</a></li>
+<li><a href="#org6782b23">5.2. <code>hashset_main</code> Demonstration</a></li>
+<li><a href="#org57e70a3">5.3. Diagram of Hash Set Data structures</a></li>
+<li><a href="#org6a9048c">5.4. Hash Table Data Types</a></li>
+<li><a href="#org7f42246">5.5. Provided <code>hash_code()</code> Function</a></li>
+<li><a href="#org03ba944">5.6. <code>hashset_funcs.c</code> Outline</a></li>
+<li><a href="#org8ce593b">5.7. <code>hashset_main.c</code>: main function / application</a></li>
+<li><a href="#org9c076dd">5.8. Grading Criteria for Problem 3</a></li>
 </ul>
 </li>
-<li><a href="#orgf60fe71">6. Project Submission</a>
+<li><a href="#org0dae1a8">6. Project Submission</a>
 <ul>
-<li><a href="#orgb555bdf">6.1. Submit to Gradescope</a></li>
-<li><a href="#org646084d">6.2. Late Policies</a></li>
+<li><a href="#orgfff87f1">6.1. Submit to Gradescope</a></li>
+<li><a href="#org6866a1a">6.2. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -562,8 +559,8 @@ a binary search tree.</dd>
 </div>
 </div>
 
-<div id="outline-container-orgab2c606" class="outline-2">
-<h2 id="orgab2c606"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-org4f81da1" class="outline-2">
+<h2 id="org4f81da1"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This project addresses more advanced C programming topics each in its
@@ -588,9 +585,10 @@ implemented that is backed by a binary search tree.</li>
 </ol>
 </div>
 
-<div id="outline-container-orgea792fb" class="outline-4">
-<h4 id="orgea792fb">Difficulty Note</h4>
-<div class="outline-text-4" id="text-orgea792fb">
+
+<div id="outline-container-org5c585ef" class="outline-4">
+<h4 id="org5c585ef">Difficulty Notice*</h4>
+<div class="outline-text-4" id="text-org5c585ef">
 <p>
 Past students have found this content to be <b>more challenging than
 Project 1.</b>
@@ -604,15 +602,15 @@ run out of time on the larger third problem.
 </p>
 <div class="org-center">
 <p>
-<b>You have been warned.</b>
+<b><i>You have been warned.</i></b>
 </p>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgd09692f" class="outline-2">
-<h2 id="orgd09692f"><span class="section-number-2">2</span> <a id="org21385da"></a> Download Code and Setup</h2>
+<div id="outline-container-org19506be" class="outline-2">
+<h2 id="org19506be"><span class="section-number-2">2</span> <a id="org4db2912"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -713,63 +711,21 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tbody>
 <tbody>
 <tr>
-<td class="org-left"><code>treemap_funcs.c</code></td>
-<td class="org-left">CREATE</td>
-<td class="org-left">Problem 3 functions to write</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>treemap_main.c</code></td>
-<td class="org-left">CREATE</td>
-<td class="org-left">Problem 3 main function to write</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>treemap.h</code></td>
+<td class="org-left"><code>hashset.h</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Problem 3 header file</td>
 </tr>
 
 <tr>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>hashset_funcs.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Problem 3 functions to write</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>data/tree-demo.script</code></td>
-<td class="org-left">Data</td>
-<td class="org-left">Problem 3 sample input script to main program</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>data/stranger.hm</code></td>
-<td class="org-left">Data</td>
-<td class="org-left">Problem 3 sample tree map saved to file</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>data/other.script</code></td>
-<td class="org-left">Data</td>
-<td class="org-left">Problem 3 sample input script to main program</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>data/other.hm</code></td>
-<td class="org-left">Data</td>
-<td class="org-left">Problem 3 sample tree map saved to file</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>data/big.script</code></td>
-<td class="org-left">Data</td>
-<td class="org-left">Problem 3 sample input script to main program</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>data/big.hm</code></td>
-<td class="org-left">Data</td>
-<td class="org-left">Problem 3 sample tree map saved to file</td>
+<td class="org-left"><code>hashset_main.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Problem 3 main function to write</td>
 </tr>
 
 <tr>
@@ -779,7 +735,43 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tr>
 
 <tr>
-<td class="org-left"><code>test_treemap.org</code></td>
+<td class="org-left"><code>data/hashset_demo.script</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">Problem 3 sample input scripts to main program</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>data/alphabet.script</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>data/rm.hashset</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">Problem 3 sample hash set save files</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>data/alphabet.hashset</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>data/alphabet_expand.hashset</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_hashmap.org</code></td>
 <td class="org-left">Testing</td>
 <td class="org-left">Problem 3 tests</td>
 </tr>
@@ -800,9 +792,9 @@ folder. Ultimately you will re-zip this folder to submit it.
 </table>
 </div>
 
-<div id="outline-container-orgc7582aa" class="outline-4">
-<h4 id="orgc7582aa">Makefile</h4>
-<div class="outline-text-4" id="text-orgc7582aa">
+<div id="outline-container-org2e7f8e0" class="outline-4">
+<h4 id="org2e7f8e0">Makefile</h4>
+<div class="outline-text-4" id="text-org2e7f8e0">
 <p>
 As in the first assignment, a <code>Makefile</code> is provided as part of this
 project. The essential targets pertinent to each problem are described
@@ -826,9 +818,9 @@ Typical usage is:
 </div>
 
 
-<div id="outline-container-orgbd8a43d" class="outline-4">
-<h4 id="orgbd8a43d">Automated Tests</h4>
-<div class="outline-text-4" id="text-orgbd8a43d">
+<div id="outline-container-orgd6078b5" class="outline-4">
+<h4 id="orgd6078b5">Automated Tests</h4>
+<div class="outline-text-4" id="text-orgd6078b5">
 <p>
 As in previous assignments, automated tests are provided and
 associated with problems. Each problem describes how to run tests
@@ -857,12 +849,12 @@ gcc -Wall -Wno-comment -Werror -g  -c clock_update.c
 </div>
 </div>
 
-<div id="outline-container-org84b3e1d" class="outline-2">
-<h2 id="org84b3e1d"><span class="section-number-2">3</span> <b>Problem 1</b>: Digital Clock Simulation</h2>
+<div id="outline-container-org627caec" class="outline-2">
+<h2 id="org627caec"><span class="section-number-2">3</span> <b>Problem 1</b>: Digital Clock Simulation</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org1434c13" class="outline-3">
-<h3 id="org1434c13"><span class="section-number-3">3.1</span> Overview</h3>
+<div id="outline-container-org785a0e1" class="outline-3">
+<h3 id="org785a0e1"><span class="section-number-3">3.1</span> Overview</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 You are tasked with writing code which will be run by a
@@ -885,9 +877,9 @@ Each feature is discussed in subsequent sections.
 </p>
 </div>
 
-<div id="outline-container-org96c86d9" class="outline-4">
-<h4 id="org96c86d9">Time of Day Register</h4>
-<div class="outline-text-4" id="text-org96c86d9">
+<div id="outline-container-org7706930" class="outline-4">
+<h4 id="org7706930">Time of Day Register</h4>
+<div class="outline-text-4" id="text-org7706930">
 <p>
 A special register is periodically updated to contain an integer that
 reflects how much time has passed since the beginning of the day.
@@ -924,9 +916,9 @@ bit shift and mask operations due to the power of 2 involved.</li>
 </div>
 </div>
 
-<div id="outline-container-orgc0d0d9e" class="outline-4">
-<h4 id="orgc0d0d9e">Clock Display Port Register</h4>
-<div class="outline-text-4" id="text-orgc0d0d9e">
+<div id="outline-container-orge7d6e67" class="outline-4">
+<h4 id="orge7d6e67">Clock Display Port Register</h4>
+<div class="outline-text-4" id="text-orge7d6e67">
 <p>
 A special register controls the display of the LCD clock.  This
 register is accessible in C programs via a global variable.
@@ -947,8 +939,8 @@ set the bits of this variable to properly show the time.
 </div>
 </div>
 
-<div id="outline-container-org6bb29ef" class="outline-3">
-<h3 id="org6bb29ef"><span class="section-number-3">3.2</span> Diagrams of Digits</h3>
+<div id="outline-container-orgf9b491f" class="outline-3">
+<h3 id="orgf9b491f"><span class="section-number-3">3.2</span> Diagrams of Digits</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 The following diagram shows bit patterns for various digits and how
@@ -960,7 +952,7 @@ set.
 
 <div class="org-center">
 
-<div id="org1e296f4" class="figure">
+<div id="orgbab25a7" class="figure">
 <p><img src="digital-digits-top-down.png" alt="digital-digits-top-down.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Bit to clock display bar correspondence for the ones digit of the minute.  The 0th bit controls the upper horizontal bar, the 1th bit controls the horizontal bar counter-clockwise from it, and so on around the 6 outer bars in a counter-clockwise fashion. The 6th bit controls the middle horizontal bar. When a bit is 1 (set), the bar will be darkened while when the bit is 0 (clear) the bar will not be displayed (shown as empty).  The combinations of bits shown are the only ones that arise when showing digits for times.</p>
@@ -994,8 +986,8 @@ interest.</li>
 </div>
 </div>
 
-<div id="outline-container-org0a8c9b6" class="outline-3">
-<h3 id="org0a8c9b6"><span class="section-number-3">3.3</span> Diagram of Time Display</h3>
+<div id="outline-container-orgd72abb3" class="outline-3">
+<h3 id="orgd72abb3"><span class="section-number-3">3.3</span> Diagram of Time Display</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 Time is displayed with several adjacent digits along with an AM/PM
@@ -1007,7 +999,7 @@ appear as it does.
 
 <div class="org-center">
 
-<div id="orged2ab99" class="figure">
+<div id="orgf47aa5f" class="figure">
 <p><img src="digital-clock-topdown.png" alt="digital-clock-topdown.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Two full examples of how the 30 bits of the clock display state control which parts of the clock are shown.  Each digit follows the same pattern of bit to bar correspondence as the right-most with bits. The lowest order (rightmost) bit controls the top bar of each digit and proceed around the outside counter-clockwise with the final bit for each digit controlling the middle bar.  The highest order bits (28 and 29) control whether the "AM" or "PM" lights are shown. Note that both could be shown at the same time or neither shown but this should not be done for actual times.</p>
@@ -1033,8 +1025,8 @@ integer.</li>
 </div>
 
 
-<div id="outline-container-org32a00c1" class="outline-3">
-<h3 id="org32a00c1"><span class="section-number-3">3.4</span> <code>clock_update.c</code>: Updating the Display with User Code</h3>
+<div id="outline-container-orgdd1ecc1" class="outline-3">
+<h3 id="orgdd1ecc1"><span class="section-number-3">3.4</span> <code>clock_update.c</code>: Updating the Display with User Code</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 Periodically the microcontroller will run code to adjust the LCD
@@ -1062,9 +1054,9 @@ These should all be written in <code>clock_update.c</code> and are as follows.
 
 
 
-<div id="outline-container-org1cb5e8e" class="outline-4">
-<h4 id="org1cb5e8e">Converting time of Day in Seconds to a Struct</h4>
-<div class="outline-text-4" id="text-org1cb5e8e">
+<div id="outline-container-orgfe7a2df" class="outline-4">
+<h4 id="orgfe7a2df">Converting time of Day in Seconds to a Struct</h4>
+<div class="outline-text-4" id="text-orgfe7a2df">
 <div class="org-src-container">
 <pre class="src src-c">int set_tod_from_ports(tod_t *tod);
 // Reads the time of day from the CLOCK_TIME_PORT global variable. If
@@ -1121,9 +1113,9 @@ of a division.
 </div>
 </div>
 
-<div id="outline-container-org71878c2" class="outline-4">
-<h4 id="org71878c2">Setting bits in an integer according to a <code>tod_t</code></h4>
-<div class="outline-text-4" id="text-org71878c2">
+<div id="outline-container-org8c7a485" class="outline-4">
+<h4 id="org8c7a485">Setting bits in an integer according to a <code>tod_t</code></h4>
+<div class="outline-text-4" id="text-org8c7a485">
 <div class="org-src-container">
 <pre class="src src-c">int set_display_from_tod(tod_t tod, int *display);
 // Accepts a tod and alters the bits in the int pointed at by display
@@ -1198,9 +1190,9 @@ bit if time is in the PM.</li>
 </div>
 
 
-<div id="outline-container-orgc51ef67" class="outline-4">
-<h4 id="orgc51ef67">Changing the clock display</h4>
-<div class="outline-text-4" id="text-orgc51ef67">
+<div id="outline-container-org7bc0ad7" class="outline-4">
+<h4 id="org7bc0ad7">Changing the clock display</h4>
+<div class="outline-text-4" id="text-org7bc0ad7">
 <div class="org-src-container">
 <pre class="src src-c">int clock_update();
 // Examines the CLOCK_TIME_PORT global variable to determine hour,
@@ -1227,8 +1219,8 @@ functions.
 </div>
 </div>
 
-<div id="outline-container-org7e2e677" class="outline-3">
-<h3 id="org7e2e677"><span class="section-number-3">3.5</span> Clock Simulator</h3>
+<div id="outline-container-orgd28fa8d" class="outline-3">
+<h3 id="orgd28fa8d"><span class="section-number-3">3.5</span> Clock Simulator</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 While we do not have actual hardware with the features mentioned, a
@@ -1266,8 +1258,8 @@ look when the <code>CLOCK_DISPLAY_PORT</code> bits are set.
 </div>
 </div>
 
-<div id="outline-container-org61ae4cf" class="outline-3">
-<h3 id="org61ae4cf"><span class="section-number-3">3.6</span> Sample Runs of <code>clock_main</code></h3>
+<div id="outline-container-orgf538def" class="outline-3">
+<h3 id="orgf538def"><span class="section-number-3">3.6</span> Sample Runs of <code>clock_main</code></h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 You can build the <code>clock_main</code> executable via
@@ -1286,7 +1278,7 @@ provided <code>Makefile</code> to create the <code>clock_main</code> program.  I
 <code>clock_update.c</code> and the <code>main()</code> in <code>clock_main.c</code>.
 </p>
 
-<pre class="example" id="org3336617">
+<pre class="example" id="org4da3fbf">
 &gt; make clock_main
 make: 'clock_main' is up to date.
 
@@ -1709,8 +1701,8 @@ failed to initialize tod; bailing
 </div>
 </div>
 
-<div id="outline-container-orgc0775ff" class="outline-3 grading 30">
-<h3 id="orgc0775ff"><span class="section-number-3">3.7</span> Problem 1 Grading Criteria&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="30">30</span></span></h3>
+<div id="outline-container-org97b93bb" class="outline-3 grading 30">
+<h3 id="org97b93bb"><span class="section-number-3">3.7</span> Problem 1 Grading Criteria&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="30">30</span></span></h3>
 <div class="outline-text-3" id="text-3-7">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1878,12 +1870,12 @@ failed to initialize tod; bailing
 </div>
 </div>
 
-<div id="outline-container-org69aed44" class="outline-2">
-<h2 id="org69aed44"><span class="section-number-2">4</span> <b>Problem 2</b>: Debugging the Puzzlebox</h2>
+<div id="outline-container-orgb442011" class="outline-2">
+<h2 id="orgb442011"><span class="section-number-2">4</span> <b>Problem 2</b>: Debugging the Puzzlebox</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org79b0e2b" class="outline-3">
-<h3 id="org79b0e2b"><span class="section-number-3">4.1</span> Overview</h3>
+<div id="outline-container-org86ecc15" class="outline-3">
+<h3 id="org86ecc15"><span class="section-number-3">4.1</span> Overview</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 The file <code>puzzlebox.c</code> contains source code that reads inputs from a
@@ -1918,8 +1910,8 @@ at various points make it <b>much easier</b> to solve the puzzles.
 </div>
 </div>
 
-<div id="outline-container-org17d9ef7" class="outline-3">
-<h3 id="org17d9ef7"><span class="section-number-3">4.2</span> <code>input.txt</code> Input File</h3>
+<div id="outline-container-org2eeab8d" class="outline-3">
+<h3 id="org2eeab8d"><span class="section-number-3">4.2</span> <code>input.txt</code> Input File</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 Name your input file <code>input.txt</code> and put your internet ID in it along
@@ -1975,8 +1967,8 @@ inputs for <code>input.txt</code>.
 </div>
 </div>
 
-<div id="outline-container-org2df58de" class="outline-3">
-<h3 id="org2df58de"><span class="section-number-3">4.3</span> <code>gdb</code> The GNU Debugger</h3>
+<div id="outline-container-org25ea43e" class="outline-3">
+<h3 id="org25ea43e"><span class="section-number-3">4.3</span> <code>gdb</code> The GNU Debugger</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 You will definitely need to use a debugger to solve the puzzlebox and
@@ -1989,7 +1981,7 @@ install on must Linux machines.
 For a quick overview of GDB, here are some resources
 </p>
 <ul class="org-ul">
-<li><a href="http://www-users.cs.umn.edu/~kauffman/tutorials/gdb.html">CSCI 2021 Quick Guide to gdb: The GNU Debugger</a>: Page describing how
+<li><a href="https://kauffman77.github.io/tutorials/gdb.html">Quick Guide to gdb: The GNU Debugger</a>: Page describing how
 to start the debugger, a sample session using <code>puzzlebox</code>, an
 overview of the most common commands.</li>
 <li><a href="https://www.youtube.com/watch?v%3DPorfLSr3DDI">CppCon 2015: Greg Law " Give me 15 minutes &amp; I'll change your view
@@ -2002,8 +1994,8 @@ TUI mode</li>
 </div>
 </div>
 
-<div id="outline-container-orge95a5e2" class="outline-3">
-<h3 id="orge95a5e2"><span class="section-number-3">4.4</span> Typical Cycle</h3>
+<div id="outline-container-orgf6ce444" class="outline-3">
+<h3 id="orgf6ce444"><span class="section-number-3">4.4</span> Typical Cycle</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 A typical cycle of working on <code>puzzlebox</code> will be the following.
@@ -2012,9 +2004,10 @@ A typical cycle of working on <code>puzzlebox</code> will be the following.
 <li><p>
 Start the debugger with puzzlebox
 </p>
-<pre class="example">
-gdb -tui ./puzzlebox
-</pre></li>
+<div class="org-src-container">
+<pre class="src src-sh">  &gt;&gt; gdb -tui ./puzzlebox
+</pre>
+</div></li>
 <li><p>
 Set the arguments array to <code>input.txt</code>
 </p>
@@ -2060,8 +2053,8 @@ run
 </div>
 </div>
 
-<div id="outline-container-orgd520048" class="outline-3">
-<h3 id="orgd520048"><span class="section-number-3">4.5</span> Kinds of Puzzles</h3>
+<div id="outline-container-org259df50" class="outline-3">
+<h3 id="org259df50"><span class="section-number-3">4.5</span> Kinds of Puzzles</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 The puzzles presented in the different phases make use of a variety of
@@ -2077,8 +2070,8 @@ character) through pointers and unions</li>
 </div>
 </div>
 
-<div id="outline-container-orgebd0667" class="outline-3 grading 30">
-<h3 id="orgebd0667"><span class="section-number-3">4.6</span> Tests for <code>puzzlebox.c</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="30">30</span></span></h3>
+<div id="outline-container-org47d3ffe" class="outline-3 grading 30">
+<h3 id="org47d3ffe"><span class="section-number-3">4.6</span> Tests for <code>puzzlebox.c</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="30">30</span></span></h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
 <code>puzzlebox.c</code> itself reports how many points one can earn at the end
@@ -2107,370 +2100,614 @@ make test-prob2
 </div>
 </div>
 
-
-<div id="outline-container-org5d8a469" class="outline-2">
-<h2 id="org5d8a469"><span class="section-number-2">5</span> <b>Problem 3</b>: Tree Maps in C</h2>
+<div id="outline-container-org41ed9b9" class="outline-2">
+<h2 id="org41ed9b9"><span class="section-number-2">5</span> <b>Problem 3</b>: Hash Tables in C</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-orgba9dc3f" class="outline-3">
-<h3 id="orgba9dc3f"><span class="section-number-3">5.1</span> Overview</h3>
+<div id="outline-container-org4eb2e55" class="outline-3">
+<h3 id="org4eb2e55"><span class="section-number-3">5.1</span> Overview</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
-This problem implements a rudimentary "tree map" application in C
-which features a library of tree manipulation functions and a "main"
-application that provides a command line interface to them.  The
-architecture is similar to a lab problem involving linked lists so
-reviewing that code can provide some insight.
+This problem implements a rudimentary hash table application in C
+along with a program that uses it.  The architecture is similar to a
+lab problem involving linked lists so reviewing that code can provide
+some insight.
 </p>
 
 <p>
-Basic Binary Search Trees are covered in most introductory data
-structure classes such as CMSC 131 / 132.  A "Tree Map" is simply
-a binary search tree which is organized by "Keys" which are associated
-with "Values".  The Key is used to look up the associated Value.  A
-representative image is below where nodes are labeled with <code>Key -&gt;
-Value</code>.
+Basic Hash Tables are covered in most introductory data structure
+classes such as CSCI 1913 and 1933. Should you need to review them,
+the following resources may prove useful.
 </p>
-
-<div class="org-center">
-
-<div id="org58af4d5" class="figure">
-<p><img src="treemap.png" alt="treemap.png" style="max-width:100%;" />
-</p>
-</div>
-</div>
+<ul class="org-ul">
+<li><a href="https://en.wikipedia.org/wiki/Hash_table">Wikipedia Article on Hash Tables</a>: Provides general overview of the
+data structure. Specifically focus on <a href="https://en.wikipedia.org/wiki/Hash_table#Separate_chaining_with_linked_lists">Separate Chaining with Linked
+Lists</a> which is the style of hash table implemented in the
+assignment.</li>
+<li><a href="https://www.youtube.com/watch?v=shs0KM3wKv8">Youtube "Data Structures: Hash Tables" by HackerRank</a>: Short video
+summarizing major concepts of hash tables in any programming
+language. Explains briefly hash code functions and the Separate
+Chaining architecture we will use.</li>
+<li><a href="https://www.youtube.com/watch?v=c3RVW3KGIIE">Youtube "How HashMap works in Java" by Ranjith Ramachandran</a>: Short
+video which includes a detailed walk-through of adding elements to a
+separately chained hash table.  Somewhat Java-centric including use
+of a different mapping of hash codes to array indices than we will
+use. Also note that they Key/Value structure used there is for a Map
+whereas we will use a Set where the Key/Val are identical and
+referred to as an Element.</li>
+</ul>
 
 <p>
-Notice that the Keys which appear to the left of arrows are arranged
-according to the Binary Search Tree principle with alphabetically
-lower keys to the left of their parent and alphabetically later keys
-to the right of a parent. If this principle is unfamiliar to you,
-review it prior to proceeding.
+Our particular variant will be a <b>Hash Set</b> which is a collection of
+elements (strings) which are each unique. The hash table is used to
+quickly add new elements and check whether an element is contained in the
+set. The hash table will use the <b>separate chaining</b> technique to
+resolve hash code conflicts: each hash "bucket" has a singly linked
+list of elements in that bucket.
+</p>
+
+<p>
+Additionally, the hash set will maintain a record of the <b>order elements
+are added</b> by overlaying a linked list on elements as they are
+added. This allows for efficient traversal of the hash table elements for
+printing and gives a queue-like feel to parts of the table.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org76719c0" class="outline-3">
-<h3 id="org76719c0"><span class="section-number-3">5.2</span> <code>treemap_main</code> Demonstration</h3>
+<div id="outline-container-org6782b23" class="outline-3">
+<h3 id="org6782b23"><span class="section-number-3">5.2</span> <code>hashset_main</code> Demonstration</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 The intent of this problem is to develop a small application which
 behaves as the following demo indicates.
 </p>
-<div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; make prob3                   # build the treemap_main application
-gcc -Wall -Wno-comment -Werror -g  -c treemap_main.c
-gcc -Wall -Wno-comment -Werror -g  -c treemap_funcs.c
-gcc -Wall -Wno-comment -Werror -g  -o treemap_main treemap_main.o treemap_funcs.o
-gcc -Wall -Wno-comment -Werror -g  -o test_treemap_verify test_treemap_verify.c
 
-&gt;&gt; ./treemap_main               # run the application
-TreeMap Editor
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; make hashset_main                   # Compile hash table application
+gcc -Wall -Wno-comment -Werror -g  -c hashset_main.c
+gcc -Wall -Wno-comment -Werror -g  -c hashset_funcs.c
+gcc -Wall -Wno-comment -Werror -g  -o hashset_main hashset_main.o hashset_funcs.o
+
+&gt;&gt; ./hashset_main                      # start application, shows help message with commands
+Hashset Application
 Commands:
-  quit:            exit the program
-  print:           shows contents of the tree in reverse sorted order
-  add &lt;key&gt; &lt;val&gt;: inserts the given key/val into the tree, duplicate keys are ignored
-  get &lt;key&gt;:       prints FOUND if the name is in the tree, NOT FOUND otherwise
-  clear:           eliminates all key/vals from the tree
-  size:            prints the total number of nodes in the tree
-  preorder:        prints contents of the tree in pre-order which is how it will be saved
-  save &lt;file&gt;:     writes the contents of the tree in pre-order to the given file
-  load &lt;file&gt;:     clears the current tree and loads the one in the given file
+  hashcode &lt;elem&gt;  : prints out the numeric hash code for the given key (does not change the hash set)
+  contains &lt;elem&gt;  : prints the value associated with the given element or NOT PRESENT
+  add &lt;elem&gt;       : inserts the given element into the hash set, reports existing element
+  print            : prints all elements in the hash set in the order they were addded
+  structure        : prints detailed structure of the hash set
+  clear            : reinitializes hash set to be empty with default size
+  save &lt;file&gt;      : writes the contents of the hash set to the given file
+  load &lt;file&gt;      : clears the current hash set and loads the one in the given file
+  next_prime &lt;int&gt; : if &lt;int&gt; is prime, prints it, otherwise finds the next prime and prints it
+  expand           : expands memory size of hash set to reduce its load factor
+  quit             : exit the program
 
-TM&gt; add El strange              # add some key/vals to the tree
-TM&gt; add Mike stoic
+HS&gt; print                              # prints items in order, empty initially
 
-TM&gt; size                        # show number of nodes in the tree
-2 nodes
+HS&gt; structure                          # show hash table structure, empty intitially
+elem_count: 0
+table_size: 5
+order_first: NULL
+order_last : NULL
+load_factor: 0.0000
+[ 0] : 
+[ 1] : 
+[ 2] : 
+[ 3] : 
+[ 4] : 
 
-TM&gt; print                       # print the current tree
-  Mike -&gt; stoic                 # right branch
-El -&gt; strange                   # root
+HS&gt; add Rick                           # add items table
+HS&gt; add Morty                             
 
-TM&gt; add Dustin corny            # add some more key/vals
-TM&gt; add Lucas brash
+HS&gt; print                              # show items in order added
+  1 Rick
+  2 Morty
 
-TM&gt; print                       # print the tree
-  Mike -&gt; stoic                 # root-&gt;right
-    Lucas -&gt; brash              # root-&gt;right-&gt;left
-El -&gt; strange                   # root
-  Dustin -&gt; corny               # root-&gt;left
+HS&gt; structure                          # show internal structure of the hash table
+elem_count: 2
+table_size: 5
+order_first: Rick
+order_last : Morty
+load_factor: 0.4000
+[ 0] :                                 # some buckets are empty
+[ 1] : 
+[ 2] : 
+[ 3] : {2546943 Rick &gt;&gt;Morty}          # nodes show hash code, string stored, next string
+[ 4] : {74531189 Morty &gt;&gt;NULL}         # last item added, points to null
 
-TM&gt; add Will lost               # add more key/vals
-TM&gt; add Steve hairy
+HS&gt; add Summer                         # add more items
+HS&gt; add Jerry
+HS&gt; add Beth
+HS&gt; add Tinyrick
 
-TM&gt; size                        # show number of nodes in the tree
-6 nodes
+HS&gt; print                              # print items in order added
+  1 Rick
+  2 Morty
+  3 Summer
+  4 Jerry
+  5 Beth
+  6 Tinyrick
 
-TM&gt; print                       # show the tree structure
-    Will -&gt; lost                # root-&gt;right-&gt;right
-      Steve -&gt; hairy            # root-&gt;right-&gt;right-&gt;left
-  Mike -&gt; stoic                 # root-&gt;right
-    Lucas -&gt; brash              # root-&gt;right-&gt;left
-El -&gt; strange                   # root
-  Dustin -&gt; corny               # root-&gt;left
+HS&gt; structure                          # show structure
+elem_count: 6                          # NOTE: recently added items added to front of bucket lists
+table_size: 5
+order_first: Rick
+order_last : Tinyrick
+load_factor: 1.2000
+[ 0] : 
+[ 1] : {-1964728321 Tinyrick &gt;&gt;NULL} 
+[ 2] : {2066967 Beth &gt;&gt;Tinyrick} 
+[ 3] : {-1807340593 Summer &gt;&gt;Jerry} {2546943 Rick &gt;&gt;Morty} 
+[ 4] : {71462654 Jerry &gt;&gt;Beth} {74531189 Morty &gt;&gt;Summer} 
 
-TM&gt; get Dustin                  # retrieve associated values for keys
-FOUND: corny
+HS&gt; contains Jerry                     # check if items contained / not in hashset
+FOUND: Jerry
+HS&gt; contains Rick
+FOUND: Rick
+HS&gt; contains Unity
+NOT PRESENT
+HS&gt; contains President
+NOT PRESENT
 
-TM&gt; get Steve
-FOUND: hairy
+HS&gt; add Jerry                          # items are unique, no changes made on detecting duplicates
+Elem already present, no changes made
+HS&gt; add Beth
+Elem already present, no changes made
 
-TM&gt; get Mike
-FOUND: stoic
+HS&gt; save rm.hashset                    # save the hash table file rm.hashset, can be loaded later
+HS&gt; clear                              # clear the hash table
+HS&gt; print                              # show cleared hash table is empty now
+HS&gt; structure
+elem_count: 0
+table_size: 5
+order_first: NULL
+order_last : NULL
+load_factor: 0.0000
+[ 0] : 
+[ 1] : 
+[ 2] : 
+[ 3] : 
+[ 4] : 
 
-TM&gt; get Barb                    # no such key in tree
-NOT FOUND
+HS&gt; add Birdperson                     # add new items to the empty hash table
+HS&gt; add Squanchy
+HS&gt; structure                          # show contents
+elem_count: 2
+table_size: 5
+order_first: Birdperson
+order_last : Squanchy
+load_factor: 0.4000
+[ 0] : 
+[ 1] : 
+[ 2] : {-724361712 Squanchy &gt;&gt;NULL} 
+[ 3] : {2082041198 Birdperson &gt;&gt;Squanchy} 
+[ 4] : 
 
-TM&gt; get Hopper
-NOT FOUND
+HS&gt; load rm.hashset                    # clear current hash table and load from file
+HS&gt; structure                          # show contents identical to when 'save' was used
+elem_count: 6
+table_size: 5
+order_first: Rick
+order_last : Tinyrick
+load_factor: 1.2000
+[ 0] : 
+[ 1] : {-1964728321 Tinyrick &gt;&gt;NULL} 
+[ 2] : {2066967 Beth &gt;&gt;Tinyrick} 
+[ 3] : {-1807340593 Summer &gt;&gt;Jerry} {2546943 Rick &gt;&gt;Morty} 
+[ 4] : {71462654 Jerry &gt;&gt;Beth} {74531189 Morty &gt;&gt;Summer} 
 
-TM&gt; size                        # currently 6 nodes in tree
-6 nodes
-TM&gt; save stranger.tm            # save the tree in a file
+HS&gt; expand                             # expand the size of the hash table's internal array
+HS&gt; print                              # no effect on items/ordering in table
+  1 Rick
+  2 Morty
+  3 Summer
+  4 Jerry
+  5 Beth
+  6 Tinyrick
 
-TM&gt; clear                       # clear all nodes in the tree
+HS&gt; structure                          # show internal sturcture: larger array now
+elem_count: 6
 
-TM&gt; size                        # all nodes removed
-0 nodes
-TM&gt; print                       # print the tree which is now empty
+table_size: 11                         # array size is next_prime(2*5+1) = 11
+order_first: Rick
+order_last : Tinyrick
+load_factor: 0.5455
+[ 0] : 
+[ 1] : {2066967 Beth &gt;&gt;Tinyrick} 
+[ 2] : 
+[ 3] : {-1807340593 Summer &gt;&gt;Jerry} {2546943 Rick &gt;&gt;Morty} 
+[ 4] : 
+[ 5] : 
+[ 6] : {-1964728321 Tinyrick &gt;&gt;NULL} 
+[ 7] : {74531189 Morty &gt;&gt;Summer} 
+[ 8] : 
+[ 9] : 
+[10] : {71462654 Jerry &gt;&gt;Beth} 
 
-TM&gt; load stranger.tm            # re-load the tree from the saved file
+HS&gt; add Birdperson                     # add additional items
+HS&gt; add Squanchy
+HS&gt; add Picklerick
 
-TM&gt; size                        # 6 nodes restored after loading
-6 nodes
+HS&gt; structure                          # show structure again
+elem_count: 9
+table_size: 11
+order_first: Rick
+order_last : Picklerick
+load_factor: 0.8182
+[ 0] : {761532761 Picklerick &gt;&gt;NULL} 
+[ 1] : {2066967 Beth &gt;&gt;Tinyrick} 
+[ 2] : 
+[ 3] : {-1807340593 Summer &gt;&gt;Jerry} {2546943 Rick &gt;&gt;Morty} 
+[ 4] : 
+[ 5] : 
+[ 6] : {2082041198 Birdperson &gt;&gt;Squanchy} {-1964728321 Tinyrick &gt;&gt;Birdperson} 
+[ 7] : {74531189 Morty &gt;&gt;Summer} 
+[ 8] : {-724361712 Squanchy &gt;&gt;Picklerick} 
+[ 9] : 
+[10] : {71462654 Jerry &gt;&gt;Beth} 
 
-TM&gt; print                       # show that the tree has been loaded
-    Will -&gt; lost
-      Steve -&gt; hairy
-  Mike -&gt; stoic
-    Lucas -&gt; brash
-El -&gt; strange
-  Dustin -&gt; corny
+HS&gt; expand                             # expand again
+HS&gt; structure                          # show internal structure
+elem_count: 9
+table_size: 23                         # size is next_prime(2*11 + 1) = 23
+order_first: Rick
+order_last : Picklerick
+load_factor: 0.3913
+[ 0] : 
+[ 1] : {761532761 Picklerick &gt;&gt;NULL} 
+[ 2] : 
+[ 3] : {2066967 Beth &gt;&gt;Tinyrick} 
+[ 4] : 
+[ 5] : 
+[ 6] : 
+[ 7] : 
+[ 8] : {2082041198 Birdperson &gt;&gt;Squanchy} 
+[ 9] : 
+[10] : 
+[11] : {-724361712 Squanchy &gt;&gt;Picklerick} {-1964728321 Tinyrick &gt;&gt;Birdperson} {74531189 Morty &gt;&gt;Summer} 
+[12] : 
+[13] : 
+[14] : 
+[15] : {2546943 Rick &gt;&gt;Morty} 
+[16] : 
+[17] : 
+[18] : {-1807340593 Summer &gt;&gt;Jerry} 
+[19] : 
+[20] : 
+[21] : {71462654 Jerry &gt;&gt;Beth} 
+[22] : 
 
-TM&gt; add El hairy                # 'add' modifies existing key/vals if found
-modified existing key           # reports if a key exists, modifying its value
-TM&gt; add Will found
-modified existing key
-TM&gt; add Barb away
-TM&gt; size                        # 7 nodes as only 1 node was new; others modified
-7 nodes                         # existing nodes to change value associated with key
-
-TM&gt; print                       # show tree with changed values in it
-    Will -&gt; found               # changed
-      Steve -&gt; hairy
-  Mike -&gt; stoic
-    Lucas -&gt; brash
-El -&gt; hairy                     # changed
-  Dustin -&gt; corny
-    Barb -&gt; away                # changed
-
-TM&gt; load stranger.tm            # load tree from disk, clears the tree and then restores the disk version
-TM&gt; print                       # show all tree has been restored
-    Will -&gt; lost
-      Steve -&gt; hairy
-  Mike -&gt; stoic
-    Lucas -&gt; brash
-El -&gt; strange
-  Dustin -&gt; corny
-
-TM&gt; preorder                    # show the pre-ordering format of the tree which is used to save/load trees
-El strange                      # root
-  Dustin corny                  # root-&gt;left
-  Mike stoic                    # root-&gt;right
-    Lucas brash                 # root-&gt;right-&gt;left
-    Will lost                   # root-&gt;right-&gt;right
-      Steve hairy               # root-&gt;right-&gt;right-&gt;left
-
-TM&gt; quit                        # quit
-&gt;                               # back the the shell
+HS&gt; quit                               # exit the application
+&gt;&gt;                                     # back to normal shell
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org205e6e5" class="outline-3">
-<h3 id="org205e6e5"><span class="section-number-3">5.3</span> <a id="org0a52f4e"></a> <code>treemap_funcs.c</code>: Binary Tree Functions</h3>
+<div id="outline-container-org57e70a3" class="outline-3">
+<h3 id="org57e70a3"><span class="section-number-3">5.3</span> Diagram of Hash Set Data structures</h3>
 <div class="outline-text-3" id="text-5-3">
-<p>
-Most of the functionality of the Treemap will be in the
-<code>treemap_funcs.c</code> file. This will include functions to insert
-key/values, search the tree, and save/load trees.  To get a sense of
-the data structure, examine the <code>treemap.h</code> file to see the two C
-structs which will be used to represent treemaps.
+<div class="org-center">
+
+<div id="org025bc01" class="figure">
+<p><img src="hashset2.png" alt="hashset2.png" style="max-width:100%;" />
 </p>
-
-<div class="org-src-container">
-<pre class="src src-c">// Type of tree nodes
-typedef struct node {
-  char key[96];                 // key for the node
-  char val[96];                 // value for the node
-  struct node *left;            // left branch,  NULL if not present
-  struct node *right;           // right branch, NULL if not present
-} tmnode_t;
-
-// Type of tree itself
-typedef struct {
-  tmnode_t *root;               // root of tree, NULL if tree empty
-} treemap_t;
-</pre>
+<p><span class="figure-number">Figure 3: </span>Shows the structure of a hash set and the various C data structures (<code>structs</code>) which are involved. Details are discussed in subsequent sections.</p>
+</div>
+</div>
+</div>
 </div>
 
+
+
+<div id="outline-container-org6a9048c" class="outline-3">
+<h3 id="org6a9048c"><span class="section-number-3">5.4</span> Hash Table Data Types</h3>
+<div class="outline-text-3" id="text-5-4">
 <p>
-Standard operations are supported by the treemap.
+We will favor <b>separately chained</b> hash sets which have the
+following features.
 </p>
 <ul class="org-ul">
-<li>Adding key/val pairs</li>
-<li>Searching for the value associated with a key</li>
-<li>Altering the value associated with a key</li>
-<li>Clearing the entire tree map</li>
-<li>Calculating the number of nodes in the tree</li>
-<li>Printing the key/value pairs in the tree map in reverse sorted order
-(in-order traversal) and from the root down (pre-order traversal)</li>
+<li>A hash set stores elements (strings) allowing fast lookup based on the
+hash code of the element. When a programming environment provides a
+"set" data structure, hash tables are frequently the backing data
+structure.</li>
+<li>The hash set has a 'table' which is a fixed size array. Each array
+element is a pointer to a linked list node or <code>NULL</code>.</li>
+<li>Elements in the hash table are stored in linked list nodes. Elements that
+hash to the same table location are stored in the list at that
+location</li>
+<li>A <code>hashcode()</code> function is provided which generates an integer from
+a string and is the first step to determining where key/value is
+located.</li>
+<li>The hash set also tracks the ordering that elements are added via
+additional pointers. The hash set tracks the first and last elements
+added allowing queue-like adds. Each node is part of a list for the
+table index it is stored at AND part of the overall list of all
+elements added in order.</li>
+</ul>
+
+<p>
+Examine the header file <code>hashset.h</code> to see the two C structs which will
+be used to represent hash tables.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">// Type for linked list nodes in hash set
+typedef struct hashnode {
+  struct hashnode *table_next;  // pointer to next node at table index of this node, NULL if last node
+  struct hashnode *order_next;  // pointer to next node in insert order, NULL if last data added
+  char data[128];               // string for the data stored in this node
+} hsnode_t;
+
+// Type of hash table
+typedef struct {
+  int data_count;               // number of data items (elements) in the table
+  int table_size;               // how big is the table array
+  hsnode_t **table;             // array of "buckets" which contain nodes
+  hsnode_t *order_first;        // pointer to the first node that was added
+  hsnode_t *order_last;         // pointer to last node that was added
+} hashset_t;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7f42246" class="outline-3">
+<h3 id="org7f42246"><span class="section-number-3">5.5</span> Provided <code>hash_code()</code> Function</h3>
+<div class="outline-text-3" id="text-5-5">
+<p>
+The code for <code>hash_code()</code> is provided below. All hash tables require
+a means of converting elements into a non-unique number. For
+consistency, we will use the below code which employs several
+interesting C tricks that will be discussed as the course
+progresses. Some of the advantages/disadvantages of the hash function
+are mentioned in the comments.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">// PROVIDED: Compute a simple hash code for the given character
+// string. Uses a "polyomial code" which uses all characters of the
+// string to form the hash code. This is the same approach that many
+// standard libraries like Java's String.hashcode() function
+// use. ADVANTAGE: Gives good distribution for all strings with even
+// single character variations having different hash
+// codes. DISADVANTAGE: computing the hash code is linear in time on
+// the length of the string.
+int hashcode(char key[]){
+  int hc = 0;
+  for(int i=0; key[i]!='\0'; i++){
+    hc = hc*31 + key[i];
+  }
+  return hc;
+}
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org03ba944" class="outline-3">
+<h3 id="org03ba944"><span class="section-number-3">5.6</span> <code>hashset_funcs.c</code> Outline</h3>
+<div class="outline-text-3" id="text-5-6">
+<p>
+Standard operations are supported by the hash set.
+</p>
+<ul class="org-ul">
+<li>Adding an element</li>
+<li>Determining if an element is contained or not in the set</li>
+<li>Clearing the entire hash table</li>
+<li>Printing all data in the hash table according to their add order</li>
+<li>Printing the internal layout of the hash table</li>
+<li>Expanding the memory used by the hash table to improve lookup
+performance.</li>
 </ul>
 
 <p>
 These are broken down into the following C functions which you will
-need to implement in <code>treemap_funcs.c</code>.
+need to implement in <code>hashset_funcs.c</code> except for the first
+<code>hashcode()</code> function which is provided.
 </p>
 
-<pre class="example" id="org31a766a">
-// treemap_funcs.c: Provides a small library of functions that operate on
-// binary search trees mapping strings keys to string values.
+<div class="org-src-container">
+<pre class="src src-c">// hashset_funcs.c: utility functions for operating on hash sets. Most
+// functions are used in the hashset_main.c which provides an
+// application to work with the functions.
 
-#include "treemap.h"
+#include "hashset.h"
 
-void treemap_init(treemap_t *tree);
-// Initialize the given tree to have a null root making it size 0.
+// PROVIDED: Compute a simple hash code for the given character
+// string. Uses a "polyomial code" which uses all characters of the
+// string to form the hash code. This is the same approach that many
+// standard libraries like Java's String.hashcode() function
+// use. ADVANTAGE: Gives good distribution for all strings with even
+// single character variations having different hash
+// codes. DISADVANTAGE: computing the hash code is linear in time on
+// the length of the string.
+int hashcode(char key[]){
+  int hc = 0;
+  for(int i=0; key[i]!='\0'; i++){
+    hc = hc*31 + key[i];
+  }
+  return hc;
+}
 
-int treemap_add(treemap_t *tree, char key[], char val[]);
-// Inserts given key/value into a binary search tree. Uses an
-// ITERATIVE (loopy) approach to insertion which starts a pointer at
-// the root of the tree and changes its location until the correct
-// insertion point is located. If the key given already exists in the
-// tree, no new node is created; the existing value is changed to the
-// parameter 'val' and 0 is returned.  If no node with the given key
-// is found, a new node is created and with the given key/val, added
-// to the tree, and 1 is returned. Makes use of strcpy() to ease
-// copying characters between memory locations.
+void hashset_init(hashset_t *hs, int table_size);
+// Initialize the hash set 'hs' to have given size and data_count
+// 0. Ensures that the 'table' field is initialized to an array of
+// size 'table_size' and is filled with NULLs. Also ensures that the
+// first/last pointers are initialized to NULL
 
-char *treemap_get(treemap_t *tree, char key[]);
-// Searches the tree for given 'key' and returns its associated
-// value. Uses an ITERATIVE (loopy) search approach which starts a
-// pointer at the root of the tree and changes it until the search key
-// is found or determined not to be in the tree. If a matching key is
-// found, returns a pointer to its value. If no matching key is found,
-// returns NULL.
+int hashset_contains(hashset_t *hs, char data[]);
+// Returns 1 if the parameter `data` is in the hash set and 0
+// otherwise. Uses hashcode() and field `table_size` to determine
+// which index in table to search.  Iterates through the list at that
+// table index using strcmp() to check for `data`. NOTE: The
+// `hashcode()` function may return positive or negative
+// values. Negative values are negated to make them positive. The
+// "bucket" (index in hs-&gt;table) for `data` is determined by with
+// 'hashcode(key) modulo table_size'.
 
-void treemap_clear(treemap_t *tree);
-// Eliminate all nodes in the tree setting its contents empty. Uses
-// recursive node_remove_all() function to free memory for all nodes.
-
-void node_remove_all(tmnode_t *cur);
-// Recursive helper function which visits all nodes rooted at node
-// `cur` and frees the memory associated with them. This requires a
-// post-order traversal: visit left sub-tree, visit right sub-tree,
-// then free the `cur` node.
-
-int treemap_size(treemap_t *tree);
-// Returns the number of nodes currently in the tree. Uses
-// node_count_all() to recursively count all nodes.
-
-int node_count_all(tmnode_t *cur);
-// Counts all nodes in the tree rooted at `cur`. Uses recursion to
-// descend to the left and right branch if present and count nodes
-// there, adding 1 for the `cur` if non-null. Returns 0 if `cur` is
-// NULL.
-
-void treemap_print_revorder(treemap_t *tree);
-// Prints the key/val pairs of the tree in reverse order at differing
-// levels of indentation which shows all elements and their structure
-// in the tree. Visually the tree can be rotated clockwise to see its
-// structure. See the related node_print_revorder() for additional
-// detals.
-
-void node_print_revorder(tmnode_t *cur, int indent);
-// Recursive helper function which prints all key/val pairs in the
-// tree rooted at node 'cur' in reverse order. Traverses right
-// subtree, prints cur node's key/val, then traverses left tree.
-// Parameter 'indent' indicates how far to indent (2 spaces per indent
-// level).
+int hashset_add(hashset_t *hs, char data[]);
+// If the data is already present in the hash set, makes no changes
+// to the hash set and returns 0. hashset_contains() may be used for
+// this. Otherwise determines the bucket to add `data` at via the same
+// process as in hashset_contains() and adds it to the FRONT of the
+// list at that table index. Adjusts the `hs-&gt;order_last` pointer to
+// append the new data to the ordered list of data. If this is the
+// first data added, also adjsuts the `hs-&gt;first` pointer. Updates the
+// `data_count` field and returns 1 to indicate a successful addition.
 //
-// For example: a if the root node "El" is passed into the function
-// and it has the following structure:
+// NOTE: Adding data at the front of each bucket list allows much
+// simplified logic that does not need any looping/iteration.
+
+void hashset_free_fields(hashset_t *hs);
+// De-allocates nodes/table for `hs`. Iterates through the ordered
+// list of the hash set starting at the `order_first` field and
+// de-allocates all nodes in the list. Also free's the `table`
+// field. Sets all relevant fields to 0 or NULL as appropriate to
+// indicate that the hash set has no more usable space. Does NOT
+// attempt to de-allocate the `hs` itself as it may not be
+// heap-allocated (e.g. in the stack or a global).
+
+void hashset_show_structure(hashset_t *hs);
+// Displays detailed structure of the hash set. Shows stats for the
+// hash set as below including the load factor (data count divided
+// by table_size) to 4 digits of accuracy.  Then shows each table
+// array index ("bucket") on its own line with the linked list of
+// data in the bucket on the same line. 
 // 
-//         ___El-&gt;strange_____     
-//        |                   |   
-// Dustin-&gt;corny       ___Mike-&gt;stoic
-//                    |              
-//               Lucas-&gt;brash     
+// EXAMPLE:
+// data_count: 4
+// table_size: 5
+// order_first: Rick
+// order_last : Tinyrick
+// load_factor: 0.8000
+// [ 0] : {7738144525137111380 Tinyrick &gt;&gt;NULL} 
+// [ 1] : 
+// [ 2] : 
+// [ 3] : {125779953153363 Summer &gt;&gt;Tinyrick} {1801677138 Rick &gt;&gt;Morty} 
+// [ 4] : {521644699469 Morty &gt;&gt;Summer} 
+//
+// NOTES:
+// - Uses format specifier "[%2d] : " to print the table indices
+// - Nodes in buckets have the following format:
+//   {1415930697 IceT &gt;&gt;Goldenfold}
+//    |          |       |        
+//    |          |       +-&gt; order_next-&gt;data OR NULL if last node
+//    |          +-&gt;`data` string     
+//    +-&gt; hashcode("IceT"), print using format "%ld" for 64-bit longs
 // 
-// the recursive calls will print the following output:
+
+void hashset_write_data_ordered(hashset_t *hs, FILE *out);
+// Outputs all data in the hash set according to the order they
+// were added. Starts at the `order_first` field and iterates through
+// the list defined there. Each data is printed on its own line
+// preceded by its add position with 1 for the first data, 2 for the
+// second, etc. Prints output to `FILE *out` which should be an open
+// handle. NOTE: the output can be printed to the terminal screen by
+// passing in the `stdout` file handle for `out`.
+
+void hashset_save(hashset_t *hs, char *filename);
+// Writes the given hash set to the given `filename` so that it can be
+// loaded later.  Opens the file and writes its 'table_size' and
+// 'data_count' to the file. Then uses the hashset_write_data_ordered()
+// function to output all data in the hash set into the file.
+// EXAMPLE FILE:
 // 
-//   Mike -&gt; stoic                 # root-&gt;right
-//     Lucas -&gt; brash              # root-&gt;right-&gt;left
-// El -&gt; strange                   # root
-//   Dustin -&gt; corny               # root-&gt;left
+// 5 6
+//   1 Rick
+//   2 Morty
+//   3 Summer
+//   4 Jerry
+//   5 Beth
+//   6 Tinyrick
+// 
+// First two numbers are the 'table_size' and 'data_count' field and
+// remaining text is the output of hashset_write_data_ordered();
+// e.g. insertion position and data.
 
-void treemap_print_preorder(treemap_t *tree);
-// Print all the data in the tree in pre-order with indentation
-// corresponding to the depth of the tree. Makes use of
-// node_write_preorder() for this.
+int hashset_load(hashset_t *hs, char *filename);
+// Loads a hash set file created with hashset_save(). If the file
+// cannot be opened, prints the message
+// 
+// ERROR: could not open file 'somefile.hs'
+//
+// and returns 0 without changing anything. Otherwise clears out the
+// current hash set `hs`, initializes a new one based on the size
+// present in the file, and adds all data from the file into the new
+// hash set. Ignores the indices at the start of each line and uses
+// hashset_add() to insert data in the order they appear in the
+// file. Returns 1 on successful loading (FIXED: previously indicated
+// a different return value on success) . This function does no error
+// checking of the contents of the file so if they are corrupted, it
+// may cause an application to crash or loop infinitely.
 
-void treemap_save(treemap_t *tree, char *fname);
-// Saves the tree by opening the named file, writing the tree to it in
-// pre-order with node_write_preorder(), then closing the file.
+int next_prime(int num);
+// If 'num' is a prime number, returns 'num'. Otherwise, returns the
+// first prime that is larger than 'num'. Uses a simple algorithm to
+// calculate primeness: check if any number between 2 and (num/2)
+// divide num. If none do, it is prime. If not, tries next odd number
+// above num. Loops this approach until a prime number is located and
+// returns this. Used to ensure that hash table_size stays prime which
+// theoretically distributes data better among the array indices
+// of the table.
 
-void node_write_preorder(tmnode_t *cur, FILE *out, int depth);
-// Recursive helper function which writes/prints the tree in pre-order
-// to the given open file handle. The parameter depth gives how far to
-// indent node data, 2 spaces per unit depth. Depth increases by 1 on
-// each recursive call. The function prints the cur node data,
-// traverses the left tree, then traverses the right tree.
-
-int treemap_load(treemap_t *tree, char *fname );
-// Clears the given tree then loads new elements to it from the
-// named. Repeated calls to treemap_add() are used to add strings read
-// from the file.  If the tree is stored in pre-order in the file, its
-// exact structure will be restored.  Returns 1 if the tree is loaded
-// successfully and 0 if opening the named file fails in which case no
-// changes are made to the tree.
+void hashset_expand(hashset_t *hs);
+// Allocates a new, larger area of memory for the `table` field and
+// re-adds all current data to it. The size of the new table is
+// next_prime(2*table_size+1) which keeps the size prime.  After
+// allocating the new table, all table entries are initialized to NULL
+// then the old table is iterated through and all data are added to
+// the new table according to their hash code. The memory for the old
+// table is de-allocated and the new table assigned to the hash set
+// fields "table" and "table_size".  This function increases
+// "table_size" while keeping "data_count" the same thereby reducing
+// the load of the hash table. Ensures that the memory associated with
+// the old table is free()'d. Makes NO special effort to preserve old
+// nodes: re-adds everything into the new table and then frees the old
+// one along with its nodes. Uses functions such as hashset_init(),
+// hashset_add(), hashset_free_fields() to accomplish the transfer.
 
 </pre>
 </div>
 </div>
+</div>
 
-<div id="outline-container-org48ef8f6" class="outline-3">
-<h3 id="org48ef8f6"><span class="section-number-3">5.4</span> <code>treemap_main.c</code>: main function / application</h3>
-<div class="outline-text-3" id="text-5-4">
+<div id="outline-container-org8ce593b" class="outline-3">
+<h3 id="org8ce593b"><span class="section-number-3">5.7</span> <code>hashset_main.c</code>: main function / application</h3>
+<div class="outline-text-3" id="text-5-7">
 <p>
-In <code>treemap_main.c</code> implement an interactive program which allows users
-to type commands to manipulate the tree map. 
+In <code>hashset_main.c</code> implement an interactive program which allows users
+to type commands to manipulate the hash set. 
 </p>
 
 <p>
-The provided <code>Makefile</code> should compile the <code>treemap_main</code> program as follows.
+The provided <code>Makefile</code> should compile the <code>hashset_main</code> program as follows.
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">
-&gt; make prob3                    # Compile with Makefile
-gcc -Wall -g -lm -c treemap_main.c
-gcc -Wall -g -lm -c treemap_funcs.c
-gcc -Wall -g -lm -o treemap_main treemap_main.o treemap_funcs.o
+<pre class="src src-sh">&gt;&gt; make hashset_main                   # Compile hash table application
+gcc -Wall -Wno-comment -Werror -g  -c hashset_main.c
+gcc -Wall -Wno-comment -Werror -g  -c hashset_funcs.c
+gcc -Wall -Wno-comment -Werror -g  -o hashset_main hashset_main.o hashset_funcs.o
 
-&gt; treemap_main                  # run the application
-TreeMap Editor
+&gt;&gt; ./hashset_main                      # start application, shows help message with commands
+Hashset Application
 Commands:
-  quit:            exit the program
-  print:           shows contents of the tree in reverse sorted order
-  add &lt;key&gt; &lt;val&gt;: inserts the given key/val into the tree, duplicate keys are ignored
-  get &lt;key&gt;:       prints FOUND if the name is in the tree, NOT FOUND otherwise
-  clear:           eliminates all key/vals from the tree
-  size:            prints the total number of nodes in the tree
-  preorder:        prints contents of the tree in pre-order which is how it will be saved
-  save &lt;file&gt;:     writes the contents of the tree in pre-order to the given file
-  load &lt;file&gt;:     clears the current tree and loads the one in the given file
-TM&gt; 
+  hashcode &lt;data&gt;  : prints out the numeric hash code for the given key (does not change the hash set)
+  contains &lt;data&gt;  : prints FOUND if data is in the set NOT PRESENT otherwise
+  add &lt;data&gt;       : inserts the given data into the hash set, reports existing data
+  print            : prints all data in the hash set in the order they were addded
+  structure        : prints detailed structure of the hash set
+  clear            : reinitializes hash set to be empty with default size
+  save &lt;file&gt;      : writes the contents of the hash set to the given file
+  load &lt;file&gt;      : clears the current hash set and loads the one in the given file
+  next_prime &lt;int&gt; : if &lt;int&gt; is prime, prints it, otherwise finds the next prime and prints it
+  expand           : expands memory size of hash set to reduce its load factor
+  quit             : exit the program
+HS&gt; 
 </pre>
 </div>
 
@@ -2479,195 +2716,145 @@ The following sections provide some implementation details.
 </p>
 </div>
 
-<div id="outline-container-org1838af8" class="outline-4">
-<h4 id="org1838af8">Read commands, Execute</h4>
-<div class="outline-text-4" id="text-org1838af8">
+<div id="outline-container-org186d31d" class="outline-4">
+<h4 id="org186d31d">Read commands, Execute</h4>
+<div class="outline-text-4" id="text-org186d31d">
 <p>
-The basic flow of <code>treemap_main.c</code> follows the same pattern that code for
-a HW exercise demonstrates.  A good way to get started on the main
-application is to <b>copy over the HW solution</b> and begin modifying it.
+The basic flow of <code>hashset_main.c</code> follows the same pattern that code for
+a lab exercise demonstrates.  A good way to get started on the main
+application is to <b>copy over the lab solution</b> and begin modifying it.
 </p>
 <ul class="org-ul">
-<li>Create a <code>treemap_t</code> variable, likely on the stack as a local variable in
+<li>Create a <code>hashset_t</code> variable, likely on the stack as a local variable in
 <code>main()</code></li>
 <li>Start a loop that terminates when the user exits or there is no more
 input</li>
 <li>Each time the user enters a string, read it and check for one of the
 built-in commands</li>
 <li>On identifying the command, potentially read another string if
-needed (commands like <code>add</code> and <code>get</code>)</li>
-<li>Call an appropriate <code>treemap_XXX()</code> function to handle the command</li>
+needed (commands like <code>add</code> and <code>contains</code>)</li>
+<li>Call an appropriate <code>hashset_XXX()</code> function to handle the command</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org4e145aa" class="outline-4">
-<h4 id="org4e145aa">Supported Commands</h4>
-<div class="outline-text-4" id="text-org4e145aa">
+<div id="outline-container-org8b3a973" class="outline-4">
+<h4 id="org8b3a973">Supported Commands</h4>
+<div class="outline-text-4" id="text-org8b3a973">
 <p>
 To indicate to users of the program the supported commands, use the
 following code to print out the initial option list.
 </p>
 
-<pre class="example" id="orgd62ae07">
-  printf("TreeMap Editor\n");
+<div class="org-src-container">
+<pre class="src src-c">  printf("Hashset Application\n");
   printf("Commands:\n");
-  printf("  quit:            exit the program\n");
-  printf("  print:           shows contents of the tree in reverse sorted order\n");
-  printf("  add &lt;key&gt; &lt;val&gt;: inserts the given key/val into the tree, duplicate keys are ignored\n");
-  printf("  get &lt;key&gt;:       prints FOUND if the name is in the tree, NOT FOUND otherwise\n");
-  printf("  clear:           eliminates all key/vals from the tree\n");
-  printf("  size:            prints the total number of nodes in the tree\n");
-  printf("  preorder:        prints contents of the tree in pre-order which is how it will be saved\n");
-  printf("  save &lt;file&gt;:     writes the contents of the tree in pre-order to the given file\n");
-  printf("  load &lt;file&gt;:     clears the current tree and loads the one in the given file\n");
+  printf("  hashcode &lt;data&gt;  : prints out the numeric hash code for the given key (does not change the hash set)\n");
+  printf("  contains &lt;data&gt;  : prints FOUND if data is in the set NOT PRESENT otherwise\n");
+  printf("  add &lt;data&gt;       : inserts the given data into the hash set, reports existing data\n");
+  printf("  print            : prints all data in the hash set in the order they were addded\n");
+  printf("  structure        : prints detailed structure of the hash set\n");
+  printf("  clear            : reinitializes hash set to be empty with default size\n");
+  printf("  save &lt;file&gt;      : writes the contents of the hash set to the given file\n");
+  printf("  load &lt;file&gt;      : clears the current hash set and loads the one in the given file\n");
+  printf("  next_prime &lt;int&gt; : if &lt;int&gt; is prime, prints it, otherwise finds the next prime and prints it\n");
+  printf("  expand           : expands memory size of hash set to reduce its load factor\n");
+  printf("  quit             : exit the program\n");
 </pre>
 </div>
 </div>
+</div>
 
-<div id="outline-container-orgcf92039" class="outline-4">
-<h4 id="orgcf92039">Size and Counting Nodes</h4>
-<div class="outline-text-4" id="text-orgcf92039">
+<div id="outline-container-org6dc2cd2" class="outline-4">
+<h4 id="org6dc2cd2">Clearing Hash Table</h4>
+<div class="outline-text-4" id="text-org6dc2cd2">
 <p>
-The tree does not maintain its size anywhere but this can be done
-using a recursive traversal of the tree. In brief, a function like
-<code>tree_size()</code> will simply call <code>node_count_all()</code> on the root and
-return what that function calculates. <code>node_count_all()</code> will be a
-typical recursive traversal, likely a pre-order traversal, and its
-code will flow something like the following.
+When issuing the <code>clear</code> command, the contents of the current hash set
+should be eliminated and the hash set reinitialized to the default
+size. This is most easily done via.
 </p>
 <ol class="org-ol">
-<li>If the current node is <code>NULL</code>, return 0.</li>
-<li>Otherwise recourse on the left and right branches to compute the
-number of nodes in them. Store these in variables.</li>
-<li>Return the sum of the left + right counts + 1 for the current
-node.</li>
+<li>Using the <code>hashset_free_fields()</code> function</li>
+<li>Using <code>hashset_init()</code> with the <code>HASHSET_DEFAULT_TABLE_SIZE</code>
+constant defined in <code>hashset.h</code>.</li>
 </ol>
 </div>
 </div>
 
-<div id="outline-container-org804b602" class="outline-4">
-<h4 id="org804b602">Clearing Treemap</h4>
-<div class="outline-text-4" id="text-org804b602">
-<p>
-When issuing the <code>clear</code> command, the contents of the current tree map
-should be eliminated and the tree map reinitialized to be empty. This
-is best done:
-</p>
-<ol class="org-ol">
-<li>Using the <code>treemap_clear()</code> function which immediately calls&#x2026;</li>
-<li><code>node_remove_all()</code> which recursively visits and frees nodes.</li>
-<li>Finally the root of the tree is set to <code>NULL</code></li>
-</ol>
-
-<p>
-To recursively free nodes, follow a similar approach to that taken
-when counting nodes.
-</p>
-</div>
-</div>
-
-
-<div id="outline-container-orgdeb4815" class="outline-4">
-<h4 id="orgdeb4815"><a id="org7c852f7"></a> Paths to Files for Saving and Loading</h4>
-<div class="outline-text-4" id="text-orgdeb4815">
+<div id="outline-container-org2189e7f" class="outline-4">
+<h4 id="org2189e7f"><a id="org7e09d42"></a> Paths to Files for Saving and Loading</h4>
+<div class="outline-text-4" id="text-org2189e7f">
 <p>
 Saving and loading data involves writing to files. The names
 associated with the files must be specified as a <i>path</i> so that if
 files are to be saved or loaded from subdirectories, include this
-as part of the path.  For example, the <code>stranger.tm</code> file is
+as part of the path.  For example, the <code>rm.hashset</code> file is
 provided in the <code>data/</code> directory and once loading functionality is
 code, it can be loaded as follows.
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">p2-code&gt; ./treemap_main
-..
-TM&gt; load data/stranger.tm       # load the provided tree map from a subdirectory
-TM&gt; print                       # show contents of tree map
-    Will -&gt; lost
-      Steve -&gt; hairy
-  Mike -&gt; stoic
-    Lucas -&gt; brash
-El -&gt; strange
-  Dustin -&gt; corny
+<pre class="src src-sh">&gt;&gt; ./hashset_main
+...
+HS&gt; load data/rm.hashset       # load existing hashset save file
+HS&gt; print
+  1 Rick
+  2 Morty
+  3 Summer
+  4 Jerry
+  5 Beth
+  6 Tinyrick
 
-TM&gt;
+HS&gt; structure                  # show structure
+elem_count: 6
+table_size: 5
+order_first: Rick
+order_last : Tinyrick
+load_factor: 1.2000
+[ 0] : 
+[ 1] : {-1964728321 Tinyrick &gt;&gt;NULL} 
+[ 2] : {2066967 Beth &gt;&gt;Tinyrick} 
+[ 3] : {-1807340593 Summer &gt;&gt;Jerry} {2546943 Rick &gt;&gt;Morty} 
+[ 4] : {71462654 Jerry &gt;&gt;Beth} {74531189 Morty &gt;&gt;Summer} 
+
+HS&gt; expand                     # expand
+HS&gt; add Birdperson             # add new items
+HS&gt; add Goldenfold
+
+HS&gt; save cur.hashset           # save to file in current directory
+
+HS&gt; clear                      # empty hash table
+HS&gt; print                      # show emptiness
+
+HS&gt; load cur.hashset           # reload
+HS&gt; print                      # items restored
+  1 Rick
+  2 Morty
+  3 Summer
+  4 Jerry
+  5 Beth
+  6 Tinyrick
+  7 Birdperson
+  8 Goldenfold
+HS&gt; save data/new.hashset      # create another save file in data/ dir
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgb6f7f7e" class="outline-4">
-<h4 id="orgb6f7f7e">File Handles Pre-Order Printing / Saving</h4>
-<div class="outline-text-4" id="text-orgb6f7f7e">
+<div id="outline-container-org3130799" class="outline-4">
+<h4 id="org3130799">Failing to Load Files</h4>
+<div class="outline-text-4" id="text-org3130799">
 <p>
-Notice there are 3 functions that involve outputting pre-order
-traversals.
+If a file cannot be opened with the <code>load 'file.hm'</code> command, the
+underlying <code>hashset_load()</code> should print an error of the form
 </p>
 <div class="org-src-container">
-<pre class="src src-c">void treemap_print_preorder(treemap_t *tree);
-// Print all the data in the tree in pre-order with indentation
-// corresponding to the depth of the tree. Makes use of
-// node_write_preorder() for this.
-
-void treemap_save(treemap_t *tree, char *fname);
-// Saves the tree by opening the named file, writing the tree to it in
-// pre-order with node_write_preorder(), then closing the file.
-
-void node_write_preorder(node_t *cur, FILE *out, int depth);
-// Recursive helper function which writes/prints the tree in pre-order
-// to the given open file handle...
-</pre>
-</div>
-
-<p>
-The final function <code>node_write_preorder()</code> takes a <code>FILE *</code> argument
-which the doc string describes as where output should be written. As
-the other functions mention, <code>node_write_preorder()</code> should be used in
-both of them. At first this might seem impossible because
-</p>
-<ul class="org-ul">
-<li><code>treemap_print_preorder()</code> prints the tree to the screen</li>
-<li><code>treemap_save()</code> writes the tree into a file</li>
-</ul>
-
-<p>
-However, recall these things that make it possible to utilize
-<code>node_print_preorder()</code> for both
-</p>
-<ul class="org-ul">
-<li><code>fprintf()</code> is a generalized to <code>printf()</code> that accepts a <code>FILE *</code>
-argument which is where to print. Definitely make use of <code>fprintf()</code>
-in <code>node_write_preorder()</code>.</li>
-<li>The special symbol <code>stdout</code> is a <code>FILE *</code> that corresponds to the
-screen (standard output) so can be passed as an argument to
-<code>node_write_preorder()</code> in the event that one wants the output for
-this function to go to the screen.</li>
-</ul>
-
-<p>
-These techniques should allow you to write very short functions for
-<code>treemap_print_preorder()</code> and <code>treemap_save()</code> which rely mainly on
-<code>node_write_preorder()</code> to do most of the work leading to an elegant
-reduction in code size.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org5b95515" class="outline-4">
-<h4 id="org5b95515">Failing to Load Files</h4>
-<div class="outline-text-4" id="text-org5b95515">
-<p>
-If a file cannot be opened with the <code>load 'file.tm'</code> command, the
-underlying <code>treemap_load()</code> should print an error of the form
-</p>
-<div class="org-src-container">
-<pre class="src src-text">ERROR: could not open file 'somefile.tm'
+<pre class="src src-text">ERROR: could not open file 'somefile.hm'
 </pre>
 </div>
 <p>
-and the <code>treemap_main.c</code> main loop should NOT change the tree map. 
-Instead it will print the message
+and the <code>hash_main.c</code> main loop should NOT change the hash set and
+print the message
 </p>
 <div class="org-src-container">
 <pre class="src src-text">load failed
@@ -2679,78 +2866,85 @@ automated tests.
 </p>
 <div class="org-src-container">
 <pre class="src src-sh">...
-TM&gt; print                       # tree has values in it
-    Will -&gt; lost
-      Steve -&gt; hairy
-  Mike -&gt; stoic
-    Lucas -&gt; brash
-El -&gt; strange
-  Dustin -&gt; corny
+HS&gt; print                      # current contents of set
+  1 Rick
+  2 Morty
+  3 Summer
+  4 Jerry
+  5 Beth
+  6 Tinyrick
+  7 Birdperson
+  8 Goldenfold
 
-TM&gt; load data/not-there.tm      # attempt to load file that doesn't exist
-ERROR: could not open file 'data/not-there.tm'
+HS&gt; load notthere.hashset      # attempt to load file that doesn't exit
+ERROR: could not open file 'notthere.hashset'
 load failed
 
-TM&gt; print                       # original tree is unchanged after a failed load
-    Will -&gt; lost
-      Steve -&gt; hairy
-  Mike -&gt; stoic
-    Lucas -&gt; brash
-El -&gt; strange
-  Dustin -&gt; corny
+HS&gt; print                      # failed load does not modify current set
+  1 Rick
+  2 Morty
+  3 Summer
+  4 Jerry
+  5 Beth
+  6 Tinyrick
+  7 Birdperson
+  8 Goldenfold
+HS&gt; 
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org7aba281" class="outline-4">
-<h4 id="org7aba281">Command Echoing: <code>-echo</code> option to <code>treemap_main</code></h4>
-<div class="outline-text-4" id="text-org7aba281">
+<div id="outline-container-org8628b6b" class="outline-4">
+<h4 id="org8628b6b">Command Echoing: <code>-echo</code> option to <code>hashset_main</code></h4>
+<div class="outline-text-4" id="text-org8628b6b">
 <p>
 Some users may wish to "script" this the main program: allow it to
 process input commands from a file rather than from the user typing.
-This notion is demonstrated in the HW <code>list_main</code> application and
-should be reviewed if it is unfamiliar.
+This notion is discussed in a lab and should be reviewed if it is
+unfamiliar.
 </p>
 
 <p>
-An example of an input script is in <code>data/treemap-script.txt</code> which
+An example of an input script is in <code>data/hashset_demo.script</code> which
 looks like a lot of user commands:
 </p>
 <div class="org-src-container">
-<pre class="src src-text">add El strange
-add Mike stoic
-size
+<pre class="src src-text">print
+structure
+add Rick
+add Morty
 print
-add Dustin corny
-add Lucas brash
+structure
+add Summer
+add Jerry
+add Beth
+add Tinyrick
 print
-add Will lost
-add Steve hairy
-size
-print
-get Dustin
-get Steve
-get Mike
-get Barb
-get Hopper
-size
-save stranger.tm
+structure
+contains Jerry
+contains Rick
+contains Unity
+contains President
+save rm.hashset
 clear
-size
 print
-load stranger.tm
-size
+structure
+add Birdperson
+add Squanchy
+structure
+load rm.hashset
+structure
+expand
 print
-add El hairy
-add Will found
-add Barb away
-size
-print
-load stranger.tm
-print
-preorder
-quit
+structure
+add Birdperson
+add Squanchy
+add Picklerick
+structure
+expand
+structure
+bye
 </pre>
 </div>
 
@@ -2759,18 +2953,18 @@ The file can be fed directly to the program without needing type it
 using Unix pipes as per the following:
 </p>
 <div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; cat data/treemap-script.txt | ./treemap_main -echo
+<pre class="src src-sh">&gt;&gt; cat data/hashset_demo.script | ./hashset_main -echo
 </pre>
 </div>
 <p>
-Notice the use of a command line argument for <code>treemap_main</code>: the
+Notice the use of a command line argument for <code>hashset_main</code>: the
 <code>-echo</code> option. This is a REQUIRED feature which prints commands typed
 by users to the screen. To implement this, do the following.
 </p>
 
 <p>
 Model the structure of command echoing after what is shown in related
-Homework.
+Lab work.
 </p>
 <ul class="org-ul">
 <li>Use a variable in <code>main()</code> to indicate whether command echoing is on
@@ -2786,7 +2980,7 @@ following is useful.
 </div></li>
 <li>Each command should check for echoing and print the command being
 run along with any arguments to it. This technique is demonstrated
-in related Homework.</li>
+in related lab work.</li>
 </ul>
 
 <p>
@@ -2796,98 +2990,49 @@ like the example below.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; cat data/treemap-script.txt | ./treemap_main -echo
-TreeMap Editor
+<pre class="src src-sh">&gt;&gt; cat hashset_demo.script | hashset_main -echo 
+Hashset Application
 Commands:
-  quit:            exit the program
-  print:           shows contents of the tree in reverse sorted order
-  add &lt;key&gt; &lt;val&gt;: inserts the given key/val into the tree, duplicate keys are ignored
-  get &lt;key&gt;:       prints FOUND if the name is in the tree, NOT FOUND otherwise
-  clear:           eliminates all key/vals from the tree
-  preorder:        prints contents of the tree in pre-order which is how it will be saved
-  save &lt;file&gt;:     writes the contents of the tree in pre-order to the given file
-  load &lt;file&gt;:     clears the current tree and loads the one in the given file
-TM&gt; add El strange
-TM&gt; add Mike stoic
-TM&gt; print
-  Mike -&gt; stoic
-El -&gt; strange
-TM&gt; add Dustin corny
-TM&gt; add Lucas brash
-TM&gt; print
-  Mike -&gt; stoic
-    Lucas -&gt; brash
-El -&gt; strange
-  Dustin -&gt; corny
-TM&gt; add Will lost
-TM&gt; add Steve hairy
-TM&gt; print
-    Will -&gt; lost
-      Steve -&gt; hairy
-  Mike -&gt; stoic
-    Lucas -&gt; brash
-El -&gt; strange
-  Dustin -&gt; corny
-TM&gt; get Dustin
-FOUND: corny
-TM&gt; get Steve
-FOUND: hairy
-TM&gt; get Mike
-FOUND: stoic
-TM&gt; get Barb
-NOT FOUND
-TM&gt; get Hopper
-NOT FOUND
-TM&gt; save stranger.tm
-TM&gt; clear
-TM&gt; print
-TM&gt; load stranger.tm
-TM&gt; print
-    Will -&gt; lost
-      Steve -&gt; hairy
-  Mike -&gt; stoic
-    Lucas -&gt; brash
-El -&gt; strange
-  Dustin -&gt; corny
-TM&gt; add El hairy
-modified existing key
-TM&gt; add Will found
-modified existing key
-TM&gt; add Barb away
-TM&gt; print
-    Will -&gt; found
-      Steve -&gt; hairy
-  Mike -&gt; stoic
-    Lucas -&gt; brash
-El -&gt; hairy
-  Dustin -&gt; corny
-    Barb -&gt; away
-TM&gt; load stranger.tm
-TM&gt; print
-    Will -&gt; lost
-      Steve -&gt; hairy
-  Mike -&gt; stoic
-    Lucas -&gt; brash
-El -&gt; strange
-  Dustin -&gt; corny
-TM&gt; preorder
-El strange
-  Dustin corny
-  Mike stoic
-    Lucas brash
-    Will lost
-      Steve hairy
-TM&gt; quit
-&gt;&gt; 
+  hashcode &lt;data&gt;  : prints out the numeric hash code for the given key (does not change the hash set)
+  contains &lt;data&gt;  : prints FOUND if data is in the set NOT PRESENT otherwise
+  add &lt;data&gt;       : inserts the given data into the hash set, reports existing data
+  print            : prints all data in the hash set in the order they were addded
+  structure        : prints detailed structure of the hash set
+  clear            : reinitializes hash set to be empty with default size
+  save &lt;file&gt;      : writes the contents of the hash set to the given file
+  load &lt;file&gt;      : clears the current hash set and loads the one in the given file
+  next_prime &lt;int&gt; : if &lt;int&gt; is prime, prints it, otherwise finds the next prime and prints it
+  expand           : expands memory size of hash set to reduce its load factor
+  quit             : exit the program
+HS&gt; print
+
+HS&gt; structure
+data_count: 0
+table_size: 5
+order_first: NULL
+order_last : NULL
+load_factor: 0.0000
+[ 0] : 
+[ 1] : 
+[ 2] : 
+[ 3] : 
+[ 4] : 
+
+HS&gt; add Rick
+HS&gt; add Morty
+HS&gt; print
+  1 Rick
+  2 Morty
+...
 </pre>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org456a86b" class="outline-3 grading 40">
-<h3 id="org456a86b"><span class="section-number-3">5.5</span> Grading Criteria for P3&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="40">40</span></span></h3>
-<div class="outline-text-3" id="text-5-5">
+<div id="outline-container-org9c076dd" class="outline-3 grading 40">
+<h3 id="org9c076dd"><span class="section-number-3">5.8</span> Grading Criteria for Problem 3&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="40">40</span></span></h3>
+<div class="outline-text-3" id="text-5-8">
 <p>
 The following criteria will be checked in this problem.
 </p>
@@ -2913,12 +3058,12 @@ The following criteria will be checked in this problem.
 
 <tr>
 <td class="org-right">20</td>
-<td class="org-left"><code>test_treemap.org</code> Testing script</td>
+<td class="org-left"><code>test_hashset.org</code> tests</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">20 tests for <code>treemap_main</code> executable, exercises functions in <code>treemap_funcs.c</code></td>
+<td class="org-left">20 tests for <code>hashset_main</code> executable, exercises functions in <code>hashset_funcs.c</code></td>
 </tr>
 
 <tr>
@@ -2933,7 +3078,12 @@ The following criteria will be checked in this problem.
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Code compiles without warnings (<code>make clean</code> followed by <code>make prob3</code> gives no errors/warnings)</td>
+<td class="org-left">Code compiles without warnings (<code>make clean</code> followed by <code>make test-prob3</code> gives no errors/warnings)</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">NOTE: run individual tests via <code>make test-prob3 testnum=4</code></td>
 </tr>
 </tbody>
 <tbody>
@@ -2944,52 +3094,62 @@ The following criteria will be checked in this problem.
 
 <tr>
 <td class="org-right">15</td>
-<td class="org-left"><code>treemap_funcs.c</code></td>
+<td class="org-left"><code>hashset_funcs.c</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Clear commenting indicating intent during functions, for example "recursing to the left" or "key already exists"</td>
+<td class="org-left">Clear commenting indicating intent during functions "calculate table index" or "iterate through list"</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Relatively short functions: nothing needs to be too long (50-60 lines tops)</td>
+<td class="org-left">Relatively short functions: nothing needs to be too long (50 lines tops)</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Clear use of binary search principle: left for less, right for greater, use of string functions like <code>strcmp()</code> to determine direction</td>
+<td class="org-left">Clearly written iteration loops to traverse linked lists in hash table functions</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Effective use of iteration in add and get functions</td>
+<td class="org-left">Use of <code>strcmp()</code> to check data during <code>hashset_contains()</code> operation</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Effective use of recursion in node helper methods for calculating size, printing, and clearing</td>
+<td class="org-left">Use of <code>hashset_contains()</code> during <code>hashset_add()</code> to check for duplicates</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Correct order of visiting/freeing in <code>node_remove_all()</code></td>
+<td class="org-left">Concise and commented code for <code>hashset_add()</code> which calculates table index and inserts new node at the front the list via <code>table_next</code> pointers</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Use of one general <code>node_write_preorder</code> in both <code>treemap_print_preorder()</code> and <code>treemap_save()</code></td>
+<td class="org-left">Maintains the <code>order_first/order_last</code> fields during add operation</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left"><code>treemap_load()</code> checks for success in opening file, clears existing tree before loading</td>
+<td class="org-left"><code>hashset_free_fields()</code> frees all list nodes and the table array, assigns 0/NULL to all fields</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left"><code>treemap_load()</code> does not change existing tree if files cannot be opened</td>
+<td class="org-left">Uses the ordered list of data to easily free all nodes during <code>hashset_free_fields()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>hashset_save()</code> makes use of <code>hashset_write()</code> with an open file handle to avoid redundant code</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>hashset_load()</code> checks that files open successfully before using <code>hashset_free_fields()</code> to de-allocate memory</td>
 </tr>
 
 <tr>
@@ -2999,17 +3159,27 @@ The following criteria will be checked in this problem.
 
 <tr>
 <td class="org-right">&#xa0;</td>
+<td class="org-left"><code>next_prime()</code> is clearly written and easy to follow; follows the algorithm described in the function documentation</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>hashset_expand()</code> uses other functions in such as <code>next_prime()</code>, <code>hashset_add()</code> and <code>hashset_free_fields()</code> to avoid repeating code.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
 <td class="org-right">5</td>
-<td class="org-left"><code>treemap_main.c</code></td>
+<td class="org-left"><code>hashset_main.c</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Comments indicating what high-level command is being implemented in each part of <code>main()</code></td>
+<td class="org-left">Comments indicating what high-level command is being implemented in each part of <code>main</code></td>
 </tr>
 
 <tr>
@@ -3024,17 +3194,12 @@ The following criteria will be checked in this problem.
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Easy to recognize reading of additional arguments for <code>add/get/etc.</code></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
 <td class="org-left">Clear efforts to honor <code>-echo</code> option and echo commands</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Clear effort to free all memory prior to exit by clearing tree on exit</td>
+<td class="org-left">Clear effort to free all memory prior to exit by clearing hashset on exit</td>
 </tr>
 </tbody>
 </table>
@@ -3042,13 +3207,12 @@ The following criteria will be checked in this problem.
 </div>
 </div>
 
-
-<div id="outline-container-orgf60fe71" class="outline-2">
-<h2 id="orgf60fe71"><span class="section-number-2">6</span> Project Submission</h2>
+<div id="outline-container-org0dae1a8" class="outline-2">
+<h2 id="org0dae1a8"><span class="section-number-2">6</span> Project Submission</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-orgb555bdf" class="outline-3">
-<h3 id="orgb555bdf"><span class="section-number-3">6.1</span> <a id="orgfbabba6"></a> Submit to Gradescope</h3>
+<div id="outline-container-orgfff87f1" class="outline-3">
+<h3 id="orgfff87f1"><span class="section-number-3">6.1</span> <a id="org9cee4cc"></a> Submit to Gradescope</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 Refer to the Project 1 instructions and adapt them for details of how
@@ -3062,8 +3226,8 @@ to submit to Gradescope. In summary they are
 </div>
 </div>
 
-<div id="outline-container-org646084d" class="outline-3">
-<h3 id="org646084d"><span class="section-number-3">6.2</span> Late Policies</h3>
+<div id="outline-container-org6866a1a" class="outline-3">
+<h3 id="org6866a1a"><span class="section-number-3">6.2</span> Late Policies</h3>
 <div class="outline-text-3" id="text-6-2">
 <p>
 You may wish to review the policy on late project submission which
@@ -3080,7 +3244,7 @@ accepted more than 48 hours after the deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-10-04 Fri 10:41 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-02-24 Mon 15:13 <br/> </i>
 </div>
 </body>
 </html>
