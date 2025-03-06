@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-10-05 Sat 15:55 -->
+<!-- 2025-03-05 Wed 14:48 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Lab06: Assembly Coding</title>
@@ -330,6 +330,7 @@ margin-left: 0.5em;
 }
 }
 .linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
 }
 
 @media print {
@@ -446,11 +447,12 @@ return {
 name: 'interactive',           // language name
 keywords: {
 $pattern: /[^ \t\n]+/,       // lex based on non-whitespace
-keyword: [">>","(shellac)","HM>","TM>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:"], // allowed interactive prompts
+keyword: [">>","(shellac)","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
 },
 contains: [
 // hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
 hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+hljs.COMMENT(/#+/, /$/),     // and a sequence of hashes
 ]
 };
 };
@@ -458,9 +460,10 @@ hljs.registerLanguage('interactive', interactive_lang);     // register custom l
 
 // Add highlighjs CSS classes to elemens marked with relevant org classes
 lang_map = new Map();              // map of org to hljs languages
-lang_map.set("src-c"    , "language-c");
-lang_map.set("src-text" , "language-plaintext");
-lang_map.set("src-sh"   , "language-interactive");
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
 function add_class(el) {           // applied to each pre.src element
 for (let [org_lang, hljs_lang] of lang_map) {
 if(el.classList.contains(org_lang)){
@@ -477,74 +480,73 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2024-10-05 Sat 15:55</i>
+<i>Last Updated: 2025-03-05 Wed 14:48</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">Lab06: Assembly Coding</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Mon 14-Oct-2024</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm Mon 24-Mar-2025</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
 
-<div id="outline-container-org8907c74" class="outline-4">
-<h4 id="org8907c74">CODE DISTRIBUTION: <a href="lab06-code.zip">lab06-code.zip</a></h4>
-<div class="outline-text-4" id="text-org8907c74">
+<div id="outline-container-orgd57be1c" class="outline-4">
+<h4 id="orgd57be1c">CODE DISTRIBUTION: <a href="lab06-code.zip">lab06-code.zip</a></h4>
+<div class="outline-text-4" id="text-orgd57be1c">
 </div>
 </div>
 
-<div id="outline-container-org35abe9e" class="outline-4">
-<h4 id="org35abe9e">CHANGELOG: Empty</h4>
+<div id="outline-container-org4e93fae" class="outline-4">
+<h4 id="org4e93fae">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-org63d0aee" class="outline-4">
-<h4 id="org63d0aee"></h4>
-<div class="outline-text-4" id="text-org63d0aee">
+<div id="outline-container-org2daec5c" class="outline-4">
+<h4 id="org2daec5c"></h4>
+<div class="outline-text-4" id="text-org2daec5c">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org774813d">1. Rationale</a></li>
-<li><a href="#org9bc3d17">2. Codepack</a></li>
-<li><a href="#org1b059e8">3. x86-64 General Purpose Registers</a></li>
-<li><a href="#org83f5d67">4. Two Assembly Functions</a></li>
-<li><a href="#org14b51a6">5. <code>set_coins</code> Assembly Function</a></li>
-<li><a href="#org2e86f14">6. <code>total_coins</code> Assembly Function</a></li>
-<li><a href="#org1085b1c">7. Debug Assembly Functions via <code>gdb</code></a></li>
-<li><a href="#org0bffe12">8. QUESTIONS.txt File Contents</a></li>
-<li><a href="#orgef1774d">9. Submission</a></li>
+<li><a href="#org3a1fdd7">1. Rationale</a></li>
+<li><a href="#orga088bb8">2. Codepack</a></li>
+<li><a href="#orgbbbe462">3. x86-64 General Purpose Registers</a></li>
+<li><a href="#orgb81c194">4. Two Assembly Functions</a></li>
+<li><a href="#org0d168a5">5. <code>set_coins</code> Assembly Function</a></li>
+<li><a href="#org9fef795">6. <code>total_coins</code> Assembly Function</a></li>
+<li><a href="#orgb856c1d">7. Debug Assembly Functions via <code>gdb</code></a></li>
+<li><a href="#org91365fc">8. QUESTIONS.txt File Contents</a></li>
+<li><a href="#orgd27f685">9. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org774813d" class="outline-2">
-<h2 id="org774813d"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org3a1fdd7" class="outline-2">
+<h2 id="org3a1fdd7"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Assembly coding requires careful attention to detail and can feel
-quite overwhelming initially. This exercise is designed to introduce some
-aspects of assembly coding required to complete upcoming projects. It
-focuses on completing two functions from a previous HW and passing
-automated tests. The exercise allows practice on basic assembly
-instructions, location of argument registers, extracting function
-arguments, and debugging assembly.
+quite overwhelming initially. This exercise is designed to introduce
+some aspects of assembly coding required to complete upcoming
+projects. It focuses on completing two functions that require partial
+completion and passing automated tests. The exercise allows practice
+on basic assembly instructions, location of argument registers,
+extracting function arguments, and debugging assembly.
 </p>
 </div>
 
-<div id="outline-container-org2060887" class="outline-4">
-<h4 id="org2060887">Associated Reading / Preparation</h4>
-<div class="outline-text-4" id="text-org2060887">
+<div id="outline-container-orgc187a2a" class="outline-4">
+<h4 id="orgc187a2a">Associated Reading / Preparation</h4>
+<div class="outline-text-4" id="text-orgc187a2a">
 <ul class="org-ul">
 <li>Bryant and O'Hallaron: Ch 3.1-3.7 on assembly code instructions in
 x86-64.</li>
 <li>Any overview guide to x86-64 assembly instructions such as <a href="https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf">Brown
 University's x64 Cheat Sheet </a></li>
 <li>To more easily debug assembly, it is useful to be able to run a
-debugger like <code>gdb</code> on the assembly code. Examine the <a href="https://www-users.cse.umn.edu/~kauffman/tutorials/gdb.html#gdb-assembly">CSCI 2021
-Quick Guide to gdb: The GNU Debugger</a> which contains information
-specific to assembly as such as how to display the register
-contents.</li>
+debugger like <code>gdb</code> on the assembly code. Examine the <a href="https://kauffman77.github.io/tutorials/gdb.html#gdb-assembly">Quick Guide to
+gdb</a> which contains information specific to assembly as such as how
+to display the register contents.</li>
 </ul>
 
 <p>
@@ -560,9 +562,9 @@ Assembler dialect and shows how to block comment/uncomment code.
 </div>
 </div>
 
-<div id="outline-container-org71fdd91" class="outline-4">
-<h4 id="org71fdd91">Grading Policy</h4>
-<div class="outline-text-4" id="text-org71fdd91">
+<div id="outline-container-org085a3a4" class="outline-4">
+<h4 id="org085a3a4">Grading Policy</h4>
+<div class="outline-text-4" id="text-org085a3a4">
 <p>
 Credit for this exercise is earned by completing the code/asnwers here
 and submitting a Zip of the work to Gradescope. Students are
@@ -585,8 +587,8 @@ See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies 
 </div>
 </div>
 
-<div id="outline-container-org9bc3d17" class="outline-2">
-<h2 id="org9bc3d17"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orga088bb8" class="outline-2">
+<h2 id="orga088bb8"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -681,8 +683,8 @@ The codepack for the HW contains the following files:
 </div>
 </div>
 
-<div id="outline-container-org1b059e8" class="outline-2">
-<h2 id="org1b059e8"><span class="section-number-2">3</span> x86-64 General Purpose Registers</h2>
+<div id="outline-container-orgbbbe462" class="outline-2">
+<h2 id="orgbbbe462"><span class="section-number-2">3</span> x86-64 General Purpose Registers</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 The below diagram illustrates the General Purpose registers on 
@@ -693,7 +695,7 @@ parts of the code studied in this lab.
 
 <div class="org-center">
 
-<div id="org45d18c9" class="figure">
+<div id="org20862ef" class="figure">
 <p><img src="registers.png" alt="registers.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>x86-64 General Purpose Registers used for integer operations and some other special purposes</p>
@@ -703,8 +705,8 @@ parts of the code studied in this lab.
 </div>
 
 
-<div id="outline-container-org83f5d67" class="outline-2">
-<h2 id="org83f5d67"><span class="section-number-2">4</span> Two Assembly Functions</h2>
+<div id="outline-container-orgb81c194" class="outline-2">
+<h2 id="orgb81c194"><span class="section-number-2">4</span> Two Assembly Functions</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 The goal of the exercise is to complete working assembly code for two
@@ -822,13 +824,13 @@ RESULTS: 1 / 1 tests passed
 </div>
 
 
-<div id="outline-container-org14b51a6" class="outline-2">
-<h2 id="org14b51a6"><span class="section-number-2">5</span> <code>set_coins</code> Assembly Function</h2>
+<div id="outline-container-org0d168a5" class="outline-2">
+<h2 id="org0d168a5"><span class="section-number-2">5</span> <code>set_coins</code> Assembly Function</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-orgea67b40" class="outline-4">
-<h4 id="orgea67b40">Use of the Division Instruction</h4>
-<div class="outline-text-4" id="text-orgea67b40">
+<div id="outline-container-org4c6b3c2" class="outline-4">
+<h4 id="org4c6b3c2">Use of the Division Instruction</h4>
+<div class="outline-text-4" id="text-org4c6b3c2">
 <p>
 The main purpose of <code>set_coins</code> is to repeatedly divide the "cents" by
 different coin values to determine how many quarters, dimes, nickels,
@@ -857,9 +859,9 @@ by moving the remaining cents into <code>%eax</code> again for another division.
 </div>
 </div>
 
-<div id="outline-container-org7025aad" class="outline-4">
-<h4 id="org7025aad">Setting Struct Fields in Memory</h4>
-<div class="outline-text-4" id="text-org7025aad">
+<div id="outline-container-org84e9f6e" class="outline-4">
+<h4 id="org84e9f6e">Setting Struct Fields in Memory</h4>
+<div class="outline-text-4" id="text-org84e9f6e">
 <p>
 Note the use of <code>movb</code> to move a single byte from the A-family
 register into main memory.  
@@ -886,13 +888,13 @@ offsets such as <code>2(%rsi)</code>.
 </div>
 </div>
 
-<div id="outline-container-org2e86f14" class="outline-2">
-<h2 id="org2e86f14"><span class="section-number-2">6</span> <code>total_coins</code> Assembly Function</h2>
+<div id="outline-container-org9fef795" class="outline-2">
+<h2 id="org9fef795"><span class="section-number-2">6</span> <code>total_coins</code> Assembly Function</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-org89d9033" class="outline-4">
-<h4 id="org89d9033">Packed Struct Arguments</h4>
-<div class="outline-text-4" id="text-org89d9033">
+<div id="outline-container-org7f122b1" class="outline-4">
+<h4 id="org7f122b1">Packed Struct Arguments</h4>
+<div class="outline-text-4" id="text-org7f122b1">
 <p>
 Consider the C prototype and assembly documentation given for the function:
 </p>
@@ -936,8 +938,8 @@ remainder of the function.
 </div>
 </div>
 
-<div id="outline-container-org1085b1c" class="outline-2">
-<h2 id="org1085b1c"><span class="section-number-2">7</span> Debug Assembly Functions via <code>gdb</code></h2>
+<div id="outline-container-orgb856c1d" class="outline-2">
+<h2 id="orgb856c1d"><span class="section-number-2">7</span> Debug Assembly Functions via <code>gdb</code></h2>
 <div class="outline-text-2" id="text-7">
 <p>
 Debugging assembly code is difficult as there are so many details to
@@ -987,8 +989,8 @@ gdb&gt; run                        # run to breakpoint
 </div>
 
 
-<div id="outline-container-org0bffe12" class="outline-2">
-<h2 id="org0bffe12"><span class="section-number-2">8</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org91365fc" class="outline-2">
+<h2 id="org91365fc"><span class="section-number-2">8</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-8">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the exercise.
@@ -1039,7 +1041,7 @@ QUIZ Coding Assembly Functions
   - ( ) Arguments are passed in registers; the first two are in the
     `%rax' and `%rbx' registers
   - ( ) Arguments are passed in registers; the first two are in the
-    `$rdi' and `%rsi' registers
+    `%rdi' and `%rsi' registers
   - ( ) Arguments are in the stack; the first two are available using
     the stack pointer as `0(%rsp)' and `8(%rsp)'
   - ( ) Arguments are in the stack; the first two are available using
@@ -1108,8 +1110,8 @@ CODE coins_funcs_asm.s
 </div>
 
 
-<div id="outline-container-orgef1774d" class="outline-2">
-<h2 id="orgef1774d"><span class="section-number-2">9</span> Submission</h2>
+<div id="outline-container-orgd27f685" class="outline-2">
+<h2 id="orgd27f685"><span class="section-number-2">9</span> Submission</h2>
 <div class="outline-text-2" id="text-9">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -1119,7 +1121,7 @@ how to upload your completed exercise zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-10-05 Sat 15:55 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-03-05 Wed 14:48 <br/> </i>
 </div>
 </body>
 </html>
