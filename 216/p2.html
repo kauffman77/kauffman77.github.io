@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-03-05 Wed 10:01 -->
+<!-- 2025-03-07 Fri 16:55 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Project 2: Bit Ops, Debugging, Data Structures</title>
@@ -480,7 +480,7 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2025-03-05 Wed 10:01</i>
+<i>Last Updated: 2025-03-07 Fri 16:55</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Project 2: Bit Ops, Debugging, Data Structures</h1>
@@ -492,17 +492,46 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
-<div id="outline-container-orgebf109a" class="outline-4">
-<h4 id="orgebf109a">CODE/TEST DISTRIBUTION: <a href="p2-code.zip">p2-code.zip</a></h4>
+<div id="outline-container-org159dba7" class="outline-4">
+<h4 id="org159dba7">CODE/TEST DISTRIBUTION: <a href="p2-code.zip">p2-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org297ec5c" class="outline-4">
-<h4 id="org297ec5c">VIDEO OVERVIEW: <a href="https://youtu.be/KpBDGYXgFSE">https://youtu.be/KpBDGYXgFSE</a></h4>
+<div id="outline-container-orgc450c3c" class="outline-4">
+<h4 id="orgc450c3c">VIDEO OVERVIEW: <a href="https://youtu.be/KpBDGYXgFSE">https://youtu.be/KpBDGYXgFSE</a></h4>
 </div>
-<div id="outline-container-orga69e6ca" class="outline-4">
-<h4 id="orga69e6ca">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-orga69e6ca">
+<div id="outline-container-org9952fc8" class="outline-4">
+<h4 id="org9952fc8">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org9952fc8">
 <dl class="org-dl">
+<dt>Fri Mar  7 04:48:40 PM EST 2025</dt><dd><p>
+<a href="https://piazza.com/class/m69s0i6labk3eb/post/394">Post 394</a> reported a typo in the
+Project spec for Problem 3's Hashset: when an already-present
+element is added to the hashset, the response message in <code>main()</code>
+should be
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">  HS&gt; add Jerry     # items are unique, no changes made on detecting duplicates
+  Data already present, no changes made
+  HS&gt; add Beth
+  Data already present, no changes made
+</pre>
+</div>
+<p>
+Previously the example indicate 'Elem' rather than 'Data' was expected.
+</p>
+
+<p>
+That post also reports missing documentation for <code>hashset_save()</code>
+which should print an error message like
+</p>
+<pre class="example">
+ERROR: could not open file '&lt;FILENAME&gt;'
+</pre>
+
+<p>
+if the call to <code>fopen()</code> the file to save fails.
+</p></dd>
+
 <dt>Wed Mar  5 10:00:08 AM EST 2025</dt><dd>An overview video of Project 2
 has been posted here: <a href="https://youtu.be/KpBDGYXgFSE">https://youtu.be/KpBDGYXgFSE</a>. The video
 surveys each of the problems in the project and demonstrates how to
@@ -514,55 +543,55 @@ problems in the project.</dd>
 </div>
 </div>
 
-<div id="outline-container-org91ff4e6" class="outline-4">
-<h4 id="org91ff4e6"></h4>
-<div class="outline-text-4" id="text-org91ff4e6">
+<div id="outline-container-org88877f2" class="outline-4">
+<h4 id="org88877f2"></h4>
+<div class="outline-text-4" id="text-org88877f2">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org2beb831">1. Introduction</a></li>
-<li><a href="#org6f24cbc">2. Download Code and Setup</a></li>
-<li><a href="#org298c713">3. <b>Problem 1</b>: Digital Scale Simulation</a>
+<li><a href="#org5d14f34">1. Introduction</a></li>
+<li><a href="#orgeb481f3">2. Download Code and Setup</a></li>
+<li><a href="#org3965d0b">3. <b>Problem 1</b>: Digital Scale Simulation</a>
 <ul>
-<li><a href="#org06115e4">3.1. Overview</a></li>
-<li><a href="#org2631eab">3.2. Scale Features and Tare</a></li>
-<li><a href="#org9d09516">3.3. Scale Hardware Ports</a></li>
-<li><a href="#orgb98735f">3.4. Scale Structs and Defines</a></li>
-<li><a href="#orgcd6e333">3.5. <code>scale_update.c</code> Outline</a></li>
-<li><a href="#org1828ad2">3.6. Diagram of Display</a></li>
-<li><a href="#org78fdb92">3.7. Digit Patterns</a></li>
-<li><a href="#org3011a66">3.8. Implementation Hints</a></li>
-<li><a href="#orgea22145">3.9. Scale Simulator and Main</a></li>
-<li><a href="#orga6d5ce2">3.10. Problem 1 Grading Criteria</a></li>
+<li><a href="#org18eade7">3.1. Overview</a></li>
+<li><a href="#orgf6f3120">3.2. Scale Features and Tare</a></li>
+<li><a href="#orga87a685">3.3. Scale Hardware Ports</a></li>
+<li><a href="#org837dd5d">3.4. Scale Structs and Defines</a></li>
+<li><a href="#org66d39fb">3.5. <code>scale_update.c</code> Outline</a></li>
+<li><a href="#orgfb6cc1c">3.6. Diagram of Display</a></li>
+<li><a href="#org8e11a97">3.7. Digit Patterns</a></li>
+<li><a href="#org6ab79ab">3.8. Implementation Hints</a></li>
+<li><a href="#orgda62cc9">3.9. Scale Simulator and Main</a></li>
+<li><a href="#orgc674e11">3.10. Problem 1 Grading Criteria</a></li>
 </ul>
 </li>
-<li><a href="#org8e0f613">4. <b>Problem 2</b>: Debugging the Puzzlebox</a>
+<li><a href="#orga6f6907">4. <b>Problem 2</b>: Debugging the Puzzlebox</a>
 <ul>
-<li><a href="#orga532605">4.1. Overview</a></li>
-<li><a href="#org646f569">4.2. <code>input.txt</code> Input File</a></li>
-<li><a href="#orgc36c58b">4.3. <code>gdb</code> The GNU Debugger</a></li>
-<li><a href="#org6e673aa">4.4. Typical Cycle</a></li>
-<li><a href="#org9827b0c">4.5. Kinds of Puzzles</a></li>
-<li><a href="#orgb6b5699">4.6. Tests for <code>puzzlebox.c</code></a></li>
+<li><a href="#orgcc699c2">4.1. Overview</a></li>
+<li><a href="#orgc7e7e75">4.2. <code>input.txt</code> Input File</a></li>
+<li><a href="#orga5a163b">4.3. <code>gdb</code> The GNU Debugger</a></li>
+<li><a href="#org73d7a5a">4.4. Typical Cycle</a></li>
+<li><a href="#orgc410772">4.5. Kinds of Puzzles</a></li>
+<li><a href="#org21dd720">4.6. Tests for <code>puzzlebox.c</code></a></li>
 </ul>
 </li>
-<li><a href="#org1ad23c5">5. <b>Problem 3</b>: Hash Tables in C</a>
+<li><a href="#org232fa69">5. <b>Problem 3</b>: Hash Tables in C</a>
 <ul>
-<li><a href="#org68889b8">5.1. Overview</a></li>
-<li><a href="#orge1ed940">5.2. <code>hashset_main</code> Demonstration</a></li>
-<li><a href="#orgcade0d0">5.3. Diagram of Hash Set Data structures</a></li>
-<li><a href="#org319ad56">5.4. Hash Table Data Types</a></li>
-<li><a href="#org59567f6">5.5. Provided <code>hash_code()</code> Function</a></li>
-<li><a href="#orgc5d7c19">5.6. <code>hashset_funcs.c</code> Outline</a></li>
-<li><a href="#orgbe59774">5.7. <code>hashset_main.c</code>: main function / application</a></li>
-<li><a href="#org36fb9c2">5.8. Grading Criteria for Problem 3</a></li>
+<li><a href="#org47872ee">5.1. Overview</a></li>
+<li><a href="#org021a12b">5.2. <code>hashset_main</code> Demonstration</a></li>
+<li><a href="#org397ac62">5.3. Diagram of Hash Set Data structures</a></li>
+<li><a href="#orgd4befba">5.4. Hash Table Data Types</a></li>
+<li><a href="#orgda5357e">5.5. Provided <code>hash_code()</code> Function</a></li>
+<li><a href="#orgf60fdc1">5.6. <code>hashset_funcs.c</code> Outline</a></li>
+<li><a href="#org175b6f7">5.7. <code>hashset_main.c</code>: main function / application</a></li>
+<li><a href="#org7b100c5">5.8. Grading Criteria for Problem 3</a></li>
 </ul>
 </li>
-<li><a href="#org76faf17">6. Project Submission</a>
+<li><a href="#org6e80d03">6. Project Submission</a>
 <ul>
-<li><a href="#orgf4a0535">6.1. Submit to Gradescope</a></li>
-<li><a href="#org1a54b0e">6.2. Late Policies</a></li>
+<li><a href="#org7fe3360">6.1. Submit to Gradescope</a></li>
+<li><a href="#orgb79e876">6.2. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -571,8 +600,8 @@ problems in the project.</dd>
 </div>
 </div>
 
-<div id="outline-container-org2beb831" class="outline-2">
-<h2 id="org2beb831"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-org5d14f34" class="outline-2">
+<h2 id="org5d14f34"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This project addresses more advanced C programming topics each in its
@@ -598,9 +627,9 @@ unique values is implemented, backed by a hash table.</li>
 </div>
 
 
-<div id="outline-container-org4f55d68" class="outline-4">
-<h4 id="org4f55d68">Difficulty Notice</h4>
-<div class="outline-text-4" id="text-org4f55d68">
+<div id="outline-container-orge9800cf" class="outline-4">
+<h4 id="orge9800cf">Difficulty Notice</h4>
+<div class="outline-text-4" id="text-orge9800cf">
 <p>
 Past students have found this content to be <b>more challenging than
 Project 1.</b>
@@ -621,8 +650,8 @@ run out of time on the larger third problem.
 </div>
 </div>
 
-<div id="outline-container-org6f24cbc" class="outline-2">
-<h2 id="org6f24cbc"><span class="section-number-2">2</span> <a id="orgff0a57c"></a> Download Code and Setup</h2>
+<div id="outline-container-orgeb481f3" class="outline-2">
+<h2 id="orgeb481f3"><span class="section-number-2">2</span> <a id="org3163c01"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -804,9 +833,9 @@ folder. Ultimately you will re-zip this folder to submit it.
 </table>
 </div>
 
-<div id="outline-container-orgd80a526" class="outline-4">
-<h4 id="orgd80a526">Makefile</h4>
-<div class="outline-text-4" id="text-orgd80a526">
+<div id="outline-container-orgb1b98cb" class="outline-4">
+<h4 id="orgb1b98cb">Makefile</h4>
+<div class="outline-text-4" id="text-orgb1b98cb">
 <p>
 As in the first assignment, a <code>Makefile</code> is provided as part of this
 project. The essential targets pertinent to each problem are described
@@ -830,9 +859,9 @@ Typical usage is:
 </div>
 
 
-<div id="outline-container-orgc721cf7" class="outline-4">
-<h4 id="orgc721cf7">Automated Tests</h4>
-<div class="outline-text-4" id="text-orgc721cf7">
+<div id="outline-container-orgf65bad3" class="outline-4">
+<h4 id="orgf65bad3">Automated Tests</h4>
+<div class="outline-text-4" id="text-orgf65bad3">
 <p>
 As in previous assignments, automated tests are provided and
 associated with problems. Each problem describes how to run tests
@@ -861,12 +890,12 @@ gcc -Wall -Wno-comment -Werror -g  -c scale_update.c
 </div>
 </div>
 
-<div id="outline-container-org298c713" class="outline-2">
-<h2 id="org298c713"><span class="section-number-2">3</span> <b>Problem 1</b>: Digital Scale Simulation</h2>
+<div id="outline-container-org3965d0b" class="outline-2">
+<h2 id="org3965d0b"><span class="section-number-2">3</span> <b>Problem 1</b>: Digital Scale Simulation</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org06115e4" class="outline-3">
-<h3 id="org06115e4"><span class="section-number-3">3.1</span> Overview</h3>
+<div id="outline-container-org18eade7" class="outline-3">
+<h3 id="org18eade7"><span class="section-number-3">3.1</span> Overview</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 You are tasked with writing code which will be run by a
@@ -890,8 +919,8 @@ Each feature is discussed in subsequent sections.
 </div>
 </div>
 
-<div id="outline-container-org2631eab" class="outline-3">
-<h3 id="org2631eab"><span class="section-number-3">3.2</span> Scale Features and Tare</h3>
+<div id="outline-container-orgf6f3120" class="outline-3">
+<h3 id="orgf6f3120"><span class="section-number-3">3.2</span> Scale Features and Tare</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 The scale has the following features.
@@ -906,9 +935,9 @@ equivalent pounds)</li>
 </ul>
 </div>
 
-<div id="outline-container-orgde84634" class="outline-4">
-<h4 id="orgde84634">Tare Feature</h4>
-<div class="outline-text-4" id="text-orgde84634">
+<div id="outline-container-orgcc6f0f6" class="outline-4">
+<h4 id="orgcc6f0f6">Tare Feature</h4>
+<div class="outline-text-4" id="text-orgcc6f0f6">
 <p>
 Many tabletop digital scales have a handy "TARE" functionality (Arabic
 for "that which is removed").  It is used to measure the weight of
@@ -929,7 +958,7 @@ The diagram below shows steps 1, 2, and 4.
 </p>
 <div class="org-center">
 
-<div id="org947b96b" class="figure">
+<div id="org7817f41" class="figure">
 <p><img src="tare-feature.png" alt="tare-feature.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Example of using the Tare feature of the scale to weigh the contents of a container. The empty bowl is first placed on the scale and the "Tare" button is pressed before weighing the filled bowl.</p>
@@ -939,8 +968,8 @@ The diagram below shows steps 1, 2, and 4.
 </div>
 </div>
 
-<div id="outline-container-org9d09516" class="outline-3">
-<h3 id="org9d09516"><span class="section-number-3">3.3</span> Scale Hardware Ports</h3>
+<div id="outline-container-orga87a685" class="outline-3">
+<h3 id="orga87a685"><span class="section-number-3">3.3</span> Scale Hardware Ports</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The Scale has hardware that is exposed through several global
@@ -1034,8 +1063,8 @@ extern int SCALE_DISPLAY_PORT;
 </div>
 </div>
 
-<div id="outline-container-orgb98735f" class="outline-3">
-<h3 id="orgb98735f"><span class="section-number-3">3.4</span> Scale Structs and Defines</h3>
+<div id="outline-container-org837dd5d" class="outline-3">
+<h3 id="org837dd5d"><span class="section-number-3">3.4</span> Scale Structs and Defines</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 During processing, the functions that are required need to pass
@@ -1073,8 +1102,8 @@ typedef struct{
 </div>
 </div>
 
-<div id="outline-container-orgcd6e333" class="outline-3">
-<h3 id="orgcd6e333"><span class="section-number-3">3.5</span> <code>scale_update.c</code> Outline</h3>
+<div id="outline-container-org66d39fb" class="outline-3">
+<h3 id="org66d39fb"><span class="section-number-3">3.5</span> <code>scale_update.c</code> Outline</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 Periodically the microcontroller managing the scale will call
@@ -1202,8 +1231,8 @@ int scale_update();
 </div>
 </div>
 
-<div id="outline-container-org1828ad2" class="outline-3">
-<h3 id="org1828ad2"><span class="section-number-3">3.6</span> Diagram of Display</h3>
+<div id="outline-container-orgfb6cc1c" class="outline-3">
+<h3 id="orgfb6cc1c"><span class="section-number-3">3.6</span> Diagram of Display</h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 The overall display is formed with several adjacent digits along with
@@ -1214,7 +1243,7 @@ that would create the display.
 
 <div class="org-center">
 
-<div id="orga236726" class="figure">
+<div id="orga9cffce" class="figure">
 <p><img src="digital-scale-top-down.png" alt="digital-scale-top-down.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Examples of how the bits of the <code>DISPLAY_PORT</code> control which parts of the display are shown.  Each digit follows the same pattern of bit to bar correspondence as the right-most with bits. That pattern appears in a later diagram.  The highest order bits (28-31) control indicator lights as shown. Note that several conflicting indicators could be shown at the same time but the code setting the display should not do this normally.</p>
@@ -1240,8 +1269,8 @@ negative sign</li>
 </div>
 </div>
 
-<div id="outline-container-org78fdb92" class="outline-3">
-<h3 id="org78fdb92"><span class="section-number-3">3.7</span> Digit Patterns</h3>
+<div id="outline-container-org8e11a97" class="outline-3">
+<h3 id="org8e11a97"><span class="section-number-3">3.7</span> Digit Patterns</h3>
 <div class="outline-text-3" id="text-3-7">
 <p>
 Each part of the LCD display is controlled with individual bits. The
@@ -1253,7 +1282,7 @@ somewhere in the program.
 
 <div class="org-center">
 
-<div id="orgcbba30f" class="figure">
+<div id="org747b9f5" class="figure">
 <p><img src="digital-digits-top-down.png" alt="digital-digits-top-down.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 3: </span>Bit to digit display bar correspondence.  The 0th bit controls the top horizontal bar, the 1th bit controls the horizontal bar counter-clockwise from it, the 2th bit the middle bar, and so on working top to bottom, left to right. When a bit is 1 (set), the bar will be darkened while when the bit is 0 (clear) the bar will not be displayed (shown as empty).  The combinations of bits shown are the only ones that arise when showing digits for times.</p>
@@ -1292,13 +1321,13 @@ digits follow the above pattern which allows for easy combination.
 </div>
 </div>
 
-<div id="outline-container-org3011a66" class="outline-3">
-<h3 id="org3011a66"><span class="section-number-3">3.8</span> Implementation Hints</h3>
+<div id="outline-container-org6ab79ab" class="outline-3">
+<h3 id="org6ab79ab"><span class="section-number-3">3.8</span> Implementation Hints</h3>
 <div class="outline-text-3" id="text-3-8">
 </div>
-<div id="outline-container-org28d860f" class="outline-4">
-<h4 id="org28d860f">Bit Shifts VS Division</h4>
-<div class="outline-text-4" id="text-org28d860f">
+<div id="outline-container-org05b9b8e" class="outline-4">
+<h4 id="org05b9b8e">Bit Shifts VS Division</h4>
+<div class="outline-text-4" id="text-org05b9b8e">
 <p>
 Review the correspondence between right shift operations and
 division and note that any bits shifted off would be the remainder
@@ -1311,9 +1340,9 @@ operations, not by adding to the original quantity.
 </div>
 </div>
 
-<div id="outline-container-org562517f" class="outline-4">
-<h4 id="org562517f">Digit Bit Patterns</h4>
-<div class="outline-text-4" id="text-org562517f">
+<div id="outline-container-orgd245dfe" class="outline-4">
+<h4 id="orgd245dfe">Digit Bit Patterns</h4>
+<div class="outline-text-4" id="text-orgd245dfe">
 <p>
 While creating the bit display pattern in <code>scale_display_weight()</code>, a
 good trick to use when create a series of bit patterns that correspond
@@ -1382,8 +1411,8 @@ that are present.</li>
 </div>
 
 
-<div id="outline-container-orgea22145" class="outline-3">
-<h3 id="orgea22145"><span class="section-number-3">3.9</span> Scale Simulator and Main</h3>
+<div id="outline-container-orgda62cc9" class="outline-3">
+<h3 id="orgda62cc9"><span class="section-number-3">3.9</span> Scale Simulator and Main</h3>
 <div class="outline-text-3" id="text-3-9">
 <p>
 While we do not have actual hardware with the features mentioned, a
@@ -1700,8 +1729,8 @@ Scale Display:
 </div>
 </div>
 
-<div id="outline-container-orga6d5ce2" class="outline-3 grading 30">
-<h3 id="orga6d5ce2"><span class="section-number-3">3.10</span> Problem 1 Grading Criteria&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="30">30</span></span></h3>
+<div id="outline-container-orgc674e11" class="outline-3 grading 30">
+<h3 id="orgc674e11"><span class="section-number-3">3.10</span> Problem 1 Grading Criteria&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="30">30</span></span></h3>
 <div class="outline-text-3" id="text-3-10">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1874,12 +1903,12 @@ Scale Display:
 </div>
 </div>
 
-<div id="outline-container-org8e0f613" class="outline-2">
-<h2 id="org8e0f613"><span class="section-number-2">4</span> <b>Problem 2</b>: Debugging the Puzzlebox</h2>
+<div id="outline-container-orga6f6907" class="outline-2">
+<h2 id="orga6f6907"><span class="section-number-2">4</span> <b>Problem 2</b>: Debugging the Puzzlebox</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orga532605" class="outline-3">
-<h3 id="orga532605"><span class="section-number-3">4.1</span> Overview</h3>
+<div id="outline-container-orgcc699c2" class="outline-3">
+<h3 id="orgcc699c2"><span class="section-number-3">4.1</span> Overview</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 The file <code>puzzlebox.c</code> contains source code that reads inputs from a
@@ -1914,8 +1943,8 @@ at various points make it <b>much easier</b> to solve the puzzles.
 </div>
 </div>
 
-<div id="outline-container-org646f569" class="outline-3">
-<h3 id="org646f569"><span class="section-number-3">4.2</span> <code>input.txt</code> Input File</h3>
+<div id="outline-container-orgc7e7e75" class="outline-3">
+<h3 id="orgc7e7e75"><span class="section-number-3">4.2</span> <code>input.txt</code> Input File</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 Name your input file <code>input.txt</code> and put your internet ID in it along
@@ -1971,8 +2000,8 @@ inputs for <code>input.txt</code>.
 </div>
 </div>
 
-<div id="outline-container-orgc36c58b" class="outline-3">
-<h3 id="orgc36c58b"><span class="section-number-3">4.3</span> <code>gdb</code> The GNU Debugger</h3>
+<div id="outline-container-orga5a163b" class="outline-3">
+<h3 id="orga5a163b"><span class="section-number-3">4.3</span> <code>gdb</code> The GNU Debugger</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 You will definitely need to use a debugger to solve the puzzlebox and
@@ -1998,8 +2027,8 @@ TUI mode</li>
 </div>
 </div>
 
-<div id="outline-container-org6e673aa" class="outline-3">
-<h3 id="org6e673aa"><span class="section-number-3">4.4</span> Typical Cycle</h3>
+<div id="outline-container-org73d7a5a" class="outline-3">
+<h3 id="org73d7a5a"><span class="section-number-3">4.4</span> Typical Cycle</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 A typical cycle of working on <code>puzzlebox</code> will be the following.
@@ -2057,8 +2086,8 @@ run
 </div>
 </div>
 
-<div id="outline-container-org9827b0c" class="outline-3">
-<h3 id="org9827b0c"><span class="section-number-3">4.5</span> Kinds of Puzzles</h3>
+<div id="outline-container-orgc410772" class="outline-3">
+<h3 id="orgc410772"><span class="section-number-3">4.5</span> Kinds of Puzzles</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 The puzzles presented in the different phases make use of a variety of
@@ -2074,8 +2103,8 @@ character) through pointers and unions</li>
 </div>
 </div>
 
-<div id="outline-container-orgb6b5699" class="outline-3 grading 30">
-<h3 id="orgb6b5699"><span class="section-number-3">4.6</span> Tests for <code>puzzlebox.c</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="30">30</span></span></h3>
+<div id="outline-container-org21dd720" class="outline-3 grading 30">
+<h3 id="org21dd720"><span class="section-number-3">4.6</span> Tests for <code>puzzlebox.c</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="30">30</span></span></h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
 <code>puzzlebox.c</code> itself reports how many points one can earn at the end
@@ -2104,12 +2133,12 @@ make test-prob2
 </div>
 </div>
 
-<div id="outline-container-org1ad23c5" class="outline-2">
-<h2 id="org1ad23c5"><span class="section-number-2">5</span> <b>Problem 3</b>: Hash Tables in C</h2>
+<div id="outline-container-org232fa69" class="outline-2">
+<h2 id="org232fa69"><span class="section-number-2">5</span> <b>Problem 3</b>: Hash Tables in C</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org68889b8" class="outline-3">
-<h3 id="org68889b8"><span class="section-number-3">5.1</span> Overview</h3>
+<div id="outline-container-org47872ee" class="outline-3">
+<h3 id="org47872ee"><span class="section-number-3">5.1</span> Overview</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 This problem implements a rudimentary hash table application in C
@@ -2159,8 +2188,8 @@ printing and gives a queue-like feel to parts of the table.
 </div>
 </div>
 
-<div id="outline-container-orge1ed940" class="outline-3">
-<h3 id="orge1ed940"><span class="section-number-3">5.2</span> <code>hashset_main</code> Demonstration</h3>
+<div id="outline-container-org021a12b" class="outline-3">
+<h3 id="org021a12b"><span class="section-number-3">5.2</span> <code>hashset_main</code> Demonstration</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 The intent of this problem is to develop a small application which
@@ -2256,9 +2285,9 @@ HS&gt; contains President
 NOT PRESENT
 
 HS&gt; add Jerry                          # items are unique, no changes made on detecting duplicates
-Elem already present, no changes made
+Data already present, no changes made
 HS&gt; add Beth
-Elem already present, no changes made
+Data already present, no changes made
 
 HS&gt; save rm.hashset                    # save the hash table file rm.hashset, can be loaded later
 HS&gt; clear                              # clear the hash table
@@ -2390,12 +2419,12 @@ HS&gt; quit                               # exit the application
 </div>
 </div>
 
-<div id="outline-container-orgcade0d0" class="outline-3">
-<h3 id="orgcade0d0"><span class="section-number-3">5.3</span> Diagram of Hash Set Data structures</h3>
+<div id="outline-container-org397ac62" class="outline-3">
+<h3 id="org397ac62"><span class="section-number-3">5.3</span> Diagram of Hash Set Data structures</h3>
 <div class="outline-text-3" id="text-5-3">
 <div class="org-center">
 
-<div id="org36bfadf" class="figure">
+<div id="org46d7526" class="figure">
 <p><img src="hashset2.png" alt="hashset2.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 4: </span>Shows the structure of a hash set and the various C data structures (<code>structs</code>) which are involved. Details are discussed in subsequent sections.</p>
@@ -2406,8 +2435,8 @@ HS&gt; quit                               # exit the application
 
 
 
-<div id="outline-container-org319ad56" class="outline-3">
-<h3 id="org319ad56"><span class="section-number-3">5.4</span> Hash Table Data Types</h3>
+<div id="outline-container-orgd4befba" class="outline-3">
+<h3 id="orgd4befba"><span class="section-number-3">5.4</span> Hash Table Data Types</h3>
 <div class="outline-text-3" id="text-5-4">
 <p>
 We will favor <b>separately chained</b> hash sets which have the
@@ -2459,8 +2488,8 @@ typedef struct {
 </div>
 </div>
 
-<div id="outline-container-org59567f6" class="outline-3">
-<h3 id="org59567f6"><span class="section-number-3">5.5</span> Provided <code>hash_code()</code> Function</h3>
+<div id="outline-container-orgda5357e" class="outline-3">
+<h3 id="orgda5357e"><span class="section-number-3">5.5</span> Provided <code>hash_code()</code> Function</h3>
 <div class="outline-text-3" id="text-5-5">
 <p>
 The code for <code>hash_code()</code> is provided below. All hash tables require
@@ -2493,8 +2522,8 @@ int hashcode(char key[]){
 </div>
 </div>
 
-<div id="outline-container-orgc5d7c19" class="outline-3">
-<h3 id="orgc5d7c19"><span class="section-number-3">5.6</span> <code>hashset_funcs.c</code> Outline</h3>
+<div id="outline-container-orgf60fdc1" class="outline-3">
+<h3 id="orgf60fdc1"><span class="section-number-3">5.6</span> <code>hashset_funcs.c</code> Outline</h3>
 <div class="outline-text-3" id="text-5-6">
 <p>
 Standard operations are supported by the hash set.
@@ -2632,6 +2661,13 @@ void hashset_save(hashset_t *hs, char *filename);
 // First two numbers are the 'table_size' and 'data_count' field and
 // remaining text is the output of hashset_write_data_ordered();
 // e.g. insertion position and data.
+//
+// If the `filename` cannot be openened and fopen() returns NULL,
+// prints the message
+//
+//  ERROR: could not open file '&lt;FILENAME&gt;'
+//
+// and returns immediately.
 
 int hashset_load(hashset_t *hs, char *filename);
 // Loads a hash set file created with hashset_save(). If the file
@@ -2680,8 +2716,8 @@ void hashset_expand(hashset_t *hs);
 </div>
 </div>
 
-<div id="outline-container-orgbe59774" class="outline-3">
-<h3 id="orgbe59774"><span class="section-number-3">5.7</span> <code>hashset_main.c</code>: main function / application</h3>
+<div id="outline-container-org175b6f7" class="outline-3">
+<h3 id="org175b6f7"><span class="section-number-3">5.7</span> <code>hashset_main.c</code>: main function / application</h3>
 <div class="outline-text-3" id="text-5-7">
 <p>
 In <code>hashset_main.c</code> implement an interactive program which allows users
@@ -2720,9 +2756,9 @@ The following sections provide some implementation details.
 </p>
 </div>
 
-<div id="outline-container-org9db027d" class="outline-4">
-<h4 id="org9db027d">Read commands, Execute</h4>
-<div class="outline-text-4" id="text-org9db027d">
+<div id="outline-container-org4d737d8" class="outline-4">
+<h4 id="org4d737d8">Read commands, Execute</h4>
+<div class="outline-text-4" id="text-org4d737d8">
 <p>
 The basic flow of <code>hashset_main.c</code> follows the same pattern that code for
 a lab exercise demonstrates.  A good way to get started on the main
@@ -2742,9 +2778,9 @@ needed (commands like <code>add</code> and <code>contains</code>)</li>
 </div>
 </div>
 
-<div id="outline-container-org72cab35" class="outline-4">
-<h4 id="org72cab35">Supported Commands</h4>
-<div class="outline-text-4" id="text-org72cab35">
+<div id="outline-container-orgb197227" class="outline-4">
+<h4 id="orgb197227">Supported Commands</h4>
+<div class="outline-text-4" id="text-orgb197227">
 <p>
 To indicate to users of the program the supported commands, use the
 following code to print out the initial option list.
@@ -2769,9 +2805,9 @@ following code to print out the initial option list.
 </div>
 </div>
 
-<div id="outline-container-orgb2a3153" class="outline-4">
-<h4 id="orgb2a3153">Clearing Hash Table</h4>
-<div class="outline-text-4" id="text-orgb2a3153">
+<div id="outline-container-org4236f2c" class="outline-4">
+<h4 id="org4236f2c">Clearing Hash Table</h4>
+<div class="outline-text-4" id="text-org4236f2c">
 <p>
 When issuing the <code>clear</code> command, the contents of the current hash set
 should be eliminated and the hash set reinitialized to the default
@@ -2785,9 +2821,9 @@ constant defined in <code>hashset.h</code>.</li>
 </div>
 </div>
 
-<div id="outline-container-org63c470b" class="outline-4">
-<h4 id="org63c470b"><a id="orgd81023d"></a> Paths to Files for Saving and Loading</h4>
-<div class="outline-text-4" id="text-org63c470b">
+<div id="outline-container-orge7b45a5" class="outline-4">
+<h4 id="orge7b45a5"><a id="orgd42982f"></a> Paths to Files for Saving and Loading</h4>
+<div class="outline-text-4" id="text-orge7b45a5">
 <p>
 Saving and loading data involves writing to files. The names
 associated with the files must be specified as a <i>path</i> so that if
@@ -2845,9 +2881,9 @@ HS&gt; save data/new.hashset      # create another save file in data/ dir
 </div>
 </div>
 
-<div id="outline-container-org7421f39" class="outline-4">
-<h4 id="org7421f39">Failing to Load Files</h4>
-<div class="outline-text-4" id="text-org7421f39">
+<div id="outline-container-org9508704" class="outline-4">
+<h4 id="org9508704">Failing to Load Files</h4>
+<div class="outline-text-4" id="text-org9508704">
 <p>
 If a file cannot be opened with the <code>load 'file.hm'</code> command, the
 underlying <code>hashset_load()</code> should print an error of the form
@@ -2899,9 +2935,9 @@ HS&gt;
 </div>
 </div>
 
-<div id="outline-container-orgeeb1b21" class="outline-4">
-<h4 id="orgeeb1b21">Command Echoing: <code>-echo</code> option to <code>hashset_main</code></h4>
-<div class="outline-text-4" id="text-orgeeb1b21">
+<div id="outline-container-orgfa01643" class="outline-4">
+<h4 id="orgfa01643">Command Echoing: <code>-echo</code> option to <code>hashset_main</code></h4>
+<div class="outline-text-4" id="text-orgfa01643">
 <p>
 Some users may wish to "script" this the main program: allow it to
 process input commands from a file rather than from the user typing.
@@ -3034,8 +3070,8 @@ HS&gt; print
 </div>
 </div>
 
-<div id="outline-container-org36fb9c2" class="outline-3 grading 40">
-<h3 id="org36fb9c2"><span class="section-number-3">5.8</span> Grading Criteria for Problem 3&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="40">40</span></span></h3>
+<div id="outline-container-org7b100c5" class="outline-3 grading 40">
+<h3 id="org7b100c5"><span class="section-number-3">5.8</span> Grading Criteria for Problem 3&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="40">40</span></span></h3>
 <div class="outline-text-3" id="text-5-8">
 <p>
 The following criteria will be checked in this problem.
@@ -3211,12 +3247,12 @@ The following criteria will be checked in this problem.
 </div>
 </div>
 
-<div id="outline-container-org76faf17" class="outline-2">
-<h2 id="org76faf17"><span class="section-number-2">6</span> Project Submission</h2>
+<div id="outline-container-org6e80d03" class="outline-2">
+<h2 id="org6e80d03"><span class="section-number-2">6</span> Project Submission</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-orgf4a0535" class="outline-3">
-<h3 id="orgf4a0535"><span class="section-number-3">6.1</span> <a id="org2656d75"></a> Submit to Gradescope</h3>
+<div id="outline-container-org7fe3360" class="outline-3">
+<h3 id="org7fe3360"><span class="section-number-3">6.1</span> <a id="org8e283fc"></a> Submit to Gradescope</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 Refer to the Project 1 instructions and adapt them for details of how
@@ -3230,8 +3266,8 @@ to submit to Gradescope. In summary they are
 </div>
 </div>
 
-<div id="outline-container-org1a54b0e" class="outline-3">
-<h3 id="org1a54b0e"><span class="section-number-3">6.2</span> Late Policies</h3>
+<div id="outline-container-orgb79e876" class="outline-3">
+<h3 id="orgb79e876"><span class="section-number-3">6.2</span> Late Policies</h3>
 <div class="outline-text-3" id="text-6-2">
 <p>
 You may wish to review the policy on late project submission which
@@ -3248,7 +3284,7 @@ accepted more than 48 hours after the deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-03-05 Wed 10:01 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-03-07 Fri 16:55 <br/> </i>
 </div>
 </body>
 </html>
