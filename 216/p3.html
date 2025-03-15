@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-10-28 Mon 10:35 -->
+<!-- 2025-03-14 Fri 21:06 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CMSC216 Project 3: Assembly Coding and Debugging</title>
+<title>CMSC216 Project 3: Assembly Coding and Debugging (DRAFT)</title>
 <meta name="author" content="Chris Kauffman" />
 <meta name="generator" content="Org Mode" />
 <style>
@@ -330,6 +330,7 @@ margin-left: 0.5em;
 }
 }
 .linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
 }
 
 @media print {
@@ -446,11 +447,12 @@ return {
 name: 'interactive',           // language name
 keywords: {
 $pattern: /[^ \t\n]+/,       // lex based on non-whitespace
-keyword: [">>","(shellac)","HM>","TM>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:"], // allowed interactive prompts
+keyword: [">>","(shellac)","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
 },
 contains: [
 // hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
 hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+hljs.COMMENT(/#+/, /$/),     // and a sequence of hashes
 ]
 };
 };
@@ -458,9 +460,10 @@ hljs.registerLanguage('interactive', interactive_lang);     // register custom l
 
 // Add highlighjs CSS classes to elemens marked with relevant org classes
 lang_map = new Map();              // map of org to hljs languages
-lang_map.set("src-c"    , "language-c");
-lang_map.set("src-text" , "language-plaintext");
-lang_map.set("src-sh"   , "language-interactive");
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
 function add_class(el) {           // applied to each pre.src element
 for (let [org_lang, hljs_lang] of lang_map) {
 if(el.classList.contains(org_lang)){
@@ -477,119 +480,54 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2024-10-28 Mon 10:35</i>
+<i>Last Updated: 2025-03-14 Fri 21:06</i>
 </div>
 <div id="content" class="content">
-<h1 class="title">CMSC216 Project 3: Assembly Coding and Debugging</h1>
+<h1 class="title">CMSC216 Project 3: Assembly Coding and Debugging (DRAFT)</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Mon 28-Oct-2024</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
-<li><i>Approximately 3.0-4.0% of total grade</i></li>
+<li><b>Due: 11:59pm Mon 07-Apr-2025</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><i>Approximately 4.0% of total grade</i></li>
 <li>Projects are <b>individual work</b>: no collaboration with other students
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
 
 
-<div id="outline-container-org774f03d" class="outline-4">
-<h4 id="org774f03d">CODE/TEST DISTRIBUTION: <a href="p3-code.zip">p3-code.zip</a></h4>
+<div id="outline-container-orga6f9e5f" class="outline-4">
+<h4 id="orga6f9e5f">CODE/TEST DISTRIBUTION: <a href="p3-code.zip">p3-code.zip</a></h4>
 </div>
-<div id="outline-container-org88ed3c6" class="outline-4">
-<h4 id="org88ed3c6">VIDEO OVERVIEW: <a href="https://youtu.be/wxZU9UimmFc">https://youtu.be/wxZU9UimmFc</a></h4>
+<div id="outline-container-org4b2fa59" class="outline-4">
+<h4 id="org4b2fa59">VIDEO OVERVIEW: <i>Note Yet Available</i></h4>
 </div>
-<div id="outline-container-org11dcdb9" class="outline-4">
-<h4 id="org11dcdb9">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org11dcdb9">
-<dl class="org-dl">
-<dt>Mon Oct 28 10:33:14 AM EDT 2024</dt><dd><p>
-<a href="https://piazza.com/class/lzzvmm0hu9v228/post/1402">Post 1402</a> pointed out that the
-autograder total was listed incorrectly on Gradescope. The Manual
-inspection total was also listed incorrectly. This has been
-corrected. The table below summarizes the avialable / full points
-for each element of project 3.
-</p>
-
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-right" />
-
-<col  class="org-right" />
-
-<col  class="org-left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="org-right">Full</th>
-<th scope="col" class="org-right">Avail</th>
-<th scope="col" class="org-left">Element</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="org-right">20</td>
-<td class="org-right">20</td>
-<td class="org-left">Prob 1 Autograder</td>
-</tr>
-
-<tr>
-<td class="org-right">40</td>
-<td class="org-right">60</td>
-<td class="org-left">Prob 2 Autograder</td>
-</tr>
-
-<tr>
-<td class="org-right">40</td>
-<td class="org-right">45</td>
-<td class="org-left">Prob 1 Manual inspection, 5pts MAKEUP available</td>
-</tr>
-</tbody>
-<tbody>
-<tr>
-<td class="org-right">100</td>
-<td class="org-right">125</td>
-<td class="org-left">Total</td>
-</tr>
-</tbody>
-</table></dd>
-
-<dt>Tue Oct 15 05:11:10 PM EDT 2024</dt><dd>A video overview for P3 has been
-posted at the following location. In addition to surveying content
-associated with the project, several terminal and debugger tricks
-are demonstrated that may be of use to folks as they work on the
-project. VIDEO: <a href="https://youtu.be/wxZU9UimmFc">https://youtu.be/wxZU9UimmFc</a></dd>
-</dl>
+<div id="outline-container-orgb63e5b6" class="outline-4">
+<h4 id="orgb63e5b6">CHANGELOG: EMPTY</h4>
 </div>
-</div>
-
-<div id="outline-container-org43f2810" class="outline-4">
-<h4 id="org43f2810"></h4>
-<div class="outline-text-4" id="text-org43f2810">
+<div id="outline-container-org2e22322" class="outline-4">
+<h4 id="org2e22322"></h4>
+<div class="outline-text-4" id="text-org2e22322">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgb6f5e71">1. Introduction</a></li>
-<li><a href="#org44b1890">2. Download Code and Setup</a></li>
-<li><a href="#orgeb53f84">3. <b>Problem 1</b>: Clock Display Assembly Functions</a>
+<li><a href="#org9f09bbd">1. Introduction</a></li>
+<li><a href="#org76272b8">2. Download Code and Setup</a></li>
+<li><a href="#orgd29605c">3. <b>Problem 1</b>: Scale Assembly Functions</a>
 <ul>
-<li><a href="#orgf289223">3.1. Hand-Code Your Assembly</a></li>
-<li><a href="#org44c0efe">3.2. General Cautions when coding Assembly</a></li>
-<li><a href="#orge54c3b4">3.3. Register Summary Diagram</a></li>
-<li><a href="#orge2f8e6e">3.4. Structure of <code>clock_update_asm.s</code></a></li>
-<li><a href="#org9214ab8">3.5. <code>set_tod_from_ports()</code></a></li>
-<li><a href="#org5eb8e43">3.6. <code>set_display_from_tod</code></a></li>
-<li><a href="#org7036217">3.7. <code>clock_update</code></a></li>
-<li><a href="#org86f7830">3.8. Notes on Partial Credit</a></li>
-<li><a href="#orga088c6e">3.9. Grading Criteria for Problem 1</a></li>
+<li><a href="#org10b1ccd">3.1. Hand-Code Your Assembly</a></li>
+<li><a href="#org94df3bd">3.2. General Cautions and Assembly Hints</a></li>
+<li><a href="#org039a767">3.3. Register Summary Diagram</a></li>
+<li><a href="#org83e688a">3.4. Structure of <code>scale_update_asm.s</code></a></li>
+<li><a href="#orgad629e4">3.5. Documentation Of Functions</a></li>
+<li><a href="#org9491fe6">3.6. Accessing Struct Fields in Assembly</a></li>
+<li><a href="#orgf410254">3.7. Grading Criteria for Problem 1</a></li>
 </ul>
 </li>
-<li><a href="#org12e343c">4. <b>Problem 2</b>: The Puzzlebin</a>
+<li><a href="#orga49fe19">4. <b>Problem 2</b>: Puzzlebin</a>
 <ul>
-<li><a href="#org4ff3cca">4.1. Overview</a></li>
-<li><a href="#org27a8842">4.2. Permission Denied Errors</a></li>
-<li><a href="#org58727b1">4.3. Puzzlebin Scoring</a></li>
-<li><a href="#org97e8366">4.4. Advice and Hints</a></li>
-<li><a href="#org24f29f5">4.5. Compatibility</a></li>
+<li><a href="#org2e52c91">4.1. Overview</a></li>
+<li><a href="#org7b9791e">4.2. Permission Denied Errors</a></li>
+<li><a href="#org617c8a0">4.3. Puzzlebin Scoring</a></li>
+<li><a href="#org7afc155">4.4. Advice and Hints</a></li>
+<li><a href="#org2289275">4.5. Compatibility</a></li>
 </ul>
 </li>
 </ul>
@@ -598,8 +536,8 @@ project. VIDEO: <a href="https://youtu.be/wxZU9UimmFc">https://youtu.be/wxZU9Uim
 </div>
 </div>
 
-<div id="outline-container-orgb6f5e71" class="outline-2">
-<h2 id="orgb6f5e71"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-org9f09bbd" class="outline-2">
+<h2 id="org9f09bbd"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This project will feel somewhat familiar in that it is nearly
@@ -608,7 +546,7 @@ puzzle-solving problem.  The major change is that everything is at the
 assembly level:
 </p>
 <ul class="org-ul">
-<li>Problem 1 re-works the Clock functions from the previous project in
+<li>Problem 1 re-works the Scale functions from the previous project in
 x86-64 Assembly rather than C</li>
 <li>Problem 2 involves analyzing a binary executable to provide it with
 the correct input to "defuse" the executable much like the previous
@@ -623,8 +561,8 @@ appreciation for "high-level" languages (like C).
 </div>
 </div>
 
-<div id="outline-container-org44b1890" class="outline-2">
-<h2 id="org44b1890"><span class="section-number-2">2</span> <a id="orgd406603"></a> Download Code and Setup</h2>
+<div id="outline-container-org76272b8" class="outline-2">
+<h2 id="org76272b8"><span class="section-number-2">2</span> <a id="org30923c8"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -651,69 +589,51 @@ folder. Ultimately you will re-zip this folder to submit it.
 </thead>
 <tbody>
 <tr>
-<td class="org-left"><code>Makefile</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Problem 1 Build file</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>clock.h</code></td>
+<td class="org-left"><code>scale.h</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Problem 1 header file</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>clock_main.c</code></td>
+<td class="org-left"><code>scale_main.c</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Problem 1 main() function</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>clock_sim.c</code></td>
+<td class="org-left"><code>scale_sim.c</code></td>
 <td class="org-left">Provided</td>
-<td class="org-left">Problem 1 clockmeter simulator functions</td>
+<td class="org-left">Problem 1 scale simulator functions</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>clock_update_asm.s</code></td>
+<td class="org-left"><code>scale_update_asm.s</code></td>
 <td class="org-left">CREATE</td>
-<td class="org-left">Problem 1 Assembly functions, re-code C in x86-64, <b>main source file for problem 1</b></td>
+<td class="org-left">Problem 1 Assembly functions, re-code C in x86-64, <b>main source file for Problem 1</b></td>
 </tr>
 
 <tr>
-<td class="org-left"><code>clock_update.c</code></td>
-<td class="org-left">CREATE</td>
+<td class="org-left"><code>scale_update.c</code></td>
+<td class="org-left">OPTIONAL</td>
 <td class="org-left">Problem 1 C functions, COPY from Project 2 or see a staff member to discuss</td>
 </tr>
 
 <tr>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>test_clock_update.c</code></td>
+<td class="org-left"><code>test_scale_update.c</code></td>
 <td class="org-left">Testing</td>
-<td class="org-left">Problem 1 testing program for <code>clock_update_asm.c</code></td>
+<td class="org-left">Problem 1 testing program for <code>scale_update_asm.c</code></td>
 </tr>
 
 <tr>
-<td class="org-left"><code>test_clock_update_asm.s</code></td>
+<td class="org-left"><code>test_scale_update_asm.s</code></td>
 <td class="org-left">Testing</td>
-<td class="org-left">Problem 1 testing program for <code>clock_update_asm.c</code></td>
+<td class="org-left">Problem 1 testing program for <code>scale_update_asm.c</code></td>
 </tr>
 
 <tr>
-<td class="org-left"><code>test_clock_update.org</code></td>
+<td class="org-left"><code>test_scale.org</code></td>
 <td class="org-left">Testing</td>
 <td class="org-left">Problem 1 testing data file</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>testy</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">Problem 1 test running script</td>
 </tr>
 </tbody>
 <tbody>
@@ -729,12 +649,25 @@ folder. Ultimately you will re-zip this folder to submit it.
 <td class="org-left">Problem 2 Input for <code>puzzlebox</code>, fill this in</td>
 </tr>
 </tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Build file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running script</td>
+</tr>
+</tbody>
 </table>
 </div>
 </div>
 
-<div id="outline-container-orgeb53f84" class="outline-2">
-<h2 id="orgeb53f84"><span class="section-number-2">3</span> <b>Problem 1</b>: Clock Display Assembly Functions</h2>
+<div id="outline-container-orgd29605c" class="outline-2">
+<h2 id="orgd29605c"><span class="section-number-2">3</span> <b>Problem 1</b>: Scale Assembly Functions</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 The functions in this problem are identical to a previous project
@@ -742,37 +675,40 @@ in which code to support an LCD clock display was written. These
 functions are:
 </p>
 <dl class="org-dl">
-<dt><code>int set_tod_from_ports(tod_t *tod)</code></dt><dd>Retrieves value <code>CLOCK_TIME_PORT</code> and converts this to number of
-seconds from the beginning of the day with rounding via bit shifts
-and masking.  Then sets the fields of the struct pointed to by <code>tod</code>
-to have the correct hours, minutes, seconds, and AM/PM indication.</dd>
-<dt><code>int set_display_from_tod(tod_t tod, int *display)</code></dt><dd>Given a <code>tod_t</code> struct, reset and alter the bits pointed to by
-<code>display</code> to cause a proper clock display.</dd>
-<dt><code>int clock_update()</code></dt><dd>Update global <code>CLOCK_DISPLAY_PORT</code> using the previous two
-functions.</dd>
+<dt><code>int scale_from_ports(scale_t *scale)</code></dt><dd>Retrieves values from ports (global variables) and fills the fields
+of a <code>scale</code> with values indicating a weight to display along with
+a mode and indicators for the display</dd>
+<dt><code>int scale_display_special(scale_t scale, int *display)</code></dt><dd>Create a "special" pattern in the LCD display indicating an error or
+storing the tare value.  The <code>mode</code> field of parameter <code>scale</code>
+indicates which case to do.</dd>
+<dt><code>int scale_display_weight(scale_t scale, int *display)</code></dt><dd>Show a "normal"  weight in the LCD display according to the data in
+<code>scale</code>. Construct a bit pattern <code>display</code> that shows the weight
+along with other indicators for unit / non-zero tare.</dd>
+<dt><code>int scale_update()</code></dt><dd>Update global <code>SCALE_DISPLAY_PORT</code> using the
+previous functions.</dd>
 </dl>
 
 <p>
 The big change in this iteration will be that <b>the functions must be
 written in x86-64 assembly code</b>. As C functions each of these is
-short, up to 85 lines maximum. The assembly versions will be somewhat
-longer as each C line typically needs 1-4 lines of assembly code to
-implement fully. Coding these functions in assembly give you real
-experience writing working assembly code and working with it in
-combination with C.
+short, 40 lines long in most cases and usually shorter. The assembly
+versions will be somewhat longer as each C line typically needs 1-4
+lines of assembly code to implement fully. Coding these functions in
+assembly give you real experience writing working assembly code and
+working with it in combination with C.
 </p>
 
 <p>
 <b>The code setup and tests are mostly identical</b> for this problem as
-for the previous C version of the problem.  <a href="p2.html">Refer to original Clock
-LCD Display Problem description</a> for a broad overview of the simulator
-and files associated with it.
+for the previous C version of the problem.  <a href="p2.html">Refer to original Scale
+Problem description</a> for a broad overview of the simulator and files
+associated with it.
 </p>
 </div>
 
 
-<div id="outline-container-orgf289223" class="outline-3">
-<h3 id="orgf289223"><span class="section-number-3">3.1</span> Hand-Code Your Assembly</h3>
+<div id="outline-container-org10b1ccd" class="outline-3">
+<h3 id="org10b1ccd"><span class="section-number-3">3.1</span> Hand-Code Your Assembly</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 As discussed in class, one can generate assembly code from C code with
@@ -798,22 +734,26 @@ criteria.
 </p>
 </div>
 
-<div id="outline-container-orgcd6382b" class="outline-4">
-<h4 id="orgcd6382b">Base your Assembly code on your C code</h4>
-<div class="outline-text-4" id="text-orgcd6382b">
+<div id="outline-container-org801c2b5" class="outline-4">
+<h4 id="org801c2b5">Base your Assembly code on your C code</h4>
+<div class="outline-text-4" id="text-org801c2b5">
 <p>
 The files to be submitted for this problem include
 </p>
 <ul class="org-ul">
-<li><code>clock_update.c</code>: C version of the functions</li>
-<li><code>clock_update_asm.s</code>: Assembly version of the functions</li>
+<li><code>scale_update.c</code>: C version of the functions</li>
+<li><code>scale_update_asm.s</code>: Assembly version of the functions</li>
 </ul>
 <p>
 Graders may examine these for a correspondence between to the
-algorithm used in the C version to the Assembly version. Compiler
-generated assembly often does significant re-arrangements of assembly
-code with many intermediate labels that hand-written code will not
-have.
+algorithm used in the C version to the Assembly version.  This is not
+a "hard" requirement in that folks who decide on a different approach
+in their assembly compared to their C version will not be
+penalized. However, it is an excellent idea to have a tight roadmap in
+C before attempting the assembly version.  Compiler generated assembly
+often does significant re-arrangements of assembly code with many
+intermediate labels that hand-written code will not have which makes
+it easy to spot folks who are cutting corners.
 </p>
 
 <p>
@@ -824,34 +764,34 @@ will help you get them up and running quickly.</b>
 </div>
 </div>
 
-<div id="outline-container-org673829c" class="outline-4">
-<h4 id="org673829c">Annotate your Assembly Thoroughly</h4>
-<div class="outline-text-4" id="text-org673829c">
+<div id="outline-container-org8b96156" class="outline-4">
+<h4 id="org8b96156">Annotate your Assembly Thoroughly</h4>
+<div class="outline-text-4" id="text-org8b96156">
 <p>
 Comment your assembly code A LOT. While good C code can be quite
 self-explanatory with descriptive variable names and clear control
 structures, assembly is rarely so easy to understand. Include clear
-commentary on your assembly. This should include
+commentary on your assembly. This should include:
 </p>
 <ul class="org-ul">
 <li>Subdividing functions into smaller blocks with comments describing
 what the blocks accomplish.</li>
-<li>Descriptions of which "variables" from the C side are held in which
+<li>Descriptions of which "variables" or data are held in which
 registers.</li>
-<li>Descriptions of most assembly lines and their effect on the
-variables held in the registers.</li>
+<li>Descriptions of most assembly lines and their effect on the data
+held in the registers.</li>
 <li>Descriptions of any data such as bitmasks stored in the assembly
 code.</li>
-<li>Use informative label names like <code>.ROUNDING_UP</code> to convey further
+<li>Using informative label names like <code>.ROUNDING_UP</code> to convey further
 meaning about what goals certain positions in code are
 accomplishing.</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgc74f2e0" class="outline-4">
-<h4 id="orgc74f2e0">Use Division</h4>
-<div class="outline-text-4" id="text-orgc74f2e0">
+<div id="outline-container-orga85f600" class="outline-4">
+<h4 id="orga85f600">Use Division</h4>
+<div class="outline-text-4" id="text-orga85f600">
 <p>
 While it is a slow instruction that is cumbersome to set up, using
 <code>idivX</code> division instruction is the most human-readable means to
@@ -864,8 +804,8 @@ effort has been put into the assembly code.
 </div>
 </div>
 
-<div id="outline-container-org44c0efe" class="outline-3">
-<h3 id="org44c0efe"><span class="section-number-3">3.2</span> General Cautions when coding Assembly</h3>
+<div id="outline-container-org94df3bd" class="outline-3">
+<h3 id="org94df3bd"><span class="section-number-3">3.2</span> General Cautions and Assembly Hints</h3>
 <div class="outline-text-3" id="text-3-2">
 <ol class="org-ol">
 <li>Get your editor set up to make coding assembly easier. If you are
@@ -942,12 +882,78 @@ order. Avoid this if you can (and you probably can in our case).
 <code>subq/addq</code> . Keep in mind the stack must be aligned to 16-byte
 boundaries for function calls to work correctly.  Above all, don't
 treat <code>rsp</code> as a general purpose register.</li>
+<li>Note carefully which function use which conventions for struct
+arguments; e.g. pointers to structs VERSUS actual structs. Use
+appropriate assembly techniques to access fields each (they are not
+the same).</li>
+<li><p>
+To access a global variable and copy it into a register, use the
+following assembly syntax
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">   movw GLOB_VAR_NAME(%rip), %cx    # copy global var to reg cx
+</pre>
+</div>
+<p>
+Many functions access the global PORT variables but only a few
+change those variables.
+</p></li>
+<li>Use comparisons and jumps a separate sections of code that are
+clearly marked as "error" or "out of bounds" if you detect bad
+arguments to functions.</li>
+<li>When required, used bit shifting and masking to efficiently perform
+division by powers of two and check for remainders if rounding is
+required.</li>
+<li>Make use of division to extract digits in base 10 if the situation
+requires it. Keep in mind that the <code>idivX</code> instruction must have
+<code>rax/eax/ax</code> as the dividend, <code>rdx</code> sign-extended out via <code>cwtl /
+    cltq / cqto</code> instructions. Any register can contain the <code>divisor</code>.
+After the instruction, <code>rax/eax/ax</code> will hold the <code>quotient</code> and
+<code>rdx/edx/dx</code> the remainder.  With cleverness, you'll only need to
+do a couple divisions.</li>
+<li>Use shifts and ORs to combine the digit bit patterns to create the
+final display bit pattern.</li>
+<li><p>
+The final function in the problem requires the previous functions
+to be called to to create the struct and manipulate the bits of
+the display.  Calling a function requires that the stack be
+aligned to 16-bytes; there is always an 8-byte quantity on the
+stack (previous value of the <code>rsp</code> stack pointer).  This means the
+stack must be extended with a <code>subq</code> instruction before any
+calls. A typical sequence is
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">    subq $&lt;NUM&gt;,%rsp    # adjust the stack pointer to make space for local      
+                        # values AND align to a 16-byte boundary
+
+    call    some_func   # stack aligned, call function
+    ## return val from func in rax or eax
+
+    call    other_func  # stack still aligned, call other function
+    ## return val from func in rax or eax
+
+    addq $&lt;NUM&gt;,%rsp    # restore the stack pointer to its original value
+</pre>
+</div>
+<p>
+NOTE: the specific value for <code>&lt;NUM&gt;</code> is dependent on the
+situation. Common total adjustments are 8 bytes, 24 bytes, and 40
+bytes. Pick one that fits the situation here: how much space for
+local variables is needed in the function. Most implementations
+will need space for a local struct so knowing the total size
+required for it is a good start.
+</p></li>
+<li>Structs that are stored in the stack can be "packed" into
+registers by moving their fields into those registers. For small
+structs, a single <code>movq / movl / movw</code> may be enough to move the
+entire struct into an argument register. For larger structs,
+several moves may be required.</li>
 </ol>
 </div>
 </div>
 
-<div id="outline-container-orge54c3b4" class="outline-3">
-<h3 id="orge54c3b4"><span class="section-number-3">3.3</span> Register Summary Diagram</h3>
+<div id="outline-container-org039a767" class="outline-3">
+<h3 id="org039a767"><span class="section-number-3">3.3</span> Register Summary Diagram</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 For reference, here is a picture that appears in the lecture slides
@@ -957,7 +963,7 @@ x86-64.
 
 <div class="org-center">
 
-<div id="org909bcd9" class="figure">
+<div id="orgde158e9" class="figure">
 <p><img src="registers.png" alt="registers.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Summary of general purpose register usages in x86-64.</p>
@@ -966,8 +972,8 @@ x86-64.
 </div>
 </div>
 
-<div id="outline-container-orge2f8e6e" class="outline-3">
-<h3 id="orge2f8e6e"><span class="section-number-3">3.4</span> Structure of <code>clock_update_asm.s</code></h3>
+<div id="outline-container-org83e688a" class="outline-3">
+<h3 id="org83e688a"><span class="section-number-3">3.4</span> Structure of <code>scale_update_asm.s</code></h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 Below is a rough outline of the structure of required assmebly file.
@@ -977,10 +983,10 @@ it out as needed.
 
 <div class="org-src-container">
 <pre class="src src-asm">.text                           # IMPORTANT: subsequent stuff is executable
-.global  set_tod_from_ports
+.global scale_from_ports
         
 ## ENTRY POINT FOR REQUIRED FUNCTION
-set_tod_from_ports:
+scale_from_ports:
         ## assembly instructions here
 
         ## a useful technique for this problem
@@ -1014,426 +1020,211 @@ my_array:                       # declare multiple ints sequentially starting at
 ## Otherwise you may get weird permission errors when executing 
 
 .text
-.global  set_display_from_tod
+.global  scale_display_special
 
 ## ENTRY POINT FOR REQUIRED FUNCTION
-set_display_from_tod:
+scale_display_special:
         ## assembly instructions here
 
 	## two useful techniques for this problem
         movl    my_int(%rip),%eax    # load my_int into register eax
         leaq    my_array(%rip),%rdx  # load pointer to beginning of my_array into rdx
+        ## DON'T FORGET TO RETURN FROM FUNCTIONS
 
 
-.text
+.global  scale_display_special
+
+## ENTRY POINT FOR REQUIRED FUNCTION
+scale_display_weight:
+
+        ## DON'T FORGET TO RETURN FROM FUNCTIONS
+
+
+
 .global clock_update
         
 ## ENTRY POINT FOR REQUIRED FUNCTION
-clock_update:
+scale_update:
 	## assembly instructions here
+        ## DON'T FORGET TO RETURN FROM FUNCTIONS
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org9214ab8" class="outline-3">
-<h3 id="org9214ab8"><span class="section-number-3">3.5</span> <code>set_tod_from_ports()</code></h3>
+<div id="outline-container-orgad629e4" class="outline-3">
+<h3 id="orgad629e4"><span class="section-number-3">3.5</span> Documentation Of Functions</h3>
 <div class="outline-text-3" id="text-3-5">
-<div class="org-src-container">
-<pre class="src src-c">int set_tod_from_ports(tod_t *tod);
-// Reads the time of day from the CLOCK_TIME_PORT global variable. If
-// the port's value is invalid (negative or larger than 16 times the
-// number of seconds in a day) does nothing to tod and returns 1 to
-// indicate an error. Otherwise, this function uses the port value to
-// calculate the number of seconds from start of day (port value is
-// 16*number of seconds from midnight). Rounds seconds up if there at
-// least 8/16 have passed. Uses shifts and masks for this calculation
-// to be efficient. Then uses division on the seconds since the
-// begining of the day to calculate the time of day broken into hours,
-// minutes, seconds, and sets the AM/PM designation with 1 for AM and
-// 2 for PM. By the end, all fields of the `tod` struct are filled in
-// and 0 is returned for success.
- // 
-// CONSTRAINT: Uses only integer operations. No floating point
-// operations are used as the target machine does not have a FPU.
-</pre>
-</div>
-
 <p>
-Note that this function uses a <code>tod_t</code> struct which is in <code>clock.h</code>
-described here:
+Below is a repeat of the documentation from project 2 on the expected
+behavior of the required functions.
 </p>
+
 <div class="org-src-container">
-<pre class="src src-c">// Breaks time down into 12-hour format
-typedef struct{
-  int   day_secs;    // seconds from start of day
-  short time_secs;   // seconds in current hour
-  short time_mins;   // minutes in current hour
-  short time_hours;  // current hour of day
-  char  ampm;        // 1 for am, 2 for pm
-} tod_t;
-</pre>
-</div>
-</div>
+<pre class="src src-c">// scale_update.c: functions that read scale hardware, convert its
+// encode its state in a struct, and adjusts the display to show the
+// user information.
 
-<div id="outline-container-org0ff5dd7" class="outline-4">
-<h4 id="org0ff5dd7">Assembly Implementation Notes <code>set_tod_from_ports</code></h4>
-<div class="outline-text-4" id="text-org0ff5dd7">
-<ol class="org-ol">
-<li>The function one argument: a pointer to a struct which will be in
-register <code>rdi</code>.</li>
-<li>Return values or functions are to be placed <code>eax</code> for 32 bit
-quantities as is the case here (<code>int</code>).</li>
-<li><p>
-To access a global variable and copy it into a register, use the
-following assembly syntax
-</p>
-<div class="org-src-container">
-<pre class="src src-asm">   movl  CLOCK_TIME_PORT(%rip), %ecx    # copy global var to reg ecx
-</pre>
-</div>
-<p>
-The function should not change <code>CLOCK_TIME_PORT</code> so copying it to
-a register is among the first steps to perform.
-</p></li>
-<li>Use comparisons and jump to a separate section of code that is
-clearly marked as "error" if you detect a bad arguments.</li>
-<li>Make use of shift / mask operations to convert the port value to
-the number of seconds from the beginning of the day. Use the
-remainder value to determine if seconds should round up or not.</li>
-<li>Make use of division to "break down" the argument
-<code>time_secs</code>. Keep in mind that the <code>idivl</code> instruction must
-have <code>eax</code> as the dividend, <code>edx</code> zeroed out via a <code>cqto</code>
-instruction. Any 32-bit register can contain the <code>divisor</code>.  After
-the instruction, <code>eax</code> will hold the <code>quotient</code> and <code>edx</code> the
-remainder.  With cleverness, you'll only need to do a couple
-divisions.</li>
-<li><p>
-A pointer to a <code>tod_t</code> struct can access its fields using the
-following offset table which assume that <code>%reg</code> holds a pointer to
-the struct (substitute an actual register name).
-</p>
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+#include "scale.h"
 
-
-<colgroup>
-<col  class="org-left" />
-
-<col  class="org-left" />
-
-<col  class="org-left" />
-
-<col  class="org-left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="org-left">&#xa0;</th>
-<th scope="col" class="org-left">&#xa0;</th>
-<th scope="col" class="org-left">Destination</th>
-<th scope="col" class="org-left">Assembly</th>
-</tr>
-
-<tr>
-<th scope="col" class="org-left">C Field Access</th>
-<th scope="col" class="org-left">Offset</th>
-<th scope="col" class="org-left">Size</th>
-<th scope="col" class="org-left">Assign 5 to field</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="org-left"><code>tod-&gt;day_secs</code></td>
-<td class="org-left">0 bytes</td>
-<td class="org-left">4 bytes</td>
-<td class="org-left"><code>movl $5, 0(%reg)</code></td>
-</tr>
-
-<tr>
-<td class="org-left"><code>tod-&gt;time_secs</code></td>
-<td class="org-left">4 bytes</td>
-<td class="org-left">2 bytes</td>
-<td class="org-left"><code>movw $5, 4(%reg)</code></td>
-</tr>
-
-<tr>
-<td class="org-left"><code>tod-&gt;time_mins</code></td>
-<td class="org-left">6 bytes</td>
-<td class="org-left">2 bytes</td>
-<td class="org-left"><code>movw $5, 6(%reg)</code></td>
-</tr>
-
-<tr>
-<td class="org-left"><code>tod-&gt;time_hours</code></td>
-<td class="org-left">8 bytes</td>
-<td class="org-left">2 bytes</td>
-<td class="org-left"><code>movw $5, 8(%reg)</code></td>
-</tr>
-
-<tr>
-<td class="org-left"><code>tod-&gt;ampm</code></td>
-<td class="org-left">10 bytes</td>
-<td class="org-left">1 byte</td>
-<td class="org-left"><code>movb $5,10(%reg)</code></td>
-</tr>
-</tbody>
-</table>
-<p>
-You will need to use these offsets to set the fields of the struct
-near the end of the routine.
-</p></li>
-</ol>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org5eb8e43" class="outline-3">
-<h3 id="org5eb8e43"><span class="section-number-3">3.6</span> <code>set_display_from_tod</code></h3>
-<div class="outline-text-3" id="text-3-6">
-<div class="org-src-container">
-<pre class="src src-c">int set_display_from_tod(tod_t tod, int *display);
-// Accepts a tod and alters the bits in the int pointed at by display
-// to reflect how the LCD clock should appear. If any time_** fields
-// of tod are negative or too large (e.g. bigger than 12 for hours,
-// bigger than 59 for min/sec) or if the AM/PM is not 1 or 2, no
-// change is made to display and 1 is returned to indicate an
-// error. The display pattern is constructed via shifting bit patterns
-// representing digits and using logical operations to combine them.
-// May make use of an array of bit masks corresponding to the pattern
-// for each digit of the clock to make the task easier.  Returns 0 to
-// indicate success. This function DOES NOT modify any global
-// variables
-</pre>
-</div>
-</div>
-
-<div id="outline-container-orgc25c1d6" class="outline-4">
-<h4 id="orgc25c1d6">Assembly Implementation Notes <code>set_display_from_tod</code></h4>
-<div class="outline-text-4" id="text-orgc25c1d6">
-<ol class="org-ol">
-<li>Arguments will be
-<ul class="org-ul">
-<li>a packed <code>tod_t</code> struct in <code>%rdi</code> and <code>%rsi</code></li>
-<li>an integer pointer in <code>%rdx</code></li>
-</ul></li>
-<li><p>
-The packed <code>tod_t</code> struct is spread across two registers, <code>%rdi</code>
-and <code>%rsi</code> so will have the following layout.
-</p>
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-left" />
-
-<col  class="org-left" />
-
-<col  class="org-right" />
-
-<col  class="org-left" />
-
-<col  class="org-left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="org-left">&#xa0;</th>
-<th scope="col" class="org-left">&#xa0;</th>
-<th scope="col" class="org-right">Bits</th>
-<th scope="col" class="org-left">Shift</th>
-<th scope="col" class="org-left">&#xa0;</th>
-</tr>
-
-<tr>
-<th scope="col" class="org-left">C Field Access</th>
-<th scope="col" class="org-left">Register</th>
-<th scope="col" class="org-right">in reg</th>
-<th scope="col" class="org-left">Required</th>
-<th scope="col" class="org-left">Size</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="org-left"><code>tod.day_secs</code></td>
-<td class="org-left"><code>%rdi</code></td>
-<td class="org-right">0-31</td>
-<td class="org-left">None</td>
-<td class="org-left">4 bytes</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>tod.time_secs</code></td>
-<td class="org-left"><code>%rdi</code></td>
-<td class="org-right">32-47</td>
-<td class="org-left">Right by 32</td>
-<td class="org-left">2 bytes</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>tod.time_mins</code></td>
-<td class="org-left"><code>%rdi</code></td>
-<td class="org-right">48-63</td>
-<td class="org-left">Right by 48</td>
-<td class="org-left">2 bytes</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>tod.time_hours</code></td>
-<td class="org-left"><code>%rsi</code></td>
-<td class="org-right">0-15</td>
-<td class="org-left">None</td>
-<td class="org-left">2 bytes</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>tod.ampm</code></td>
-<td class="org-left"><code>%rsi</code></td>
-<td class="org-right">16-23</td>
-<td class="org-left">Right by 16</td>
-<td class="org-left">1 bytes</td>
-</tr>
-</tbody>
-</table>
-<p>
-To access individual fields of the struct, you will need to do
-shifting and masking to extract the values from the <code>%rdi / %rsi</code>
-registers.
-</p></li>
-<li>Use comparisons and jump to a separate section of code that is
-clearly marked as "error" if you detect bad fields in the <code>tod</code>
-struct argument.</li>
-<li><p>
-As was the case in the C version of the problem, it is useful to
-create a table of bit masks corresponding to the bits that should be
-set for each clock digit (e.g. digit "1" has bit patter
-<code>0b0000110</code>). In assembly this is easiest to do by using a data
-section with successive integers. An example of how this can be done
-is below.
-</p>
-<div class="org-src-container">
-<pre class="src src-asm">   .section .data
-   array:                          # an array of 3 ints
-           .int 200                # array[0] = 200
-           .int 300                # array[1] = 300
-           .int 400                # array[3] = 400
-   const:
-           .int 17                 # special constant
-    
-   .section .text
-   .globl func
-   func:
-           leaq array(%rip),%r8    # r8 points to array, rip used to enable relocation
-           movq $2,%r9             # r9 = 2, index into array
-           movl (%r8,%r9,4),%r10d  # r10d = array[2], note 32-bit movl and dest reg
-           movl const(%rip),%r11d  # r11d = 17 (const), rip used to enable relocation
-</pre>
-</div>
-<p>
-Adapt this example to create a table of useful bit masks for
-digits. The GCC assembler understands binary constants specified
-with the <code>0b0011011</code> style syntax.
-</p></li>
-<li>Make use of division again to compute "digits" for the ones and tens
-place of the hours and minutes for the clock. Use these digits to
-reference into the table of digit bit masks you create to
-progressively build up the correct bit pattern for the clock
-display.</li>
-<li>Use shifts and ORs to combine the digit bit patterns to create the
-final clock display bit pattern.</li>
-</ol>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org7036217" class="outline-3">
-<h3 id="org7036217"><span class="section-number-3">3.7</span> <code>clock_update</code></h3>
-<div class="outline-text-3" id="text-3-7">
-<div class="org-src-container">
-<pre class="src src-c">int clock_update();
-// Examines the CLOCK_TIME_PORT global variable to determine hour,
-// minute, and am/pm.  Sets the global variable CLOCK_DISPLAY_PORT bits
-// to show the proper time.  If CLOCK_TIME_PORT appears to be in error
-// (to large/small) makes no change to CLOCK_DISPLAY_PORT and returns 1
-// to indicate an error. Otherwise returns 0 to indicate success.
+int scale_from_ports(scale_t *scale);
+// Uses the values in SCALE_SENSOR_PORT, SCALE_TARE_PORT, and
+// SCALE_STATUS_PORT to set the fields of the `scale` struct to
+// appropriate values. 
 //
-// Makes use of the previous two functions: set_tod_from_ports() and
-// set_display_from_tod().
+// Does bound checking so that if the SCALE_SENSOR_PORT or
+// SCALE_TARE_PORT is out of range (see their docs) sets the fields of
+// scale to be 0's, sets the scale-&gt;mode to be MODE_ERROR, and
+// returns 1. 
+//
+// If SCALE_STATUS_PORT indicates the Tare button is being pressed
+// (see that variable's docs), sets fields of `scale` to be 0, sets
+// the mode to be MODE_TARE, and returns 2.
+//
+// Otherwise sets the fields of scale as follows.
+//
+// - mode :: set to MODE_SHOW to show the display weight as normal
+//
+// - weight :: set to (SCALE_SENSOR_PORT - SCALE_TARE_PORT).  Converts
+//   to pounds if SCALE_STATUS_PORT indicates that is the desired
+//   unit. Conversion is done using bit shifting / masking and rounds
+//   pounds up if the ounces are halfway to the next pound.
+//
+// - indicators :: sets a bit to turn on either the Ounce or Pound
+//   Indicator light. If the SCALE_TARE_PORT is not zero, sets a bit
+//   to turn on the Tare indicator light. See documentation for the
+//   scale_t struct for which bits control which indicator lights.
+//
+// Returns 0 when `scale` has its field set as above.
 // 
+// CONSTRAINTS: Uses only integer operations. No floating point
+// operations are used as the target machine does not have a FPU. Does
+// not use any math functions such as abs().
+//
+// CONSTRAINTS: Does not use integer division; uses bit shifting and
+// masking to compute division by powers of two and perform rounding.
+
+int scale_display_special(scale_t scale, int *display);
+// Sets the bits pointed at by `display to indicate one of two
+// "special" cases.
+//
+// If scale.mode is MODE_ERROR, sets the display to "ERR" to indicate
+// that the weight is out of range or some other hardware error has
+// occurred.
+//
+// If scale.mode is MODE_TARE, sets the display to "STOR" to indicate
+// that the Tare button is being pressed and the current weight will be
+// stored in the internal saved weight space.
+//
+// In both the above cases, only changes the bits pointed at by
+// `display` and returns 0. Does not make any other changes to the
+// machine state.
+//
+// If scale.mode is a different value that one of the above two cases,
+// this function has been called in error and returns 1.
+//
+// CONSTRAINT: This function should not access or change any global
+// PORT variables.
+
+int scale_display_weight(scale_t scale, int *display);
+// Called when scale.mode is MODE_SHOW. If it is not, this function
+// returns 1 immediately and makes no other changes.
+//
+// For scale.mode of MODE_SHOW, sets `display` bits to indicate the
+// weight in scale.weight. Uses integer division to determine digits
+// to be shown in `display` and whether a negative sign should be
+// present. Sets bits of `display` according to the bits in
+// scale.indicators to show ounces / pounds as the unit and indicate a
+// non-zero tare. Returns 0 on completion.
+//
+// CONSTRAINT: This function should not access or change any global
+// PORT variables. It may use a global array of bit patterns if deemed
+// useful.
+
+int scale_update();
+// Updates the state of scale using previously defined functions. Uses
+// stack space for a scale_t struct which is set from the ports and
+// then used to alter the display. If the MODE_TARE is indicated, then
+// copies SCALE_SENSOR_PORT to SCALE_TARE_PORT. Returns 0 if the
+// display is set properly and 1 if an error occurs while setting the
+// display. 
+//
 // CONSTRAINT: Does not allocate any heap memory as malloc() is NOT
-// available on the target microcontroller.  Uses stack and global
-// memory only.
+// available on the target microcontroller.  Uses only stack memory
+// for local variables.
+
 </pre>
 </div>
 </div>
-<div id="outline-container-orgf296bbf" class="outline-4">
-<h4 id="orgf296bbf">Assembly Implementation Notes for <code>clock_update</code></h4>
-<div class="outline-text-4" id="text-orgf296bbf">
-<ol class="org-ol">
-<li>No arguments come into the function.</li>
-<li><p>
-Call the two previous functions to create the struct and manipulate
-the bits of an the display.  Calling a function requires that the
-stack be aligned to 16-bytes; there is always an 8-byte quantity on
-the stack (previous value of the <code>rsp</code> stack pointer).  This means
-the stack must be extended with a <code>pushq</code> instruction before any
-calls. A typical sequence is
+</div>
+
+
+<div id="outline-container-org9491fe6" class="outline-3">
+<h3 id="org9491fe6"><span class="section-number-3">3.6</span> Accessing Struct Fields in Assembly</h3>
+<div class="outline-text-3" id="text-3-6">
+<p>
+Accessing struct fields in C involves use of either the dot (<code>.</code>) or
+arrow (<code>-&gt;</code>) field access operators depending on whether the struct is
+locally stored (an "actual struct") or is available via its memory
+location (a "pointer to a struct"). In assembly, different techniques
+are also required. These are <b>demonstrated in a recent Lab and
+students wanting a quick overview should review that lab</b>. The
+provided header file has tables of where the struct fields for the
+required data types are stored. These are show below for quick
+reference:
 </p>
+
+
 <div class="org-src-container">
-<pre class="src src-asm">   pushq/subq %rsp      # adjust the stack pointer to make space for local      
-                       # values AND align to a 16-byte boundary
+<pre class="src src-c">
+////////////////////////////////////////////////////////////////////////////////
+// scale data and structs
 
-   call    some_func   # stack aligned, call function
-   ## return val from func in rax or eax
+#define UNIT_KG 1               // show kilograms
+#define UNIT_LB 2               // show pounds (2.2 pounds per kg)
 
-   call    other_func  # stack still aligned, call other function
-   ## return val from func in rax or eax
+#define MODE_SHOW      1        // show measured weight as sensor_val - tare_val 
+#define MODE_TARE      2        // store the sensor_val into tare_val, Tare Indicator on
+#define MODE_ERROR     4        // error of some kind
 
-   popq/addq %rsp       # restore the stack pointer to its original value
+// store state of the scale in a struct for easier access
+typedef struct{
+  short weight;            // calculated weight for use elsewhere
+  char mode;               // one of the MODE_XX values indicating what to do/show
+  char indicators;         // Bit field with 1's for different indicators
+  // Bit 0: Ounce Indicator On/Off
+  // Bit 1: Pound Indicator On/Off
+  // Bit 2: Tare Indicator On/Off, on when stored Tare value is non-zero
+} scale_t;
+
+// Accessing fields via a scale_t * pointer
+// |-------------------+----------+-------------+-------------------|
+// |                   |          | Destination | Assembly          |
+// | C Field Access    | Offset   | Size        | Assign 5 to field |
+// |-------------------+----------+-------------+-------------------|
+// | scale-&gt;weight     | 0 bytes  | 2 bytes     | movw $5, 0(%reg)  |
+// | scale-&gt;mode       | 2 bytes  | 1 bytes     | movb $5, 2(%reg)  |
+// | scale-&gt;indicators | 3 bytes  | 1 bytes     | movb $5, 2(%reg)  |
+// |-------------------+----------+-------------+-------------------|
+//
+// Accessing fields via a scale_t packed struct
+// |------------------+--------+-------------+---------|
+// |                  |   Bits | Shift       |         |
+// | C Field Access   | in reg | Required    | Size    |
+// |------------------+--------+-------------+---------|
+// | scale.weight     |   0-15 | None        | 2 bytes |
+// | scale.mode       |  16-23 | Right by 16 | 1 byte  |
+// | scale.indicators |  24-31 | Right by 24 | 1 byte  |
+// |------------------+--------+-------------+---------|
+//
 </pre>
 </div>
-<p>
-NOTE: the specific number of <code>pushq</code> instructions to use or <code>subq</code>
-values to decrease <code>%rsp</code> is dependent on the situation. Common
-total adjustments are 8 bytes, 24 bytes, and 40 bytes. Pick one
-that fits the situation here.
-</p></li>
-<li>In order to call the <code>set_tod_from_ports()</code> function, this function
-will need to allocate space on the stack for a <code>tod_t</code>.  This
-struct is 12 bytes big so at least that amount of memory will need
-be available in the stack for use. Since there are also function
-calls required, grow the stack by <code>16*N+8</code> bytes for a non-negative
-value of <code>N</code>.</li>
-<li>Similarly, to call the <code>set_display_from_tod()</code> function, one
-will need a packed <code>tod_t</code> in a register. If the preceding
-<code>set_tod_from_ports()</code> call succeeded, this packed struct can be read
-from memory into registers with several <code>movq</code> instructions. That stack
-space can re-used if needed.</li>
-<li>Keep in mind that you will need to do error checking of the return
-values from the two functions: if they return non-zero values jump
-to a clearly marked "error" section and return a 1. If an error
-occurs, <b>don't forget to pop restore registers and the stack
-pointer before returning.</b></li>
-</ol>
-</div>
 </div>
 </div>
 
-<div id="outline-container-org86f7830" class="outline-3">
-<h3 id="org86f7830"><span class="section-number-3">3.8</span> Notes on Partial Credit</h3>
-<div class="outline-text-3" id="text-3-8">
-<p>
-Partial credit will be awarded in Manual Inspection for code that
-looks functional but did not pass tests.  However, keep in mind that
-tests for <code>clock_update()</code> rely on the previous 2 functions working
-correctly and <code>clock_main</code> requires all functions to work correctly in
-conjunction.  There is no partial credit available for these Automated
-Tests even if they fail tests due to previous functions behaving
-incorrectly, they still fail.
-</p>
-</div>
-</div>
-
-<div id="outline-container-orga088c6e" class="outline-3 grading 60">
-<h3 id="orga088c6e"><span class="section-number-3">3.9</span> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="60">60</span></span></h3>
-<div class="outline-text-3" id="text-3-9">
+<div id="outline-container-orgf410254" class="outline-3 grading 60">
+<h3 id="orgf410254"><span class="section-number-3">3.7</span> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="60">60</span></span></h3>
+<div class="outline-text-3" id="text-3-7">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -1451,22 +1242,22 @@ incorrectly, they still fail.
 <tbody>
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">AUOTMATED TESTS</td>
+<td class="org-left">AUTOMATED TESTS</td>
 </tr>
 
 <tr>
 <td class="org-right">20</td>
-<td class="org-left"><code>make test-prob1</code> runs 40 tests for correctness, 0.5 points per test</td>
+<td class="org-left"><code>make test-prob1</code> which uses programs <code>test_scale_update</code> and <code>scale_main</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left"><code>test_clock_update.c</code> provides tests for functions in <code>clock_update_asm.s</code></td>
+<td class="org-left">Provides 40 tests for functions in <code>scale_update_asm.c</code> and their use in <code>main()</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">There are also tests of <code>clock_main</code> which uses functions from <code>clock_update_asm.c</code></td>
+<td class="org-left">0.5 point per test passed</td>
 </tr>
 </tbody>
 <tbody>
@@ -1497,12 +1288,12 @@ incorrectly, they still fail.
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Detailed documentation/comments are provided showing the algorithm used in the assembly</td>
+<td class="org-left">Detailed documentation/comments are provided helping describe the algorithm used in the assembly</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Use of good label names to indicate jump targets: <code>.NEG_PORT</code> is good, <code>.L32</code> is bad</td>
+<td class="org-left">Use of good label names to indicate jump targets: <code>.NEG_PORT_VALUE</code> is good, <code>.L32</code> is bad</td>
 </tr>
 
 <tr>
@@ -1517,7 +1308,7 @@ incorrectly, they still fail.
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Any callee save registers used (<code>rbx rbp r12 r13 r14 r15</code>) are pushed at the top of functions and popped at the end</td>
+<td class="org-left">Any callee save registers used (<code>rbx rbp r12 r13 r14 r15</code>) are pushed at the top of functions and popped at the end to restore their previous values</td>
 </tr>
 
 <tr>
@@ -1527,27 +1318,32 @@ incorrectly, they still fail.
 
 <tr>
 <td class="org-right">10</td>
-<td class="org-left"><code>set_tod_from_ports()</code></td>
+<td class="org-left"><code>scale_from_ports()</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Clear use of shift / mask instructions to convert <code>CLOCK_TIME_PORT</code> to seconds with rounding</td>
+<td class="org-left">Clear section or lines which perform special case analysis for <code>MODE_ERROR</code> and <code>MODE_TARE</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Clear use of the division instruction to compute the seconds, minutes, hours</td>
+<td class="org-left">Use of correct syntax and technique to access global PORT variables</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Clear section or lines which write fields of <code>tod_t</code> struct to memory</td>
+<td class="org-left">Clear use of shift / mask instructions to convert weight form ounces to pounds; shifting and masking are both required for full credit</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">The <code>idivX</code> instruction is used to compute quotients and remainders that are needed.</td>
+<td class="org-left">Rounding performed during the conversion of ounces to pounds</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Correct syntax used to write values to the pointer to the <code>scale_t</code> struct</td>
 </tr>
 
 <tr>
@@ -1556,23 +1352,23 @@ incorrectly, they still fail.
 </tr>
 
 <tr>
-<td class="org-right">15</td>
-<td class="org-left"><code>set_display_from_clock()</code></td>
+<td class="org-right">5</td>
+<td class="org-left"><code>scale_display_special()</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">There is a clearly documented <code>.data</code> section in assembly setting up useful tables of bitmasks</td>
+<td class="org-left">Correct syntax to access the fields of the packed struc to determine mode</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Struct fields are unpacked from an argument register using shift operations</td>
+<td class="org-left">Error case analysis: if the mode is neither of <code>MODE_ERROR</code> nor <code>MODE_TARE</code>, does nothing and returns an error</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">The <code>idivX</code> instruction is used to compute quotients and remainders that are needed.</td>
+<td class="org-left">Correct syntax used to set the argument pointer to a "special" display pattern</td>
 </tr>
 
 <tr>
@@ -1582,17 +1378,47 @@ incorrectly, they still fail.
 
 <tr>
 <td class="org-right">10</td>
-<td class="org-left"><code>clock_update()</code></td>
+<td class="org-left"><code>scale_display_weight()</code></td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">The stack is extended to make space available for local variables (<code>tod_t</code> struct)</td>
+<td class="org-left">Correct syntax to access the fields of the packed struc to determine mode</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Function calls to the earlier two functions are made with appropriate arguments passed</td>
+<td class="org-left">Error case analysis: if the mode is not <code>MODE_SHOW</code>, does nothing and returns an error</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of division via <code>idivX</code> to determine digits to display</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of an array of bit patterns established in a <code>.data</code> section to simplify display creation</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Analysis to determine whether to show leading digits (e.g. no leading 0) and where to place a "negative sign" in the display if needed</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left"><code>scale_update()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">The stack is extended to make space available for local variables / local structs; no use of global variables for this purpose</td>
 </tr>
 
 <tr>
@@ -1607,6 +1433,11 @@ incorrectly, they still fail.
 
 <tr>
 <td class="org-right">&#xa0;</td>
+<td class="org-left">Function calls to the earlier two functions are made with appropriate arguments passed</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
 <td class="org-left">There is a clear sequence of instructions that load a memory address for the first function call</td>
 </tr>
 
@@ -1614,23 +1445,49 @@ incorrectly, they still fail.
 <td class="org-right">&#xa0;</td>
 <td class="org-left">There is a clear sequence of instructions that load a packed struct into registers for the second function call</td>
 </tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">There is case analysis based on the return value of functions to behave differently if needed</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Global variables such as PORTS are adjusted if needed.</td>
+</tr>
 </tbody>
 </table>
+
 <p>
 <b>NOTE</b>: Passing all tests and earning all manual inspection criteria
 will earn up to <b>5 Points of Project Makeup Credit</b> which will offset
 past and future loss of credit on projects.
 </p>
 </div>
+
+<div id="outline-container-org35caad7" class="outline-4">
+<h4 id="org35caad7">Notes on Partial Credit</h4>
+<div class="outline-text-4" id="text-org35caad7">
+<p>
+Partial credit will be awarded in Manual Inspection for code that
+looks functional but did not pass tests.  However, keep in mind that
+tests for some functions rely on previous functions working correctly
+and the provided <code>main()</code> requires all functions to work correctly in
+conjunction.  There is no partial credit available for Automated Tests
+even if later functions fail tests due to early functions behaving
+incorrectly.
+</p>
+</div>
+</div>
 </div>
 </div>
 
-<div id="outline-container-org12e343c" class="outline-2">
-<h2 id="org12e343c"><span class="section-number-2">4</span> <b>Problem 2</b>: The Puzzlebin</h2>
+<div id="outline-container-orga49fe19" class="outline-2">
+<h2 id="orga49fe19"><span class="section-number-2">4</span> <b>Problem 2</b>: Puzzlebin</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org4ff3cca" class="outline-3">
-<h3 id="org4ff3cca"><span class="section-number-3">4.1</span> Overview</h3>
+<div id="outline-container-org2e52c91" class="outline-3">
+<h3 id="org2e52c91"><span class="section-number-3">4.1</span> Overview</h3>
 <div class="outline-text-3" id="text-4-1">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1642,8 +1499,8 @@ past and future loss of credit on projects.
 </colgroup>
 <tbody>
 <tr>
-<td class="org-left">2021 GDB Quick Guide/Assembly</td>
-<td class="org-left"><a href="https://www-users.cse.umn.edu/~kauffman/tutorials/gdb.html#gdb-assembly">https://www-users.cse.umn.edu/~kauffman/tutorials/gdb.html#gdb-assembly</a></td>
+<td class="org-left">GDB Quick Guide/Assembly</td>
+<td class="org-left"><a href="https://kauffman77.github.io/tutorials/gdb.html#gdb-assembly">https://kauffman77.github.io/tutorials/gdb.html#gdb-assembly</a></td>
 </tr>
 </tbody>
 </table>
@@ -1694,16 +1551,18 @@ cases, a little exploration will suffice to solve most phases.</dd>
 <dt>The input line "SKIP" will skip a phase with a small penalty</dt><dd>Students
 woefully stuck on a phase may skip it to the next phase with the
 input line <code>SKIP</code>. Be aware that this applies a small penalty to the
-overall score.</dd>
+overall score AND changes the state of the random number generator
+so that if you revisit an earlier skipped phase, answers to later
+phases may change.</dd>
 </dl>
 </div>
 </div>
 
-<div id="outline-container-org27a8842" class="outline-3">
-<h3 id="org27a8842"><span class="section-number-3">4.2</span> Permission Denied Errors</h3>
+<div id="outline-container-org7b9791e" class="outline-3">
+<h3 id="org7b9791e"><span class="section-number-3">4.2</span> Permission Denied Errors</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
-In come cases, the process of zipping an executable like <code>puzzliebin</code>
+In some cases, the process of zipping an executable like <code>puzzliebin</code>
 then unzipping it leads to the permissions on it being set
 incorrectly.  Below is a common permissions error and how to fix it by
 changing the permissions on <code>puzzlebin</code>.
@@ -1734,8 +1593,8 @@ Puzzlebin (release Tue 10-Oct-2024)
 </div>
 
 
-<div id="outline-container-org58727b1" class="outline-3 grading 40">
-<h3 id="org58727b1"><span class="section-number-3">4.3</span> Puzzlebin Scoring&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="40">40</span></span></h3>
+<div id="outline-container-org617c8a0" class="outline-3 grading 40">
+<h3 id="org617c8a0"><span class="section-number-3">4.3</span> Puzzlebin Scoring&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="40">40</span></span></h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 Scoring is done according to the following table.
@@ -1824,8 +1683,8 @@ Scoring is done according to the following table.
 </div>
 </div>
 
-<div id="outline-container-org97e8366" class="outline-3">
-<h3 id="org97e8366"><span class="section-number-3">4.4</span> Advice and Hints</h3>
+<div id="outline-container-org7afc155" class="outline-3">
+<h3 id="org7afc155"><span class="section-number-3">4.4</span> Advice and Hints</h3>
 <div class="outline-text-3" id="text-4-4">
 <ul class="org-ul">
 <li><p>
@@ -1836,7 +1695,7 @@ Most of the time you should run <code>puzzlebin</code> in <code>gdb</code> as in
 </pre>
 </div>
 <p>
-Refer to the <a href="http://www-users.cs.umn.edu/~kauffman/tutorials/gdb">Quick Guide to GDB</a> if you have forgotten how to use
+Refer to the <a href="https://kauffman77.github.io/tutorials/gdb.html">Quick Guide to GDB</a> if you have forgotten how to use
 <code>gdb</code> and pay particular attention to the sections on debugging
 assembly.
 </p></li>
@@ -1850,7 +1709,7 @@ going to be passed. These are passed to the <code>failure()</code> function:
 printing them out may give you some hints.</li>
 <li>Make use of other tools to analyze puzzlebin aside from the
 debugger.  Some of these like <code>strings</code> are described at the end of
-the <a href="https://www-users.cs.umn.edu/~kauffman/tutorials/gdb.html">Quick Guide to GDB</a>. They will allow you to search for
+the <a href="https://kauffman77.github.io/tutorials/gdb.html">Quick Guide to GDB</a>. They will allow you to search for
 "interesting" data in the executable <code>puzzlebin</code>.</li>
 <li><b>Disassemble</b> the executable to look at its entire source assembly code
 as a text file. The Quick Guide to GDB shows how to use <code>objdump</code> to
@@ -1862,13 +1721,13 @@ authors, that inspired Puzzlebin. It has a long history and there
 are some useful guides out there that can help you through rough
 patches. Keep in mind that your code will differ from any online
 tutorials BUT the techniques to defuse it may be similar to what is
-required to solve puzzles..</li>
+required to solve puzzles.</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org24f29f5" class="outline-3">
-<h3 id="org24f29f5"><span class="section-number-3">4.5</span> Compatibility</h3>
+<div id="outline-container-org2289275" class="outline-3">
+<h3 id="org2289275"><span class="section-number-3">4.5</span> Compatibility</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 <code>puzzlebin</code> is a binary executable file and these are always a bit
@@ -1884,7 +1743,7 @@ of interest.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-10-28 Mon 10:35 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-03-14 Fri 21:06 <br/> </i>
 </div>
 </body>
 </html>
