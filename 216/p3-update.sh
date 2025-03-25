@@ -3,7 +3,7 @@
 # echo 'No updates at this time'
 echo 'Creating a backup zip in ../p3-complete-backup.zip'
 make zip > /dev/null
-mv --backup=numbered p2-complete.zip ../p3-complete-backup.zip
+mv --backup=numbered p3-complete.zip ../p3-complete-backup.zip
 
 echo 'Retrieving zip of updated provided files'
 wget -q https://www.cs.umd.edu/~profk/216/p3-update.zip
