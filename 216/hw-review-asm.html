@@ -3,13 +3,13 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-10-30 Wed 09:35 -->
+<!-- 2025-04-07 Mon 08:33 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Assembly Review Exercise</title>
 <meta name="author" content="Chris Kauffman" />
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -330,6 +330,7 @@ margin-left: 0.5em;
 }
 }
 .linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
 }
 
 @media print {
@@ -446,11 +447,12 @@ return {
 name: 'interactive',           // language name
 keywords: {
 $pattern: /[^ \t\n]+/,       // lex based on non-whitespace
-keyword: [">>","(shellac)","HM>","TM>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:"], // allowed interactive prompts
+keyword: [">>","(shellac)","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
 },
 contains: [
 // hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
 hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+hljs.COMMENT(/#+/, /$/),     // and a sequence of hashes
 ]
 };
 };
@@ -458,9 +460,10 @@ hljs.registerLanguage('interactive', interactive_lang);     // register custom l
 
 // Add highlighjs CSS classes to elemens marked with relevant org classes
 lang_map = new Map();              // map of org to hljs languages
-lang_map.set("src-c"    , "language-c");
-lang_map.set("src-text" , "language-plaintext");
-lang_map.set("src-sh"   , "language-interactive");
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
 function add_class(el) {           // applied to each pre.src element
 for (let [org_lang, hljs_lang] of lang_map) {
 if(el.classList.contains(org_lang)){
@@ -477,43 +480,34 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2024-10-30 Wed 09:35</i>
+<i>Last Updated: 2025-04-07 Mon 08:33</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Assembly Review Exercise</h1>
-
-<div id="outline-container-orge019000" class="outline-4">
-<h4 id="orge019000">CODE DISTRIBUTION: <a href="hw-review-asm-code.zip">hw-review-asm-code.zip</a></h4>
-<div class="outline-text-4" id="text-orge019000">
+<div id="outline-container-orgb35b1db" class="outline-4">
+<h4 id="orgb35b1db">CODE DISTRIBUTION: <a href="hw-review-asm-code.zip">hw-review-asm-code.zip</a></h4>
+<div class="outline-text-4" id="text-orgb35b1db">
 <ul class="org-ul">
 <li>Download the code distribution every HW</li>
 <li>See further setup instructions below</li>
 </ul>
 </div>
 </div>
-
-<div id="outline-container-org45af8f6" class="outline-4">
-<h4 id="org45af8f6">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org45af8f6">
-<dl class="org-dl">
-<dt>Wed Oct 30 09:31:24 AM EDT 2024</dt><dd>The code pack was incorrectly
-named in the link: it should be <a href="hw-review-asm-code.zip">hw-review-asm-code.zip</a>; the
-link has been repaired for those who wish to download the codepack.</dd>
-</dl>
-
+<div id="outline-container-orgce65626" class="outline-4">
+<h4 id="orgce65626">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orgce65626">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgfb3e8ff">1. Review Problem</a></li>
+<li><a href="#org10ebfb7">1. Review Problem 1</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgfb3e8ff" class="outline-2">
-<h2 id="orgfb3e8ff"><span class="section-number-2">1</span> Review Problem</h2>
+<div id="outline-container-org10ebfb7" class="outline-2">
+<h2 id="org10ebfb7"><span class="section-number-2">1</span> Review Problem 1</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 On a recent practice exam, an assembly version of the following C
@@ -642,10 +636,9 @@ After completing your code, compile and run it to see if it matches
 the same behavior as the C version.
 </p>
 </div>
-
-<div id="outline-container-org26fa6db" class="outline-4">
-<h4 id="org26fa6db">SOLUTION</h4>
-<div class="outline-text-4" id="text-org26fa6db">
+<div id="outline-container-org26c8a20" class="outline-4">
+<h4 id="org26c8a20">SOLUTION</h4>
+<div class="outline-text-4" id="text-org26c8a20">
 <button onclick="document.getElementById('solution1').style.display='block'">Click for Solution</button>
 <div id="solution1" style="display:none;">
 
@@ -709,7 +702,7 @@ needs a memory address. In that case, only Method 1 would work.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-10-30 Wed 09:35 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-04-07 Mon 08:33 <br/> </i>
 </div>
 </body>
 </html>
