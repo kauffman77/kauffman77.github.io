@@ -3,13 +3,13 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-11 Mon 14:37 -->
+<!-- 2025-04-16 Wed 08:55 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Lab10: I/O Redirection and File Statistics</title>
 <meta name="author" content="Chris Kauffman" />
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -330,6 +330,7 @@ margin-left: 0.5em;
 }
 }
 .linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
 }
 
 @media print {
@@ -446,11 +447,12 @@ return {
 name: 'interactive',           // language name
 keywords: {
 $pattern: /[^ \t\n]+/,       // lex based on non-whitespace
-keyword: [">>","(shellac)","HM>","TM>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:"], // allowed interactive prompts
+keyword: [">>","(shellac)","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
 },
 contains: [
 // hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
 hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+hljs.COMMENT(/#+/, /$/),     // and a sequence of hashes
 ]
 };
 };
@@ -458,9 +460,10 @@ hljs.registerLanguage('interactive', interactive_lang);     // register custom l
 
 // Add highlighjs CSS classes to elemens marked with relevant org classes
 lang_map = new Map();              // map of org to hljs languages
-lang_map.set("src-c"    , "language-c");
-lang_map.set("src-text" , "language-plaintext");
-lang_map.set("src-sh"   , "language-interactive");
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
 function add_class(el) {           // applied to each pre.src element
 for (let [org_lang, hljs_lang] of lang_map) {
 if(el.classList.contains(org_lang)){
@@ -477,84 +480,48 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2024-11-11 Mon 14:37</i>
+<i>Last Updated: 2025-04-16 Wed 08:55</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Lab10: I/O Redirection and File Statistics</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Mon 18-Nov-2024</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm Mon 28-Apr-2025</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
-
-<div id="outline-container-orgf1666ea" class="outline-4">
-<h4 id="orgf1666ea">CODE DISTRIBUTION: <a href="lab10-code.zip">lab10-code.zip</a></h4>
-<div class="outline-text-4" id="text-orgf1666ea">
+<div id="outline-container-org32bd763" class="outline-4">
+<h4 id="org32bd763">CODE DISTRIBUTION: <a href="lab10-code.zip">lab10-code.zip</a></h4>
+<div class="outline-text-4" id="text-org32bd763">
 <ul class="org-ul">
 <li>Download the code distribution</li>
 <li>See further setup instructions below</li>
 </ul>
 </div>
 </div>
-
-<div id="outline-container-org5348576" class="outline-4">
-<h4 id="org5348576">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org5348576">
-<dl class="org-dl">
-<dt>Mon Nov 11 02:34:43 PM EST 2024</dt><dd><p>
-A second bug in Lab10 was
-reported wherein the testing files for problems 1 and 2 are named
-out swapped. This and the earlier <code>Makefile</code> problem can be
-corrected by running the following command in the lab10-code
-directory:
-</p>
-<div class="org-src-container">
-<pre class="src src-sh">  curl https://www.cs.umd.edu/~profk/216/lab10-update.sh |bash
-</pre>
-</div>
-<p>
-This will eliminate the incorrect versions of testing files and
-update them to correct ones.
-</p></dd>
-
-<dt>Mon Nov 11 11:50:54 AM EST 2024</dt><dd><p>
-A bug in the Lab10 <code>Makefile</code>
-was identified which affects the command <code>make test-prob1</code>.  The
-following in <code>Makefile</code> should be corrected as indicated:
-</p>
-<div class="org-src-container">
-<pre class="src src-text">  68: test-prob1 : test-setup redirect_child
-  69:	./testy test_redirect_child.org  # CORRECT: add "_child" to existin test_redirect.org
-  #     ./testy test_redirect.org        # INCORRECT
-</pre>
-</div>
-<p>
-The <code>Makefile</code> has been updated in the current codepack.
-</p></dd>
-</dl>
+<div id="outline-container-orge32a3e0" class="outline-4">
+<h4 id="orge32a3e0">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orge32a3e0">
 </div>
 </div>
-
-<div id="outline-container-org969fa14" class="outline-4">
-<h4 id="org969fa14"></h4>
-<div class="outline-text-4" id="text-org969fa14">
+<div id="outline-container-org1d5b928" class="outline-4">
+<h4 id="org1d5b928"></h4>
+<div class="outline-text-4" id="text-org1d5b928">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orge150699">1. Rationale</a></li>
-<li><a href="#org4042e1b">2. Codepack</a></li>
-<li><a href="#orgcfe76f7">3. Problem 1: I/O Redirection</a></li>
-<li><a href="#org22d88eb">4. Problem 2: <code>stat()</code> and <code>access()</code> System Calls</a></li>
-<li><a href="#org0a12092">5. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org30c13a6">6. Submission</a></li>
+<li><a href="#org5fae4f3">1. Rationale</a></li>
+<li><a href="#org383cd44">2. Codepack</a></li>
+<li><a href="#org136db25">3. Problem 1: I/O Redirection</a></li>
+<li><a href="#org687ccc4">4. Problem 2: <code>stat()</code> and <code>access()</code> System Calls</a></li>
+<li><a href="#orgc43c4bb">5. QUESTIONS.txt File Contents</a></li>
+<li><a href="#orge82aa6a">6. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orge150699" class="outline-2">
-<h2 id="orge150699"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org5fae4f3" class="outline-2">
+<h2 id="org5fae4f3"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This lab covers two independent but short concepts in separate
@@ -578,10 +545,9 @@ system calls for this task, <code>access()</code> and <code>stat()</code>. It em
 in a few simple tasks to acquaint students with their use.
 </p>
 </div>
-
-<div id="outline-container-org5804855" class="outline-4">
-<h4 id="org5804855">Grading Policy</h4>
-<div class="outline-text-4" id="text-org5804855">
+<div id="outline-container-org626e1d7" class="outline-4">
+<h4 id="org626e1d7">Grading Policy</h4>
+<div class="outline-text-4" id="text-org626e1d7">
 <p>
 Credit for this exercise is earned by completing the code/asnwers here
 and submitting a Zip of the work to Gradescope. Students are
@@ -603,9 +569,8 @@ See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies 
 </div>
 </div>
 </div>
-
-<div id="outline-container-org4042e1b" class="outline-2">
-<h2 id="org4042e1b"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org383cd44" class="outline-2">
+<h2 id="org383cd44"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for this exercise is linked at the top of this
@@ -707,9 +672,8 @@ the following files which are briefly described.
 </table>
 </div>
 </div>
-
-<div id="outline-container-orgcfe76f7" class="outline-2">
-<h2 id="orgcfe76f7"><span class="section-number-2">3</span> Problem 1: I/O Redirection</h2>
+<div id="outline-container-org136db25" class="outline-2">
+<h2 id="org136db25"><span class="section-number-2">3</span> Problem 1: I/O Redirection</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Programs often need to deal with open files for reading and
@@ -730,13 +694,12 @@ to assist students in understanding how programs like
 <code>switch_stdout.c</code> work.
 </p>
 </div>
-
-<div id="outline-container-orgc7f36b8" class="outline-4">
-<h4 id="orgc7f36b8">Fork and Child File Descriptors</h4>
-<div class="outline-text-4" id="text-orgc7f36b8">
+<div id="outline-container-org23c1ab2" class="outline-4">
+<h4 id="org23c1ab2">Fork and Child File Descriptors</h4>
+<div class="outline-text-4" id="text-org23c1ab2">
 <div class="org-center">
 
-<div id="org4542043" class="figure">
+<div id="org05459a3" class="figure">
 <p><img src="fork-fds.png" alt="fork-fds.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Effects of <code>open()</code>'ing a file then calling <code>fork()</code> : the child and parent both refer to the same open file.</p>
@@ -744,14 +707,12 @@ to assist students in understanding how programs like
 </div>
 </div>
 </div>
-
-
-<div id="outline-container-org65cdc62" class="outline-4">
-<h4 id="org65cdc62">dup() and dup2() System calls</h4>
-<div class="outline-text-4" id="text-org65cdc62">
+<div id="outline-container-org31fdf3b" class="outline-4">
+<h4 id="org31fdf3b">dup() and dup2() System calls</h4>
+<div class="outline-text-4" id="text-org31fdf3b">
 <div class="org-center">
 
-<div id="orgfd32232" class="figure">
+<div id="orgdaf5b92" class="figure">
 <p><img src="dup-and-dup2.png" alt="dup-and-dup2.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 2: </span>LEFT: Effect of calling <code>dup()</code> to create a duplicate file descriptor table entry. RIGHT: Effect of calling <code>dup2()</code> to overwrite on file descriptor entry with another.</p>
@@ -760,11 +721,8 @@ to assist students in understanding how programs like
 </div>
 </div>
 </div>
-
-
-
-<div id="outline-container-org22d88eb" class="outline-2">
-<h2 id="org22d88eb"><span class="section-number-2">4</span> Problem 2: <code>stat()</code> and <code>access()</code> System Calls</h2>
+<div id="outline-container-org687ccc4" class="outline-2">
+<h2 id="org687ccc4"><span class="section-number-2">4</span> Problem 2: <code>stat()</code> and <code>access()</code> System Calls</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Basic file statistics such as file size, modification times, and
@@ -783,9 +741,8 @@ complete a program that uses them.
 </p>
 </div>
 </div>
-
-<div id="outline-container-org0a12092" class="outline-2">
-<h2 id="org0a12092"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-orgc43c4bb" class="outline-2">
+<h2 id="orgc43c4bb"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the exercise.
@@ -798,9 +755,6 @@ for the exercise.
 
                             LAB10 QUESTIONS
                            _________________
-
-
-
 
 
 Exercise Instructions
@@ -1113,9 +1067,8 @@ CODE PROBLEM 2: newer_file.c Program
 </div>
 </div>
 </div>
-
-<div id="outline-container-org30c13a6" class="outline-2">
-<h2 id="org30c13a6"><span class="section-number-2">6</span> Submission</h2>
+<div id="outline-container-orge82aa6a" class="outline-2">
+<h2 id="orge82aa6a"><span class="section-number-2">6</span> Submission</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -1125,7 +1078,7 @@ how to upload your completed exercise zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-11-11 Mon 14:37 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-04-16 Wed 08:55 <br/> </i>
 </div>
 </body>
 </html>
