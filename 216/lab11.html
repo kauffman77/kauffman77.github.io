@@ -3,13 +3,13 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-18 Mon 08:11 -->
+<!-- 2025-04-24 Thu 17:12 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CMSC216 Lab11: File Stats and Timing Strides</title>
+<title>CMSC216 Lab11: Makefiles and Timing Strides</title>
 <meta name="author" content="Chris Kauffman" />
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -330,6 +330,7 @@ margin-left: 0.5em;
 }
 }
 .linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
 }
 
 @media print {
@@ -446,11 +447,12 @@ return {
 name: 'interactive',           // language name
 keywords: {
 $pattern: /[^ \t\n]+/,       // lex based on non-whitespace
-keyword: [">>","(shellac)","HM>","TM>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:"], // allowed interactive prompts
+keyword: [">>","(shellac)","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
 },
 contains: [
 // hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
 hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+hljs.COMMENT(/#+/, /$/),     // and a sequence of hashes
 ]
 };
 };
@@ -458,9 +460,10 @@ hljs.registerLanguage('interactive', interactive_lang);     // register custom l
 
 // Add highlighjs CSS classes to elemens marked with relevant org classes
 lang_map = new Map();              // map of org to hljs languages
-lang_map.set("src-c"    , "language-c");
-lang_map.set("src-text" , "language-plaintext");
-lang_map.set("src-sh"   , "language-interactive");
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
 function add_class(el) {           // applied to each pre.src element
 for (let [org_lang, hljs_lang] of lang_map) {
 if(el.classList.contains(org_lang)){
@@ -477,43 +480,42 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2024-11-18 Mon 08:11</i>
+<i>Last Updated: 2025-04-24 Thu 17:12</i>
 </div>
 <div id="content" class="content">
-<h1 class="title">CMSC216 Lab11: File Stats and Timing Strides</h1>
+<h1 class="title">CMSC216 Lab11: Makefiles and Timing Strides</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Mon 25-Nov-2024</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm Mon 05-May-2025</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
-
-<div id="outline-container-orga15f614" class="outline-4">
-<h4 id="orga15f614">CODE DISTRIBUTION: <a href="lab11-code.zip">lab11-code.zip</a></h4>
+<div id="outline-container-org627cb97" class="outline-4">
+<h4 id="org627cb97">CODE DISTRIBUTION: <a href="lab11-code.zip">lab11-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org543de28" class="outline-4">
-<h4 id="org543de28">CHANGELOG: Empty</h4>
+<div id="outline-container-org49714c4" class="outline-4">
+<h4 id="org49714c4">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-org241ee0a" class="outline-4">
-<h4 id="org241ee0a"></h4>
-<div class="outline-text-4" id="text-org241ee0a">
+<div id="outline-container-orgc8363ff" class="outline-4">
+<h4 id="orgc8363ff"></h4>
+<div class="outline-text-4" id="text-orgc8363ff">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org383bae0">1. Rationale</a></li>
-<li><a href="#orgb7743ee">2. Codepack</a></li>
-<li><a href="#orgf2788d4">3. Problem 1 Background: Makefiles</a>
+<li><a href="#org06ad657">1. Rationale</a></li>
+<li><a href="#org4fb786b">2. Codepack</a></li>
+<li><a href="#org6a0c6d7">3. Problem 1 Background: Makefiles</a>
 <ul>
-<li><a href="#orgc5be291">Structure of Makefiles</a></li>
-<li><a href="#org9492129">Variables and Shortcuts in Makefiles</a></li>
-<li><a href="#orgc6deb7b">Dependency Detection</a></li>
+<li><a href="#org471efa9">Structure of Makefiles</a></li>
+<li><a href="#org2ee8206">Variables and Shortcuts in Makefiles</a></li>
+<li><a href="#orgc3c6122">Dependency Detection</a></li>
 </ul>
 </li>
-<li><a href="#orgf6f127c">4. Problem 2 Background: The <code>clock()</code> Function</a></li>
-<li><a href="#org787fdcd">5. QUESTIONS.txt File Contents</a>
+<li><a href="#org28bf9f7">4. Problem 2 Background: The <code>clock()</code> Function</a></li>
+<li><a href="#orga66a229">5. QUESTIONS.txt File Contents</a>
 <ul>
-<li><a href="#orgae358c9">Submission</a></li>
+<li><a href="#orga4873ce">Submission</a></li>
 </ul>
 </li>
 </ul>
@@ -521,9 +523,8 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </div>
 </div>
 </div>
-
-<div id="outline-container-org383bae0" class="outline-2">
-<h2 id="org383bae0"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org06ad657" class="outline-2">
+<h2 id="org06ad657"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This lab covers two independent but short concepts in separate
@@ -547,10 +548,9 @@ sequential access patterns are faster than better than strided or
 random access patterns.
 </p>
 </div>
-
-<div id="outline-container-org8c010fd" class="outline-4">
-<h4 id="org8c010fd">Associated Reading / Preparation</h4>
-<div class="outline-text-4" id="text-org8c010fd">
+<div id="outline-container-orgace2ae5" class="outline-4">
+<h4 id="orgace2ae5">Associated Reading / Preparation</h4>
+<div class="outline-text-4" id="text-orgace2ae5">
 <p>
 Background material and sample codes are provided in this
 document. Those interested in more detail might consider the following
@@ -581,10 +581,9 @@ split between the User and System times.</li>
 </ul>
 </div>
 </div>
-
-<div id="outline-container-org2bfc416" class="outline-4">
-<h4 id="org2bfc416">Grading Policy</h4>
-<div class="outline-text-4" id="text-org2bfc416">
+<div id="outline-container-org87d8d5c" class="outline-4">
+<h4 id="org87d8d5c">Grading Policy</h4>
+<div class="outline-text-4" id="text-org87d8d5c">
 <p>
 Credit for this exercise is earned by completing the code/asnwers here
 and submitting a Zip of the work to Gradescope. Students are
@@ -606,9 +605,8 @@ See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies 
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgb7743ee" class="outline-2">
-<h2 id="orgb7743ee"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org4fb786b" class="outline-2">
+<h2 id="org4fb786b"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -720,9 +718,8 @@ The codepack for the HW contains the following files:
 </table>
 </div>
 </div>
-
-<div id="outline-container-orgf2788d4" class="outline-2">
-<h2 id="orgf2788d4"><span class="section-number-2">3</span> Problem 1 Background: Makefiles</h2>
+<div id="outline-container-org6a0c6d7" class="outline-2">
+<h2 id="org6a0c6d7"><span class="section-number-2">3</span> Problem 1 Background: Makefiles</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Building programs often involves compiling separate source files and
@@ -734,10 +731,9 @@ still in use is <code>make</code> and its associated <code>Makefiles</code>.  Th
 covers the basics of how to create a <code>Makefile</code>.
 </p>
 </div>
-
-<div id="outline-container-orgc5be291" class="outline-3">
-<h3 id="orgc5be291">Structure of Makefiles</h3>
-<div class="outline-text-3" id="text-orgc5be291">
+<div id="outline-container-org471efa9" class="outline-3">
+<h3 id="org471efa9">Structure of Makefiles</h3>
+<div class="outline-text-3" id="text-org471efa9">
 <p>
 The basic structure of a <code>Makefile</code> involves <b>rules</b> which relate
 <b>targets, dependencies, and commands</b>. Simple <code>Makefiles</code> comprise a
@@ -843,11 +839,9 @@ the program.
 </p>
 </div>
 </div>
-
-
-<div id="outline-container-org9492129" class="outline-3">
-<h3 id="org9492129">Variables and Shortcuts in Makefiles</h3>
-<div class="outline-text-3" id="text-org9492129">
+<div id="outline-container-org2ee8206" class="outline-3">
+<h3 id="org2ee8206">Variables and Shortcuts in Makefiles</h3>
+<div class="outline-text-3" id="text-org2ee8206">
 <p>
 Makefiles support a large number of features such as explicit
 variables, automatic variables, pattern-based rules, and many
@@ -891,10 +885,9 @@ the following invocation allows using a specific file other than that:
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgc6deb7b" class="outline-3">
-<h3 id="orgc6deb7b">Dependency Detection</h3>
-<div class="outline-text-3" id="text-orgc6deb7b">
+<div id="outline-container-orgc3c6122" class="outline-3">
+<h3 id="orgc3c6122">Dependency Detection</h3>
+<div class="outline-text-3" id="text-orgc3c6122">
 <p>
 Makefiles are useful for larger projects to automatically detect
 dependencies which must be updated.  The example in
@@ -948,11 +941,8 @@ the exectuable program.
 </div>
 </div>
 </div>
-
-
-
-<div id="outline-container-orgf6f127c" class="outline-2">
-<h2 id="orgf6f127c"><span class="section-number-2">4</span> Problem 2 Background: The <code>clock()</code> Function</h2>
+<div id="outline-container-org28bf9f7" class="outline-2">
+<h2 id="org28bf9f7"><span class="section-number-2">4</span> Problem 2 Background: The <code>clock()</code> Function</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 The code block below illustrates the basic usage pattern for the
@@ -1008,10 +998,8 @@ larger, in the 1e-01 second range to be trustworthy.
 </ul>
 </div>
 </div>
-
-
-<div id="outline-container-org787fdcd" class="outline-2">
-<h2 id="org787fdcd"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-orga66a229" class="outline-2">
+<h2 id="orga66a229"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -1024,9 +1012,6 @@ for the lab.
 
                             LAB11 QUESTIONS
                            _________________
-
-
-
 
 
 Exercise Instructions
@@ -1350,11 +1335,9 @@ BASE vs OPTM versions
 </pre>
 </div>
 </div>
-
-
-<div id="outline-container-orgae358c9" class="outline-3">
-<h3 id="orgae358c9">Submission</h3>
-<div class="outline-text-3" id="text-orgae358c9">
+<div id="outline-container-orga4873ce" class="outline-3">
+<h3 id="orga4873ce">Submission</h3>
+<div class="outline-text-3" id="text-orga4873ce">
 <p>
 Follow the instructions at the end of <a href="../lab01.html">Lab01</a> if you need a refresher on
 how to upload your completed exercise zip to Gradescope.
@@ -1364,7 +1347,7 @@ how to upload your completed exercise zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-11-18 Mon 08:11 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-04-24 Thu 17:12 <br/> </i>
 </div>
 </body>
 </html>
