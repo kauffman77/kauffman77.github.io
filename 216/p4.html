@@ -3,13 +3,13 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-20 Wed 12:07 -->
+<!-- 2025-04-25 Fri 19:15 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CMSC216 Project 4: Chester, a C High-level Tester</title>
+<title>CMSC216 Project 4: Going Commando</title>
 <meta name="author" content="Chris Kauffman" />
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -330,6 +330,7 @@ margin-left: 0.5em;
 }
 }
 .linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
 }
 
 @media print {
@@ -446,11 +447,13 @@ return {
 name: 'interactive',           // language name
 keywords: {
 $pattern: /[^ \t\n]+/,       // lex based on non-whitespace
-keyword: [">>","(shellac)","HM>","TM>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:"], // allowed interactive prompts
+keyword: [">>","(shellac)","[COMMANDO]>>","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
 },
 contains: [
 // hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
-hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+// hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+hljs.COMMENT(/## /, /$/),     // hash-hash-ws for comment
+hljs.COMMENT(/##+/, /$/),     // or a sequence of hashes
 ]
 };
 };
@@ -458,9 +461,10 @@ hljs.registerLanguage('interactive', interactive_lang);     // register custom l
 
 // Add highlighjs CSS classes to elemens marked with relevant org classes
 lang_map = new Map();              // map of org to hljs languages
-lang_map.set("src-c"    , "language-c");
-lang_map.set("src-text" , "language-plaintext");
-lang_map.set("src-sh"   , "language-interactive");
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
 function add_class(el) {           // applied to each pre.src element
 for (let [org_lang, hljs_lang] of lang_map) {
 if(el.classList.contains(org_lang)){
@@ -477,146 +481,73 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2024-11-20 Wed 12:07</i>
+<i>Last Updated: 2025-04-25 Fri 19:15</i>
 </div>
 <div id="content" class="content">
-<h1 class="title">CMSC216 Project 4: Chester, a C High-level Tester</h1>
+<h1 class="title">CMSC216 Project 4: Going Commando</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Sun 24-Nov-2024</b> <del>Fri 22-Nov-2024</del></li>
+<li><b>Due: 11:59pm Sat 03-May-2025</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 4.0% of total grade</i></li>
-<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a></li>
 <li>Projects are <b>individual work</b>: no collaboration with other students
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
-
-<div id="outline-container-org2d308f9" class="outline-4">
-<h4 id="org2d308f9">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
+<div id="outline-container-org62a2833" class="outline-4">
+<h4 id="org62a2833">CODE DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org26541a4" class="outline-4">
-<h4 id="org26541a4">VIDEO OVERVIEW: <a href="https://youtu.be/ZD43Hy12Uc4">https://youtu.be/ZD43Hy12Uc4</a></h4>
+<div id="outline-container-org8f38cb6" class="outline-4">
+<h4 id="org8f38cb6">VIDEO OVERVIEW: <i>Not Yet Available</i></h4>
 </div>
-<div id="outline-container-orgc68384c" class="outline-4">
-<h4 id="orgc68384c">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-orgc68384c">
-<dl class="org-dl">
-<dt>Wed Nov 20 12:06:40 PM EST 2024</dt><dd>As per <a href="https://piazza.com/class/lzzvmm0hu9v228/post/1917">Post 1917</a> the deadline for
-P4 has been extended by 2 days to Sun 24-Nov-2024 at 11:59pm.</dd>
-
-<dt>Mon Nov 18 04:56:50 PM EST 2024</dt><dd>An optional MAKEUP credit problem
-has been added to the project. The problem is described in
-<a href="#orgc8f0227">the updated Makeup Credit</a> section of the project specification.  To
-get the tests and data files necessary to run evaluate the Makeup
-credit problem, run <code>make update</code>.</dd>
-
-<dt>Thu Nov 14 01:36:43 PM EST 2024</dt><dd><p>
-A minor update to the project
-testing files is no available by using the command:
-</p>
-<div class="org-src-container">
-<pre class="src src-sh">  &gt;&gt; make update
-</pre>
+<div id="outline-container-org4e2879f" class="outline-4">
+<h4 id="org4e2879f">CHANGELOG: Empty</h4>
 </div>
-<p>
-The update corrects the following two issues.
-</p>
-
-<p>
-<a href="https://piazza.com/class/lzzvmm0hu9v228/post/1677">Post 1677</a> reported that unreadable files that are intentionally
-created during testing raise errors with VS Code / SFTP
-syncing. These should not be harmful, just annoying, but the test
-update ensures that on finishing the tests, the unreadable files are
-removed so that syncing will not raise errors.
-</p>
-
-<p>
-<a href="https://piazza.com/class/lzzvmm0hu9v228/post/1679">Post 1679</a> identified typos in <code>test_prob5.org</code> and which are
-corrected.
-</p></dd>
-
-<dt>Wed Nov 13 02:29:19 PM EST 2024</dt><dd><p>
-<a href="https://piazza.com/class/lzzvmm0hu9v228/post/1662">Post 1662</a> pointed out a mismatch
-on file name patterns Chester should create between the
-Documentation Comments and the test cases.  The Doc Comments were
-incorrect: file names should follow the pattern
-</p>
-<div class="org-src-container">
-<pre class="src src-text">  TESTDIR/PREFIX-output-05.txt
-</pre>
-</div>
-<p>
-and the Doc Comments are now updated to reflect that. This is true
-for other files as well such as input files and results files.
-</p></dd>
-
-<dt>Wed Nov 13 01:44:21 PM EST 2024</dt><dd>A video overview of P4 has been
-posted here: <a href="https://youtu.be/ZD43Hy12Uc4">https://youtu.be/ZD43Hy12Uc4</a></dd>
-
-<dt>Wed Nov 13 12:43:31 PM EST 2024</dt><dd>The <a href="#orge5c2d4b">Grading Criteria</a> for P4 has
-been updated with Manual Inspection criteria for all problems. Staff
-have assembled a <a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">C Coding Style Guide</a> which will be used to assign
-style points on the project. Students may wish to examine this style
-guide ahead of time and configure their editor of choice to make it
-easy to meet the style requirements. The Guide contains a section on
-configuring VS Code to automatically adjust style to meet
-expectations.</dd>
-</dl>
-</div>
-</div>
-
-<div id="outline-container-org1f83a04" class="outline-4">
-<h4 id="org1f83a04"></h4>
-<div class="outline-text-4" id="text-org1f83a04">
+<div id="outline-container-orgaf720c4" class="outline-4">
+<h4 id="orgaf720c4"></h4>
+<div class="outline-text-4" id="text-orgaf720c4">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org901ca43">1. Overview</a></li>
-<li><a href="#org9d1edbf">2. Download Code and Setup</a></li>
-<li><a href="#org9eb9e30">3. Overview of Chester</a>
+<li><a href="#org7ac6168">1. Introduction: A Simple Shell</a></li>
+<li><a href="#orgef73cc4">2. Download Code and Setup</a></li>
+<li><a href="#org069c211">3. Opening Demo</a></li>
+<li><a href="#org06789b4">4. Overall Architecture</a>
 <ul>
-<li><a href="#org1b07444">3.1. Chester Testing Files</a></li>
-<li><a href="#org687b26d">3.2. Data Structures</a></li>
-<li><a href="#org66adc27">3.3. Strings in Chester</a></li>
-<li><a href="#org63f6cd5">3.4. Outline of <code>chester_funcs.c</code></a></li>
-<li><a href="#org05b4f44">3.5. Provided Utility Functions</a></li>
-<li><a href="#org33fe126">3.6. Sample Usage</a></li>
+<li><a href="#orga2dbbf4">4.1. <code>cmd_t</code> struct</a></li>
+<li><a href="#org155ad44">4.2. <code>cmdctl_t</code> struct</a></li>
+<li><a href="#orge985c28">4.3. <code>main()</code> function ::</a></li>
+<li><a href="#org68ed629">4.4. Outline of Code</a></li>
 </ul>
 </li>
-<li><a href="#orga4c8efb">4. <b>Problem 1</b>: Test Service Functions</a>
+<li><a href="#orgee79a72">5. <b>Problem 1</b>: Basic Functionality</a>
 <ul>
-<li><a href="#orgd3e0d9a">4.1. Creating the Test Directory</a></li>
-<li><a href="#org9f018ed">4.2. Setting the Output File Name</a></li>
-<li><a href="#orge33c2b4">4.3. Creating Input Files</a></li>
-<li><a href="#orgadaca9e">4.4. Reading Output Files</a></li>
+<li><a href="#org8cd70fc">5.1. Implementation Notes</a></li>
+<li><a href="#org41e6f39">5.2. Grading Criteria for Problem 1</a></li>
 </ul>
 </li>
-<li><a href="#org5cac615">5. <b>Problem 2</b>: Start/Finish Tests</a>
+<li><a href="#orgd416b44">6. <b>Problem 2</b>: Starting and Finishing Commands</a>
 <ul>
-<li><a href="#orgda6c98c">5.1. Starting Tests</a></li>
-<li><a href="#org5e0e873">5.2. Finishing Tests</a></li>
+<li><a href="#org282225f">6.1. Implementation Notes</a></li>
+<li><a href="#org179b42f">6.2. Grading Criteria for Problem 2</a></li>
 </ul>
 </li>
-<li><a href="#org89c6a32">6. <b>Problem 3</b>: Creating Test Results</a>
+<li><a href="#org53d0951">7. <b>Problem 3</b>: Commando <code>main()</code></a>
 <ul>
-<li><a href="#org3302b52">6.1. String Comparison Utilities</a></li>
-<li><a href="#org2bd2822">6.2. Results Files</a></li>
+<li><a href="#org204dad3">7.1. Interactive Loop</a></li>
+<li><a href="#org9cbcdb3">7.2. Startup, Basic Help, Exiting</a></li>
+<li><a href="#org577252f">7.3. Command Line Forms and Usage</a></li>
+<li><a href="#org90fd5b0">7.4. Command Echoing</a></li>
+<li><a href="#org14bd0ee">7.5. Output Directory</a></li>
+<li><a href="#org1375467">7.6. Built-ins</a></li>
+<li><a href="#orgb80b951">7.7. Running Commands</a></li>
+<li><a href="#org00e38d2">7.8. Grading Criteria for Problem 2</a></li>
 </ul>
 </li>
-<li><a href="#orge40f5dd">7. <b>Problem 4</b>: Running Suite Tests</a></li>
-<li><a href="#org350645a">8. <b>Problem 5</b>: Chester Main</a></li>
-<li><a href="#grading-criteria">9. Grading Criteria</a></li>
-<li><a href="#makeup">10. <b>Optional Makeup Credit</b></a>
+<li><a href="#orgdcc2028">8. <b>MAKEUP Problem</b></a></li>
+<li><a href="#org2c878be">9. Project Submission</a>
 <ul>
-<li><a href="#org3075960">10.1. Multiprocess Testing</a></li>
-<li><a href="#orgc2f3421">10.2. Chester Main Support</a></li>
-<li><a href="#org2bcda6c">10.3. Makeup Grading Criteria</a></li>
-</ul>
-</li>
-<li><a href="#org2d71cbf">11. Assignment Submission</a>
-<ul>
-<li><a href="#org2c3781c">11.1. Submit to Gradescope</a></li>
-<li><a href="#org62b802c">11.2. Late Policies</a></li>
+<li><a href="#orgddfe246">9.1. Submit to Gradescope</a></li>
+<li><a href="#orgef7b55a">9.2. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -624,46 +555,62 @@ expectations.</dd>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org901ca43" class="outline-2">
-<h2 id="org901ca43"><span class="section-number-2">1</span> Overview</h2>
+<div id="outline-container-org7ac6168" class="outline-2">
+<h2 id="org7ac6168"><span class="section-number-2">1</span> Introduction: A Simple Shell</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-Software testing has gained a central role in the maintenance and
-development of reliable computing systems. By automating the task of
-check at least some aspects of correctness as code evolves, testing
-frameworks enable new features to be added while guaranteeing old
-functionality is not compromised.
+Command line shells allow one to access the capabilities of a computer
+using simple, interactive means.  Type the name of a program and the
+shell will bring it into being, run it, and show output.  The name
+"shell" is indicative of the program providing a thin convenience
+"layer" around more core facilities of a computing and operating
+system: run programs easily and see what they do. Familiarizing
+yourself with a basic shell implementation teaches about this
+interface layer and will make working in full-blown shells more
+palatable. 
 </p>
 
 <p>
-This project will build a simple testing framework in C. It is a
-"high-level" tester which allows the tests to be specified in a
-textual format and focuses on testing full programs. The being a C,
-High-level Tester, it is dubbed <b>Chester</b>.
+The goal of this project is to write a simple, quasi-command line
+shell called <code>commando</code>.  The shell will be less functional in many
+ways from standard shells like <code>bash</code> (default on most Linux
+machines), <code>zsh</code> (default on MacOS) and <code>tcsh</code> (default on GRACE), but
+will have some properties that distinguish it such as maintaining a
+history of all programs run and their output.  Like most interesting
+projects, <code>commando</code> uses a variety of system calls together to
+accomplish its overall purpose.  Most of these will be individually
+discussed in lecture but the interactions between them is what
+inspires real danger and romance.
 </p>
 
 <p>
-To complete Chester, a variety of systems programming techniques will
-be utilized including the following.
+Completing <code>commando</code> will educate an implementer on the following
+systems programming topics.
 </p>
 <ul class="org-ul">
-<li>Creating child processes to execute external commands</li>
-<li>Coordination of child processes with the Chester parent process</li>
-<li>Creation of files and directories</li>
-<li>Redirection of input/output</li>
-<li>Reading and writing data from files to evaluate test results</li>
+<li><b>Basic C Memory Discipline</b>: A variety of strings and structs are
+allocated and de-allocated during execution which will require
+attention to detail and judicious use of memory tools like Valgrind.</li>
+<li><b>fork() and exec()</b>: Text entered that is not recognized as a
+built-in is treated as an command (external program) to be
+executed. This spawns a child process which executes the new
+program.</li>
+<li><b>open(), dup2(), mkdir(), read():</b> Rather than immediately print child output
+to the screen, child output is redirected into files and then
+retrieved on request by commando.</li>
+<li><b>wait() and waitpid(), blocking and nonblocking:</b> Child processes
+usually take a while to finish so the shell will check on their
+status every so often</li>
 </ul>
 </div>
 </div>
-
-<div id="outline-container-org9d1edbf" class="outline-2">
-<h2 id="org9d1edbf"><span class="section-number-2">2</span> <a id="orgd937a94"></a> Download Code and Setup</h2>
+<div id="outline-container-orgef73cc4" class="outline-2">
+<h2 id="orgef73cc4"><span class="section-number-2">2</span> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-Download the code pack linked at the top of the page. Unzip this which
-will create a project folder. Create new files in this
-folder. Ultimately you will re-zip this folder to submit it.
+As in labs, download the code pack linked at the top of the
+page. Unzip this which will create a folder and create your files in
+that folder.
 </p>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -685,70 +632,40 @@ folder. Ultimately you will re-zip this folder to submit it.
 </thead>
 <tbody>
 <tr>
-<td class="org-left">Source Files</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>chester.h</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Header file for Chester</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>chester_util.c</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Utility functions provided</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>chester_parse.c</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Parsing functions provided to read input files</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>chester_parse.h</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Header for parsing functions</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>chester_parse.peg</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Parser generator used to create the parser</td>
-</tr>
-
-<tr>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>chester_funcs.c</code></td>
+<td class="org-left"><code>Makefile</code></td>
 <td class="org-left">CREATE</td>
-<td class="org-left">Functions that operate data in the Chester system</td>
+<td class="org-left">Build project, run tests</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>chester_main.c</code></td>
+<td class="org-left"><code>commando_funcs.c</code></td>
 <td class="org-left">CREATE</td>
-<td class="org-left">main() function for the Chester</td>
+<td class="org-left">Functions to deal with the <code>cmd_t</code> and <code>cmdctl_t</code> structs (Problems 1/2)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>commando_main.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">main() function for commando interactive shell (Problem 3)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>commando.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Header file which contains required structs, defines, and prototypes</td>
 </tr>
 </tbody>
 <tbody>
 <tr>
-<td class="org-left">Build/Testing Files</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>test_commando.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test definitions for all commando</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>Makefile</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">Build file to compile all programs</td>
+<td class="org-left"><code>test_commando.c</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Low-level function tests for Problems 1/2</td>
 </tr>
 
 <tr>
@@ -758,822 +675,459 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tr>
 
 <tr>
-<td class="org-left"><code>test_chester.c</code></td>
+<td class="org-left"><code>test_standardize_pids</code></td>
 <td class="org-left">Testing</td>
-<td class="org-left">Unit tests for Chester</td>
+<td class="org-left">Filter to standardize PID printing during testing</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>test_prob1.org</code></td>
+<td class="org-left"><code>test_standardize_all</code></td>
 <td class="org-left">Testing</td>
-<td class="org-left">Tests for Problem 1</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>test_prob2.org</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">Tests for Problem 2</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>test_prob3.org</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">Tests for Problem 3</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>test_prob4.org</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">Tests for Problem 4</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>test_prob5.org</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">Tests for Problem 5</td>
+<td class="org-left">Filter to standardize other output during testing</td>
 </tr>
 
 <tr>
 <td class="org-left"><code>data/</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">Subdirectory with files / programs used during testing</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>data/four_tests.md</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">One of several sample input files</td>
+<td class="org-left">Data</td>
+<td class="org-left">Directory containing below files used in testing</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-
-<div id="outline-container-org9eb9e30" class="outline-2">
-<h2 id="org9eb9e30"><span class="section-number-2">3</span> Overview of Chester</h2>
+<div id="outline-container-org069c211" class="outline-2">
+<h2 id="org069c211"><span class="section-number-2">3</span> Opening Demo</h2>
 <div class="outline-text-2" id="text-3">
-</div>
-<div id="outline-container-org1b07444" class="outline-3">
-<h3 id="org1b07444"><span class="section-number-3">3.1</span> Chester Testing Files</h3>
-<div class="outline-text-3" id="text-3-1">
 <p>
-Chester uses input files that contain the tests to run with each test
-containing description, a program to run, expected output for the
-program, optional input for the program, and options that adjust
-Chester behavior. The file format is roughly in <a href="https://www.markdownguide.org/basic-syntax/">Markdown format</a> with
-each heading titling a test and code blocks used for input/output for
-the test. An example comes from <code>data/two_tests.md</code>:
+The best way to get a sense of any program is to see how it
+behaves. In the below demonstration, <code>commando</code> is first built then
+started. Input is entered in <code>commando</code> after its prompt on lines that
+look like this:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">[COMMANDO]&gt;&gt; commands here
+</pre>
+</div>
+<p>
+Other lines contain output from the program. To the right of the demo
+after the <code>#</code> symbol are comments on what is happening.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text"><span class="linenr"> 1: </span>!prefix=two-tests
-<span class="linenr"> 2: </span>!testdir=chester-test-two-tests
-<span class="linenr"> 3: </span>
-<span class="linenr"> 4: </span># Basic bash Test
-<span class="linenr"> 5: </span>Checks that bash properly produces output.
-<span class="linenr"> 6: </span>
-<span class="linenr"> 7: </span>!program=bash -c 'echo Chester is; echo a Tester'
-<span class="linenr"> 8: </span>
-<span class="linenr"> 9: </span>```output
-<span class="linenr">10: </span>Chester is
-<span class="linenr">11: </span>a Tester
-<span class="linenr">12: </span>```
-<span class="linenr">13: </span>
-<span class="linenr">14: </span># Count chars with wc
-<span class="linenr">15: </span>Checks that wc (word count) works with provided
-<span class="linenr">16: </span>input.
-<span class="linenr">17: </span>
-<span class="linenr">18: </span>!program=wc
-<span class="linenr">19: </span>
-<span class="linenr">20: </span>```input
-<span class="linenr">21: </span>This is a test.
-<span class="linenr">22: </span>This is only a test.
-<span class="linenr">23: </span>Keep calm and carry on.
-<span class="linenr">24: </span>```
-<span class="linenr">25: </span>
-<span class="linenr">26: </span>```output
-<span class="linenr">27: </span> 3 14 61
-<span class="linenr">28: </span>```
+<pre class="src src-sh">&gt;&gt; make commando                                            ## compile commando
+gcc -Wall -Werror -g -c commando_main.c
+gcc -Wall -Werror -g -c commando_funcs.c
+gcc -Wall -Werror -g -o commando commando_main.o commando_funcs.o
+
+&gt;&gt; ./commando                                               ## run commando
+=== COMMANDO ver 2 ===
+Type 'help' for supported commands
+[COMMANDO]&gt;&gt; help                                           ## print help on builtins
+help                       : show this message
+exit                       : exit the program
+directory                  : show the directory used for command output
+history                    : list all jobs that have been started giving information on each
+pause &lt;secs&gt;               : pause for the given number of seconds which may be fractional
+info &lt;cmdid&gt;               : show detailed information on a command
+show-output &lt;cmdid&gt;        : print the output for given command number
+finish &lt;cmdid&gt;             : wait until the given command finishes running
+finish-all                 : wait for all running commands to finish
+source &lt;filename&gt;          : (MAKEUP) open and read input from the given file as though it were typed
+command &lt;arg1&gt; &lt;arg2&gt; ...  : non-built-in is run as a command and logged in history
+
+[COMMANDO]&gt;&gt; directory                                      ## print the directory used for command output
+Output directory is 'commando-dir'                          ## this is the default value
+
+[COMMANDO]&gt;&gt; history                                        ## show the history of commands; none so far
+CMDID PID       BYTES STATE           COMMAND
+
+[COMMANDO]&gt;&gt; cat data/quote.txt                             ## run a command as a child process
+
+[COMMANDO]&gt;&gt; history                                        ## show the history of entered commands, one currently running
+CMDID PID       BYTES STATE           COMMAND
+    0 #222616       - RUNNING         cat
+---&gt; COMPLETE:     0 #222616     125 EXIT(0)         cat    
+1 commands finished                                         ## an alert that a previously started command ended
+
+[COMMANDO]&gt;&gt; history                                        ## after the above command finishes, state has changed
+CMDID PID       BYTES STATE           COMMAND
+    0 #222616     125 EXIT(0)         cat
+
+[COMMANDO]&gt;&gt; info 0                                         ## detailed information on the command
+CMD 0 INFORMATION
+command: cat data/quote.txt 
+argv[]:
+  [ 0]: cat
+  [ 1]: data/quote.txt
+cmdstate: EXIT(0)
+input: &lt;NONE&gt;
+output: commando-dir/0000-cat.out
+output size: 125 bytes
+
+[COMMANDO]&gt;&gt; show-output 0                                  ## output for the completed command
+Object-oriented programming is an exceptionally bad idea which could
+only have originated in California.
+
+-- Edsger Dijkstra
+
+[COMMANDO]&gt;&gt; ls -l data                                     ## start another command
+
+[COMMANDO]&gt;&gt;                                                ## after a momement, press enter
+---&gt; COMPLETE:     1 #222643    1097 EXIT(0)         ls
+1 commands finished                                         ## to see the command has finished
+
+[COMMANDO]&gt;&gt; history                                        ## show history
+CMDID PID       BYTES STATE           COMMAND
+    0 #222616     125 EXIT(0)         cat
+    1 #222643    1097 EXIT(0)         ls
+
+[COMMANDO]&gt;&gt; show-output 1                                  ## print output for last command
+total 96
+-rw-r--r-- 1 kauffman users 13893 Feb  5  2019 3K.txt
+-rwxr--r-- 1 kauffman users    43 Apr 23 23:41 delay.sh
+-rw-r--r-- 1 kauffman users  1511 Feb  5  2019 gettysburg.txt
+-rwxr--r-- 1 kauffman users   326 Apr 24 15:17 make_unwriteable.sh
+-rwxr-xr-x 1 kauffman users 15424 Apr 24 15:12 print_args
+-rw-r--r-- 1 kauffman users   218 Feb  5  2019 print_args.c
+-rw-r--r-- 1 kauffman users   125 Feb  5  2019 quote.txt
+-rw-r--r-- 1 kauffman users   184 Feb  6  2020 README
+-rw-r--r-- 1 kauffman users    72 Apr 21 14:02 script.txt
+-rwxr--r-- 1 kauffman users   185 Apr 23 23:35 self_signal.sh
+-rwxr--r-- 1 kauffman users    36 Apr 18 16:17 sleep_print.sh
+drwxr-xr-x 2 kauffman users  4096 Apr 25 10:22 subdir
+-rwxr--r-- 1 kauffman users   427 Feb  5  2019 table.sh
+
+[COMMANDO]&gt;&gt; data/sleep_print 25.0 Long running             ## start command but mistype its name
+
+[COMMANDO]&gt;&gt; history                                        ## show current history
+CMDID PID       BYTES STATE           COMMAND
+    0 #222616     125 EXIT(0)         cat
+    1 #222643    1097 EXIT(0)         ls
+    2 #222659       - RUNNING         data/sleep_print
+---&gt; COMPLETE:     2 #222659      95 FAIL_EXEC       data/sleep_print
+1 commands finished                                         ## note the FAILE_EXEC - didn't run right
+
+[COMMANDO]&gt;&gt; data/sleep_print.sh 25.0 Long running          ## try again with the correct name
+
+[COMMANDO]&gt;&gt; history                                        ## command running now
+CMDID PID       BYTES STATE           COMMAND
+    0 #222616     125 EXIT(0)         cat
+    1 #222643    1097 EXIT(0)         ls
+    2 #222659      95 FAIL_EXEC       data/sleep_print
+    3 #222666       - RUNNING         data/sleep_print.sh
+
+[COMMANDO]&gt;&gt; info 3                                         ## show detailed information
+CMD 3 INFORMATION
+command: data/sleep_print.sh 25.0 Long running              ## full command line
+argv[]:                                                     ## command line args
+  [ 0]: data/sleep_print.sh
+  [ 1]: 25.0
+  [ 2]: Long
+  [ 3]: running
+cmdstate: RUNNING                                           ## current state: still running
+input: &lt;NONE&gt;
+output: commando-dir/0003-data_sleep_print.sh.out
+output size: &lt;CMD NOT FINISHED&gt;                             ## no output as it is still running
+
+[COMMANDO]&gt;&gt; wc -l data/gettysburg.txt                      ## launch another command
+
+[COMMANDO]&gt;&gt; 
+---&gt; COMPLETE:     4 #222677      23 EXIT(0)         wc     ## it finishes quickly
+1 commands finished
+
+[COMMANDO]&gt;&gt; history                                        ## check history
+CMDID PID       BYTES STATE           COMMAND
+    0 #222616     125 EXIT(0)         cat
+    1 #222643    1097 EXIT(0)         ls
+    2 #222659      95 FAIL_EXEC       data/sleep_print
+    3 #222666       - RUNNING         data/sleep_print.sh   ## still running
+    4 #222677      23 EXIT(0)         wc
+
+[COMMANDO]&gt;&gt; data/table.sh 10 3                             ## run another command
+---&gt; COMPLETE:     3 #222666      13 EXIT(0)         data/sleep_print.sh
+1 commands finished                                         ## past command finishes
+
+[COMMANDO]&gt;&gt;                                                ## wait a tick and press enter
+---&gt; COMPLETE:     5 #222688     380 EXIT(0)         data/table.sh
+1 commands finished                                         ## most recent command finishes
+
+[COMMANDO]&gt;&gt; info 4                                         ## information on 4th command
+CMD 4 INFORMATION
+command: wc -l data/gettysburg.txt 
+argv[]:
+  [ 0]: wc
+  [ 1]: -l
+  [ 2]: data/gettysburg.txt
+cmdstate: EXIT(0)
+input: &lt;NONE&gt;
+output: commando-dir/0004-wc.out
+output size: 23 bytes
+
+[COMMANDO]&gt;&gt; show-output 4                                  ## output for 4th command
+28 data/gettysburg.txt
+
+[COMMANDO]&gt;&gt; info 5                                         ## infor for 5th command
+CMD 5 INFORMATION
+command: data/table.sh 10 3
+argv[]:
+  [ 0]: data/table.sh
+  [ 1]: 10
+  [ 2]: 3
+cmdstate: EXIT(0)
+input: &lt;NONE&gt;
+output: commando-dir/0005-data_table.sh.out
+output size: 380 bytes
+
+[COMMANDO]&gt;&gt; show-output 5                                  ## output for command
+i^1=      1  i^2=      1  i^3=      1
+i^1=      2  i^2=      4  i^3=      8
+i^1=      3  i^2=      9  i^3=     27
+i^1=      4  i^2=     16  i^3=     64
+i^1=      5  i^2=     25  i^3=    125
+i^1=      6  i^2=     36  i^3=    216
+i^1=      7  i^2=     49  i^3=    343
+i^1=      8  i^2=     64  i^3=    512
+i^1=      9  i^2=     81  i^3=    729
+i^1=     10  i^2=    100  i^3=   1000
+
+[COMMANDO]&gt;&gt; data/sleep_print.sh 5.0 A                      ## launch several commands that
+                                                            ## will take 5 seconds to run
+[COMMANDO]&gt;&gt; data/sleep_print.sh 5.0 B
+
+[COMMANDO]&gt;&gt; data/sleep_print.sh 5.0 C
+
+[COMMANDO]&gt;&gt; pause 5.5                                      ## pause commando for 5.5 seconds
+Pausing for 5.500000 seconds
+---&gt; COMPLETE:     6 #222705       2 EXIT(0)         data/sleep_print.sh
+---&gt; COMPLETE:     7 #222710       2 EXIT(0)         data/sleep_print.sh
+---&gt; COMPLETE:     8 #222716       2 EXIT(0)         data/sleep_print.sh
+3 commands finished                                         ## an coming back from pause, all commands finished
+
+[COMMANDO]&gt;&gt; data/sleep_print.sh 5.0 D                      ## 9th command runs a long time
+
+[COMMANDO]&gt;&gt; data/sleep_print.sh 1.0 D                      ## short run
+
+[COMMANDO]&gt;&gt; data/sleep_print.sh 1.0 D                      ## short run
+
+[COMMANDO]&gt;&gt; finish 9                                       ## block until 9th command finishes
+---&gt; COMPLETE:     9 #222765       2 EXIT(0)         data/sleep_print.sh   ## 9th command done
+---&gt; COMPLETE:    10 #222770       2 EXIT(0)         data/sleep_print.sh   ## top-of-loop update shows
+---&gt; COMPLETE:    11 #222777       2 EXIT(0)         data/sleep_print.sh   ## short run command also done
+2 commands finished                                                        ## only 2 as 1st is an explicit finish
+
+[COMMANDO]&gt;&gt; data/sleep_print.sh 5.0 X                      ## start several long-running commands
+
+[COMMANDO]&gt;&gt; data/sleep_print.sh 5.0 X
+
+[COMMANDO]&gt;&gt; data/sleep_print.sh 5.0 X
+
+[COMMANDO]&gt;&gt; finish-all                                     ## wait for all to fininsh
+---&gt; COMPLETE:    12 #222793       2 EXIT(0)         data/sleep_print.sh
+---&gt; COMPLETE:    13 #222798       2 EXIT(0)         data/sleep_print.sh
+---&gt; COMPLETE:    14 #222801       2 EXIT(0)         data/sleep_print.sh
+3 commands finished
+
+[COMMANDO]&gt;&gt; exit                                           ## all done for now
+
+&gt;&gt;                                                          ## back to a "real" shell
 </pre>
 </div>
-
-<p>
-The file specifies two tests
-</p>
+</div>
+<div id="outline-container-orgdc69870" class="outline-4">
+<h4 id="orgdc69870">Things to Note</h4>
+<div class="outline-text-4" id="text-orgdc69870">
 <ul class="org-ul">
-<li><p>
-Test 0: <code>Basic bash Tests</code> runs the program 
-</p>
-<pre class="example">
-bash -c 'echo Chester is; echo a Tester'
-</pre>
-
-<p>
-and checks that the output matches the output indicated in the
-<code>output</code> block
-</p></li>
-<li>Test 1: <code>Count chars with wc</code> runs the <code>wc</code> program on the provided
-input to count the lines, words, and characters in the provided
-<code>input</code> block. The expected <code>output</code> is given.</li>
-</ul>
-
-<p>
-On completion, running the completed Chester program on this test
-file, the tests are run and checked against the expected output which
-will produce the following output and results files.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; chester data/two_tests.md               ## RUN CHESTER
-data/two_tests.md : running 2 / 2 tests
-Running with single process: .. Done
- 0) Basic bash Test      : ok
- 1) Count chars with wc  : ok
-Overall: 2 / 2 tests passed
-
-&gt;&gt; ls chester-test-two-tests               ## SHOW TESTING DIRECTORY CONTENTS 
-two-tests-input-01.txt	 two-tests-output-01.txt  two-tests-result-01.md
-two-tests-output-00.txt  two-tests-result-00.md
-
-                                           ## SHOW ONE OF THE RESULTS FILE
-&gt;&gt; cat chester-test-two-tests/two-tests-result-00.md
-# TEST 0: Basic bash Test (ok)
-## DESCRIPTION
-Checks that bash properly produces output.
-
-## PROGRAM: bash -c 'echo Chester is; echo a Tester'
-
-## INPUT: None
-
-## OUTPUT: ok
-
-## EXIT CODE: ok
-
-## RESULT: ok
-&gt;&gt; 
-</pre>
-</div>
-
-<ul class="org-ul">
-<li>All of the tests pass here but this will not always be so</li>
-<li><p>
-Note that the top of <code>two_tests.md</code> file contains the directives
-</p>
-<div class="org-src-container">
-<pre class="src src-text">  !prefix=two-tests
-  !testdir=chester-test-two-tests
-</pre>
-</div>
-<p>
-These cause files associated with testing to be created in the
-directory <code>chester-test-two-tests</code>, referred to as the <b>Test
-Directory</b> and all files within it to be named with the prefix
-<code>two-tests</code> 
-</p></li>
-</ul>
-
-<p>
-This setup should feel familiar: it is modeled after the behavior of
-the testing framework used throughout the course so far to perform
-automated tests on all submitted programs.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org687b26d" class="outline-3">
-<h3 id="org687b26d"><span class="section-number-3">3.2</span> Data Structures</h3>
-<div class="outline-text-3" id="text-3-2">
-<p>
-There are 2 central data structures used in Chester which are found in
-the header <code>chester.h</code>.
-</p>
-<dl class="org-dl">
-<dt><code>test_t</code></dt><dd>Contains all information about a specific test to run
-such as the program to run in the test, input for the program,
-expected and actual output, files associated with testing, and the
-results of running the test.</dd>
-<dt><code>suite_t</code></dt><dd>A collection of tests along with which of them to run
-and where to store the testing results. The most important field in
-a suite is its <code>tests[]</code> array which contains an array of <code>test_t</code>
-structs which are possible tests to run.</dd>
-</dl>
-
-<p>
-It is worthwhile spend some time acquainting yourself with some of the
-documentation on these structs provided in <code>chester.h</code>. Refer back to the
-header often as you need to recall parts of the data. Both structs
-have quite a few fields but almost all of them will be used at some
-point during the project.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org66adc27" class="outline-3">
-<h3 id="org66adc27"><span class="section-number-3">3.3</span> Strings in Chester</h3>
-<div class="outline-text-3" id="text-3-3">
-<p>
-The data structures contain many <code>char *</code> fields which are pointers to
-strings.  <b>All strings associated with structs are <code>malloc()'d</code> and
-need to be <code>free()</code>'d eventually.</b> Expect to do this in the following
-way.
-</p>
-<ul class="org-ul">
-<li><p>
-ALLOCATION: Most strings will initially be stored in non-heap locations can be
-quickly copied using the <code>strdup()</code> function. An example for the
-<code>suite_t</code> <code>infile_name</code> field appears in <code>chester_util.c</code> in the
-following function:
-</p>
-<div class="org-src-container">
-<pre class="src src-c">  int suite_init_from_file_peg(suite_t *suite, char *fname){
-    suite_init(suite);
-    FILE *infile = fopen(fname,"r");
-    if(infile == NULL){
-      printf("Unable to open file '%s'\n",fname);
-      return -1;
-    }
-    suite-&gt;infile_name = strdup(fname); // malloc() a copy of the string 
-    ...;
-</pre>
-</div>
-<p>
-Here <code>strdup()</code> is used to create a heap-allocated copy of the
-string the "belongs" to the suite structure.
-</p></li>
-<li><p>
-DEALLOCATION: Later, the provided <code>suite_dealloc()</code> function is used
-to deallocate memory associated with the suite. Any fields that are
-non-NULL will be <code>free()</code>'d:
-</p>
-<div class="org-src-container">
-<pre class="src src-c">  void suite_dealloc(suite_t *suite){
-    if(suite-&gt;infile_name != NULL) free(suite-&gt;infile_name);
-    if(suite-&gt;prefix != NULL)      free(suite-&gt;prefix);
-    ...;
-</pre>
-</div></li>
+<li>The child processes (commands) that <code>commando</code> starts do not show
+any output by default and run concurrently with the main process
+which gives back the <code>[COMMANDO]&gt;&gt;</code> prompt immediately.  This is
+different from a normal shell such as <code>bash</code> which starts commands
+in the foreground, shows their output immediately, and will block
+the shell until a job finishes before showing the command prompt for
+additional input.</li>
+<li>The output for all jobs is saved by <code>commando</code> and can be recalled
+at any time using the <code>show-output &lt;jobid&gt;</code> built-in.</li>
+<li>Not all of the built-ins are shown in the demo but each will be
+discussed in later sections.</li>
+<li>It should be clear that <code>commando</code> is not a full shell (no signals,
+built-in scripting, or pipes), but it is a mid-sized project which
+will take some organization. Luckily, this document prescribes a
+simple architecture to make the coding manageable.</li>
 </ul>
 </div>
 </div>
-
-<div id="outline-container-org63f6cd5" class="outline-3">
-<h3 id="org63f6cd5"><span class="section-number-3">3.4</span> Outline of <code>chester_funcs.c</code></h3>
-<div class="outline-text-3" id="text-3-4">
+</div>
+<div id="outline-container-org06789b4" class="outline-2">
+<h2 id="org06789b4"><span class="section-number-2">4</span> Overall Architecture</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-orga2dbbf4" class="outline-3">
+<h3 id="orga2dbbf4"><span class="section-number-3">4.1</span> <code>cmd_t</code> struct</h3>
+<div class="outline-text-3" id="text-4-1">
 <p>
-The primary implementation files required are <code>chester_funcs.c</code> and
-<code>chester_main.c</code>.  As the name suggests, <code>chester_main.c</code> will contain the
-<code>main()</code> function and is part of the final problem. 
+The <code>cmd_t</code> type is defined in the <code>commando.h</code> header file. It is
+intended to encapsulate the state of a <b>command</b>, a running or
+completed child process.  Fields within it describe aspects such as
+the name of the command being run, arguments to it, its exit status,
+and a file with the command output in it.
 </p>
 
-<p>
-<code>chester_funcs.c</code> has a number of "service" functions which manipulate
-Suite and Tests data. Each of these is required and will be
-tested. The outline and some brief documentation for them is below.
-</p>
 <div class="org-src-container">
-<pre class="src src-c">// chester_funcs.c: Service functions for chester primarily operating
-// upon suite_t structs.
+<pre class="src src-c">// states in which a cmd might be
+typedef enum  {
+  CMDSTATE_NOTSET = 0,                // hasn't been set
+  CMDSTATE_INIT,                      // cmd struct just initialized but no child process
+  CMDSTATE_RUNNING,                   // child process fork()/exec()'d and running
+  CMDSTATE_EXIT,                      // child process exited normally
+  CMDSTATE_SIGNALLED,                 // child process exited abnormally due to a signal
+  CMDSTATE_UNKNOWN_END,               // cmd finished but for unknown reasons
+  CMDSTATE_FAIL_INPUT=97,             // couldn't find input file for redirection
+  CMDSTATE_FAIL_OUTPUT=98,            // couldn't find input file for redirection
+  CMDSTATE_FAIL_EXEC=99,              // exec() failed after fork()
+} cmdstate_t;
 
-#include "chester.h"
-
-////////////////////////////////////////////////////////////////////////////////
-// PROBLEM 1 Functions
-////////////////////////////////////////////////////////////////////////////////
-
-int suite_create_testdir(suite_t *suite);
-// PROBLEM 1: Creates the testing results directory according to the
-// name in the suite `testdir` field. If testdir does not exist, it is
-// created as directory with permisions of User=read/write/execute
-// then returns 1. If testdir already exists and is a directory, does
-// nothing and returns 0. If a non-directory file named testdir
-// already exists, print an error message and return -1 to indicate
-// testing cannot proceed. The error message is:
-//
-// ERROR: Could not create test directory 'XXX'
-//        Non-directory file with that name already exists
-//
-// with XXX substituted with the value of testdir
-//
-// CONSTRAINT: This function must be implemented using low-level
-// system calls. Use of high-level calls like system("cmd") will be
-// reduced to 0 credit. Review system calls like stat() and mkdir()
-// for use here. The access() system call may be used but keep in mind
-// it does not distinguish between regular files and directories.
-
-int suite_test_set_outfile_name(suite_t *suite, int testnum);
-// PROBLEM 1: Sets the field `outfile_name` for the numbered
-// tests. The filename is constructed according to the pattern
-//
-// TESTDIR/PREFIX-output-05.txt
-//
-// with TESTDIR and PREFIX replaced by the testdir and prefix fields
-// in the suite and the 05 replaced by the test number. The test
-// number is formatted as indicated: printed in a width of 2 with 0
-// padding for single-digit test numbers. The sprintf() or snprintf()
-// functions are useful to create the string. The string is then
-// duplicated into the heap via strdup() and a pointer to it saved in
-// `outfile_name`. The file is not created but the name will be used
-// when starting a test as output will be redirected into
-// outfile_name. This function should always return 0.
-
-int suite_test_create_infile(suite_t *suite, int testnum);
-// PROBLEM 1: Creates a file that is used as input for the numbered
-// test. The file will contain the contents of the `input` field. If
-// that field is NULL, this function immediately returns. Otherwise, a
-// file named like
-//
-//   TESTDIR/PREFIX-input-05.txt
-//
-// is created with TESTDIR and PREFIX replaced by the `testdir` field
-// and `prefix` fields of the suite and the 05 replaced by the test
-// number. A copy of this filename is duplicated and retained in the
-// `infile_name` field for the test. After opening this file, the
-// contents of the `input` field are then written to this file before
-// closing the file and returning
-// 0. The testing directory is assumed to exist by this function. The
-// options associated with the file are to be the following:
-// - Open write only
-// - Create the file if it does not exist
-// - Truncate the file if it does exist
-// - Created files have the User Read/Write permission set
-// If the function cannot create the input file due to open() failing,
-// an error message is printed and -1 is returned; the error message is
-// printed using perror() and will appear as:
-//
-//   Could not create input file : CAUSE
-//
-// with the portion to the right being added by perror() to show the
-// system cause
-
-int suite_test_read_output_actual(suite_t *suite, int testnum);
-// PROBLEM 1: Reads the contents of the file named in field
-// `outfile_name` for the given testnum into heap-allocated space and
-// assigns the output_actual field to that space. Uses a combination
-// of stat() and read() to efficiently read in the entire contents of
-// a file into a malloc()'d block of memory, null terminates it (\0)
-// so that the contents may treatd as a valid C string. Returns the
-// total number of bytes read from the file on on success (this is
-// also the length of the `output_actual` string). If the file could
-// not be opened or read, the `output_actual` field is not changed and
-// -1 is returned.
-//
-// CONSTRAINT: This function should perform at most 1 heap allocation;
-// use of the realloc() function is barred. System calls like stat()
-// MUST be used to determine the amount of memory needed before
-// allocation, Failure to do so will lead to loss of credit.
-
-////////////////////////////////////////////////////////////////////////////////
-// PROBLEM 2 Functions
-////////////////////////////////////////////////////////////////////////////////
-//
-// PROBLEM 2: Start a child process that will run program in the
-// indicated test number. The parent process first sets the
-// outfile_name and creates infile_name with the program input. It
-// then creates a child process, sets the test field `child_pid` to
-// the child process ID and returns 0.
-//
-// The child sets up output redirection so that the standard out AND
-// standard error streams for the child process is channeled into the
-// file named in field `outfile_name`. Note that standard out and
-// standard error are "merged" so that they both go to the same
-// `outfile_name`. This file should have the same options used when
-// opening it as described in suite_test_create_infile(). If
-// infile_name is non-NULL, input redirection is also set up with
-// input coming from the file named in field `infile_name`. Uses the
-// split_into_argv() function to create an argv[] array which is
-// passed to an exec()-family system call.
-//
-// Any errors in the child during input redirection setup, output
-// redirection setup, or exec()'ing print error messages and cause an
-// immediate exit() with an associated error code. These are as
-// follows:
-//
-// | CONDITION            | EXIT WITH CODE         |                                             |
-// |----------------------+------------------------+---------------------------------------------|
-// | Input redirect fail  | exit(TESTFAIL_INPUT);  |                                             |
-// | Output redirect fail | exit(TESTFAIL_OUTPUT); |                                             |
-// | Exec failure         | exit(TESTFAIL_EXEC);   | Prints 'ERROR: test program failed to exec' |
-//
-// Since output redirection is being set up, printing error messages
-// in the child process becomes unreliable. Instead, the exit_code for
-// the child process should be checked for one of the above values to
-// determine what happened.
-//
-// NOTE: When correctly implemented, this function should never return
-// in the child process though the compiler may require a `return ??`
-// at the end to match the int return type. NOT returning from this
-// function in the child is important as if a child manages to return,
-// there will now be two instances of chester running with the child
-// starting its own series of tests which will not end well...
-
-int suite_test_start(suite_t *suite, int testnum);
-////////////////////////////////////////////////////////////////////////////////
-// PROBLEM 2 Functions
-////////////////////////////////////////////////////////////////////////////////
-//
-// PROBLEM 2: Start a child process that will run program in the
-// indicated test number. The parent process first sets the
-// outfile_name and creates infile_name with the program input. It
-// then creates a child process, sets the test field `child_pid` to
-// the child process ID and returns 0.
-//
-// The child sets up output redirection so that the standard out AND
-// standard error streams for the child process is channeled into the
-// file named in field `outfile_name`. Note that standard out and
-// standard error are "merged" so that they both go to the same
-// `outfile_name`. This file should have the same options used when
-// opening it as described in suite_test_create_infile(). If
-// infile_name is non-NULL, input redirection is also set up with
-// input coming from the file named in field `infile_name`. Uses the
-// split_into_argv() function to create an argv[] array which is
-// passed to an exec()-family system call.
-//
-// Any errors in the child during input redirection setup, output
-// redirection setup, or exec()'ing print error messages and cause an
-// immediate exit() with an associated error code. These are as
-// follows:
-//
-// | CONDITION            | EXIT WITH CODE         |                                             |
-// |----------------------+------------------------+---------------------------------------------|
-// | Input redirect fail  | exit(TESTFAIL_INPUT);  |                                             |
-// | Output redirect fail | exit(TESTFAIL_OUTPUT); |                                             |
-// | Exec failure         | exit(TESTFAIL_EXEC);   | Prints 'ERROR: test program failed to exec' |
-//
-// Since output redirection is being set up, printing error messages
-// in the child process becomes unreliable. Instead, the exit_code for
-// the child process should be checked for one of the above values to
-// determine what happened.
-//
-// NOTE: When correctly implemented, this function should never return
-// in the child process though the compiler may require a `return ??`
-// at the end to match the int return type. NOT returning from this
-// function in the child is important as if a child manages to return,
-// there will now be two instances of chester running with the child
-// starting its own series of tests which will not end well...
-
-int suite_test_finish(suite_t *suite, int testnum, int status);
-// PROBLEM 2
-//
-// Processes a tests after its child process has completed and
-// determines whether the tests passes / fails.
-//
-// The `status` parameter comes from a wait()-style call and is use to
-// set the `exit_code_actual` of the test. `exit_code_actual` is one
-// of the following two possibilities:
-// - 0 or positive integer: test program exited normally and the exit
-//   code/status is stored.
-// - Negative integer: The tested program exited abnormally due to
-//   being signaled and the negative of the signal number is
-//   stored. Ex: child received SIGSEGV=11 so exit_code_actual is -11.
-// If `status` indicated neither a normal nor abnormal exit, this
-// function prints an error and returns (this case is not tested).
-//
-// Output produced by the test is read into the `output_actual` field
-// using previously written functions.
-//
-// The test's `state` field is set to one of TEST_PASSED or
-// TEST_FAILED. Comparisons are done between the fields:
-// - output_expect vs output_actual (strings)
-// - exit_code_expect vs exit_code_actual (int)
-//
-// If there is a mismatch with these, the test has failed and its
-// `state` is set to TEST_FAILED. If both sets of fields match, the
-// state of the test becomes `TEST_PASSED` and the suite's
-// `tests_passed` field is incremented.
-//
-// Special Case: if output_expect is NULL, there is no expected output
-// and comparison to output_actual should be skipped. This covers
-// testing cases where a program is being run to examine only whether
-// it returns the correct exit code or avoids segfaults.
-
-////////////////////////////////////////////////////////////////////////////////
-// PROBLEM 1 Functions
-////////////////////////////////////////////////////////////////////////////////
-
-void print_window(FILE *out, char *str, int center, int lrwidth);
-// PROBLEM 3
-// 
-// Print part of the string that contains index center to the given
-// out file. Print characters in the string between
-// [center-lrwidth,center+lrwidth] with the upper bound being
-// inclusive. If either the start or stop point is out of bounds,
-// truncate the printing: the minimum starting point is index 0, the
-// maximum stopping point is the string length.
-//
-// EXAMPLES:
-// char *s = "ABCDEFGHIJKL";
-// //         012345678901
-// print_window(stdout, s, 4, 3);
-// // BCDEFGH
-// // 1234567
-// print_window(stdout, s, 2, 5);
-// // ABCDEFGH
-// // 01234567
-// print_window(stdout, s, 8, 4);
-// // EFGHIJKL
-// // 45678901
-//
-// NOTE: this function is used when creating test results to show
-// where expected and actual output differ
-
-int differing_index(char *strA, char *strB);
-// PROBLEM 3
-// 
-// Finds the lowest index where different characters appear in strA and
-// strB. If the strings are identical except that one is longer than
-// the other, the index returned is the length of the shorter
-// string. If the strings are identical, returns -1.
-//
-// EXAMPLES:
-// differing_index("01234567","0123x567") -&gt; 4
-// differing_index("012345","01234567")   -&gt; 6
-// differing_index("012345","01x34567")   -&gt; 2
-// differing_index("012345","012345")     -&gt; -1
-// 
-// NOTE: this function is used when creating test results to show
-// where expected and actual output differ
-
-int suite_test_make_resultfile(suite_t *suite, int testnum);
-// PROBLEM 3
-//
-// Creates a result file for the given test. The general format is shown in the example below.
-//   # TEST 6: wc 1 to 10 (FAIL)              // testnum and test title, print "ok" for passed tests
-//   ## DESCRIPTION
-//   Checks that wc works with input          // description field of test
-//
-//   ## PROGRAM: wc                           // program field of test
-//
-//   ## INPUT:                                // input field of test, "INPUT: None" for NULL input
-//   1
-//   2
-//   3
-//   4
-//   5
-//   6
-//   7
-//   8
-//   9
-//   10
-//                                            // if output_expect is NULL, print "OUTPUT: skipped check"
-//   ## OUTPUT: MISMATCH at char position 3   // results of differing_index() between 
-//   ### Expect                               // output_expect and output_actual fields
-//   10 10 21                                 // output_expect via calls to print_window()
-//
-//   ### Actual
-//   10  9 20                                 // output_actual via calls to print_window()
-//                                            // if no MISMATCH in output, prints ## OUTPUT: ok
-//
-//   ## EXIT CODE: ok                         // MISMATCH if exit_code_expect and actual don't match and
-//                                            // prints Expect/Actual values
-//   ## RESULT: FAIL                          // "ok" for passed tests
-//
-// The file to create is named according to the pattern
-//
-// TESTDIR/PREFIX-result-05.md
-//
-// with TESTDIR / PREFIX and 05 substituted for the `testdir` and
-// `prefix` fields of suite and 05 for the testnum (width 2 and
-// 0-padded). Note the use of the .md extension to identify the output
-// as Markdown formatted text.
-//
-// The output file starts with a heading which prints the a heading
-// with the testnum and title in it along with ok/FAIL based on the
-// `state` of the test. Then 6 sections are printed which are
-// 1. DESCRIPTION
-// 2. PROGRAM
-// 3. INPUT
-// 4. OUTPUT (comparing output_expect and output_actual)
-// 5. EXIT CODE (comparing exit_code_expect and exit_code_actual)
-// 6. RESULT
-//
-// In the OUTPUT section, if a difference is detected at position N
-// via the differing_index() function, then a window around position N
-// is printed into the file for both the expected and actual
-// output. The window width used is defined in the header via the
-// constant TEST_DIFFWIDTH and is passed to print_window() function.
-//
-// If the output_expect field is NULL, the OUTPUT section header has
-// the message "skipped check" printed next to it.
-//
-// In the EXIT CODE section, if there is a mismatch between the
-// expected and actual exit_code, then they are both printed as in:
-// ## EXIT CODE: MISMATCH
-// - Expect: 0
-// - Actual: 1
-//
-// The final RESULT section prints either ok / FAIL depending on the
-// test state.
-//
-// If the result file cannot be opened/created, this file prints the
-// error message
-//   ERROR: Could not create result file 'XXX'
-// with XXX substituted for the file name and returns -1. Otherwise
-// the function returns 0 on successfully creating the resultfile.
-
-////////////////////////////////////////////////////////////////////////////////
-// PROBLEM 4 Functions
-////////////////////////////////////////////////////////////////////////////////
-
-int suite_run_tests_singleproc(suite_t *suite);
-// PROBLEM 4
-//
-// Runs tests in the suite one at time. Before begining the tests,
-// creates the testing directory with a call to
-// suite_create_testdir().  If the directory cannot be created, this
-// function returns -1 without further action.
-//
-// The tests with indices in the field `tests_torun[]` are run in the
-// order that they appear there. This is done in a loop.
-// `suite_test_start(..)` is used to start tests and wait()-style
-// system calls are used to suspend execution until the child process
-// is finished. Additional functions previously written are then used
-// to
-// - Assign the exit_code for the child
-// - Read the actual output into the test struct
-// - Set the pass/fail state
-// - Produce a results file for the test
-//
-// Prints the "Running with single process:" and each test that
-// completes prints a "." on the screen to give an indication of
-// progress. "Done" is printed when all tests complete so that a full
-// line which runs 8 tests looks like
-//
-//    Running with single process: ........ Done
-//
-// If errors arise such as with waiting for a child process, failures
-// with getting the test output, or other items, error messages should
-// be printed but the loop should continue. No specific error messages
-// are required and no testing is done; error messages are solely to
-// aid with debugging problems.
-
-void suite_print_results_table(suite_t *suite);
-// PROBLEM 4
-//
-// Prints a table of test results formatted like the following.
-//
-//  0) echo check           : FAIL -&gt; see chester-test/prob1-result-00.txt
-//  1) sleep 2s             : ok
-//  2) pwd check            : FAIL -&gt; see chester-test/prob1-result-02.txt
-//  3) seq check            : ok
-//  4) ls check             : FAIL -&gt; see chester-test/prob1-result-04.txt
-//  5) ls not there         : ok
-//  6) wc 1 to 10           : FAIL -&gt; see chester-test/prob1-result-06.txt
-//  7) date runs            : ok
-//
-// The test number at the beginning of the line is printed with width
-// 2 and space padded. The Test title is printed with a width of 20,
-// left-aligned using capabilities of printf().  If the test passes,
-// the message "ok" is added while if it fails, a FAIL appears and the
-// result file associated with the test is indicated. This function
-// honors the `tests_torun[]` array and will only print table results
-// for tests with indices in this array.
-
-////////////////////////////////////////////////////////////////////////////////
-// PROBLEM 5 Functions
-////////////////////////////////////////////////////////////////////////////////
-
-int main(int argc, char *argv[]);;
-// PROBLEM 5
-//
-// Defined in the file chester_main.c. Entry point for the Chester
-// application which may be invoked with one of the following command
-// line forms along with expected output.
-//
-// &gt;&gt; ./chester tests.md        # RUNS ALL TESTS
-// tests.md : running 8 / 8 tests
-// Running with single process: ........ Done
-//  0) echo check           : FAIL -&gt; see chester-test/prob1-result-00.txt
-//  1) sleep 2s             : ok
-//  2) pwd check            : FAIL -&gt; see chester-test/prob1-result-02.txt
-//  3) seq check            : ok
-//  4) ls check             : FAIL -&gt; see chester-test/prob1-result-04.txt
-//  5) ls not there         : ok
-//  6) wc 1 to 10           : FAIL -&gt; see chester-test/prob1-result-06.txt
-//  7) date runs            : ok
-// Overall: 4 / 8 tests passed
-//
-// &gt;&gt; ./chester tests.md 2 4 6  # RUNS ONLY 3 TESTS NUMBERED 2 4 6
-// tests.md : running 3 / 8 tests
-// Running with single process: ... Done
-//  2) pwd check            : FAIL -&gt; see chester-test/prob1-result-02.txt
-//  4) ls check             : FAIL -&gt; see chester-test/prob1-result-04.txt
-//  6) wc 1 to 10           : FAIL -&gt; see chester-test/prob1-result-06.txt
-// Overall: 0 / 3 tests passed
-//
-// main() parses the indicated input file to create a test suite
-// struct. It then determines if all tests or only specified tests
-// will be run by analyzing the command line argument structure. The
-// `suite.tests_torun[]` and `suite.test_torun_count` fields are set
-// according to which tests will be run: either specified tests only
-// or 0..tests_count-1 for all tests. 
-//
-// Before running tests, output lines are printed indicating the test
-// file and number of tests to be run versus the total number of tests
-// in the file. The tests are then run and an output table is produced
-// using appropriate functions. The "Overall" line is printed with the
-// count of tests passed and that were actually run.
-//
-// MAKEUP CREDIT: Support the following additional invocations that
-// support concurrent test execution.
-//
-// &gt;&gt; ./chester -max_procs 4 tests.md         # RUN ALL TESTS WITH
-// tests.md : running 8 / 8 tests             # 4 CONCURRENT PROCESSES
-// Running with 4 processes: ........ Done
-//  0) echo check           : FAIL -&gt; see chester-test/prob1-result-00.txt
-//  1) sleep 2s             : ok
-//  2) pwd check            : FAIL -&gt; see chester-test/prob1-result-02.txt
-//  3) seq check            : ok
-//  4) ls check             : FAIL -&gt; see chester-test/prob1-result-04.txt
-//  5) ls not there         : ok
-//  6) wc 1 to 10           : FAIL -&gt; see chester-test/prob1-result-06.txt
-//  7) date runs            : ok
-// Overall: 4 / 8 tests passed
-//
-// &gt;&gt; ./chester -max_procs 3 tests.md 2 4 6   # RUN 3 SELECTED TESTS WITH
-// tests.md : running 3 / 8 tests             # 3 CONCURRENT PROCESSES
-// Running with 3 processes: ... Done
-//  2) pwd check            : FAIL -&gt; see chester-test/prob1-result-02.txt
-//  4) ls check             : FAIL -&gt; see chester-test/prob1-result-04.txt
-//  6) wc 1 to 10           : FAIL -&gt; see chester-test/prob1-result-06.txt
-// Overall: 0 / 3 tests passed
-//
-// Concurrently running processes are run via the associated
-// `suite_run_tests_multiproc()` program.  The `-max_procs` command
-// line flag sets the `suite.max_procs` field which is used in
-// `suite_run_tests_multiproc()` to launch multiple processes to speed
-// up test completion.
-
-int suite_testnum_with_pid(suite_t *suite, pid_t pid);
-// MAKEUP CREDIT: Finds the test that has child_pid equal to pid and
-// returns that its index. If no test with the pid given is found,
-// returns -1. This function is used during
-// suite_run_tests_singleproc() to look up the test associated with a
-// completed child process.
-
-int suite_run_tests_multiproc(suite_t *suite);
-// MAKEUP CREDIT: Like suite_run_tests_singleproc() but uses up to
-// suite.max_procs concurrent processes to do so. This will speed up
-// tests if multiple processors are available or if tests are bounded
-// by I/O operations. The general algorithm to achieve concurrent
-// execution is described in the project description and should be
-// consulted carefully when implementing this function.
-
+// struct that represents a command and its output 
+typedef struct cmd {
+  char cmdline[MAX_LINE];             // original command line entered by users, copied from input
+  char *argv[MAX_ARGS];               // argv[] for running child, NULL terminated, malloc()'d and must be free()'d
+  int argc;                           // length of the argv[] array, used for sanity checks
+  cmdstate_t cmdstate;                // indicates phase of cmd in life cycle (running, exited, etc.)
+  pid_t pid;                          // PID of running child proces for the cmd; -1 otherwise
+  int exit_code;                      // value returned on exit from child process or negative signal number
+  char input_filename[MAX_NAME];      // name of file containing input
+  char output_filename[MAX_NAME];     // name of file containing output
+  ssize_t output_bytes;               // number of bytes of output
+} cmd_t;
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org05b4f44" class="outline-3">
-<h3 id="org05b4f44"><span class="section-number-3">3.5</span> Provided Utility Functions</h3>
-<div class="outline-text-3" id="text-3-5">
+<div id="outline-container-org155ad44" class="outline-3">
+<h3 id="org155ad44"><span class="section-number-3">4.2</span> <code>cmdctl_t</code> struct</h3>
+<div class="outline-text-3" id="text-4-2">
 <p>
-The emphasis of the project is on utilizing some system calls to
-achieve an interesting effect. To that end, some code is provided to
-focus attention on these aspects of the project. Provided code is in
-the <code>chester_util.c</code> file and the functions there may be used
-elsewhere to ease the implementation of the remainder of the program.
+The demo illustrates that <code>commando</code> tracks multiple commands and
+their child processes.  This multiplicity is simplified somewhat with
+a data structure to add and iterate through all child jobs. This is
+the role of <code>cmdctl_t</code>: it's most important field is the array <code>cmd_t
+*cmds</code> which maintains all commands that are running or are
+complete. As the number of commands run increases, this array may
+"expand" which will require reallocation and copying of its contents
+to new memory. The struct also maintains some global information such
+as the directory that is used to store output for commands.
 </p>
 
 <p>
-Notable functions are:
+Most functions in <code>commando_funcs.c</code> pertain to operating on a
+<code>cmdctl_t</code> struct often taking an index of a individual command to
+operate on. Function including adding a command, starting a command
+running, updating a command to see if it has finished, and printing
+information and output for a command.
 </p>
-<dl class="org-dl">
-<dt><code>Dprintf()</code></dt><dd>Print a debugging message which is only shown if an
-environment variable is set. Extremely useful during debugging and
-alleviates the need to remove debugging messages after the fact.</dd>
 
-<dt><code>split_into_argv()</code></dt><dd>Splits a string into an array of tokens that
-may be used as the <code>argv[]</code> in an <code>exec()</code> call</dd>
-
-<dt><code>suite_init() / suite_dealloc90</code></dt><dd>Initializes <code>suite_t</code> structs to
-default values and deallocate memory associated with it.</dd>
-
-<dt><code>suite_init_from_file_peg()</code></dt><dd>Reads a file and initializes a
-<code>suite_t</code> struct with its contents.</dd>
-
-<dt><code>suite_do_global_directive() / suite_do_local_directive()</code></dt><dd>Functions used when parsing Chester input files to process
-directives like <code>!testdir=some-directory</code>. These functions would
-only possibly be used by students if the implement optional MAKEUP
-problems described later.</dd>
-</dl>
-
-<p>
-Below is an outline of the provided function. The full source can be
-viewed in the indicated source file.
-</p>
 <div class="org-src-container">
-<pre class="src src-c">// chester_util.c: Provided functions that do not require
-// implementation.
+<pre class="src src-c">// control structure to track cmd history, output location, etc.
+typedef struct {                
+  char cmddir[MAX_NAME];              // name of the directory where cmd output files will be placed
+  int cmds_count;                     // number of elements in the cmds array
+  int cmds_capacity;                  // capacity of the cmds array
+  cmd_t *cmds;                        // array of all cmds that have run / are running
+} cmdctl_t;
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge985c28" class="outline-3">
+<h3 id="orge985c28"><span class="section-number-3">4.3</span> <code>main()</code> function ::</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+The file <code>commando_main.c</code> will contain a <code>main()</code> function which
+loops over input provided by the user either interactively or via
+standard input as is done in the automated tests.  After setup, the
+program executes an infinite loop until no more input is available or
+an exit/quit built-in is used. The <code>main()</code> understand certain
+<b>built-ins</b> that allow checking on running commands or reporting
+output. Anything that doesn't match a built-in is <code>fork()'d/exec()'d</code>
+as a child process and encapsulated as a "command".
+</p>
 
-#include "chester.h"
+<p>
+Several command line options are supported by <code>main()</code> to enable
+echoing and change the default output directory. These are described
+later. 
+</p>
+</div>
+</div>
+<div id="outline-container-org68ed629" class="outline-3">
+<h3 id="org68ed629"><span class="section-number-3">4.4</span> Outline of Code</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+Below is an outline of the required functions. Additional functions
+may be added but were not needed in the instructor solution.
+</p>
 
-#include "chester_parse.h"
+<p>
+<b>Several utility functions are provided</b> at the beginning of the code
+outline which students can and should be used in the implementation.
+</p>
 
-void Dprintf(const char* format, ...);
+<div class="org-src-container">
+<pre class="src src-c">#include "commando.h"
+
+////////////////////////////////////////////////////////////////////////////////
+// PROVIDED DATA / FUNCTIONS
+//
+// The data and functions below should not be altered as they should
+// be used as-is in the project.
+///////////////////////////////////////////////////////////////////////////////
+
 // Prints out a message if the environment variable DEBUG is set;
-// Try running as `DEBUG=1 ./some_program`
+// Running as `DEBUG=1 ./some_program` or `DEBUG=1 make test-prob1`
+// will cause all Dprintf() messages to show while running without the
+// DEBUG variable will not print those messages. An example:
+// 
+// &gt;&gt; DEBUG=1 ./commando              // enable debug messages
+// === COMMANDO ver 2 ===
+// Re-using existing output directory 'commando-dir'
+// Type 'help' for supported commands
+// [COMMANDO]&gt;&gt; ls
+// |DEBUG| sscanf ret is 1 for line `ls`
+// |DEBUG| pid 237205 still running
+// [COMMANDO]&gt;&gt; exit
+// |DEBUG| sscanf ret is 1 for line `exit`
+// |DEBUG| end main loop
+// |DEBUG| freeing memory
+// 
+// &gt;&gt; ./commando                      // no debug messages
+// === COMMANDO ver 2 ===
+// Re-using existing output directory 'commando-dir'
+// Type 'help' for supported commands
+// [COMMANDO]&gt;&gt; ls
+// [COMMANDO]&gt;&gt; exit
+void Dprintf(const char* format, ...) {
+  if(getenv("DEBUG") != NULL){
+    va_list args;
+    va_start (args, format);
+    char fmt_buf[2048];
+    snprintf(fmt_buf, 2048, "|DEBUG| %s", format);
+    vfprintf(stderr, fmt_buf, args);
+    va_end(args);
+  }
+}
 
-int split_into_argv(char *line, char *argv[], int *argc_ptr);
+// Sleep the running program for the given number of seconds allowing
+// fractional values.
+void pause_for(double secs){
+  int isecs = (int) secs;
+  double frac = secs - ((double) isecs);
+  long inanos = (long) (frac * 1.0e9);
+
+  struct timespec tm = {
+    .tv_nsec = inanos,
+    .tv_sec  = isecs,
+  };
+  nanosleep(&amp;tm,NULL);
+}
+
 // Splits `line` into tokens with pointers to each token stored in
 // argv[] and argc_ptr set to the number of tokens found. This
 // function is in the style of strtok() and destructively modifies
@@ -1594,826 +1148,549 @@ int split_into_argv(char *line, char *argv[], int *argc_ptr);
 // // set_argv[1]: world
 // // set_argv[2]: I feel good
 // // set_argv[3]: today
+// // set_argv[4]: &lt;NULL&gt;
+int split_into_argv(char *line, char *argv[], int *argc_ptr){
+  int argc = 0;
+  int in_token = 0;
+  for(int i=0; line[i]!='\0'; i++){
+    if(!in_token &amp;&amp; isspace(line[i])){                 // skip spaces between tokens
+      continue;
+    }
+    else if(in_token &amp;&amp; (line[i]=='\'' || line[i]=='\"')){
+      printf("ERROR: No support for mid-token quote at index %d\n",i);
+      return 1;
+    }
+    else if(line[i]=='\'' || line[i]=='\"'){           // begin quoted token
+      char start_quote_char = line[i];
+      i++;                                             // skip first quote char
+      argv[argc++] = line+i;                           // start of token
+      for(;line[i] != start_quote_char;i++){
+        if(line[i] == '\0'){
+          printf("ERROR: unterminated quote in &lt;%s&gt;\n",line);
+          return 1;
+        }
+      }
+      line[i] = '\0';                                  // end quoted token
+    }
+    else if(in_token &amp;&amp; !isspace(line[i])){            // still in a token, move ahead
+      continue;
+    }
+    else if(!in_token &amp;&amp; !isspace(line[i])){           // begin unquoted token 
+      in_token = 1;
+      argv[argc++] = line+i;
+    }
+    else if(in_token &amp;&amp; isspace(line[i])){             // end unquoted token
+      in_token = 0;
+      line[i] = '\0';
+    }
+    else{
+      printf("ERROR: internal parsing problem at string index %d\n",i);
+      return 1;
+    }
+  }
+  *argc_ptr = argc;
+  argv[argc] = NULL;                                   // ensure NULL termination required by exec()
+  return 0;
+}
 
-char *test_state_str(test_state_t state);
-// Returns a string constant representing the test_state_t for
-// easy printing
+////////////////////////////////////////////////////////////////////////////////
+// PROBLEM 1 Functions
+////////////////////////////////////////////////////////////////////////////////
 
-void suite_init(suite_t *suite);
-// Initialize fields of `suite` to default values.
+cmdctl_t *cmdctl_new(char *cmddir, int cmds_capacity);
+// PROBLEM 1: Allocate a new cmdctl structure with the output
+// directory `cmddir` and intitial `cmds_capacity` for its cmds[]
+// array field.
 
-void suite_dealloc(suite_t *suite);
-// Deallocate internal memory in the suite. All strings must be
-// free()'d in the suite
+void cmdctl_free(cmdctl_t *cmdctl);
+// PROBLEM 1: De-allocate the given given cmdctl struct. Free all
+// argv[] elements in each of the cmds[], free that array, then free
+// the cmdctl struct itself.
 
-int suite_init_from_file_peg(suite_t *suite, char *fname);
-// Initialize `suite` from a file using the instructor-provided PEG
-// parser. The file `fname` is copied strdup()'d to the appropriate
-// field as are various other fields.
-
-int suite_do_global_directive(suite_t *suite, const char *key, const char *val);
-// Processes a global directive which changes attributes of the suite
-// struct. This function is used during parsing for !key=val
-// diretictives in the global directive section.
-
-int suite_do_local_directive(suite_t *suite, const char *key, const char *val);
-// Processes a local directive in the suite that changes attributes of
-// the tests[] entry at index suite.tests_count.
-
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org33fe126" class="outline-3">
-<h3 id="org33fe126"><span class="section-number-3">3.6</span> Sample Usage</h3>
-<div class="outline-text-3" id="text-3-6">
-<p>
-Below is an example use of the complete <code>chester</code> program to perform
-testing activities using input files in the provided <code>data/</code> directory.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh"><span class="linenr"> 1: </span># Demonstration of chester 
-<span class="linenr"> 2: </span>&gt;&gt; cd p4-code
-<span class="linenr"> 3: </span>
-<span class="linenr"> 4: </span>&gt;&gt; make chester
-<span class="linenr"> 5: </span>gcc -Wall -Wno-comment -Werror -g  -c chester_main.c
-<span class="linenr"> 6: </span>gcc -Wall -Wno-comment -Werror -g  -c chester_funcs.c
-<span class="linenr"> 7: </span>gcc -Wall -Wno-comment -Werror -g  -c chester_util.c
-<span class="linenr"> 8: </span>gcc -Wall -Wno-comment -Werror -g  -c chester_parse.c
-<span class="linenr"> 9: </span>gcc -Wall -Wno-comment -Werror -g  -o chester chester_main.o chester_funcs.o chester_util.o chester_parse.o
-<span class="linenr">10: </span>
-<span class="linenr">11: </span>&gt;&gt; chester data/four_tests.md                      # RUN TESTS IN four_tests.md
-<span class="linenr">12: </span>data/four_tests.md : running 4 / 4 tests
-<span class="linenr">13: </span>Running with single process: .... Done
-<span class="linenr">14: </span> 0) seq check            : ok                      # USE DIRECTORY  chester-test BY DEFAULT
-<span class="linenr">15: </span> 1) wc 1 to 10           : FAIL -&gt; see chester-test/four-tests-result-01.md
-<span class="linenr">16: </span> 2) bash with output     : ok
-<span class="linenr">17: </span> 3) tail with input      : FAIL -&gt; see chester-test/four-tests-result-03.md
-<span class="linenr">18: </span>Overall: 2 / 4 tests passed
-<span class="linenr">19: </span>
-<span class="linenr">20: </span>&gt;&gt; cat chester-test/four-tests-result-01.md        # SHOW RESULTS OF ONE TEST THAT FAILED
-<span class="linenr">21: </span># TEST 1: wc 1 to 10 (FAIL)
-<span class="linenr">22: </span>## DESCRIPTION
-<span class="linenr">23: </span>Checks that wc works with input; should fail as the input is slightly
-<span class="linenr">24: </span>mangled.
-<span class="linenr">25: </span>
-<span class="linenr">26: </span>## PROGRAM: wc
-<span class="linenr">27: </span>
-<span class="linenr">28: </span>## INPUT:
-<span class="linenr">29: </span>1
-<span class="linenr">30: </span>2
-<span class="linenr">31: </span>3
-<span class="linenr">32: </span>4
-<span class="linenr">33: </span>
-<span class="linenr">34: </span>6
-<span class="linenr">35: </span>7
-<span class="linenr">36: </span>8
-<span class="linenr">37: </span>9
-<span class="linenr">38: </span>10
-<span class="linenr">39: </span>
-<span class="linenr">40: </span>## OUTPUT: MISMATCH at char position 3
-<span class="linenr">41: </span>### Expect
-<span class="linenr">42: </span>10 10 21
-<span class="linenr">43: </span>
-<span class="linenr">44: </span>### Actual
-<span class="linenr">45: </span>10  9 20
-<span class="linenr">46: </span>
-<span class="linenr">47: </span>
-<span class="linenr">48: </span>## EXIT CODE: ok
-<span class="linenr">49: </span>
-<span class="linenr">50: </span>## RESULT: FAIL
-<span class="linenr">51: </span>
-<span class="linenr">52: </span>&gt;&gt; chester data/special_cases.md                   # RUN special_cases.md TESTS
-<span class="linenr">53: </span>data/special_cases.md : running 9 / 9 tests
-<span class="linenr">54: </span>Running with single process: ......... Done        # DIRECTIVE USES A DIFFERENT TEST DIRECTORY
-<span class="linenr">55: </span> 0) Segfault Test A      : FAIL -&gt; see chester-test-special/special-cases-result-00.md
-<span class="linenr">56: </span> 1) Segfault Test B      : ok
-<span class="linenr">57: </span> 2) Error Redirect       : ok
-<span class="linenr">58: </span> 3) Empty Input          : ok
-<span class="linenr">59: </span> 4) Term Signal A        : FAIL -&gt; see chester-test-special/special-cases-result-04.md
-<span class="linenr">60: </span> 5) Term Signal B        : FAIL -&gt; see chester-test-special/special-cases-result-05.md
-<span class="linenr">61: </span> 6) Term Signal C        : ok
-<span class="linenr">62: </span> 7) Ignore Output        : ok
-<span class="linenr">63: </span> 8) Empty Description    : ok
-<span class="linenr">64: </span>Overall: 6 / 9 tests passed
-<span class="linenr">65: </span>                                                   # SHOW A FAILED TEST RESULT
-<span class="linenr">66: </span>&gt;&gt; cat chester-test-special/special-cases-result-00.md
-<span class="linenr">67: </span># TEST 0: Segfault Test A (FAIL)
-<span class="linenr">68: </span>## DESCRIPTION
-<span class="linenr">69: </span>Checks that the data/raise_sigsegv.sh program runs and the return code
-<span class="linenr">70: </span>is properly handled. The test should fail.
-<span class="linenr">71: </span>
-<span class="linenr">72: </span>## PROGRAM: bash data/raise_sigsegv.sh
-<span class="linenr">73: </span>
-<span class="linenr">74: </span>## INPUT: None
-<span class="linenr">75: </span>
-<span class="linenr">76: </span>## OUTPUT: ok
-<span class="linenr">77: </span>
-<span class="linenr">78: </span>## EXIT CODE: MISMATCH
-<span class="linenr">79: </span>- Expect: 0
-<span class="linenr">80: </span>- Actual: -11                                      # SEGFAULT IN PROGRAM DETECTED
-<span class="linenr">81: </span>
-<span class="linenr">82: </span>## RESULT: FAIL
-<span class="linenr">83: </span>
-<span class="linenr">84: </span>&gt;&gt; chester data/special_cases.md 2 4 7             # SPECIFY ONLY 3 TESTS TO RUN ON
-<span class="linenr">85: </span>data/special_cases.md : running 3 / 9 tests        # THE COMMAND LINE RATHER THAN ALL
-<span class="linenr">86: </span>Running with single process: ... Done
-<span class="linenr">87: </span> 2) Error Redirect       : ok
-<span class="linenr">88: </span> 4) Term Signal A        : FAIL -&gt; see chester-test-special/special-cases-result-04.md
-<span class="linenr">89: </span> 7) Ignore Output        : ok
-<span class="linenr">90: </span>Overall: 2 / 3 tests passed
-</pre>
-</div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orga4c8efb" class="outline-2">
-<h2 id="orga4c8efb"><span class="section-number-2">4</span> <b>Problem 1</b>: Test Service Functions</h2>
-<div class="outline-text-2" id="text-4">
-<p>
-The functions here are meant to acquaint students with some of the
-data types and functionalities required in Chester and the conventions
-around string usage. None of the functions is terribly long and should
-be considered a "warm-up" for later work.
-</p>
-</div>
-
-<div id="outline-container-orgd3e0d9a" class="outline-3">
-<h3 id="orgd3e0d9a"><span class="section-number-3">4.1</span> Creating the Test Directory</h3>
-<div class="outline-text-3" id="text-4-1">
-<p>
-Chester requires creation of a variety of files for each test
-</p>
-<ul class="org-ul">
-<li>Input to the program</li>
-<li>Output from the program</li>
-<li>Results of the test</li>
-</ul>
-<p>
-To keep a source code directory reasonably clean, these are stored in
-a <b>Test Directory</b> that is created by Chester. The following function
-is used to create the testing directory early on in a Chester run.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-c">int suite_create_testdir(suite_t *suite);
-// PROBLEM 1: Creates the testing results directory according to the
-// name in the suite `testdir` field. If testdir does not exist, it is
-// created as directory with permisions of User=read/write/execute
-// then returns 1. If testdir already exists and is a directory, does
-// nothing and returns 0. If a non-directory file named testdir
-// already exists, print an error message and return -1 to indicate
-// testing cannot proceed. The error message is:
+int cmdctl_create_cmddir(cmdctl_t *cmdctl);
+// PROBLEM 1: Creates the output directory names in cmdctl-&gt;cmddir. If
+// cmddir does not exist, it is created as directory with permissions
+// of User=read/write/execute then returns 1. If cmddir already exists
+// and is a directory, prints the following message and returns 0:
 //
-// ERROR: Could not create test directory 'XXX'
+//   Re-using existing output directory 'XXX'
+//
+// If a non-directory file named cmddir already exists, print an error
+// message and return -1 to indicate the program cannot proceed. The
+// error message is:
+//
+// ERROR: Could not create cmddir directory 'XXX'
 //        Non-directory file with that name already exists
 //
-// with XXX substituted with the value of testdir
+// with XXX substituted with the value of cmddir. 
 //
 // CONSTRAINT: This function must be implemented using low-level
 // system calls. Use of high-level calls like system("cmd") will be
 // reduced to 0 credit. Review system calls like stat() and mkdir()
 // for use here. The access() system call may be used but keep in mind
 // it does not distinguish between regular files and directories.
-</pre>
-</div>
-</div>
-</div>
 
-<div id="outline-container-org9f018ed" class="outline-3">
-<h3 id="org9f018ed"><span class="section-number-3">4.2</span> Setting the Output File Name</h3>
-<div class="outline-text-3" id="text-4-2">
-<p>
-The output for all tests will be captured in files. The following
-function sets the field with the name for this file. It introduces the
-use of formatting strings using <code>sprintf() / snprintf()</code> and then
-copying data using <code>strdup()</code> will recur throughout the project.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-c">int suite_test_set_outfile_name(suite_t *suite, int testnum);
-// PROBLEM 1: Sets the field `outfile_name` for the numbered
-// tests. The filename is constructed according to the pattern
+int cmdctl_add_cmd(cmdctl_t *cmdctl, char *cmdline);
+// PROBLEM 1: Add a command to the cmdctl. If the capacity of the
+// cmds[] array is insufficient, is size is doubled before adding
+// using the realloc() function. 
 //
-// TESTDIR/PREFIX-output-05.txt
 //
-// with TESTDIR and PREFIX replaced by the testdir and prefix fields
-// in the suite and the 05 replaced by the test number. The test
-// number is formatted as indicated: printed in a width of 2 with 0
-// padding for single-digit test numbers. The sprintf() or snprintf()
-// functions are useful to create the string. The string is then
-// duplicated into the heap via strdup() and a pointer to it saved in
-// `outfile_name`. The file is not created but the name will be used
-// when starting a test as output will be redirected into
-// outfile_name. This function should always return 0.
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orge33c2b4" class="outline-3">
-<h3 id="orge33c2b4"><span class="section-number-3">4.3</span> Creating Input Files</h3>
-<div class="outline-text-3" id="text-4-3">
-<p>
-If a test has input, then parsing will place it in a <code>test_t</code> in the
-<code>input</code> field. The following function creates a file with the contents
-of the input. This file will be used later to feed input to a tested
-program. 
-</p>
-
-<div class="org-src-container">
-<pre class="src src-c">int suite_test_create_infile(suite_t *suite, int testnum);
-// PROBLEM 1: Creates a file that is used as input for the numbered
-// test. The file will contain the contents of the `input` field. If
-// that field is NULL, this function immediately returns. Otherwise, a
-// file named like
+// SETTING ARGV[] OF THE CMD 
 //
-//   TESTDIR/PREFIX-input-05.txt
+// `cmdline` is the string typed in as a command. `cmdline` is
+// separated into an argv[] array using the split_into_argv()
+// function. All strings are duplicated into the argv[] array of the
+// cmd_t and are later free()'d on memory de-allocation.  
 //
-// is created with TESTDIR and PREFIX replaced by the `testdir` field
-// and `prefix` fields of the suite and the 05 replaced by the test
-// number. A copy of this filename is duplicated and retained in the
-// `infile_name` field for the test. After opening this file, the
-// contents of the `input` field are then written to this file before
-// closing the file and returning
-// 0. The testing directory is assumed to exist by this function. The
-// options associated with the file are to be the following:
-// - Open write only
-// - Create the file if it does not exist
-// - Truncate the file if it does exist
-// - Created files have the User Read/Write permission set
-// If the function cannot create the input file due to open() failing,
-// an error message is printed and -1 is returned; the error message is
-// printed using perror() and will appear as:
+// Example:
+// cmdline: "data/sleep_print.sh 1 hello world"
+// argv[]:
+//   [ 0]: data/sleep_print.sh
+//   [ 1]: 1
+//   [ 2]: hello
+//   [ 3]: world
+//   [ 4]: NULL
 //
-//   Could not create input file : CAUSE
+// HANDLING INPUT REDIRECTION
 //
-// with the portion to the right being added by perror() to show the
-// system cause
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgadaca9e" class="outline-3">
-<h3 id="orgadaca9e"><span class="section-number-3">4.4</span> Reading Output Files</h3>
-<div class="outline-text-3" id="text-4-4">
-<p>
-The output from a program will be stored in a file. In order to
-determine if the program produced the correct output, the its output
-is read from that file into memory and compared against the expected
-output.  The below function is responsible for reading in the contents
-of an output file and filling in the <code>output_actual</code> field. It is
-required to use certain system programming techniques outline in the
-documentation string to ensure it operates as efficiently as possible. 
-</p>
-
-<p>
-HINT: <code>stat()</code> is essential to use to complete this function
-correctly. 
-</p>
-
-<div class="org-src-container">
-<pre class="src src-c">int suite_test_read_output_actual(suite_t *suite, int testnum);
-// PROBLEM 1: Reads the contents of the file named in field
-// `outfile_name` for the given testnum into heap-allocated space and
-// assigns the output_actual field to that space. Uses a combination
-// of stat() and read() to efficiently read in the entire contents of
-// a file into a malloc()'d block of memory, null terminates it (\0)
-// so that the contents may treatd as a valid C string. Returns the
-// total number of bytes read from the file on on success (this is
-// also the length of the `output_actual` string). If the file could
-// not be opened or read, the `output_actual` field is not changed and
-// -1 is returned.
+// If the last two elements of the command line indicate input
+// redirection via "&lt; infile.txt" then the argv[] and input_filename
+// fields are set accordingly.  An example:
 //
-// CONSTRAINT: This function should perform at most 1 heap allocation;
-// use of the realloc() function is barred. System calls like stat()
-// MUST be used to determine the amount of memory needed before
-// allocation, Failure to do so will lead to loss of credit.
-</pre>
-</div>
-</div>
-</div>
-</div>
+// cmdline: "wc -l -c &lt; Makefile"
+// argv[]:
+//   [ 0]: wc
+//   [ 1]: -l
+//   [ 2]: -c
+//   [ 3]: NULL      NOTE "&lt;" and "Makefile" removed
+// input_filename: Makefile
+//
+// SETTING OUTPUT FILENAME
+//
+// The output_filename field is set to a pattern like the following:
+//
+//     0017-data_sleep_print.sh.out
+//     |     |                   +-&gt; suffix .out
+//     |     +-&gt; argv[0] with any / characters replaced by _
+//     +-&gt; 4 digit cmdid (index into cmds[] array), 0-padded
+//
+// A copy of the argv[0] string is modified to replace slashes with
+// underscores and the sprintf() family of functions is used for
+// formatting. (NOTE: not all
+//
+// SETTING OTHER FIELDS
+//
+// Other fields are set as follows:
+// - argc to the length of the argv[] array
+// - cmdstate to the CMDSTATE_INIT 
+// - pid, exit_code, output bytes to -1
+//
+// The function returns 1 if the added command caused the internal
+// array of commands to expand and 0 otherwise. 
+// 
+// CONSTRAINT: Do not use snprintf(), just plain sprintf(). Aim for
+// simplicity and add safety at a later time.
 
-<div id="outline-container-org5cac615" class="outline-2">
-<h2 id="org5cac615"><span class="section-number-2">5</span> <b>Problem 2</b>: Start/Finish Tests</h2>
-<div class="outline-text-2" id="text-5">
-</div>
-<div id="outline-container-orgda6c98c" class="outline-3">
-<h3 id="orgda6c98c"><span class="section-number-3">5.1</span> Starting Tests</h3>
-<div class="outline-text-3" id="text-5-1">
-<p>
-Tests are run by forking a child process and later executing the
-program indicated in the <code>program</code> field of the test struct. Before
-executing the program, several items of setup are done.
-</p>
-<ul class="org-ul">
-<li>The parent process must first create the input file for the tested program</li>
-<li>Once a child is forked, the parent process retains the PID for the
-child process and sets its <code>state</code> to <code>TEST_RUNNING</code></li>
-<li>The child process redirects its standard input to come from the
-input file and standard output/error to go into the specified output
-file. This requires the use of system calls like <code>open()</code> and
-<code>dup2()</code></li>
-<li>In order to Execute the program, the child must also set up an
-<code>argv[]</code> array using provided split functions.</li>
-</ul>
-<p>
-Along the way a variety of things may go wrong in which case the child
-process may exit prematurely with exit codes to indicate the problems
-that arose.
-</p>
+void cmdctl_print_oneline(cmdctl_t *cmdctl, int cmdid);
+// PROBLEM 1: Prints a oneline summary of the indicated command's
+// current state. The format is:
+//
+// EXAMPLES:
+//  A:5 B:1 C:-6    D:7     E:-15         F:remaining
+// ------------------------------------------------------------
+//    24 #007575       - RUNNING         data/sleep_print.sh
+//   123 #007570      54 EXIT(0)         seq         
+//     2 #007566      73 EXIT(1)         gcc         
+//  2961 #007562      23 SIGNALLED(-15)  data/self_signal.sh
+// ------------------------------------------------------------
+// 123456789012345678901234567890123456789012345678901234567890
+//
+// - A: cmdid (index into the cmds[] array), 5 places, right aligned
+// - B: # symbol
+// - C: PID of command, 6 places 0 padded, left aligned
+// - D: number of output bytes if not running, otherwise a "-", 7 places
+//      right aligned
+// - E: printed state with exit code/signal, 15 places, left aligned
+// - F: argv[0] (command name), left aligned, printed for remainder of
+//   line
+//
+// For E, the possible outputs are based on cmdstate_t values:
+// - NOTSET
+// - INIT
+// - RUNNING
+// - EXIT(&lt;num&gt;)      : positive number of normal exit
+// - SIGNALLED(&lt;num&gt;) : negative number of signal
+// - UNKNOWN_END
+// - FAIL_INPUT
+// - FAIL_OUTPUT
+// - FAIL_EXEC
+//
+// NOTE: Most implementations will use a combination of printf() and
+// possibly sprintf() to get the required widths. The trickiest part
+// is getting the states EXIT() / SIGNALLED() aligned correctly for
+// which an individual call to sprintf() to first format the numbers
+// followed by a printf() with a width specifier is helpful.
+//
+// CONSTRAINT: Do not use snprintf(), just plain sprintf(). Aim for
+// simplicity and add safety at a later time.
 
-<p>
-The function below is meant to manage this whole process.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">int suite_test_start(suite_t *suite, int testnum);
+void cmdctl_print_all(cmdctl_t *cmdctl);
+// PROBLEM 1: Prints a header and then iterates through all commands
+// printing one-line summaries of them information on them. Prints a
+// table header then repeatedly calls cmdctl_print_oneline(). Example:
+//
+// CMDID PID       BYTES STATE           COMMAND
+//     0 #107561      22 SIGNALLED(-9)   data/self_signal.sh
+//     1 #107562      23 SIGNALLED(-15)  data/self_signal.sh
+//     2 #107566      73 EXIT(1)         gcc         
+//     3 #107570      54 EXIT(0)         seq         
+//     4 #107575       - RUNNING         data/sleep_print.sh
+
+void cmdctl_print_info(cmdctl_t *cmdctl, int cmdid);
+// PROBLEM 1: Prints detailed information about the given
+// command. Example output is as follows.
+//
+// EXAMPLE 1: Exited command
+// Call: cmdctl_print_info(cmdctl, 2);
+// -------OUTPUT-------------
+// CMD 2 INFORMATION
+// command: seq 25
+// argv[]:
+//   [ 0]: seq
+//   [ 1]: 25
+// cmdstate: EXIT(0)
+// input: &lt;NONE&gt;
+// output: commando-dir/0002-seq.out
+// output size: 66 bytes
+// -------------------------
+// 
+// EXAMPLE 2: Running command
+// Call: cmdctl_print_info(cmdctl, 4);
+// -------OUTPUT-------------
+// CMD 4 INFORMATION
+// command: data/sleep_print.sh 25 hello world
+// argv[]:
+//   [ 0]: data/sleep_print.sh
+//   [ 1]: 25
+//   [ 2]: hello
+//   [ 3]: world
+// cmdstate: RUNNING
+// input: &lt;NONE&gt;
+// output: commando-dir/0004-data_sleep_print.sh.out
+// output size: &lt;CMD NOT FINISHED&gt;
+// -------------------------
+//
+// May have be some duplicate code in this function to that present in
+// cmd_print_oneline() for handling the different cmdstate values.
+
+void cmdctl_show_output(cmdctl_t *cmdctl, int cmdid);
+// PROBLEM 1: If the given command is not finished (e.g. still
+// RUNNING), prints the message
+//
+//   NO OUTPUT AVAILABLE: command has not finished running
+//
+// If the command is finished, opens the output file for the command
+// and prints it to the screen using low-level UNIX I/O.
+//
+// CONSTRAINT: This routine must use low-level open() and read() calls
+// and must allocate no more memory for the file contents than
+// MAX_LINE bytes in a buffer. Use of fscanf(), fgetc(), and other C
+// standard library functions is not permitted and scanning the
+// entirety of the file into memory is also not permitted.
+
 ////////////////////////////////////////////////////////////////////////////////
 // PROBLEM 2 Functions
 ////////////////////////////////////////////////////////////////////////////////
-//
-// PROBLEM 2: Start a child process that will run program in the
-// indicated test number. The parent process first sets the
-// outfile_name and creates infile_name with the program input. It
-// then creates a child process, sets the test field `child_pid` to
-// the child process ID and returns 0.
+
+int cmdctl_start_cmd(cmdctl_t *cmdctl, int cmdid);
+// PROBLEM 2: Start a child process that will run the indicated
+// cmd. After creating the child process, the parent sets sets the
+// `pid` field, changes the state to RUNNING and returns 0.
 //
 // The child sets up output redirection so that the standard out AND
 // standard error streams for the child process is channeled into the
-// file named in field `outfile_name`. Note that standard out and
+// file named in field `output_filename`. Note that standard out and
 // standard error are "merged" so that they both go to the same
-// `outfile_name`. This file should have the same options used when
-// opening it as described in suite_test_create_infile(). If
-// infile_name is non-NULL, input redirection is also set up with
-// input coming from the file named in field `infile_name`. Uses the
-// split_into_argv() function to create an argv[] array which is
-// passed to an exec()-family system call.
+// `outfile_name`. This file should use the standard file
+// creation/truncation options (O_WRONLY|O_CREAT|O_TRUNC) and be
+// readable/writable by the user (S_IRUSR|S_IWUSR).
 //
-// Any errors in the child during input redirection setup, output
-// redirection setup, or exec()'ing print error messages and cause an
-// immediate exit() with an associated error code. These are as
-// follows:
+// If input_filename is not empty, input redirection is also set up
+// with input coming from the file named in that field. Output
+// redirection is set up first to allow any errors associated with
+// input redirection to be captured in the output file for the
+// command. 
 //
-// | CONDITION            | EXIT WITH CODE         |                                             |
-// |----------------------+------------------------+---------------------------------------------|
-// | Input redirect fail  | exit(TESTFAIL_INPUT);  |                                             |
-// | Output redirect fail | exit(TESTFAIL_OUTPUT); |                                             |
-// | Exec failure         | exit(TESTFAIL_EXEC);   | Prints 'ERROR: test program failed to exec' |
+// IMPORTANT: Any errors in the child during I/O redirection or
+// exec()'ing print error messages and cause an immediate exit() with
+// an associated error code. These are as follows:
 //
-// Since output redirection is being set up, printing error messages
-// in the child process becomes unreliable. Instead, the exit_code for
-// the child process should be checked for one of the above values to
-// determine what happened.
+// | CONDITION            | EXIT WITH CODE              | Message                                                                         |
+// |----------------------+-----------------------------+---------------------------------------------------------------------------------|
+// | Output redirect fail | exit(CMDSTATE_FAIL_OUTPUT); | No message printed                                                              |
+// | Input redirect fail  | exit(CMDSTATE_FAIL_INPUT);  | ERROR: can't open file 'no-such-file.txt' for input : No such file or directory |
+// | Exec failure         | exit(CMDSTATE_FAIL_EXEC);   | ERROR: program 'no-such-cmd' failed to exec : No such file or directory         |
+//
+// The "No such file..." message is obtained and printed via
+// strerror(errno) which creates a string based on what caused a
+// system call to fail.
 //
 // NOTE: When correctly implemented, this function should never return
 // in the child process though the compiler may require a `return ??`
 // at the end to match the int return type. NOT returning from this
-// function in the child is important as if a child manages to return,
-// there will now be two instances of chester running with the child
-// starting its own series of tests which will not end well...
-</pre>
-</div>
-</div>
-</div>
+// function in the child is important: if a child manages to return,
+// there will now be two instances of main() running with the child
+// starting its own series of grandchildren which will not end well...
 
-<div id="outline-container-org5e0e873" class="outline-3">
-<h3 id="org5e0e873"><span class="section-number-3">5.2</span> Finishing Tests</h3>
-<div class="outline-text-3" id="text-5-2">
-<p>
-After a child process completes running a program, the parent process
-will need to collect information about the test results. This happens
-after a <code>wait()</code>-style system call has indicated the child has
-finished. Actives here include gather the program output, comparing it
-and the child exit code to expected values, and setting the state
-of the test to either <code>TEST_PASSED</code> or <code>TEST_FAILED</code>. The following
-function handles these activities.
-</p>
+int cmdctl_update_one(cmdctl_t *cmdctl, int cmdid, int finish);
+// PROBLEM 2: Updates a single cmd to check for its completion. If the
+// cmd is not RUNNING, returns 0 immediately.
+//
+// If the parameter `finish` is 0, uses wait()-family system calls to
+// determine if the child process associated with the command is
+// complete. If not returns 0 immediately - a NON-BLOCKING WAIT() is
+// required to accomplish this.
+//
+// If the parameter `finish` is 1, uses a BLOCKING-style call to wait
+// until the child process is actually finished before moving on.
+//
+// If the child process is finished, then diagnosis its exit status to
+// determine a normal exit vs abnormal termination due to a
+// signal. the W-MACROS() are used to determine this. The
+// cmd-&gt;exit_code field is set to positive for a regular exit code or th
+// negative signal number for an abnormal exit.
+//
+// The output_bytes is set by using a stat()-family call to determine
+// the number of bytes in the associated output file.
+//
+// When the command finishes, an "ALERT" message is printed like the
+// following which primarily uses the cmd_print_oneline() function.
+//
+// ---&gt; COMPLETE:     2 #108624    2617 EXIT(0)         ls
+// ---&gt; COMPLETE:   129 #108725      22 SIGNALLED(-2)   data/self_signal.sh
+// &lt;string shown&gt; &lt;----------output from cmd_print_oneline()----------------&gt;
+//
+// Returns 1 when the child process changes from RUNNING to a
+// completed state.
 
-<div class="org-src-container">
-<pre class="src src-c">int suite_test_finish(suite_t *suite, int testnum, int status);
-// PROBLEM 2
+int cmdctl_update_all(cmdctl_t *cmdctl, int finish);
+// PROBLEM 2: Iterates through all commands and calls update on
+// them. Passes the the `finish` parameter on to each call. Counts
+// then number of commands that change state (from RUNNING to a
+// finished state) and if 1 or more finish, prints a message like
 //
-// Processes a tests after its child process has completed and
-// determines whether the tests passes / fails.
+//   4 commands finished
 //
-// The `status` parameter comes from a wait()-style call and is use to
-// set the `exit_code_actual` of the test. `exit_code_actual` is one
-// of the following two possibilities:
-// - 0 or positive integer: test program exited normally and the exit
-//   code/status is stored.
-// - Negative integer: The tested program exited abnormally due to
-//   being signaled and the negative of the signal number is
-//   stored. Ex: child received SIGSEGV=11 so exit_code_actual is -11.
-// If `status` indicated neither a normal nor abnormal exit, this
-// function prints an error and returns (this case is not tested).
-//
-// Output produced by the test is read into the `output_actual` field
-// using previously written functions.
-//
-// The test's `state` field is set to one of TEST_PASSED or
-// TEST_FAILED. Comparisons are done between the fields:
-// - output_expect vs output_actual (strings)
-// - exit_code_expect vs exit_code_actual (int)
-//
-// If there is a mismatch with these, the test has failed and its
-// `state` is set to TEST_FAILED. If both sets of fields match, the
-// state of the test becomes `TEST_PASSED` and the suite's
-// `tests_passed` field is incremented.
-//
-// Special Case: if output_expect is NULL, there is no expected output
-// and comparison to output_actual should be skipped. This covers
-// testing cases where a program is being run to examine only whether
-// it returns the correct exit code or avoids segfaults.
-</pre>
-</div>
-</div>
-</div>
-</div>
+// after completing the loop. Returns the number of commands the that
+// finished.
 
-<div id="outline-container-org89c6a32" class="outline-2">
-<h2 id="org89c6a32"><span class="section-number-2">6</span> <b>Problem 3</b>: Creating Test Results</h2>
-<div class="outline-text-2" id="text-6">
-<p>
-It is handy for folks running tests to receive both summary
-information about tests being run and detailed results for individual
-tests. The functions in this problem deal with the latter: they
-construct a results file for a individual tests indicating whether it
-passed and if not the reasons for its failure.
-</p>
-</div>
+////////////////////////////////////////////////////////////////////////////////
+// PROBLEM 3: Implement main() in commando_main.c
+////////////////////////////////////////////////////////////////////////////////
 
-<div id="outline-container-org3302b52" class="outline-3">
-<h3 id="org3302b52"><span class="section-number-3">6.1</span> String Comparison Utilities</h3>
-<div class="outline-text-3" id="text-6-1">
-<p>
-When comparing expected and actual test output, the following two
-functions will be used to hone in on differences between them. These
-functions are used in the next one to produce the results file for a
-test.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">void print_window(FILE *out, char *str, int center, int lrwidth);
-// PROBLEM 3
-// 
-// Print part of the string that contains index center to the given
-// out file. Print characters in the string between
-// [center-lrwidth,center+lrwidth] with the upper bound being
-// inclusive. If either the start or stop point is out of bounds,
-// truncate the printing: the minimum starting point is index 0, the
-// maximum stopping point is the string length.
+int main(int argc, char *argv[]);
+// Problem 3: main in command_main.c.
 //
-// EXAMPLES:
-// char *s = "ABCDEFGHIJKL";
-// //         012345678901
-// print_window(stdout, s, 4, 3);
-// // BCDEFGH
-// // 1234567
-// print_window(stdout, s, 2, 5);
-// // ABCDEFGH
-// // 01234567
-// print_window(stdout, s, 8, 4);
-// // EFGHIJKL
-// // 45678901
+// * COMMAND LINE FORMS 
 //
-// NOTE: this function is used when creating test results to show
-// where expected and actual output differ
-</pre>
-</div>
+// The program must support four command line forms.
+// | ./commando                        | argc=1 | No echo, default cmddir          |
+// | ./commando --echo                 | argc=2 | Echoing on                       |
+// | ./commando --dir &lt;dirname&gt;        | argc=3 | Set cmddir to argument           |
+// | ./commando --echo --dir &lt;dirname&gt; | argc=4 | Echoing on and non-defaut cmddir |
+//
+// When the --echo option is provided, each line of input that is read
+// in is first printed to the screen. This is makes testing easier.
+//
+// When the --dir &lt;dirname&gt; option is present, it sets the output
+// directory used to store command output. If it is not present, the
+// default cmddir name DEFAULT_CMDDIR is used; commando.h sets this to
+// "command-dir".
+//
+// If a command line form above is not matched (arg 1 is not --echo,
+// no &lt;dirname&gt; provided, 5 or more args given, etc.), then the
+// following usage message should be printed:
+//
+//   usage: ./commando
+//          ./commando --echo
+//          ./commando --dir &lt;dirname&gt;
+//          ./commando --echo --dir &lt;dirname&gt;
+//   Incorrect command line invocation, use one of the above
+//
+//
+// * INTERACTIVE LOOP
+//
+// After setting up a cmdctl struct, main() enters an interactive loop
+// that allows users to use built-in and external commands.  Each
+// iteration of the interactive loop prints a prompt then reads a line
+// of text from users using the fgets() function. If echoing is
+// enabled, the line read is immediately printed.
+//
+// A full line is read as it may contain many tokens that will become
+// part of an external command to run.  The first "token" (word) on
+// the line is extracted using a call to sscanf() and checked against
+// the built-in commands below. If the word matches a known built-in,
+// then the program honors it and iterates.
+//
+// If no built-in functionality matches, then the line is treated as
+// an external command and run via a fork() / exec() regime from
+// functions like cmdctl_add_cmd() and cmdctl_start_cmd().
+//
+// At the top of each interactive loop, all commands are updated via a
+// call to cmdctl_update_all(...,0) which which will check to see if
+// any commands have finished and print a message indicating as much
+// before the prompt.
+//
+// Cautions on using fgets(): While useful, fgets() is a little tricky
+// and implementer should look for a brief explanation of how it
+// works. Keep in mind the following
+// - It requires a buffer to read into; use one of size MAX_LINE
+// - It will return NULL if the end of input has been reached
+// - Any newlines in the input will appear in the buffer; use strlen()
+//   to manually "chop" lines to replace the trailing \n with \0 when
+//   processing the command
+// - A handy invocation is something like
+//     char firstok[...];
+//     sscanf(inline, "%s", firstok);
+//   which allows the first token (word) to be extracted from the
+//   input line.  Other tokens can be similarly extracted using
+//   sscanf(). 
+//
+// * STARTUP MESSAGES AND ERRORS
+//
+// When beginning, commando will print out the following:
+//
+//   === COMMANDO ver 2 ===
+//   Re-using existing output directory 'commando-dir'
+//   Type 'help' for supported commands
+//   COMMANDO&gt;&gt;
+//
+// The last line is the prompt for input form the user.
+//
+// The first line indicates that there is already a directory present
+// with output so old command output may get overwritten.  It is
+// printed during cmdctl_create_cmddir().
+//
+// * BUILT-IN FUNCTIONALITY
+//
+// Typing 'help' will show a message about the built-in functionality.
+//
+// COMMANDO&gt;&gt; help
+// help                       : show this message
+// exit                       : exit the program
+// directory                  : show the directory used for command output
+// history                    : list all jobs that have been started giving information on each
+// pause &lt;secs&gt;               : pause for the given number of seconds which may be fractional
+// info &lt;cmdid&gt;               : show detailed information on a command
+// show-output &lt;cmdid&gt;        : print the output for given command number
+// finish &lt;cmdid&gt;             : wait until the given command finishes running
+// finish-all                 : wait for all running commands to finish
+// source &lt;filename&gt;          : (MAKEUP) open and read input from the given file as though it were typed
+// command &lt;arg1&gt; &lt;arg2&gt; ...  : non-built-in is run as a command and logged in history
+//
+// These are all demonstrated in the project specification and
+// generally encompass either an associated service function. The
+// `source` built-in is optional for MAKEUP credit.
 
-<div class="org-src-container">
-<pre class="src src-c">int differing_index(char *strA, char *strB);
-// PROBLEM 3
-// 
-// Finds the lowest index where different characters appear in strA and
-// strB. If the strings are identical except that one is longer than
-// the other, the index returned is the length of the shorter
-// string. If the strings are identical, returns -1.
-//
-// EXAMPLES:
-// differing_index("01234567","0123x567") -&gt; 4
-// differing_index("012345","01234567")   -&gt; 6
-// differing_index("012345","01x34567")   -&gt; 2
-// differing_index("012345","012345")     -&gt; -1
-// 
-// NOTE: this function is used when creating test results to show
-// where expected and actual output differ
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org2bd2822" class="outline-3">
-<h3 id="org2bd2822"><span class="section-number-3">6.2</span> Results Files</h3>
-<div class="outline-text-3" id="text-6-2">
-<p>
-Results files for individual tests are stored in the Testing Directory
-and are named according to the test number and prefix for the
-suite. An example result file with some comments is shown below. This
-is the same example that appears in the documentation comments for the
-following function. Result files are in Markdown format just like
-input files.
-</p>
-<div class="org-src-container">
-<pre class="src src-markdown"># TEST 6: wc 1 to 10 (FAIL)              &lt;!--- testnum and test title, print "ok" for passed tests --&gt;
-## DESCRIPTION
-Checks that wc works with input          &lt;!--- description field of test --&gt;
-
-## PROGRAM: wc                           &lt;!--- program field of test --&gt;
-
-## INPUT:                                &lt;!--- input field of test, "INPUT: None" for NULL input --&gt;
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-                                         &lt;!--- if output_expect is NULL, print "OUTPUT: skipped check" --&gt;
-## OUTPUT: MISMATCH at char position 3   &lt;!--- results of differing_index() between  --&gt;
-### Expect                               &lt;!--- output_expect and output_actual fields --&gt;
-10 10 21                                 &lt;!--- output_expect via calls to print_window() --&gt;
-
-### Actual
-10  9 20                                 &lt;!--- output_actual via calls to print_window() --&gt;
-                                         &lt;!--- if no MISMATCH in output, prints ## OUTPUT: ok --&gt;
-
-## EXIT CODE: ok                         &lt;!--- MISMATCH if exit_code_expect and actual don't match and --&gt;
-                                         &lt;!--- prints Expect/Actual values --&gt;
-## RESULT: FAIL                          &lt;!--- "ok" for passed tests --&gt;
-</pre>
-</div>
-
-
-<p>
-The function below produces a result file for a given test.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">int suite_test_make_resultfile(suite_t *suite, int testnum);
-// PROBLEM 3
-//
-// Creates a result file for the given test. The general format is shown in the example below.
-//   # TEST 6: wc 1 to 10 (FAIL)              // testnum and test title, print "ok" for passed tests
-//   ## DESCRIPTION
-//   Checks that wc works with input          // description field of test
-//
-//   ## PROGRAM: wc                           // program field of test
-//
-//   ## INPUT:                                // input field of test, "INPUT: None" for NULL input
-//   1
-//   2
-//   3
-//   4
-//   5
-//   6
-//   7
-//   8
-//   9
-//   10
-//                                            // if output_expect is NULL, print "OUTPUT: skipped check"
-//   ## OUTPUT: MISMATCH at char position 3   // results of differing_index() between 
-//   ### Expect                               // output_expect and output_actual fields
-//   10 10 21                                 // output_expect via calls to print_window()
-//
-//   ### Actual
-//   10  9 20                                 // output_actual via calls to print_window()
-//                                            // if no MISMATCH in output, prints ## OUTPUT: ok
-//
-//   ## EXIT CODE: ok                         // MISMATCH if exit_code_expect and actual don't match and
-//                                            // prints Expect/Actual values
-//   ## RESULT: FAIL                          // "ok" for passed tests
-//
-// The file to create is named according to the pattern
-//
-// TESTDIR/PREFIX-result-05.md
-//
-// with TESTDIR / PREFIX and 05 substituted for the `testdir` and
-// `prefix` fields of suite and 05 for the testnum (width 2 and
-// 0-padded). Note the use of the .md extension to identify the output
-// as Markdown formatted text.
-//
-// The output file starts with a heading which prints the a heading
-// with the testnum and title in it along with ok/FAIL based on the
-// `state` of the test. Then 6 sections are printed which are
-// 1. DESCRIPTION
-// 2. PROGRAM
-// 3. INPUT
-// 4. OUTPUT (comparing output_expect and output_actual)
-// 5. EXIT CODE (comparing exit_code_expect and exit_code_actual)
-// 6. RESULT
-//
-// In the OUTPUT section, if a difference is detected at position N
-// via the differing_index() function, then a window around position N
-// is printed into the file for both the expected and actual
-// output. The window width used is defined in the header via the
-// constant TEST_DIFFWIDTH and is passed to print_window() function.
-//
-// If the output_expect field is NULL, the OUTPUT section header has
-// the message "skipped check" printed next to it.
-//
-// In the EXIT CODE section, if there is a mismatch between the
-// expected and actual exit_code, then they are both printed as in:
-// ## EXIT CODE: MISMATCH
-// - Expect: 0
-// - Actual: 1
-//
-// The final RESULT section prints either ok / FAIL depending on the
-// test state.
-//
-// If the result file cannot be opened/created, this file prints the
-// error message
-//   ERROR: Could not create result file 'XXX'
-// with XXX substituted for the file name and returns -1. Otherwise
-// the function returns 0 on successfully creating the resultfile.
 </pre>
 </div>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orge40f5dd" class="outline-2">
-<h2 id="orge40f5dd"><span class="section-number-2">7</span> <b>Problem 4</b>: Running Suite Tests</h2>
-<div class="outline-text-2" id="text-7">
+<div id="outline-container-orgee79a72" class="outline-2">
+<h2 id="orgee79a72"><span class="section-number-2">5</span> <b>Problem 1</b>: Basic Functionality</h2>
+<div class="outline-text-2" id="text-5">
 <p>
-Running the tests in a suite is performed by the following
-function. Note that it uses the <code>tests_torun[]</code> array to determine
-which tests to run: this array contains indices of tests to run and
-may be a subset of all tests.  The array is set before running the
-function such as during the <code>main()</code> function.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-c">int suite_run_tests_singleproc(suite_t *suite);
-// PROBLEM 4
-//
-// Runs tests in the suite one at time. Before begining the tests,
-// creates the testing directory with a call to
-// suite_create_testdir().  If the directory cannot be created, this
-// function returns -1 without further action.
-//
-// The tests with indices in the field `tests_torun[]` are run in the
-// order that they appear there. This is done in a loop.
-// `suite_test_start(..)` is used to start tests and wait()-style
-// system calls are used to suspend execution until the child process
-// is finished. Additional functions previously written are then used
-// to
-// - Assign the exit_code for the child
-// - Read the actual output into the test struct
-// - Set the pass/fail state
-// - Produce a results file for the test
-//
-// Prints the "Running with single process:" and each test that
-// completes prints a "." on the screen to give an indication of
-// progress. "Done" is printed when all tests complete so that a full
-// line which runs 8 tests looks like
-//
-//    Running with single process: ........ Done
-//
-// If errors arise such as with waiting for a child process, failures
-// with getting the test output, or other items, error messages should
-// be printed but the loop should continue. No specific error messages
-// are required and no testing is done; error messages are solely to
-// aid with debugging problems.
-</pre>
-</div>
-
-<p>
-After the specified tests are run, a summary table is useful and can
-be printed using the following function.
-</p>
-<div class="org-src-container">
-<pre class="src src-c">void suite_print_results_table(suite_t *suite);
-// PROBLEM 4
-//
-// Prints a table of test results formatted like the following.
-//
-//  0) echo check           : FAIL -&gt; see chester-test/prob1-result-00.txt
-//  1) sleep 2s             : ok
-//  2) pwd check            : FAIL -&gt; see chester-test/prob1-result-02.txt
-//  3) seq check            : ok
-//  4) ls check             : FAIL -&gt; see chester-test/prob1-result-04.txt
-//  5) ls not there         : ok
-//  6) wc 1 to 10           : FAIL -&gt; see chester-test/prob1-result-06.txt
-//  7) date runs            : ok
-//
-// The test number at the beginning of the line is printed with width
-// 2 and space padded. The Test title is printed with a width of 20,
-// left-aligned using capabilities of printf().  If the test passes,
-// the message "ok" is added while if it fails, a FAIL appears and the
-// result file associated with the test is indicated. This function
-// honors the `tests_torun[]` array and will only print table results
-// for tests with indices in this array.
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org350645a" class="outline-2">
-<h2 id="org350645a"><span class="section-number-2">8</span> <b>Problem 5</b>: Chester Main</h2>
-<div class="outline-text-2" id="text-8">
-<p>
-The final step in constructing Chester is to provide a <code>main()</code> function
-in <code>chester_main.c</code> which sequences all the previous functionality
-properly. 
+Functions in this problem are all in <code>commando_funcs.c</code> and are
+designed to acquaint implementers with the basic data types in the
+project along with providing some printing functionality.
 </p>
 </div>
-
-<div id="outline-container-org2704d42" class="outline-4">
-<h4 id="org2704d42">Parsing the Input File</h4>
-<div class="outline-text-4" id="text-org2704d42">
+<div id="outline-container-org8cd70fc" class="outline-3">
+<h3 id="org8cd70fc"><span class="section-number-3">5.1</span> Implementation Notes</h3>
+<div class="outline-text-3" id="text-5-1">
 <p>
-A function is provided in <code>chester_util.c</code> to parse input files and
-fill in a <code>suite_t</code> struct which should be used to avoid the need to
-do manual parsing. A typical invocation will be:
+Most Implementation Notes are provided in the <a href="#org68ed629">Outline of Code</a>. Here
+are a few additional items to consider
 </p>
+</div>
+<div id="outline-container-org0ed66a3" class="outline-4">
+<h4 id="org0ed66a3">Use of <code>realloc()</code></h4>
+<div class="outline-text-4" id="text-org0ed66a3">
+<p>
+Aside from <code>malloc() / calloc()</code>, the C standard library provides one
+more useful memory allocation function called <code>realloc()</code>. A call to
+it looks like the following.
+</p>
+
 <div class="org-src-container">
 <pre class="src src-c">{
-  char *infilename = ...;
-  suite_t mysuite;
-  int ret = suite_init_from_file(&amp;suite, infilename);
-  if(ret == -1){
-    // error case;
+  int count = 10;
+  data_t *ptr = malloc(sizeof(data_t)*count); // malloc()'d at some size
+  ...;                                        // after a short time...
+  count = count * 2;                          // need more space in the array
+  data_t *old = ptr;                          // optionall save location
+  ptr = realloc(ptr, sizeof(data_t)*count);   // allocate more space
+  // ptr now refers to a larger area
+
+  if(ptr == old){
+    printf("Same location\n");  // expansion in place by extending a heap block
   }
-  ...
+  else{
+    printf("New location!\n");  // data copied to new larger location and old
+  }                             // now refers to a free()'d region
+}  
+</pre>
+</div>
+<p>
+<code>realloc()</code> gets a larger heap area for heap-allocated data as
+efficiently as possible.
+</p>
+<ul class="org-ul">
+<li>It may be able to expand the data in place to the new size</li>
+<li>It may have to move the data to a new location in which case the old
+area will be de-allocated</li>
+</ul>
+<p>
+The reasons for the two cases will be easier to understand once heap
+implementation is discussed.
+</p>
+</div>
+</div>
+<div id="outline-container-orgc20d407" class="outline-4">
+<h4 id="orgc20d407">Use of <code>sprintf()</code></h4>
+<div class="outline-text-4" id="text-orgc20d407">
+<p>
+There are situations in which one wants to craft a string using
+<code>printf()</code>-like formatting. For this <code>sprintf()</code> is useful: rather
+than printing to the screen, it arranges characters in a string
+(character array). A simple usage is:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">{
+  int meaning = 42;
+  char *speaker = "Deep Thought";
+  char strbuf[128];
+  sprintf(strbuf,"%s: The meaning of life is %d",speaker,meaning);
+  // strbuf: "Deep Thought: The meaning of life is 42"
 }
 </pre>
 </div>
-<p>
-Note that this opts to place the suite in the stack which is typical
-but not required.
-</p>
-</div>
-</div>
-
-<div id="outline-container-orgce67c60" class="outline-4">
-<h4 id="orgce67c60">Command Line options</h4>
-<div class="outline-text-4" id="text-orgce67c60">
-<p>
-For convenience, <code>chester</code> can be run with two variations:
-</p>
-<div class="org-src-container">
-<pre class="src src-sh">&gt;&gt; chester tests.md             # (A) run all tests in the input file
-&gt;&gt; chester tests.md 2 5 9 11    # (B) specify which tests to run on the command line
-</pre>
-</div>
-<p>
-Processing of the command line options will need to take place in
-<code>main()</code> to set up the <code>tests_torun[]</code> array to reflect these two
-possibilities. 
-</p>
-</div>
-</div>
-
-<div id="outline-container-orgb827829" class="outline-4">
-<h4 id="orgb827829">Output</h4>
-<div class="outline-text-4" id="text-orgb827829">
-<p>
-The main program should print a title message like:
-</p>
-<div class="org-src-container">
-<pre class="src src-text">&gt;&gt; chester data/special_cases.md 2 4 7
-data/special_cases.md : running 3 / 9 tests
-...
-</pre>
-</div>
-<p>
-The title message indicates the input file name and how many tests are
-being run versus how many are in the input file.
-</p>
 
 <p>
-The program should then call <code>suite_run_tests_singleproc()</code> to run the
-indicated tests and use <code>suite_print_results_table()</code> to print a
-results table. Errors uncounted while running tests may cause the
-program to bail early and not print any test results such as if the
-testing directory could not be created.
-</p>
-
-<p>
-At the end of teasing, a summary message should be printed like the
-following:
-</p>
-<div class="org-src-container">
-<pre class="src src-text">Overall: 2 / 3 tests passed
-</pre>
-</div>
-<p>
-which is the number of test passed versus the number that were run.
+<code>sprintf()</code> is a bit "dodgy" as it has the potential to overflow
+buffers but in our beginner setting we are not overly concerned with
+this. In the wild, opt for <code>snprintf()</code> which can prevent buffer
+overflow but for this project *use <code>sprintf() and NOT snprintf()</code>.
 </p>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org277070e" class="outline-2 grading 100">
-<h2 id="grading-criteria"><a id="org277070e"></a><span class="section-number-2">9</span> <a id="orge5c2d4b"></a> Grading Criteria&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="100">100</span></span></h2>
-<div class="outline-text-2" id="text-grading-criteria">
+<div id="outline-container-org41e6f39" class="outline-3 grading 30">
+<h3 id="org41e6f39"><span class="section-number-3">5.2</span> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="30">30</span></span></h3>
+<div class="outline-text-3" id="text-5-2">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -2430,623 +1707,44 @@ which is the number of test passed versus the number that were run.
 </thead>
 <tbody>
 <tr>
-<td class="org-right">50</td>
-<td class="org-left">AUTOMATED TESTS TOTAL: 1 point per test</td>
-</tr>
-
-<tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">10</td>
-<td class="org-left"><b>Problem 1:</b> <code>make test-prob1</code> runs tests from <code>test_prob1.org</code> for correctness</td>
+<td class="org-left">AUTOMATED TESTS via <code>make test-prob1</code></td>
 </tr>
 
 <tr>
 <td class="org-right">15</td>
-<td class="org-left"><b>Problem 2:</b> <code>make test-prob2</code> runs tests from <code>test_prob2.org</code> for correctness</td>
+<td class="org-left">Tests provide via <code>test_prob1.org</code> and <code>test_commando.c</code></td>
 </tr>
 
 <tr>
-<td class="org-right">10</td>
-<td class="org-left"><b>Problem 3:</b> <code>make test-prob3</code> runs tests from <code>test_prob3.org</code> for correctness</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Runs all code under Valgrind to ensure that no memory errors are present.</td>
 </tr>
 
 <tr>
-<td class="org-right">10</td>
-<td class="org-left"><b>Problem 4:</b> <code>make test-prob4</code> runs tests from <code>test_prob4.org</code> for correctness</td>
-</tr>
-
-<tr>
-<td class="org-right">5</td>
-<td class="org-left"><b>Problem 5:</b> <code>make test-prob5</code> runs tests from <code>test_prob5.org</code> for correctness</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">1 point per test passed</td>
 </tr>
 </tbody>
 <tbody>
 <tr>
-<td class="org-right">50</td>
-<td class="org-left">MANUAL INSPECTION TOTAL</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">10</td>
-<td class="org-left"><b>PROBLEM 1 <code>chester_funcs.c</code></b></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>suite_create_testdir()</code> : Makes use of system calls like <code>stat() / mkdir()</code> to create the test directory</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>suite_test_set_outfile_name()</code>: Uses <code>sprintf()</code>-style function and <code>strdup()</code> to fill the <code>outfile_name</code> field</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>suite_test_create_infile()</code>: Fills the <code>infile_name</code> field and uses system calls like <code>open() / write()</code> to create the input file</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><i>CRITERIA for <code>suite_test_read_output_actual()</code></i></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Makes use of system calls like <code>stat() / open() / read()</code> to read the input efficiently</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Determines file size ahead of time and uses a single memory allocation to create a buffer for the file contents</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Properly null-terminates the <code>output_actual</code> field; closes open file descriptors</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><i>CRITERIA for ALL FUNCTIONS</i></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">ERROR CHECKING: Functions perform error checking on system calls looking for <code>-1</code> returns which indicate the system calls failed</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">CODE STYLE</a>: Functions adhere to <a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">CMSC 216 C Coding Style Guide</a> which dictates reasonable indentation, commenting, consistency of curly usage, etc.</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">10</td>
-<td class="org-left"><b>PROBLEM 2 <code>chester_funcs.c</code></b></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><i>CRITERIA for <code>suite_test_start()</code></i></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Parent process uses previously defined functions to set the output file name and create the input file prior to forking</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Uses <code>fork()</code> to create a child process and has distinct code paths for parent and child processes</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Child process redirects standard output and error streams into <code>outfile_name</code> using system calls like <code>open() / dup2()</code></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Child process may redirect standard input to come from <code>infile_name</code></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Child process sets up an <code>argv[]</code> array using provided functions and uses and <code>exec()</code>-style sytem call to run the test program</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Error checking is done on I/O redirection and <code>exec()</code> calls with appropriate exit codes for failures here</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Explanatory COMMENTS are present to help a reader through the long function</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><i>CRITERIA for <code>suite_test_finish()</code></i></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Macros associated with <code>wait()</code> are used to determine if a child process exited normally or abnormally and the test <code>exit_code</code> field</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Output for the test is read using a previously defined function</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">The test status is updated to indicate a pass / fail based on comparing expect/actual output and exit<sub>codes</sub>; suite <code>tests_passed</code> is updated</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><i>CRITERIA for ALL FUNCTIONS</i></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Error Checking: Functions perform error checking on system calls looking for <code>-1</code> returns which indicate the system calls failed</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">Code Style</a>: Functions adhere to <a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">CMSC 216 C Coding Style Guide</a> which dictates reasonable indentation, commenting, consistency of curly usage, etc.</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">10</td>
-<td class="org-left"><b>PROBLEM 3 <code>chester_funcs.c</code></b></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>print_window()</code>: Concise and clear code is used for printing a window of the string</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>differing_index()</code>: Concise and short code is used to identify the first index of difference between strings</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><i>CRITERIA for <code>suite_test_make_resultfile()</code></i></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>sprintf() / strdup()</code> are used to populate the <code>resultfile_name</code> test field</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">No mingling of low-level/high-level output functions is used; prefer high-level C output like <code>fopen() / fprintf()</code> for its convenience</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Function has clear sections that print different parts of the output file like title, input if present, expected output, etc.</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Explanatory COMMENTS are present to help a reader through the long function</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><i>CRITERIA for ALL FUNCTIONS</i></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">Code Style</a>: Functions adhere to <a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">CMSC 216 C Coding Style Guide</a> which dictates reasonable indentation, commenting, consistency of curly usage, etc.</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">10</td>
-<td class="org-left"><b>PROBLEM 4 <code>chester_funcs.c</code></b></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><i>CRITERIA for <code>suite_run_tests_singleproc()</code></i></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Previously defined function used to create the testing directory if needed; error checking in case this fails</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Clear loop over only the tests specified in the <code>tests_torun[]</code> field, NOT all tests</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Previously defined functions used to start tests running and finish their processing when complete</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Use of <code>wait() / waitpid()</code> system calls to pause the process until a child process has finished.</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Error checking case of failures on <code>wait() / waitpid()</code> or finishing tests</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>suite_print_results_table()</code>: Clear loop to print test results for only tests that were run, use of <code>printf()</code> features to nicely format the table</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><i>CRITERIA for ALL FUNCTIONS</i></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Error Checking: Functions perform error checking on system calls looking for <code>-1</code> returns which indicate the system calls failed</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">Code Style</a>: Functions adhere to <a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">CMSC 216 C Coding Style Guide</a> which dictates reasonable indentation, commenting, consistency of curly usage, etc.</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">10</td>
-<td class="org-left"><b>PROBLEM 5 <code>chester_main.c</code></b></td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>main()</code> function makes use of provided functions in <code>chester_util.c</code> for parsing input files and de-allocating suite memory</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Clear processing of command line arguments is present with distinct cases for the two forms of running <code>chester</code>:</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">(1) No command line arguments beyond the input file defaults to running all tests</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">(2) Command line arguments are present beyond the input file and these are specific tests to run</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Use of previously defined functions to run all tests and print a results table</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">Code Style</a>: Functions adhere to <a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">CMSC 216 C Coding Style Guide</a> which dictates reasonable indentation, commenting, consistency of curly usage, etc.</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-
-<div id="outline-container-org6951fdf" class="outline-2">
-<h2 id="makeup"><a id="org6951fdf"></a><span class="section-number-2">10</span> <a id="orgc8f0227"></a> <b>Optional Makeup Credit</b></h2>
-<div class="outline-text-2" id="text-makeup">
-<p>
-A great advantage while testing is the ability to run tests
-concurrently.  When multiple CPUs or Cores are available, this means
-that tests will run in parallel. Any I/O latency for tests will be
-masked to some degree by concurrent runs of tests.  In short, test
-results will be obtained faster with concurrent runs.
-</p>
-
-<p>
-This Optional MAKEUP problem studies one approach this in two parts.
-</p>
-
-<ol class="org-ol">
-<li>A new function called <code>suite_run_tests_multiproc()</code> is implemented
-which starts multiple processes running tests up to a limit.</li>
-<li>The <code>main()</code> function is modified to allow a command line parameter
-to dictate how many concurrent processes should be used to run
-tests.</li>
-</ol>
-</div>
-
-<div id="outline-container-org3075960" class="outline-3">
-<h3 id="org3075960"><span class="section-number-3">10.1</span> Multiprocess Testing</h3>
-<div class="outline-text-3" id="text-10-1">
-<p>
-The required <code>suite_run_tests_singleproc()</code> runs tests one at a time
-waiting for each to finish. However, the infrastructure around running
-tests is designed to allow concurrent child processes to handle
-tests. The following function performs the same task using multiple
-concurrent processes.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-c">int suite_run_tests_multiproc(suite_t *suite);
-// MAKEUP CREDIT: Like suite_run_tests_singleproc() but uses up to
-// suite.max_procs concurrent processes to do so. This will speed up
-// tests if multiple processors are available or if tests are bounded
-// by I/O operations. The general algorithm to achieve concurrent
-// execution is described in the project description and should be
-// consulted carefully when implementing this function.
-</pre>
-</div>
-
-<p>
-The algorithm alluded to in the documentation comments is roughly as
-follows. 
-</p>
-
-<p>
-<b>CAVEAT: The pseudocode given runs all tests but actual
-implementations</b> <b>should only run tests with indices in
-<code>suite.tests_torun[]</code>.</b>
-</p>
-<div class="org-src-container">
-<pre class="src src-python"># RUN ALL TESTS CONCURRENTLY USING suite.max_proc CONCURRENT PROCESSES
-create test directory
-tests_count = suite.tests_count
-tests_index = 0
-test_complete = 0
-procs_max = suite.max_procs
-procs_running = 0
-while tests_complete &lt; tests_count :
-  if procs_running &lt; procs_max and test_index &lt; tests_count:
-    # under the maximum processes and tests remain to start
-    start tests[tests_index]
-    tests_index += 1
-    procs_running += 1
-  else:
-    # runnig maxprocs or no tests remain to start
-    test_pid = wait()
-    tests_complete += 1
-    procs_running -= 1
-    testnum = test associated to test_pid
-    finish testnum, create its results file
-    print a "." to indicate progress
-</pre>
-</div>
-<p>
-<b>CAVEAT REPEATED: The pseudocode given runs all tests but actual
-implementations</b> <b>should only run tests with indices in
-<code>suite.tests_torun[]</code>.</b>
-</p>
-
-<p>
-The output for the function is the same as for
-<code>suite_run_tests_singleproc()</code> except that the number of processes
-being used is shown. Below is a commented example:
-</p>
-<div class="org-src-container">
-<pre class="src src-text">Running with XX processes: .... Done
-</pre>
-</div>
-<p>
-Substitut <code>XX</code> for <code>suite.max_procs</code> and as indicated in the
-pseudocode, print a dot (.) for each test that completes.
-</p>
-</div>
-</div>
-
-<div id="outline-container-orgc2f3421" class="outline-3">
-<h3 id="orgc2f3421"><span class="section-number-3">10.2</span> Chester Main Support</h3>
-<div class="outline-text-3" id="text-10-2">
-<p>
-Modify the <code>main()</code> function in <code>chester_main.c</code> to support the
-following new command line invocations which allow the number of
-processes to use to be specified on the command line.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh"># PREVIOUS FORMS
-&gt;&gt; chester tests.md             # (A) run all tests in the input file
-&gt;&gt; chester tests.md 2 5 9 11    # (B) specify which tests to run on the command line
-
-# NEW FORMS
-&gt;&gt; chester -max_procs 4 tests.md           # (C) run all tests, use up to 4 concurrent child processes 
-&gt;&gt; chester -max_procs 2 tests.md 2 5 9 11  # (D) run specified tests, use up to 2 concurrent child processes 
-</pre>
-</div>
-
-<p>
-These new forms will require <code>main()</code> to check for the presence of
-<code>-max_procs</code> as an option and use it to set the <code>suite.max_procs</code>
-field after loading the suite from the indicated file.
-</p>
-
-<p>
-Finally, when the <code>max_procs</code> option is present and the
-<code>suite.max_procs</code> field is set to a positive integer, <code>main()</code> should
-call <code>suite_run_tests_multiproc()</code>. If these are not so, <code>main()</code>
-should call <code>suite_run_tests_singleproc()</code>.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org2bcda6c" class="outline-3">
-<h3 id="org2bcda6c"><span class="section-number-3">10.3</span> Makeup Grading Criteria</h3>
-<div class="outline-text-3" id="text-10-3">
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-right" />
-
-<col  class="org-left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="org-right">Weight</th>
-<th scope="col" class="org-left">Criteria</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="org-right">10</td>
-<td class="org-left">AUTOMATED TESTS:</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>make test-makeup</code> runs tests from <code>test_makeup.org</code> for correctness</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">Tests evaluate <code>suite_run_tests_multiproc()</code> and <code>chester -max_procs N</code> invocation</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">1 point per test</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-right">5</td>
+<td class="org-right">15</td>
 <td class="org-left">MANUAL INSPECTION</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left"><code>suite_run_tests_multiproc()</code> uses the suggested structure / algorithm to launch and manage multiple processes</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">Code Style</a>: Functions adhere to <a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">CMSC 216 C Coding Style Guide</a> which dictates</td>
 </tr>
 
 <tr>
 <td class="org-right">&#xa0;</td>
-<td class="org-left">Previous functions are used to create the testing directory, start tests, and finish tests</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">A <code>wait()</code>-style system call is sued to suspend Chester until a child process finishes</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">There is clear code to determine which test has finished based on a child PID, perhaps using a helper function</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">The <code>max_procs</code> field of suite is honored: only <code>max_procs</code> child processes are created at one time</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left">NOTE: solution that do not honor <code>max_procs</code> will not receive much credit</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>main()</code> has new sections to honor the <code>-max_procs N</code> command line option and sets the suite <code>max_procs</code> field</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>main()</code> will call <code>suite_run_tests_multiproc()</code> when <code>max_procs</code> is above 0 and <code>suite_run_tests_singleproc()</code> otherwise</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><code>main()</code> handles <code>-max_procs N</code> while still allowing individual tests to be specified as additional command line arguments</td>
-</tr>
-
-<tr>
-<td class="org-right">&#xa0;</td>
-<td class="org-left"><a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">Code Style</a>: Functions adhere to <a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">CMSC 216 C Coding Style Guide</a> which dictates reasonable indentation, commenting, consistency of curly usage, etc.</td>
+<td class="org-left">reasonable indentation, commenting, consistency of curly usage, etc.</td>
 </tr>
 
 <tr>
@@ -3055,44 +1753,1046 @@ should call <code>suite_run_tests_singleproc()</code>.
 </tr>
 
 <tr>
-<td class="org-right">15</td>
-<td class="org-left">TOTAL</td>
+<td class="org-right">1</td>
+<td class="org-left"><code>cmdctl_new() / cmdctl_free()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Effort to initialize fields to default values when allocating</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear traversal of <code>cmds[]</code> array and all <code>argv[]</code> elements to free them</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left"><code>cmdctl_create_cmddir()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of the system call <code>mkdir()</code> to create the directory</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Checks for presence of an existing directory which is re-used</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Checks for existing non-directory file which is reported</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left"><code>cmdctl_add_cmd()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Code to detect the need to expand the <code>cmds[]</code> array and use of <code>realloc()</code> to do so</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of the <code>split_into_argv()</code> function to split up the provided command line</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Processing of the <code>argv[0]</code> element to replace all <code>/</code> characters with <code>_</code> characters</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Detection and processing of input redirection via <code>... &lt; file.txt</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">May use <code>sprintf()</code> but NOT <code>snprintf()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left"><code>cmdctl_print_oneline()</code> <code>cmdctl_print_all()</code> <code>cmdctl_print_info()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Handles cases for each of the <code>cmdsate</code> values like <code>RUNNING / EXIT / etc.</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">May use <code>sprintf()</code> but NOT <code>snprintf()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left"><code>cmdctl_show_output()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Uses low-level <code>open() / read()</code> calls for reading files</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Utilizes a buffer no larger than <code>MAX_LINE</code> bytes for input</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Demonstrates a clear input loop to read parts of the file, process it, then repeat</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 </div>
-
-
-<div id="outline-container-org2d71cbf" class="outline-2">
-<h2 id="org2d71cbf"><span class="section-number-2">11</span> Assignment Submission</h2>
-<div class="outline-text-2" id="text-11">
+<div id="outline-container-orgd416b44" class="outline-2">
+<h2 id="orgd416b44"><span class="section-number-2">6</span> <b>Problem 2</b>: Starting and Finishing Commands</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+This problem implements functions to start, update, and finish
+commands. There are only two but they are interesting in that they
+utilize system calls we have studied.
+</p>
 </div>
-<div id="outline-container-org2c3781c" class="outline-3">
-<h3 id="org2c3781c"><span class="section-number-3">11.1</span> <a id="orgb635497"></a> Submit to Gradescope</h3>
-<div class="outline-text-3" id="text-11-1">
+<div id="outline-container-org282225f" class="outline-3">
+<h3 id="org282225f"><span class="section-number-3">6.1</span> Implementation Notes</h3>
+<div class="outline-text-3" id="text-6-1">
+</div>
+<div id="outline-container-org3ecf92a" class="outline-4">
+<h4 id="org3ecf92a">Printing System Call Errors</h4>
+<div class="outline-text-4" id="text-org3ecf92a">
+<p>
+When system calls like <code>open() / fork() / etc.</code> fail, they set a
+global variable which indicates the cause of an error. This can be
+reported in several ways shown in the following examples.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">{
+  char *filename = "myfile.txt";
+  int ret = open(filename, O_RDONLY);
+  if(ret == -1){
+    printf("open() failed");
+    // (A) fixed message, little information
+
+    perror("open failed because"); 
+    // (B) perror() appends a cause for the failure automatically
+
+    fprintf(stderr, "open() on the file %s failed : %s\n",
+            filename, strerror(errno));
+    // (C) sterror(errno) returns a string which can be inserted into
+    // a format string which conveys more information about the context
+}
+</pre>
+</div>
+
+<p>
+Each of these is appropriate to some contexts but (C) is the most
+flexible as it allows a string error message to be inserted at an
+arbitrary location in other output.
+</p>
+</div>
+</div>
+<div id="outline-container-org6284d8e" class="outline-4">
+<h4 id="org6284d8e">Starting Commands</h4>
+<div class="outline-text-4" id="text-org6284d8e">
+<p>
+Starting child processes via <code>fork()</code> has been discussed and should be
+used in <code>cmdctl_start_cmd()</code> function. Be cautious with this as errors
+in such code can have strange effects.
+</p>
+<ul class="org-ul">
+<li>Ensure there are cases where the parent and child process execute
+differing code by checking the return value of <code>fork()</code></li>
+<li>If the child encounters errors, make sure to <code>exit(code)</code> from it:
+that is a standard C function that ends a process. This avoids the
+child potentially returning from the function and creating a second
+instance of <code>commando</code> running.</li>
+<li>Utilize code patterns that have been studied in lecture and lab to
+have the child process redirect output and exec() a new program to
+change its identity</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgd4b7bfe" class="outline-4">
+<h4 id="orgd4b7bfe">Finish Commands</h4>
+<div class="outline-text-4" id="text-orgd4b7bfe">
+<p>
+Commands are started "asynchronously" and checked for completion on
+occasion.  Calls to the <code>cmdctl_update_one()</code> function allow for
+flexible checking on the running command.
+</p>
+<ul class="org-ul">
+<li>If called with <code>finish=0</code>, the command in question will simply be
+"checked" and if it is not finished, the function returns
+immediately</li>
+<li>If called with <code>finish=1</code>, the calling process (parent) will block
+until the command (child process) completes.</li>
+</ul>
+<p>
+To get these effects, utilize options to the <code>waitpid()</code> system call
+that adjust between Blocking/Nonblocking versions.
+</p>
+
+<p>
+When a child finishes, its exit status is captured and used to
+diagnose several special cases and update the main processes
+<code>cmdctl_t</code> struct for the command.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org179b42f" class="outline-3 grading 30">
+<h3 id="org179b42f"><span class="section-number-3">6.2</span> Grading Criteria for Problem 2&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="30">30</span></span></h3>
+<div class="outline-text-3" id="text-6-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">AUTOMATED TESTS via <code>make test-prob1</code></td>
+</tr>
+
+<tr>
+<td class="org-right">15</td>
+<td class="org-left">Tests provide via <code>test_prob1.org</code> and <code>test_commando.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Runs all code under Valgrind to ensure that no memory errors are present.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">1 point per test passed</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">15</td>
+<td class="org-left">MANUAL INSPECTION</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">Code Style</a>: Functions adhere to <a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">CMSC 216 C Coding Style Guide</a> which dictates</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">reasonable indentation, commenting, consistency of curly usage, etc.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><code>cmdctl_start_cmd()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear cases for parent and child code that are distinguished by the return value of <code>fork()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Parent code returns quickly updating the command to RUNNING</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Child proceeds to set up the command to run</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Code to open an output file with the indicated options / permissions</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Code handle output redirection and optionally input redirection in indicated</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of an <code>exec()</code>-family function to alter the child process to run the command</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Error checking and exit on problems with I/O redirection or exec()-ing</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><code>cmdctl_update_one()</code> / <code>cmdctl_update_all()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Early checks of whether the command is still RUNNING with immediate return if not</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of <code>waitpid()</code> with appropriate options to affect either Blocking / Non-blocking updates</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Code to capture exit status of child process and inspect it for various cases</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of the <code>stat()</code> system call to obtain the size in bytes of the command output</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Alert message printed when the command is <code>--&gt; COMPLETE</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="outline-container-org53d0951" class="outline-2">
+<h2 id="org53d0951"><span class="section-number-2">7</span> <b>Problem 3</b>: Commando <code>main()</code></h2>
+<div class="outline-text-2" id="text-7">
+<p>
+The <code>commando_main.c</code> file wraps a simple text user interface around
+the functions from the previous problems. Implementers may add
+utility/helper functions in <code>commando_mainc.c</code> or <code>commando_funcs.c</code>
+if desired but these will not be directly tested and were not needed
+in the reference implementation.
+</p>
+
+<p>
+<b>NOTE ON PREVIOUS WORK:</b> The interactive loop that <code>main()</code> implements
+is similar to that used in past assignments for this course (Lab02 and
+Project 2 in particular). It will require input and command echoing so
+a good starting point might be to start with those past solutions.
+</p>
+</div>
+<div id="outline-container-org204dad3" class="outline-3">
+<h3 id="org204dad3"><span class="section-number-3">7.1</span> Interactive Loop</h3>
+<div class="outline-text-3" id="text-7-1">
+<p>
+After setup, the main input loop will likely have the following basic
+structure.
+</p>
+<ol class="org-ol">
+<li>At the beginning of each loop, update the state of all commands via
+a call to <code>cmdctl_update_all()</code>. A single <code>cmdctl_t</code> struct is used
+to track the history and status of all past and present commands.</li>
+<li>Print the prompt <code>[COMMANDO]&gt;&gt;</code></li>
+<li>Use a call to <code>fgets()</code> to read a whole line of text from the
+user. The header has a <code>#define MAX_LINE ...</code> which specifies the
+maximum length of lines what are supported and a character buffer
+of that size should be used.</li>
+<li>If no input remains (e.g. reach end of input), print <code>End of input</code>
+and break out of the reading loop.</li>
+<li>If echoing is enabled, Echo (print) the given input to the
+screen. This is required to be compatible with the Automated Tests.</li>
+<li>Use the <code>sscanf()</code> function to extract the 0th "token" from the
+line (e.g. the first word on the line).  Study examples of how
+<code>sscanf()</code> works to read input from a string rather than a file or
+input but is otherwise similar to other <code>scanf()</code>-style functions.</li>
+<li>Examine the 0th token for supported built-ins like <code>help</code>,
+<code>history</code>, and so forth.  Use <code>strcmp()</code> to determine if any match
+and make appropriate calls. This will be a long if/else-if chain of
+statements similar to other interactive programs covered in the
+course.</li>
+<li>If a built-in is matched, potentially use additional <code>sscanf()</code>
+calls to read more tokens from the string then execute behavior
+associated with the built-in.</li>
+<li>If no built-ins match, treat the line as a new command to run. Add
+a new <code>cmd_t</code> to the <code>cmdctl_t</code> and start it running.</li>
+</ol>
+</div>
+<div id="outline-container-orgb60e894" class="outline-4">
+<h4 id="orgb60e894">Beginning of Loop Updates and Alerts</h4>
+<div class="outline-text-4" id="text-orgb60e894">
+<p>
+At the end of each iteration of the main loop of <code>commando</code>, each
+command should be checked for updates to its status.  This is done via
+a calls to <code>cmdctl_update_all()</code>.  This call <b>should not block</b>: if
+processes have not finished, <code>commando</code> should not wait for them. That
+means the underlying calls to <code>waitpid()</code> should use the <code>WNOHANG</code>
+option which causes <code>waitpid()</code> to return immediately if nothing has
+happened with the child process.
+</p>
+
+<p>
+If the call to <code>cmdctl_update_all()</code> detects a change it should print
+an <b>Alert</b> message indicating the it has finished. If correctly
+implemented, underlying calls like <code>cmdctl_update_one()</code> will already
+print this message. If one or more commands finish, a message is also
+printed about how many commands finished due to the call to
+<code>cmdctl_update_all()</code> (also part of the specified behavior for this
+function). This gives the effect that commands that take a while to
+complete are reported as finished together. An example is below.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">[COMMANDO]&gt;&gt; data/sleep_print.sh 2.5 Last     ## runs for a while
+[COMMANDO]&gt;&gt; data/sleep_print.sh 1.0 First    ## runs a shorter time
+[COMMANDO]&gt;&gt;                                  ## what a second then press enter
+---&gt; COMPLETE:     2 #222530       5 EXIT(0)         data/sleep_print.sh
+---&gt; COMPLETE:     3 #222535       6 EXIT(0)         data/sleep_print.sh
+2 commands finished
+[COMMANDO]&gt;&gt; ls data                          ## run a short command
+[COMMANDO]&gt;&gt;                                  ## wait a second then press enter
+---&gt; COMPLETE:     4 #222542     242 EXIT(0)         ls
+1 commands finished
+[COMMANDO]&gt;&gt;
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org6199a96" class="outline-4">
+<h4 id="org6199a96"><code>fgets()</code> Usage</h4>
+<div class="outline-text-4" id="text-org6199a96">
+<p>
+The basic usage of <code>fgets()</code> allows a whole line of text to be
+retrieved. A simple invocation looks like this.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">#define CHAR_LIM
+{
+  FILE *infile = ...;           // might be stdin
+  char inbuf[CHAR_LIM];
+
+  char *ret = fgets(inbuf, CHAR_LIM, infile);
+
+  if(ret == NULL){
+    printf("Apparently no more input...\n");
+  }
+  else{
+    // ret will point to inbuf so use either
+    printf("inbuf is: '%s'\n", inbuf);
+    int len = strlen(inbuf);
+    printf("inbuf has %d chars\n",len);
+    if(inbuf[len-1] == '\n'){
+      inbuf[len-1] == '\0';        // "chop" the included newline
+    }
+    printf("inbuf without newline: '%s'\n",inbuf);
+  }
+}
+</pre>
+</div>
+<p>
+This resource has additional information and examples:
+<a href="https://www.tutorialspoint.com/c_standard_library/c_function_fgets.htm">https://www.tutorialspoint.com/c_standard_library/c_function_fgets.htm</a>
+</p>
+</div>
+</div>
+<div id="outline-container-orge9d647b" class="outline-4">
+<h4 id="orge9d647b"><code>sscanf()</code> Usage</h4>
+<div class="outline-text-4" id="text-orge9d647b">
+<p>
+<code>sscanf()</code> is useful to parse off parts of a string into individual
+tokens. Here is a simple invocation.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">{
+  char input_string = "Two is 2 and Four is 4.0";
+  char tok1[32];
+  int tok3;
+  int ret = sscanf(input_string, "%s %*s %d", tok1, &amp;tok3);
+  // The * in %*s parses a token but does not store it so only 2
+  // memory addresses are needed
+
+  printf("tok1: %s\n",tok1);    // Two
+  printf("tok3: %d\n",tok3);    // 2
+}
+</pre>
+</div>
+<p>
+Additional examples and information are here:
+<a href="https://www.tutorialspoint.com/c_standard_library/c_function_sscanf.htm">https://www.tutorialspoint.com/c_standard_library/c_function_sscanf.htm</a>
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org9cbcdb3" class="outline-3">
+<h3 id="org9cbcdb3"><span class="section-number-3">7.2</span> Startup, Basic Help, Exiting</h3>
+<div class="outline-text-3" id="text-7-2">
+<p>
+On startup, a "heading" is printed to indicate that Commando is
+running and a brief line is printed to indicate the presence of the
+<code>help</code> built-in.  Users can exit by typing the <code>exit</code> command. Below
+is a demo of these feature.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; ./commando
+=== COMMANDO ver 2 ===
+Re-using existing output directory 'commando-dir'
+Type 'help' for supported commands
+[COMMANDO]&gt;&gt; help
+help                       : show this message
+exit                       : exit the program
+directory                  : show the directory used for command output
+history                    : list all jobs that have been started giving information on each
+pause &lt;secs&gt;               : pause for the given number of seconds which may be fractional
+info &lt;cmdid&gt;               : show detailed information on a command
+show-output &lt;cmdid&gt;        : print the output for given command number
+finish &lt;cmdid&gt;             : wait until the given command finishes running
+finish-all                 : wait for all running commands to finish
+source &lt;filename&gt;          : (MAKEUP) open and read input from the given file as though it were typed
+command &lt;arg1&gt; &lt;arg2&gt; ...  : non-built-in is run as a command and logged in history
+[COMMANDO]&gt;&gt; exit
+
+&gt;&gt; 
+</pre>
+</div>
+
+<p>
+<b>Remember</b> on exiting to de-allocate memory, primarily the <code>cmdctl_t</code>
+struct. 
+</p>
+</div>
+</div>
+<div id="outline-container-org577252f" class="outline-3">
+<h3 id="org577252f"><span class="section-number-3">7.3</span> Command Line Forms and Usage</h3>
+<div class="outline-text-3" id="text-7-3">
+<p>
+Commando supports 4 command line forms and if a user invokes the
+program in any other way, the program should print a usage message
+like below and <b>exit with code 1</b> to indicate the program did not run
+correctly. 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; ./commando abc               ## no option 'abc'
+usage: ./commando
+       ./commando --echo
+       ./commando --dir &lt;dirname&gt;
+       ./commando --echo --dir &lt;dirname&gt;
+Incorrect command line invocation, use one of the above
+
+&gt;&gt; ./commando --dir             ## missing &lt;dirname&gt; for option
+usage: ./commando
+       ./commando --echo
+       ./commando --dir &lt;dirname&gt;
+       ./commando --echo --dir &lt;dirname&gt;
+Incorrect command line invocation, use one of the above
+
+&gt;&gt; echo $?                      ## exit code 1 when usage is printed
+1
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org90fd5b0" class="outline-3">
+<h3 id="org90fd5b0"><span class="section-number-3">7.4</span> Command Echoing</h3>
+<div class="outline-text-3" id="text-7-4">
+<p>
+To make testing and scripting easier to understand, <code>commando</code> should
+support <i>command echoing</i> which means to print back to the screen what
+a user has typed in.  If the input source is coming from somewhere
+else as is the case in testing, this allows the entered commands to be
+seen in output.
+</p>
+
+<p>
+On startup, <code>commando</code> should check for the <code>--echo</code> option and enable
+echoing if present.  This is usually done by setting a variable
+somewhere to 1 and then printing lines of input each time they are
+read (or NOT printing them if the variable is 0). Refer to past
+assignments that demonstrated models for how to do this.
+</p>
+
+<p>
+Examples of echoing vs NOT echoing.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; ./commando                   ## NO echoing 
+=== COMMANDO ver 2 ===
+Type 'help' for supported commands
+[COMMANDO]&gt;&gt; history            ## built-in entered
+CMDID PID       BYTES STATE           COMMAND
+[COMMANDO]&gt;&gt; directory          ## built-in entered
+Output directory is 'commando-dir'
+[COMMANDO]&gt;&gt; exit               ## built-in entered
+
+&gt;&gt; ./commando --echo            ## ENABLE echoing
+=== COMMANDO ver 2 ===
+Type 'help' for supported commands
+[COMMANDO]&gt;&gt; history            ## built-in entered
+history                         ## and echoed
+CMDID PID       BYTES STATE           COMMAND
+[COMMANDO]&gt;&gt; directory          ## built-in entered
+directory                       ## and echoed
+Output directory is 'commando-dir'
+[COMMANDO]&gt;&gt; exit               ## built-in entered
+exit                            ## and echoed
+
+&gt;&gt; 
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org14bd0ee" class="outline-3">
+<h3 id="org14bd0ee"><span class="section-number-3">7.5</span> Output Directory</h3>
+<div class="outline-text-3" id="text-7-5">
+<p>
+Commando stores output from its commands in a directory. By default
+this is <code>commando-dir</code> as defined in <code>commando.h</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-c">#define DEFAULT_CMDDIR "commando-dir" // default output directory for commands
+</pre>
+</div>
+<p>
+However, the directory can be changed at startup via the <code>--dir
+&lt;dirname&gt;</code> option which will need to be taken from the command line
+arguments to <code>commando</code>. A typical strategy is to have a local
+variable set initially to the default but if <code>--dir</code> is present,
+change the variable to the specified value.
+</p>
+
+<p>
+Whatever the output directory is, it is used to initialize a
+<code>cmdctl_t</code> which in turn uses it in <code>cmdctl_create_cmddir()</code>. That
+function may create the directory, re-use it if existing, or report
+and error which should cause commando to quit.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; ./commando --dir special-dir        ## start with non-default directory 
+=== COMMANDO ver 2 ===
+Type 'help' for supported commands
+[COMMANDO]&gt;&gt; exit
+
+&gt;&gt; ./commando --dir special-dir        ## directory already exists
+=== COMMANDO ver 2 ===
+Re-using existing output directory 'special-dir'
+Type 'help' for supported commands
+[COMMANDO]&gt;&gt; exit
+
+&gt;&gt; echo Dont overwrite me &gt; other-dir  ## create a file 
+
+&gt;&gt; ./commando --dir other-dir          ## won't overwrite the existing file so quit
+=== COMMANDO ver 2 ===
+ERROR: Could not create cmd directory 'other-dir'
+       Non-directory file with that name already exists
+Unable to run without an output directory, exiting
+
+&gt;&gt; 
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org1375467" class="outline-3">
+<h3 id="org1375467"><span class="section-number-3">7.6</span> Built-ins</h3>
+<div class="outline-text-3" id="text-7-6">
+<p>
+Within the interactive loop for commando there are a number of
+built-in commands. These are demonstrated here.
+</p>
+</div>
+<div id="outline-container-org66dfd5b" class="outline-4">
+<h4 id="org66dfd5b">Help, History, Directory, Exit</h4>
+<div class="outline-text-4" id="text-org66dfd5b">
+<p>
+These are all fairly self-explanatory based on the output of the
+<code>help</code> built-in and are shown below.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">[COMMANDO]&gt;&gt; help                                           ## print help on builtins
+help                       : show this message
+exit                       : exit the program
+directory                  : show the directory used for command output
+history                    : list all jobs that have been started giving information on each
+pause &lt;secs&gt;               : pause for the given number of seconds which may be fractional
+info &lt;cmdid&gt;               : show detailed information on a command
+show-output &lt;cmdid&gt;        : print the output for given command number
+finish &lt;cmdid&gt;             : wait until the given command finishes running
+finish-all                 : wait for all running commands to finish
+source &lt;filename&gt;          : (MAKEUP) open and read input from the given file as though it were typed
+command &lt;arg1&gt; &lt;arg2&gt; ...  : non-built-in is run as a command and logged in history
+
+[COMMANDO]&gt;&gt; directory                                      ## print the directory used for command output
+Output directory is 'commando-dir'                          ## this is the default value
+
+[COMMANDO]&gt;&gt; exit                                           ## all done for now
+
+&gt;&gt;                                                          ## back to a "real" shell
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org7950218" class="outline-4">
+<h4 id="org7950218">History, Info, Output</h4>
+<div class="outline-text-4" id="text-org7950218">
+<p>
+The history of all past and present commands is tracked and can be
+reported via <code>history</code> which relies on <code>cmdctl_print_all()</code>.
+</p>
+
+<p>
+The <code>info</code> built-in utilizes <code>cmdctl_print_info()</code>. Note that a
+command index must be provided and using <code>sscanf()</code> to get the index
+from the input line is recommended.
+</p>
+
+<p>
+The <code>show-output</code> built-in retrieves output from the file associated
+with the command and displays it on screen using the
+<code>cmdctl_show_output()</code> function.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">[COMMANDO]&gt;&gt; history            ## show current history
+CMDID PID       BYTES STATE           COMMAND
+    0 #222616     125 EXIT(0)         cat
+    1 #222643    1097 EXIT(0)         ls
+    2 #222659      95 FAIL_EXEC       data/sleep_print
+    3 #222666       - RUNNING         data/sleep_print.sh   
+    4 #222677      23 EXIT(0)         wc
+
+[COMMANDO]&gt;&gt; info 4             ## information on 4th command
+CMD 4 INFORMATION
+command: wc -l data/gettysburg.txt 
+argv[]:
+  [ 0]: wc
+  [ 1]: -l
+  [ 2]: data/gettysburg.txt
+cmdstate: EXIT(0)
+input: &lt;NONE&gt;
+output: commando-dir/0004-wc.out
+output size: 23 bytes
+
+[COMMANDO]&gt;&gt; show-output 4      ## output for 4th command
+28 data/gettysburg.txt
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org8ada2ae" class="outline-4">
+<h4 id="org8ada2ae">Finishing Commands</h4>
+<div class="outline-text-4" id="text-org8ada2ae">
+<p>
+All commands are launched asynchronously (background / child process /
+non-blocking / various other jargon).  The <code>finish &lt;cmdid&gt;</code> built-in
+allows a user to block Commando until a command completes. It
+utilizes <code>cmdctl_update_one()</code> with appropriate options to accomplish
+this. Likewise, the built-in <code>finish-all</code> will use
+<code>cmdctl_update_all()</code> with appropriate options to complete all
+unfinished commands.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">[COMMANDO]&gt;&gt; data/sleep_print.sh 5.0 D                      ## 9th command runs a long time
+
+[COMMANDO]&gt;&gt; data/sleep_print.sh 1.0 D                      ## short run
+
+[COMMANDO]&gt;&gt; data/sleep_print.sh 1.0 D                      ## short run
+
+[COMMANDO]&gt;&gt; finish 9                                       ## block until 9th command finishes
+---&gt; COMPLETE:     9 #222765       2 EXIT(0)         data/sleep_print.sh   ## 9th command done
+---&gt; COMPLETE:    10 #222770       2 EXIT(0)         data/sleep_print.sh   ## top-of-loop update shows
+---&gt; COMPLETE:    11 #222777       2 EXIT(0)         data/sleep_print.sh   ## short run command also done
+2 commands finished                                                        ## only 2 as 1st is an explicit finish
+
+[COMMANDO]&gt;&gt; data/sleep_print.sh 5.0 X                      ## start several long-running commands
+
+[COMMANDO]&gt;&gt; data/sleep_print.sh 5.0 X
+
+[COMMANDO]&gt;&gt; data/sleep_print.sh 5.0 X
+
+[COMMANDO]&gt;&gt; finish-all                                     ## wait for all to fininsh
+---&gt; COMPLETE:    12 #222793       2 EXIT(0)         data/sleep_print.sh
+---&gt; COMPLETE:    13 #222798       2 EXIT(0)         data/sleep_print.sh
+---&gt; COMPLETE:    14 #222801       2 EXIT(0)         data/sleep_print.sh
+3 commands finished
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org9380bf4" class="outline-4">
+<h4 id="org9380bf4">Pausing</h4>
+<div class="outline-text-4" id="text-org9380bf4">
+<p>
+It is useful in testing to be able to have <code>commando</code> simply do
+nothing for a short time, accomplished with the <code>pause &lt;secs&gt;</code>
+built-in which utilizes the provided <code>pause_for()</code> function. 
+</p>
+
+<p>
+<b>Note that the &lt;secs&gt; token is a floating point number</b> so may be
+fractional (see examples below). Use a call to <code>sscanf()</code> to easily
+parse this parameter.
+</p>
+
+<p>
+After the pause, the standard check of all child processes for state
+changes should occur which can cause some processes to print that they
+are done as shown in the following example.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">[COMMANDO]&gt;&gt; pause 0.25         ## pause a quarter second
+Pausing for 0.250000 seconds
+
+[COMMANDO]&gt;&gt; pause 5.5          ## pause commando for 5.5 seconds
+Pausing for 5.500000 seconds
+---&gt; COMPLETE:     6 #222705       2 EXIT(0)         data/sleep_print.sh
+---&gt; COMPLETE:     7 #222710       2 EXIT(0)         data/sleep_print.sh
+---&gt; COMPLETE:     8 #222716       2 EXIT(0)         data/sleep_print.sh
+3 commands finished             ## after the pause, several commands finished and are reported
+
+[COMMANDO]&gt;&gt; 
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb80b951" class="outline-3">
+<h3 id="orgb80b951"><span class="section-number-3">7.7</span> Running Commands</h3>
+<div class="outline-text-3" id="text-7-7">
+<p>
+On inspecting the 0th token of an input line and finding that it does
+not match any of the built-ins for Commando, the line is interpreted
+as a Command: an external program to be run as a child process. The
+command is added to the history via <code>cmdctl_add_cmd()</code> and then
+started running.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; ./commando
+=== COMMANDO ver 2 ===
+Re-using existing output directory 'commando-dir'
+Type 'help' for supported commands
+
+[COMMANDO]&gt;&gt; ls data
+
+[COMMANDO]&gt;&gt; gcc --version
+---&gt; COMPLETE:     0 #237938     242 EXIT(0)         ls
+1 commands finished
+
+[COMMANDO]&gt;&gt; data/table.sh
+---&gt; COMPLETE:     1 #237941     228 EXIT(0)         gcc
+1 commands finished
+
+[COMMANDO]&gt;&gt; 
+---&gt; COMPLETE:     2 #237947    1140 EXIT(0)         data/table.sh
+1 commands finished
+
+[COMMANDO]&gt;&gt; data/self_signal.sh 9
+
+[COMMANDO]&gt;&gt; 
+---&gt; COMPLETE:     3 #237957      22 SIGNALLED(-9)   data/self_signal.sh
+1 commands finished
+[COMMANDO]&gt;&gt; history
+CMDID PID       BYTES STATE           COMMAND
+    0 #237938     242 EXIT(0)         ls
+    1 #237941     228 EXIT(0)         gcc
+    2 #237947    1140 EXIT(0)         data/table.sh
+    3 #237957      22 SIGNALLED(-9)   data/self_signal.sh
+
+[COMMANDO]&gt;&gt; 
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org00e38d2" class="outline-3 grading 40">
+<h3 id="org00e38d2"><span class="section-number-3">7.8</span> Grading Criteria for Problem 2&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="40">40</span></span></h3>
+<div class="outline-text-3" id="text-7-8">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">AUTOMATED TESTS via <code>make test-prob1</code></td>
+</tr>
+
+<tr>
+<td class="org-right">15</td>
+<td class="org-left">Tests provide via <code>test_prob1.org</code> and <code>test_commando.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Runs all code under Valgrind to ensure that no memory errors are present.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">1 point per test passed</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">25</td>
+<td class="org-left">MANUAL INSPECTION</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left"><a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">Code Style</a>: Functions adhere to <a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">CMSC 216 C Coding Style Guide</a> which dictates</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">reasonable indentation, commenting, consistency of curly usage, etc.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">Handling of command line arguments to enable echoing, change output directory</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">Use of <code>fgets() / sscanf()</code> to get input process the 0th token, obtain additional tokens for some built-ins</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">Clear conditional structure to check for built-ins like <code>help, pause, finish, ...</code></td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">Compact handling of built-in cases that leverage functions from <code>commando_funcs.c</code>; no duplicate code</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">Handling of end of input (not just <code>exit</code>) to break from the interactive loop</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">Cases and code to address each of the 10 built-in / command forms</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdcc2028" class="outline-2">
+<h2 id="orgdcc2028"><span class="section-number-2">8</span> <b>MAKEUP Problem</b></h2>
+<div class="outline-text-2" id="text-8">
+<p>
+For MAKEUP Credit, students may implement some optional
+functionality. Information on this will be added after the initial
+release of the project. 
+</p>
+</div>
+</div>
+<div id="outline-container-org2c878be" class="outline-2">
+<h2 id="org2c878be"><span class="section-number-2">9</span> Project Submission</h2>
+<div class="outline-text-2" id="text-9">
+</div>
+<div id="outline-container-orgddfe246" class="outline-3">
+<h3 id="orgddfe246"><span class="section-number-3">9.1</span> <a id="orga047229"></a> Submit to Gradescope</h3>
+<div class="outline-text-3" id="text-9-1">
 <p>
 Refer to the Project 1 instructions and adapt them for details of how
 to submit to Gradescope. In summary they are
 </p>
 
 <ol class="org-ol">
-<li>Type <code>make zip</code> in the project directory to create <code>p4-comlete.zip</code></li>
+<li>Type <code>make zip</code> in the project directory to create <code>p4-complete.zip</code></li>
 <li>Log into <a href="https://www.gradescope.com/">Gradescope</a>, select Project 4, and upload <code>p4-complete.zip</code></li>
 </ol>
 </div>
 </div>
-
-<div id="outline-container-org62b802c" class="outline-3">
-<h3 id="org62b802c"><span class="section-number-3">11.2</span> Late Policies</h3>
-<div class="outline-text-3" id="text-11-2">
+<div id="outline-container-orgef7b55a" class="outline-3">
+<h3 id="orgef7b55a"><span class="section-number-3">9.2</span> Late Policies</h3>
+<div class="outline-text-3" id="text-9-2">
 <p>
 You may wish to review the policy on late project submission which
 will cost 1 Engagement Point per day late. <b>No projects will be
 accepted more than 48 hours after the deadline.</b>
 </p>
-
 
 <p>
 <a href="https://www.cs.umd.edu/~profk/216/syllabus.html#late-submission">https://www.cs.umd.edu/~profk/216/syllabus.html#late-submission</a>
@@ -3102,7 +2802,7 @@ accepted more than 48 hours after the deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-11-20 Wed 12:07 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-04-25 Fri 19:15 <br/> </i>
 </div>
 </body>
 </html>
