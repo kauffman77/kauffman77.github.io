@@ -3,13 +3,13 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-12-02 Mon 21:37 -->
+<!-- 2025-05-05 Mon 07:59 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Lab12: Matrices and Memory Optimization</title>
 <meta name="author" content="Chris Kauffman" />
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -344,90 +344,44 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2024-12-02 Mon 21:37</i>
+<i>Last Updated: 2025-05-05 Mon 07:59</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Lab12: Matrices and Memory Optimization</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Mon 09-Dec-2024</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm Mon 12-May-2025</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
-
-<div id="outline-container-orgfcc5afc" class="outline-4">
-<h4 id="orgfcc5afc">CODE DISTRIBUTION: <a href="lab12-code.zip">lab12-code.zip</a></h4>
+<div id="outline-container-org8386fff" class="outline-4">
+<h4 id="org8386fff">CODE DISTRIBUTION: <a href="lab12-code.zip">lab12-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org5bdd582" class="outline-4">
-<h4 id="org5bdd582">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org5bdd582">
-<dl class="org-dl">
-<dt>Mon Dec  2 09:32:44 PM EST 2024</dt><dd><p>
-More bugs with the testing code
-were identified which cause running tests repeatedly to spuriously
-fail with a <code>Cannot create directory: file exists</code> error.  This has
-been corrected in the current code pack. Students can adjust the
-<code>test_lab12.org</code> file manually by finding and editing the following
-line
-</p>
-<div class="org-src-container">
-<pre class="src src-text">  40: &gt;&gt; mkdir -p test-results           ## LINE 40: ADD THE -p OPTION TO mkdir
-</pre>
-</div></dd>
-
-<dt>Mon Dec  2 11:09:14 AM EST 2024</dt><dd><p>
-A minor bug was reported in
-discussion which causes the first run of <code>make test-code</code> to fail
-with an error like "no such file or directory". Running <code>make
-  test-code</code> a second time completes the test normally.  This test can
-be corrected by editing <code>test_lab12.org</code> and adding the indicated
-line:
-</p>
-<div class="org-src-container">
-<pre class="src src-text">  ...
-  * CODE: csums_threaded Performance
-  
-  ** Performance
-  Runs the ~csums_thread_main~ once and checks that the speed of running
-  with 2 threads has sufficient speedup (at least 1.5x). This test is
-  flaky in that on any virtualized platform (GRACE, Gradescope) speedup
-  will be somewhat unreliable so the bar is set low.
-  
-  #+TESTY: timeout=25
-  #+BEGIN_SRC sh
-  &gt;&gt; mkdir test-results                      #### ADD THIS LINE ####
-  &gt;&gt; resultfile=test-results/out.tmp
-  &gt;&gt; ./csums_thread_main 10000 10000 2 &gt; $resultfile
-</pre>
-</div>
-<p>
-The line has been added into the current codepack. Since <code>make test</code>
-is not affected, this bug will not affect results on Gradescope.
-</p></dd>
-</dl>
+<div id="outline-container-org198c56b" class="outline-4">
+<h4 id="org198c56b">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org198c56b">
 </div>
 </div>
-
-<div id="outline-container-orga6ec434" class="outline-4">
-<h4 id="orga6ec434"></h4>
-<div class="outline-text-4" id="text-orga6ec434">
+<div id="outline-container-orgee0138d" class="outline-4">
+<h4 id="orgee0138d"></h4>
+<div class="outline-text-4" id="text-orgee0138d">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org1d04cbd">1. Rationale</a></li>
-<li><a href="#org085f27b">2. Codepack</a></li>
-<li><a href="#org68c9865">3. Overview and Background</a></li>
-<li><a href="#orgf55d312">4. Basic Overview of Threads</a></li>
-<li><a href="#org89450f2">5. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org111a76a">6. Submission</a></li>
+<li><a href="#org5876391">1. Rationale</a></li>
+<li><a href="#org8045e05">2. Codepack</a></li>
+<li><a href="#org46c35b7">3. Overview and Background</a></li>
+<li><a href="#orga9222b1">4. Basic Overview of Threads</a></li>
+<li><a href="#org8084682">5. Special Note On Testing: Use ODD GRACE Nodes</a></li>
+<li><a href="#orgc0ded32">6. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org9250e62">7. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org1d04cbd" class="outline-2">
-<h2 id="org1d04cbd"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org5876391" class="outline-2">
+<h2 id="org5876391"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Threads are frequently used to improve the performance of applications
@@ -438,19 +392,17 @@ divvying up work, and synchronizing the threads as they contribute a
 shared result.
 </p>
 </div>
-
-<div id="outline-container-orgead46e6" class="outline-4">
-<h4 id="orgead46e6">Associated Reading / Preparation</h4>
-<div class="outline-text-4" id="text-orgead46e6">
+<div id="outline-container-org90e10d7" class="outline-4">
+<h4 id="org90e10d7">Associated Reading / Preparation</h4>
+<div class="outline-text-4" id="text-org90e10d7">
 <p>
 Bryant and O'Hallaron: Ch 12.3-6 covers threaded programming.
 </p>
 </div>
 </div>
-
-<div id="outline-container-org61bc075" class="outline-4">
-<h4 id="org61bc075">Grading Policy</h4>
-<div class="outline-text-4" id="text-org61bc075">
+<div id="outline-container-org13db054" class="outline-4">
+<h4 id="org13db054">Grading Policy</h4>
+<div class="outline-text-4" id="text-org13db054">
 <p>
 Credit for this exercise is earned by completing the code/asnwers here
 and submitting a Zip of the work to Gradescope. Students are
@@ -472,9 +424,8 @@ See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies 
 </div>
 </div>
 </div>
-
-<div id="outline-container-org085f27b" class="outline-2">
-<h2 id="org085f27b"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org8045e05" class="outline-2">
+<h2 id="org8045e05"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the lab contains the following files:
@@ -567,9 +518,8 @@ The codepack for the lab contains the following files:
 </table>
 </div>
 </div>
-
-<div id="outline-container-org68c9865" class="outline-2">
-<h2 id="org68c9865"><span class="section-number-2">3</span> Overview and Background</h2>
+<div id="outline-container-org46c35b7" class="outline-2">
+<h2 id="org46c35b7"><span class="section-number-2">3</span> Overview and Background</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 This lab deals with matrices and vectors again similar to a previous
@@ -584,9 +534,8 @@ implementation.
 </p>
 </div>
 </div>
-
-<div id="outline-container-orgf55d312" class="outline-2">
-<h2 id="orgf55d312"><span class="section-number-2">4</span> Basic Overview of Threads</h2>
+<div id="outline-container-orga9222b1" class="outline-2">
+<h2 id="orga9222b1"><span class="section-number-2">4</span> Basic Overview of Threads</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Threads allow the creation of multiple "threads of execution" within
@@ -621,10 +570,42 @@ function calls used to facilitate it.
 </p>
 </div>
 </div>
-
-<div id="outline-container-org89450f2" class="outline-2">
-<h2 id="org89450f2"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org8084682" class="outline-2">
+<h2 id="org8084682"><span class="section-number-2">5</span> Special Note On Testing: Use ODD GRACE Nodes</h2>
 <div class="outline-text-2" id="text-5">
+<p>
+The code is tuned to run properly on ODD GRACE NODES (grace3, grace5,
+grace7, grace9) and on Gradescope. If running on Even nodes, the tests
+may spuriously fail. Like all performance-based tests, this set may
+also fail if many programs are running on the testing machine so you
+may wish to try a few different nodes if tests fail.
+</p>
+
+<p>
+Below is an example of how to log into a different Grace node from the
+one that is assigned to your initial login session:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">laptop&gt; ssh kauf0095@grace.umd.edu
+(kauf0095@grace.umd.edu) Password: .............
+Duo two-factor login for kauf0095...
+
+grace4&gt;&gt;
+## Assigned to an even node, log into an odd node instead
+
+grace4&gt;&gt; ssh grace5
+(kauf0095@grace.umd.edu) Password: .............
+Duo two-factor login for kauf0095...
+
+grace5&gt;&gt;
+## ODD node which is tuned for this assignment
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc0ded32" class="outline-2">
+<h2 id="orgc0ded32"><span class="section-number-2">6</span> QUESTIONS.txt File Contents</h2>
+<div class="outline-text-2" id="text-6">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
 Follow the instructions in it to complete the QUIZ and CODE questions
@@ -636,9 +617,6 @@ for the lab.
 
                             LAB12 QUESTIONS
                            _________________
-
-
-
 
 
 Exercise Instructions
@@ -803,6 +781,34 @@ CODE: Complete col_sums_thread()
 
   Build it and test it on the command line to ensure that you see some
   speedup from using threads.
+
+  *SPECIAL NOTE ON TESTING*: The code is tuned to run properly on ODD
+  GRACE NODES (grace3, grace5, grace7, grace9) and on Gradescope. If
+  running on Even nodes, the tests may spuriously fail. Like all
+  performance-based tests, this set may also fail if many programs are
+  running on the testing machine so you may wish to try a few different
+  nodes if tests fail.
+
+  Below is an example of how to log into a different Grace node from the
+  one that is assigned to your initial login session:
+  ,----
+  | laptop&gt; ssh kauf0095@grace.umd.edu
+  | (kauf0095@grace.umd.edu) Password: .............
+  | Duo two-factor login for kauf0095...
+  | 
+  | grace4&gt;&gt;
+  | ## Assigned to an even node, log into an odd node instead
+  | 
+  | grace4&gt;&gt; ssh grace5
+  | (kauf0095@grace.umd.edu) Password: .............
+  | Duo two-factor login for kauf0095...
+  | 
+  | grace5&gt;&gt;
+  | ## ODD node which is tuned for this assignment
+  `----
+
+
+  Below is an example of a successful run:
   ,----
   | &gt;&gt; make
   | gcc -Wall -Werror -g -Og -c csums_thread_main.c		
@@ -827,10 +833,9 @@ CODE: Complete col_sums_thread()
 </div>
 </div>
 </div>
-
-<div id="outline-container-org111a76a" class="outline-2">
-<h2 id="org111a76a"><span class="section-number-2">6</span> Submission</h2>
-<div class="outline-text-2" id="text-6">
+<div id="outline-container-org9250e62" class="outline-2">
+<h2 id="org9250e62"><span class="section-number-2">7</span> Submission</h2>
+<div class="outline-text-2" id="text-7">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
 how to upload your completed lab zip to Gradescope.
@@ -839,7 +844,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2024-12-02 Mon 21:37 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-05-05 Mon 07:59 <br/> </i>
 </div>
 </body>
 </html>
