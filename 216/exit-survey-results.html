@@ -3,13 +3,13 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-01-09 Thu 16:45 -->
+<!-- 2025-05-27 Tue 13:20 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Exit Survey Results</title>
 <meta name="author" content="Chris Kauffman" />
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -330,6 +330,17 @@ margin-left: 0.5em;
 }
 }
 .linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
+details > summary {
+padding: 2px 6px;
+font-family: Sans;
+font-size: 0.8em;
+width: fit-content;
+border-radius: 5px;
+background-color: #efefef;
+border: 1px solid black;
+cursor: pointer;
+}
 }
 
 @media print {
@@ -446,11 +457,14 @@ return {
 name: 'interactive',           // language name
 keywords: {
 $pattern: /[^ \t\n]+/,       // lex based on non-whitespace
-keyword: [">>","(shellac)","HM>","TM>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+keyword: [">>","(shellac)","[COMMANDO]>>","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+literal: ["[data/script.txt]>>","[data/script1.txt]>>","[data/script6.txt]>>"],
 },
 contains: [
 // hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
-hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+// hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+hljs.COMMENT(/## /, /$/),     // hash-hash-ws for comment
+hljs.COMMENT(/##+/, /$/),     // or a sequence of hashes
 ]
 };
 };
@@ -458,9 +472,10 @@ hljs.registerLanguage('interactive', interactive_lang);     // register custom l
 
 // Add highlighjs CSS classes to elemens marked with relevant org classes
 lang_map = new Map();              // map of org to hljs languages
-lang_map.set("src-c"    , "language-c");
-lang_map.set("src-text" , "language-plaintext");
-lang_map.set("src-sh"   , "language-interactive");
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
 function add_class(el) {           // applied to each pre.src element
 for (let [org_lang, hljs_lang] of lang_map) {
 if(el.classList.contains(org_lang)){
@@ -477,7 +492,7 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2025-01-09 Thu 16:45</i>
+<i>Last Updated: 2025-05-27 Tue 13:20</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Exit Survey Results</h1>
@@ -485,124 +500,130 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org951f33f">Summary Statistics for Multiple Choice Questions</a></li>
-<li><a href="#orgbc65b42">Freeform Feedback</a>
+<li><a href="#orgfb7a98c">Summary Statistics for Multiple Choice Questions</a></li>
+<li><a href="#org4f06aae">Freeform Feedback</a>
 <ul>
-<li><a href="#org72306fd">Frequent Items in Freeform Feedback</a></li>
-<li><a href="#orge57b9bd">Props to Staff Members</a></li>
+<li><a href="#org9e1482b">Frequent Items in Freeform Feedback</a></li>
+<li><a href="#org2931533">Props to Staff Members</a></li>
 </ul>
 </li>
-<li><a href="#org79b87c1">Notable Freeform Responses</a>
+<li><a href="#orgd1ecae8">Notable Freeform Responses</a>
 <ul>
-<li><a href="#org6c5a00f">Projects</a></li>
-<li><a href="#org8bca705">Exams</a></li>
-<li><a href="#org918a83e">Discussions</a></li>
-<li><a href="#org61f3ab8">Engagement</a></li>
-<li><a href="#org77c9ea6">Technical Matters</a></li>
-<li><a href="#orgb514c9e">Hard Lessons</a></li>
-<li><a href="#org693529c">Misc</a></li>
+<li><a href="#org19ed8ac">Lectures / Videos</a></li>
+<li><a href="#org771515e">Projects</a></li>
+<li><a href="#org816e815">Exams</a></li>
+<li><a href="#org2ae3a31">Discussions, Labs, HWs</a></li>
+<li><a href="#org5e3706b">Engagement</a></li>
+<li><a href="#org1357f1f">Technical Matters</a></li>
+<li><a href="#orgd804114">Hard Lessons</a></li>
+<li><a href="#org3d495cc">Future Advice</a></li>
+<li><a href="#orgcb4875e">Misc</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-
-<div id="outline-container-org951f33f" class="outline-2">
-<h2 id="org951f33f">Summary Statistics for Multiple Choice Questions</h2>
-<div class="outline-text-2" id="text-org951f33f">
+<div id="outline-container-orgfb7a98c" class="outline-2">
+<h2 id="orgfb7a98c">Summary Statistics for Multiple Choice Questions</h2>
+<div class="outline-text-2" id="text-orgfb7a98c">
 <div class="org-center">
 <p>
 
 </p>
 
 
-<div id="org2603f62" class="figure">
+<div id="orgcb92ffe" class="figure">
 <p><img src="exit-survey-01.png" alt="exit-survey-01.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org09f59d7" class="figure">
+<div id="orgbb4d65d" class="figure">
 <p><img src="exit-survey-02.png" alt="exit-survey-02.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org6edcf64" class="figure">
+<div id="org0caa967" class="figure">
 <p><img src="exit-survey-03.png" alt="exit-survey-03.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org4903768" class="figure">
+<div id="org4869fb6" class="figure">
 <p><img src="exit-survey-04.png" alt="exit-survey-04.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org13994be" class="figure">
+<div id="orgc393c06" class="figure">
 <p><img src="exit-survey-05.png" alt="exit-survey-05.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org7581a8b" class="figure">
+<div id="orgb89af3b" class="figure">
 <p><img src="exit-survey-06.png" alt="exit-survey-06.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org1fcd5ad" class="figure">
+<div id="orgc54800b" class="figure">
 <p><img src="exit-survey-07.png" alt="exit-survey-07.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org9ae9a7c" class="figure">
+<div id="org7f4427a" class="figure">
 <p><img src="exit-survey-08.png" alt="exit-survey-08.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="orgbf28623" class="figure">
+<div id="orgfe1bd6f" class="figure">
 <p><img src="exit-survey-09.png" alt="exit-survey-09.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org7d015f3" class="figure">
+<div id="org2796f9e" class="figure">
 <p><img src="exit-survey-10.png" alt="exit-survey-10.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org70ccd53" class="figure">
+<div id="org71a594c" class="figure">
 <p><img src="exit-survey-11.png" alt="exit-survey-11.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="orgaeba31e" class="figure">
+<div id="org26c5c9c" class="figure">
 <p><img src="exit-survey-12.png" alt="exit-survey-12.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org1e1a3db" class="figure">
+<div id="org7699534" class="figure">
 <p><img src="exit-survey-13.png" alt="exit-survey-13.png" style="max-width:100%;" />
+</p>
+</div>
+
+
+<div id="orgb217f22" class="figure">
+<p><img src="exit-survey-14.png" alt="exit-survey-14.png" style="max-width:100%;" />
 </p>
 </div>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgbc65b42" class="outline-2">
-<h2 id="orgbc65b42">Freeform Feedback</h2>
-<div class="outline-text-2" id="text-orgbc65b42">
+<div id="outline-container-org4f06aae" class="outline-2">
+<h2 id="org4f06aae">Freeform Feedback</h2>
+<div class="outline-text-2" id="text-org4f06aae">
 </div>
-<div id="outline-container-org72306fd" class="outline-3">
-<h3 id="org72306fd">Frequent Items in Freeform Feedback</h3>
-<div class="outline-text-3" id="text-org72306fd">
+<div id="outline-container-org9e1482b" class="outline-3">
+<h3 id="org9e1482b">Frequent Items in Freeform Feedback</h3>
+<div class="outline-text-3" id="text-org9e1482b">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -624,13 +645,13 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </tr>
 
 <tr>
-<td class="org-right">25</td>
-<td class="org-left">The course was very organized / structured</td>
+<td class="org-right">71</td>
+<td class="org-left">Good course / enjoyed it / well structured / would recommend</td>
 </tr>
 
 <tr>
-<td class="org-right">81</td>
-<td class="org-left">Enjoyed it / little to improve on / "Banger course"</td>
+<td class="org-right">3</td>
+<td class="org-left">Liked the flexibility built into course policies</td>
 </tr>
 </tbody>
 <tbody>
@@ -640,7 +661,17 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </tr>
 
 <tr>
-<td class="org-right">4</td>
+<td class="org-right">6</td>
+<td class="org-left">More practice questions for exams</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">Give a third midterm exam, two is too few</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
 <td class="org-left">Liked having open resource exams</td>
 </tr>
 </tbody>
@@ -651,42 +682,52 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </tr>
 
 <tr>
-<td class="org-right">8</td>
-<td class="org-left">Difficulty of projects incresed markedly over semester</td>
+<td class="org-right">31</td>
+<td class="org-left">Inconsistencies on GRACE / Gradescope made P4 / P5 frustrating</td>
 </tr>
 
 <tr>
-<td class="org-right">30</td>
-<td class="org-left">"Puzzlebin was deathly" / "Puzzlebin was devil's spawn" "Nightmare"</td>
-</tr>
-
-<tr>
-<td class="org-right">16</td>
-<td class="org-left">Projects too time-consuming</td>
-</tr>
-
-<tr>
-<td class="org-right">23</td>
-<td class="org-left">Figuring out what to do on projects was taxing / instructions vague</td>
+<td class="org-right">14</td>
+<td class="org-left">Timeline for P4 and P5 was too short</td>
 </tr>
 
 <tr>
 <td class="org-right">3</td>
-<td class="org-left">Sunday 11:59pm deadlines please</td>
-</tr>
-
-<tr>
-<td class="org-right">4</td>
 <td class="org-left">Project videos helpful</td>
 </tr>
 
 <tr>
-<td class="org-right">12</td>
-<td class="org-left">P4 was disorganized</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-right">18</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Difficulty of projects incresed markedly over semester</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">"Puzzlebin was deathly" / "Puzzlebin was devil's spawn" "Nightmare"</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Projects too time-consuming</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Figuring out what to do on projects was taxing / instructions vague</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Sunday 11:59pm deadlines please</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
 <td class="org-left">P3 was (too) hard</td>
 </tr>
 </tbody>
@@ -697,7 +738,7 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </tr>
 
 <tr>
-<td class="org-right">5</td>
+<td class="org-right">1</td>
 <td class="org-left">Labs + HWs were out of sync with lecture</td>
 </tr>
 </tbody>
@@ -708,37 +749,61 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </tr>
 
 <tr>
-<td class="org-right">1</td>
-<td class="org-left">Bonus Engagement Point system too complex / needs better explanation</td>
+<td class="org-right">9</td>
+<td class="org-left">Audio problems on videos were irritating</td>
 </tr>
 
 <tr>
-<td class="org-right">5</td>
-<td class="org-left">Too many questions in lecture, slows down the flow</td>
-</tr>
-
-<tr>
-<td class="org-right">2</td>
-<td class="org-left">Have some required attendance element in Discussion like quizzes</td>
-</tr>
-
-<tr>
-<td class="org-right">1</td>
-<td class="org-left">Want to know how many Engagement Points I hae</td>
+<td class="org-right">4</td>
+<td class="org-left">Want more Office Hours / more TAs</td>
 </tr>
 
 <tr>
 <td class="org-right">3</td>
+<td class="org-left">Would like more Office Hours later in the day</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">Want online Office Hours</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Bonus Engagement Point system too complex / needs better explanation</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Too many questions in lecture, slows down the flow</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Have some required attendance element in Discussion like quizzes</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Want to know how many Engagement Points I have</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
 <td class="org-left">Need more help at the beginning with environment setup</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-
-<div id="outline-container-orge57b9bd" class="outline-3">
-<h3 id="orge57b9bd">Props to Staff Members</h3>
-<div class="outline-text-3" id="text-orge57b9bd">
+<div id="outline-container-org2931533" class="outline-3">
+<h3 id="org2931533">Props to Staff Members</h3>
+<div class="outline-text-3" id="text-org2931533">
 <p>
 A number of staff members were individually thanked by students in
 their free-form feedback for help during the semester.
@@ -759,105 +824,73 @@ their free-form feedback for help during the semester.
 </thead>
 <tbody>
 <tr>
+<td class="org-left">Abdullah</td>
+<td class="org-right">3</td>
+</tr>
+
+<tr>
 <td class="org-left">Adam</td>
 <td class="org-right">4</td>
 </tr>
 
 <tr>
-<td class="org-left">Aidan</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Alex</td>
+<td class="org-left">Amber</td>
 <td class="org-right">4</td>
 </tr>
 
 <tr>
 <td class="org-left">CJ</td>
-<td class="org-right">7</td>
+<td class="org-right">8</td>
 </tr>
 
 <tr>
-<td class="org-left">Clara</td>
-<td class="org-right">3</td>
-</tr>
-
-<tr>
-<td class="org-left">Cunyang</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Eckart</td>
-<td class="org-right">5</td>
-</tr>
-
-<tr>
-<td class="org-left">Ethan</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Gavin</td>
-<td class="org-right">12</td>
-</tr>
-
-<tr>
-<td class="org-left">Haowen</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Iris</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Jihyo</td>
-<td class="org-right">3</td>
-</tr>
-
-<tr>
-<td class="org-left">Lannie</td>
-<td class="org-right">1</td>
-</tr>
-
-<tr>
-<td class="org-left">Luis</td>
+<td class="org-left">Emily</td>
 <td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-left">Jeffrey</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-left">Jeremy</td>
+<td class="org-right">3</td>
 </tr>
 
 <tr>
 <td class="org-left">Macy</td>
-<td class="org-right">2</td>
+<td class="org-right">3</td>
 </tr>
 
 <tr>
 <td class="org-left">Rohan</td>
-<td class="org-right">2</td>
+<td class="org-right">6</td>
 </tr>
 
 <tr>
 <td class="org-left">Saloni</td>
-<td class="org-right">4</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Shaobo</td>
+<td class="org-right">2</td>
 </tr>
 </tbody>
 <tbody>
 <tr>
-<td class="org-left">All Tas</td>
-<td class="org-right">10</td>
+<td class="org-left">All TAs</td>
+<td class="org-right">14</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 </div>
-
-
-<div id="outline-container-org79b87c1" class="outline-2">
-<h2 id="org79b87c1">Notable Freeform Responses</h2>
-<div class="outline-text-2" id="text-org79b87c1">
+<div id="outline-container-orgd1ecae8" class="outline-2">
+<h2 id="orgd1ecae8">Notable Freeform Responses</h2>
+<div class="outline-text-2" id="text-orgd1ecae8">
 <p>
 Student comments are given in plain face. 
 </p>
@@ -866,1017 +899,1499 @@ Student comments are given in plain face.
 <i>Instructor responses are italicized.</i>
 </p>
 </div>
-
-<div id="outline-container-org6c5a00f" class="outline-3">
-<h3 id="org6c5a00f">Projects</h3>
-<div class="outline-text-3" id="text-org6c5a00f">
+<div id="outline-container-org19ed8ac" class="outline-3">
+<h3 id="org19ed8ac">Lectures / Videos</h3>
+<div class="outline-text-3" id="text-org19ed8ac">
 <ul class="org-ul">
-<li>The one project that I did not enjoy and found the most difficult
-was Project 3. Additionally, I was being a bit cocky which resulted
-in incomplete projects, which is completely my fault. Lesson
-learned!</li>
-<li>Puzzlebin took a part of my soul that I'll never get back, but
-otherwise the projects were super cool!</li>
-<li>Puzzlebin was a whole Fortnite event with how hard it was for
-everyone, but keep it that way so future students taking the course
-can experience it.</li>
-</ul>
+<li><p>
+Regarding the lecture videos, I think they were a nice feature but I
+could rarely find the video for the 11AM lecture, only the 9:30AM
+lecture.
+</p>
 <blockquote>
 <p>
-Many folks responding took the time to reminisce about the gauntlet
-that is assembly programming and debugging. It may be that I am simply
-perpetuating the pain inflicted on me in a bygone era, SSH-ing into a
-server until 2am and attempting to crack the mysteries of an assembly
-binary bomb via GDB. While this is not a skill I've oft employed since
-then, I did benefit from the experience as it taught me one doesn't
-have to fully understand a system to make some forward progress in
-it. I've also never been afraid to fire up a debugger since then.
+Both lectures generally covered about the same thing so I only
+posted one video, whichever I thought went better. If you want to
+see what happens in your lecture, come to lecture.
 </p>
-</blockquote>
+</blockquote></li>
 
-<ul class="org-ul">
-<li>Project 5 took too much time and there wasn't enough time. It
-should've been released before thanksgiving break.</li>
-</ul>
+<li><p>
+Lectures are long.
+</p>
 <blockquote>
 <p>
-I've released projects prior to Thanksgiving before and gotten equal
-complaints about how I was forcing students to work on their project
-during a holiday. There is no winning on this account. I'm sorry that
-you would have preferred it that way rather than the post-holiday
-release. 
+Alternate take: your attention is too short.
 </p>
-</blockquote>
+</blockquote></li>
 
-<ul class="org-ul">
-<li>Although the projects were the most time consuming part of the
-course, I think they were the most informative.</li>
-</ul>
+<li><p>
+Kauffman needs to&#x2026; not answer as many questions as I find it
+difficult to follow along sometimes, which causes me to lose
+interest.
+</p>
 <blockquote>
 <p>
-That is my intent so I'm glad it worked for you.
+If the questions that others have cause you to lose interest, that's a
+bad sign.  Focus on what they are asking and learn from it.  Your
+generation has the reputation for poor attention spans. Surpass that
+characterization by improving your capacity to focus.
 </p>
-</blockquote>
 
-<ul class="org-ul">
-<li>I feel like if projects focused on just the key principles rather
-than going above and beyond on the depth of material, it would be
-equally effective.</li>
-</ul>
+<div id="orge5bba34" class="figure">
+<p><img src="quotes_on_focus.jpg" alt="quotes_on_focus.jpg" style="max-width:100%;" />
+</p>
+</div>
+</blockquote></li>
+
+<li><p>
+I think Professor Kauffman should try to minimize the use of overly
+elevated vocabulary words during lecture.
+</p>
 <blockquote>
 <p>
-I'd need more detail to act upon such a suggestion. For example, one
-could have students just write some <code>fork() / exec() / wait()</code> lines
-in a <code>main()</code>. I provided examples of this in lecture and had lab
-exercises which amounted to this style.  But a Project is something
-that applies course topics in a practical and useful setting. That
-means there will be surrounding infrastructure such as was the case in
-P4.  If you see some portions of the project that could be excised
-there or on other projects while retaining their use of core
-techniques and usefulness, please email me <code>&lt;prof@umd.edu&gt;</code> to
-discuss. This is an excellent exercise: what can be removed /
-re-designed / improved. You might find on trying it is hard to reduce
-the size of projects without sacrificing something. The size of
-software will also be constrained by the inherent complexity of the
-problems it addresses. Reasonable sized problems require some girth to
-the software.
+Inconceivable.
 </p>
-</blockquote>
+</blockquote></li>
 
-<ul class="org-ul">
-<li>Another thing is that the projects are fairly lengthy and I wished
-they were a tad bit shorter. It may just be me being terrible at
-managing my time but I still feel that even if I managed my time
-properly the projects would still feel very lengthy and take up a
-good amount of time during my day just to finish parts of the
-project.</li>
-<li>I think while the projects were informative, they were extremely
-time consuming and a lot longer than projects that a lot of my peers
-and I have done in the past.</li>
-</ul>
+<li>I think the quality of the videos could be better since the mic
+would cut off or become incomprehensible at least once per video.</li>
+<li><p>
+The static in the video recordings that happen every once in a while
+genuinely just hurt my brain to listen to&#x2026; I'm surprised if it
+hasn't been brought up by anyone else yet and honestly that's my
+biggest complaint about this course.
+</p>
 <blockquote>
 <p>
-Time spent on projects is time spent practicing our craft.  If you
-want to learn to build things, then practice building things. Building
-real software is no easy task and we built some approximations of real
-software this semester. Be proud of that as it will prepare you for
-the wild.
+In the last weeks of the semester I started noticing microphone
+malfunctions during lecture. A large number of students mentioned in
+this feedback that this extended to static, popping, and cutouts as
+well. I don't re-watch lecture videos, just post them, so I was not
+aware how bad the problem is. My $30 Amazon mic seems to have reached
+is end-of-life and I'll get a new one. I'm sorry that I did not hear
+about this earlier as I would have taken faster measures to fix
+things. Thanks to all who notified me in feedback about the issues.
 </p>
-</blockquote>
+</blockquote></li>
 
-<ul class="org-ul">
-<li>You have the hardest projects in my life, like are you torturing us
-with these joints.</li>
-</ul>
+<li><p>
+One thing that was slightly frustrating for me especially towards
+the end of the course was that because the project overview videos
+were posted on Youtube there was constant advertisements. I counted
+that I had to watch almost 5 ad's in a ten minute timeframe which
+was pretty annoying when I had limited time to watch the videos and
+I was constantly being interrupted by advertisements. If possible it
+would be helpful if the videos could just be posted on Panopto like
+the lab walkthroughs and the lectures.
+</p>
 <blockquote>
 <p>
-If you want the projects to seem easier, take CMSC 412 and build an
-operating system. I expect 216 projects will seem like a vacation
-after that.
+Gone are the good old days when if you didn't "monetize" videos on
+Youtube, no ads would play on them. I was not aware that this had
+changed and was a source of frustration. Likely I'll follow your
+suggestion and post project videos on Canvas instead as ads do nothing
+for students nor me and merely pad the pockets of Google. Thanks for
+notifying me about this frustration.
 </p>
-</blockquote>
+</blockquote></li>
 
-<ul class="org-ul">
-<li>The majority of the time, I would spend 1-2 hours just staring at
-the template of the project, not knowing how to even start the
-project. This probably wouldn't have happened if I watched the
-project overview videos, but oh well.</li>
-</ul>
+<li><p>
+Please post lecture videos earlier, I didn't watch them often but
+there was a time I couldn't make it and was kind of annoying to have
+to wait until the next day since I went to discussion not knowing
+what they were talking about.
+</p>
 <blockquote>
 <p>
-I also find starting to be hard.  Students in the past have reiterated
-that the intro videos help to break the ice. I'm sorry you didn't have
-a chance to use them as such. Look for ways to reduce that starting
-activation energy as if you are recognizing that pattern in yourself
-now, you'll have several years to learn how to overcome it before
-hitting the job market.
+I find it annoying to post videos at all. It's more work and many of
+my peers have observed that it "enables" folks to just skip class
+even though they've made a commitment through enrollment to
+attend. I do it because many students express that it provides help
+for them. Be cautious when launching complaints like the above; with
+enough such complaints, folks like myself may seek to reduce the
+complaints about the timeliness of videos by just NOT posting
+videos.
 </p>
-</blockquote>
+</blockquote></li>
+
+<li>I have never had lectures be such well-paced&#x2026;  I also enjoyed how
+we could get bonus points for asking questions and how Professor
+Kauffman responded to my doubts.</li>
+<li>Lectures are alright however they include a lot of bloat can be from
+the excess questions people ask which made it hard to focus on what
+was actually being taught.</li>
+<li>I think a lot of kids asking questions in lecture was not that
+helpful because I would zone out&#x2026;  I feel like if kids have
+questions, they should save them for the end of the lecture.</li>
+<li>I think participating in class should be mandatory to a certain
+extent. Maybe, raise your hands 3 times throughout the semester for
+credit, and any additional times after is a bonus.</li>
+<li>In a massive lecture room, there are only so many times you get
+lucky enough to answer a question</li>
+<li>I felt bad asking questions since it would slow the lecture down a
+lot.</li>
+<li>You probably don't believe me but I promise at least half of the
+questions asked are from people pretending not to know something
+just to get participation credit.</li>
+<li><p>
+I also love how Prof. Kauffman makes the class an environment where
+I don't feel judged asking questions if I don't understand
+something&#x2026; engagement points are an incentive to participate, but
+the vibe of the classroom is much more supporting of us shy-folk and
+makes it much much easier to do so.
+</p>
+<blockquote>
+<p>
+Like any policy significant decision, my choice to incentivize
+conversation in class has tradeoffs. I've set the policy as it is
+because the goals I wish to accomplish are facilitated by policy:
+</p>
+<ul class="org-ul">
+<li>Barriers to inquire more deeply through questions are low.</li>
+<li>If a point of confusion arises, someone will ask and that will
+benefit everyone with greater clarity.</li>
+<li>Our time together is not a broadcast by one but a dialogue among
+many as befits an in-person meeting at the academy.</li>
+</ul>
+<p>
+These aspects might rankle some as they feel a "lecture" should be one
+person talking and others simply listening without interruption. Those
+folks are entitled to their opinions and are free to skip lecture and
+read the textbook which offers such an experience or perhaps watch
+recordings of me or someone else and skip the parts they wish.  Those
+folks wish to learn on their own. As for me, learning together is a
+richer experience that teaches not only technical content but patience
+and appreciation for alternate perspectives. I encourage students to
+consider this part of their academic experience the next time they are
+perturbed by someone else's question: where will you learn to listen
+to others and hear them out if not in places like our meetings?
+</p>
+
+<p>
+Like any policy system, there are benefits and costs to awarding
+in-class participation.  According to the self-reporting of students
+in this anonymous survey, about 33% of students ask questions in
+lecture due to being curious and about 11% indicate they ask solely
+for to earn participation credit.  That means about 1 in 4 questions
+is purely points motivated.  I am fine with that ratio just as I am
+fine with the taxes I pay funding many things I like and some I
+don't. As has been said, "I like to pay taxes. With them, I buy
+civilization." (Oliver Wendell Holmes Jr.); or in our case, <i>I like
+questions. With them we buy understanding.</i>
+</p>
+</blockquote></li>
+
+<li><p>
+My only complaint is that if you don't sit near the front center
+row, it's harder to get called on for a question.
+</p>
+<blockquote>
+<p>
+Read <a href="https://www.cs.umd.edu/~profk/216/syllabus.html#org02b1e95">the Syllabus</a> and you'll learn about Hot Seats.
+</p>
+</blockquote></li>
+
+<li><p>
+Following what Prof K says [in lecture] is like trying to hold on to
+barreling train&#x2026;.  It feels sort of like during lecture you're
+just holding on to hearing the words (the train) and rewatching
+you're like oh there was a mountain, we crossed a bridge etc.
+</p>
+<blockquote>
+<p>
+Choo choo!
+</p>
+
+
+<div id="orge71ebdc" class="figure">
+<p><img src="thomas-skyrim.gif" alt="thomas-skyrim.gif" style="max-width:100%;" />
+</p>
+</div>
+</blockquote></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org771515e" class="outline-3">
+<h3 id="org771515e">Projects</h3>
+<div class="outline-text-3" id="text-org771515e">
+<ul class="org-ul">
+<li><p>
+[P4] being assigned after finishing up assembly and a long break
+between projects also made it more difficult as I found I had
+forgotten how to code in C.
+</p>
+<blockquote>
+<p>
+Forgetting makes everything harder. Hopefully the project helped jog
+your memory.
+</p>
+</blockquote></li>
+
+<li><p>
+Make the projects more like the puzzlebin projects. Make it more
+like a puzzle which the student must figure out how to solve using
+the tools they know, rather than just reading a predetermined
+specification and trying to follow it as closely as possible.
+</p>
+<blockquote>
+<p>
+The "puzzle" projects appeal to some but are actually not reflective
+of the norm for creating software.  The two places I employ them have
+specific goals that align well with the style: basic debugger
+discipline, learning about features of assembly, and examining
+binaries.  Other skills in the course require coding, not analysis, so are
+inappropriate to this style of assignment. If you are looking for more
+puzzles to build skills, you might <a href="https://github.com/kauffman77/shellslayer">try this</a>.
+</p>
+</blockquote></li>
+
+<li>I learned so, so much from the projects, but they were also so, so
+time-consuming. I generally used almost all of the time allowed for
+projects, working several hours each day, and submitted 1-2 days
+before the deadline. It was stressful completing the projects and
+then realizing I had minimal time left for my remaining classes.</li>
+<li><p>
+Most of my studying was done by legitimately doing the projects
+though so I guess it saved me time.
+</p>
+<blockquote>
+<p>
+The intent was for projects to take time and teach. Glad that this
+appeared to be the case for most students. Learning to play an
+instrument, paint a portrait, climb a rock wall, or deliver a
+convincing speech takes time and diligent practice. Much of the
+world wonders out the ability of programmers to construct
+programs. When they wonder at your skill, you can relate the many
+hours you spent to hone your craft just as any artist, athlete, or
+leader does.
+</p>
+</blockquote></li>
+
+<li><p>
+I would like to complain about project 4 which had its due date on
+Saturday rather than on Monday/Tuesday like all the other projects
+since it meant I didn't have the weekend to finish the project.
+</p>
+<blockquote>
+<p>
+Sorry this didn't work for you. In cases where we could, we tried to
+peg deadlines to dates that would allow students to get last-minute
+help in discussion sections. As was observed by many students, the
+timing for P4 was bad and we'll avoid this trap in the future.
+</p>
+</blockquote></li>
+
+<li><p>
+I felt that the projects were not very interesting. I think if the
+projects were designed around a real world problem and using
+computer systems to solve it would have made for more interesting
+work that has more applicability.
+</p>
+<blockquote>
+<p>
+We built (1) a search algorithm, (2) an embedded display construction,
+(3) an interactive data structure program, (3) a small shell
+implementation, (4) an optimized data analysis routine, and (5) an
+implementation of a heap.  I'm sorry if you found these uninteresting
+but your characterization of them as not "real world problems" is
+badly misguided. Please reflect on the nature of the projects more to
+understand where you are wrong.
+</p>
+</blockquote></li>
+
+<li><p>
+In 132 I was able to finish most projects in a day I wouldn't say
+that they were easy but I definitely found myself able to enter a
+flow state when working on those projects as opposed to these. With
+these projects if I started a day or two after they were assigned I
+could definitely finish them in a more relaxed manner however, it
+would definitely be a multi day process.
+</p>
+<blockquote>
+<p>
+While there is variation, as you mature, problems are not such that
+you can solve them in a single sitting. This requires you to develop
+skills to come into and out of a project over many sittings.  That
+will be the norm as your academic and professional career advances. It
+seems you got some practice at that in this course which is
+great. Keep building those skills: how does one get quickly into the
+flow state, tune out distractions, and leave work in a state that is
+easy to pick up tomorrow. Programs are not static: they grow and
+evolve and tending them is our business.
+</p>
+</blockquote></li>
+
+<li><p>
+However after completing the project, I actually felt very
+accomplished.
+</p>
+<blockquote>
+<p>
+You should. Well done.
+</p>
+</blockquote></li>
+</ul>
+
 
 <ul class="org-ul">
 <li><p>
-Absolutely no disrespect, but whoever wrote the documentation for
-the projects had an uncanny and unique ability to write in TONS of
-detail and yet remain extremely vague.
+Project 3 was likely the MOST frustrating and maddening thing I have
+ever done in my life&#x2026; like trying to catch a leviathan with a
+fishing net, like fighting a kraken with a paddleboard, like sailing
+through a hurricane on a lifeboat. I write all this to tell you:
+keep the projects the way they are.
 </p>
-
-<p>
-Again, I mean no disrespect, but somehow the documentation for these
-projects was uniquely worthless. I have yet to have a coding project
-at UMD that made me feel this way. Normally, I had an immediately
-good grasp comprehensively on what a project was meant to do and
-what concepts it encouraged to be applied, giving a good idea on how
-the functions would interact. But in this class, really bad writing
-in my opinion.
-</p>
-
-<p>
-Kauffman, if you are reading this and you are the one who wrote the
-documentation; I am sorry. I mean no disrespect. I never really
-asked questions but you seem to be a very generous man, a
-knowledgeable professor and have the respect of your students. But
-based on my personal and biased experience; I humbly think you
-should hire someone to write the documentation for the projects for
-you.
-</p></li>
-</ul>
 <blockquote>
 <p>
-Thanks for your commentary. I'll admit some bias as well: I laugh when
-2nd year computer science students are critical of Project
-specification that I write.  Not because the specs are perfect or even
-that good: I know they are filled with errors, typos, inconsistencies,
-and other warts.  Rather, I laugh with this kind of commentary as
-there's nothing to do with it. There isn't a single concrete
-suggestion in your feedback of what should actually change. It amounts
-to "do better".  If you have some specifics in mind, lay it on me at
-<code>&lt;profk@umd.edu&gt;</code>. I'd encourage you to try. It will force you to
-consider "how would I do it differently?" and move away from the vague
-critique to the specific critique and perhaps ultimately to
-construction and creation. Concrete feedback would be like the
-following suggestion from a student:
+Acknowledged. Come F2025, we will once again release the Kraken&#x2026;
 </p>
 
-<p>
-"It would be cool if the information for projects was more consistently
-split across class website and function comments. Every so often a
-crucial detail was on the class website, which took a while to find
-since all the other needed information is in the comments."
-</p>
 
-<p>
-While it didn't give a specific instance, it at least gives me
-direction to look between the documentation comments in some projects
-and compare them to the implementation details.  The improvement could be a
-matter of moving information between the doc comments and spec or
-leaving a note to remind to look at the more comprehensive
-implementation details described in the spec.
+<div id="org69d3c63" class="figure">
+<p><img src="kraken.gif" alt="kraken.gif" style="max-width:100%;" />
 </p>
+</div>
+</blockquote></li>
 
-<p>
-It may be that past projects were easy for you to understand because
-you were already familiar with most of what was involved. Unless
-things were quite odd, you've never written a Ranked Choice Voting
-calculation, embedded clock display, testing framework, or memory
-allocator before.  You should expect that it's harder to mentally
-reason about those things which makes it much harder to code. But,
-with that experience in hand, you'll be in better shape to handle yet
-more complex software.  Other complex skills are similar: writing,
-musicianship, sport, etc., they all seem opaque and extremely hard to
-grasp when starting but with steady practice become transparent and
-manageable. So it goes for computing and trust me when I assert that
-you're just getting started.
+<li><p>
+I wish that late projects would cost EITHER engagement points or a
+certain number of extra project points.
 </p>
-</blockquote>
+<blockquote>
+<p>
+I'll consider it but the decision to separate late penalties into a
+separate category is intentional. It allows those penalties be offset
+by other means than performance on the coding projects.
+</p>
+</blockquote></li>
+
+<li><p>
+I feel like the function descriptions of the last few projects have
+become more ambiguous. At the start, it was crystal clear as to how
+to implement something, almost to a fault, because I didn't feel
+like I was thinking sometimes. However, especially on project four,
+the descriptions were more confusing, and I often had to reread them
+to understand a simple concept.
+</p>
+<blockquote>
+<p>
+Project 4 was more complex that earlier projects. It is hard to
+distinguish whether the ambiguity you sense is due to problems with
+the descriptions or instead a lack of familiarity with how to employ
+course techniques in the project context. I'll review the function
+descriptions on P4 and make adjustments where it seems
+appropriate. However, my intention over the semester is to move from
+prescriptive function outline (almost everything dictated) to
+descriptions of outcomes that leave students to explore how to
+accomplish the outcome themselves. This is part of maturing:
+connecting the "what" to the "how" yourself. Some amount of
+experimentation is expected in those settings.
+</p>
+</blockquote></li>
+
+<li><p>
+I feel like my effort on the projects far exceeded that which went
+into the labs and homework quizzes. Both are worth 20% of our grade
+(projects vs. HW/lab combined).
+</p>
+<blockquote>
+<p>
+As one of my past instructor observed, "Some points are easy to get,
+some are harder." That's by design. If you want them all, you'll need
+to commit.
+</p>
+</blockquote></li>
+</ul>
 </div>
 </div>
-
-
-<div id="outline-container-org8bca705" class="outline-3">
-<h3 id="org8bca705">Exams</h3>
-<div class="outline-text-3" id="text-org8bca705">
+<div id="outline-container-org816e815" class="outline-3">
+<h3 id="org816e815">Exams</h3>
+<div class="outline-text-3" id="text-org816e815">
 <ul class="org-ul">
-<li>I also really wish there was a topic list for the exams because they
-would really help students see what to study for exams especially
-because there's only two exams each with a lot of content so having
-a topic list would just make it feel less stressful while studying.</li>
-<li>You knew going into the exam after completing the project beforehand
-that you had the skills to come out with a decent grade just because
-the projects would teach you 80% of the topics covered on the exam.</li>
-</ul>
+<li><p>
+I don't enjoy open note exams as I dont have time to look at notes
+and I think the fact that they are open note probably make them
+harder.
+</p>
 <blockquote>
 <p>
-My advice to students when preparing for exams is to finish the
-projects then perhaps review them leading into the exam.  A typical
-"topic list" is a set of bullet items that students search for in a
-browser or notes, write down a quick summary, and therefore fool
-themselves into understanding. Exams ask you to apply the things we
-discuss in class and that's usually done in projects, labs, and
-HWs. That's why I don't provide a "topic list".
+We are in a details oriented field but accumulating all those details
+is hard. I like to ask questions that poke your understanding of how
+things fit together and not on whether you can recollect the minutia.
+I think this reflects the reality of what your working life will
+be. I'd likely ask the same questions I do now irrespective of the
+open/closed resource exams as I they reflect what I hope you have
+learned. If that is harder, so be it. Doing what we do is hard, but&#x2026;
 </p>
-</blockquote>
 
-<ul class="org-ul">
-<li>I have been baffled at the discrepancy between the real [exam] and the
-practice resources.</li>
-</ul>
+
+<div id="org126be2f" class="figure">
+<p><img src="you-can-do-hard-things-cover.jpg" alt="you-can-do-hard-things-cover.jpg" style="max-width:100%;" />
+</p>
+</div>
+</blockquote></li>
+
+<li><p>
+I do think that studying for exams are hard due to the lack of
+materials&#x2026; I completely acknowledge that this is because I've been
+spoiled by Larry [Herman]'s 20 page practice exams.
+</p>
 <blockquote>
 <p>
-If you like, I can sit down with you and show you analogs of each real
-exam problem and where practice material appeared for it in lecture,
-lab, HW, and projects.  In some cases, one might need to combine
-things learned in several spots to solve an exam problem which is why
-having a good grasp on those practice materials is important.  I
-admit, students accustomed to seeing the same questions on the real
-exam as appeared on practice exams were likely disappointed, but
-you're very unlikely to code course projects in an actual job so my
-expectation is that you learn to adapt what you know to new situations.
+I'm glad that you disclosed that a past instructor provided such a
+large repository of practice. This helps me to understand student
+expectations better. As you indicated, providing such a large bank of
+practice questions is unusual. Before I came to UMD, I saw very few
+instructors provide past exams as preparatory material as writing exam
+problems that do a good job in evaluating understanding is quite
+difficult.  I'll consider making changes but the following makes me
+reluctant to do so: every student who has approached me about wanting
+more practice problems has not been able to show me answers they wrote
+themselves for HW problems.  They all just clicked through the online
+quizzes to get credit. At the point a large fraction of students come
+to me with their own answers to all of the practice materials that
+I've already provided and want more, I'd consider it more
+seriously. My perception is that what students want is more exam
+questions that they can memorize answers to and regurgitate on the
+upcoming exam. That's not the kind of learning I'm interested in
+encouraging so I don't feel a compulsion to provide additional
+practice materials.  As Thelonius Monk responded once to the question
+of why he hadn't written more songs, "Why write new tunes? They
+haven't figured out the old ones yet."
 </p>
-</blockquote>
+</blockquote></li>
 
-<ul class="org-ul">
-<li>course is kinda hard, most people did awful on the first midterm.</li>
-</ul>
+<li><p>
+The fact that I had to use my brain so much makes the projects the
+main contributing factor to my success on exams.
+</p>
 <blockquote>
 <p>
-The Exam 1 median score was 55 / 70 = 78%, a C+ grade.  Exam 2 had a
-median of 59 / 70 = 84%, a B grade and the Final exam had a 79 / 100 =
-79% median, C+.  These are normal for my runs of this course
-historically. 
+Glad to hear the existing practice worked for you.
 </p>
-</blockquote>
+</blockquote></li>
 
-<ul class="org-ul">
-<li>Upping the practice test would be helpful becuase still felt like
-practice tests did not match the exam as exam was much more
-difficult and i felt really unprepared.</li>
-<li>Wished the practice test was more like the real tests.</li>
-</ul>
+<li><p>
+A third exam would have been amazing.
+</p>
 <blockquote>
 <p>
-I can do that. Based on past student feedback, we added a second
-practice exam page posted online too complement the one discussed in
-lecture.  I can modify the problems on both to increase the difficulty
-somewhat if folks think this would set a better expectation for the
-exams. 
+I used to do so but the scheduling is so tight already it's hard. If
+3-lectures per week at 50-min a pop were used for CMSC216, I'd
+consider doing a 3rd exam but not as is with the 2-lectures per week.
 </p>
-</blockquote>
-
-<ul class="org-ul">
-<li>More Exams: 3 exams instead of 2.</li>
+</blockquote></li>
 </ul>
-<blockquote>
-<p>
-Several students commented in this way. I'll consider it but there is a
-great difficulty with this if students want a review period (e.g. a
-lecture devoted to a practice exam).  That means an exam cycle takes a
-full week so a third exam would likely mean eliminating a major topic
-in the course and require considerable re-organization.  At my prior
-university, the equivalent to CMSC 216 was taught as a MWF 50-min
-course and so it was easier to do 3 exams and a final.  However, with
-the 75-min convention at UMD, something has to go: a major
-course topic, review lectures, or a 3rd exam. I opted for the latter
-as it seemed the most favorable tradeoff.
-</p>
-</blockquote>
-
-<ul class="org-ul">
-<li>I think that the course policies were slightly unreasonable as most
-professors allow students to access past exams. Past exams are a
-very helpful in studying and they help students learn.</li>
-</ul>
-<blockquote>
-<p>
-I can understand giving past exams which involve multiple choice
-questions, writing simple functions of 15 lines or less, or similar
-shallow / easy-to-construct questions.  This has risks to it as well,
-but since generating those kinds of questions is less difficult,
-giving all of them away is tractable. I've also noticed that
-instructors that do so often don't teach the same things from one
-semester to the next so students complain that what was on past exams
-didn't prepare them for the present offering of a course. 
-</p>
-
-<p>
-As you may have noticed, the exam questions I give are dense and quite
-challenging to construct. They are meant to reflect specific topics we
-covered in this run of the course and I ensure that topics that appear
-on exams are scaffolded by appearing on assignments during the
-semester (projects, labs, HWs).  Students that complete and own their
-assignments report that they feel well-prepared for the exams.  
-</p>
-
-<p>
-All of that makes me disinclined to give away past exams: they may not
-reflect what's covered in the course now, there is already ample
-material to study on, and it makes my job much harder as I cannot
-re-use any question I've given away publicly.  I understand your
-concern as I've heard it before, but your argument is not enough to
-sway me.
-</p>
-</blockquote>
 </div>
 </div>
-
-<div id="outline-container-org918a83e" class="outline-3">
-<h3 id="org918a83e">Discussions</h3>
-<div class="outline-text-3" id="text-org918a83e">
+<div id="outline-container-org2ae3a31" class="outline-3">
+<h3 id="org2ae3a31">Discussions, Labs, HWs</h3>
+<div class="outline-text-3" id="text-org2ae3a31">
 <ul class="org-ul">
-<li>I will take responsibility for being lazy and skipping some
-discussions, however I know if I had gone I would have benefited
-much more.</li>
-</ul>
+<li>I know this sounds strange but I almost wish that attending
+discussion was mandatory, or at least maybe one a week.  I got lazy
+as the semester went on and stopped attending which I think really
+hurt my grade.</li>
+<li>I think adding some sort of incentive for students to come to
+discussion could make discussions much more engaging and more full
+of life in general.</li>
+<li>I really liked the discussions being optional. I think some people
+benefitted from TAs giving explanations of the labs and homework but
+I preferred to do them on my own.</li>
+<li>For an average 5-person discussion, [TAs] really put all their heart
+and soul into teaching&#x2026;.  I went to basically all the discussions
+just for the jokes&#x2026;. and learning, I guess.</li>
+<li><p>
+I really liked discussion sections; the TAs were very enthusiastic
+and happy to help us.
+</p>
 <blockquote>
 <p>
-Good show.  The best educators can do is to provide opportunities to
-learn, possibly with incentives, and hope that students take those
-opportunities.  No one can force you to do something.  If you found in
-retrospect that a particular activity would have been beneficial,
-you're reflecting which is great. Resolve to take advantage of those
-opportunities if they come up again.
+After discussing with the staff, we have some ideas for next semester
+on how to incentivize attendance to discussions without compromising
+on the flexibility to skip them if needed. TAs are very interested in
+providing value to students and recognize that something needs to
+change to get folks into the discussions.
 </p>
-</blockquote>
+</blockquote></li>
 
-<ul class="org-ul">
-<li>I felt like discussions would just be better online, I think because
-there is no graded work like a paper assignment or a paper quiz, I
-lost the incentive to go. If we had discussion online I would tune
-into them instead of walking all the way from Prince Frederick to
-CSI just to go over a lab and homework I could complete in maybe 30
-minutes or so elsewhere.</li>
-<li>I really liked the discussion sections and feel like you should work
-to promote active sessions because those were super helpful to me</li>
-<li>I felt the discussions were ultimately at times glorified office
-hours, and were useless to me when I didn't need help.</li>
-</ul>
+<li><p>
+I think it'd be nice if the lab questions could tell you either a)
+what questions you got wrong or b) how many you got
+wrong. There's no distinction between getting one wrong or all
+of them wrong.
+</p>
 <blockquote>
 <p>
-Folks will experience discussion sections and their value
-differently. That is fully expected and if students did not find
-attending to be helpful, they were free to spend that time on other
-things. For the record, discussions were there to support learning,
-particularly completion of Labs and at times Projects.
+That is an intentional measure to make the labs more challenging.
+While it can be frustrating, ask for help or brute force it if needed.
+Developing confidence in your answers is essential. HWs are where
+things are intentionally easy but Labs are more than that.
 </p>
-</blockquote>
+</blockquote></li>
 
-<ul class="org-ul">
-<li>I think that during discussion sections, it would be more beneficial
-to have one meeting per week dedicated to reviewing the content Prof
-K covered in the lecture, and the other one devoted to lab work and
-walkthroughs.</li>
-<li>It would be helpful if discussions also went a little bit over the
-homework. From my understanding, Mondays were dedicated to the first
-part of the lab and Tuesdays were for the second part, but after
-each part, there would be empty time until class ended. For example,
-covering the lab on Monday may take 30 minutes; touching on the
-homework in the next 20 minutes would help working through.</li>
-</ul>
+<li><p>
+I wish discussion had more worksheets to mimic written questions to
+help practice for exams.
+</p>
 <blockquote>
 <p>
-I'll consider that as TAs also indicated the bulk of the weekly Lab
-seemed to be coverable on Mondays leaving the Wednesday session light
-on content. Reviewing HWs and Lecture content are good options to
-complement the lab coverage.
+We will consider this but you should consider the ramifications for
+such a decision: attendance to lab now becomes required to earn
+credit. That means a policy for missing labs, grading work for the
+worksheets, makeup possibilities for being ill, etc.  It's a
+significant change and the benefit is not overly clear when HW already
+provides a spot you can practice writing answers if you want.
 </p>
-</blockquote>
+</blockquote></li>
+</ul>
+
 
 <ul class="org-ul">
-<li>Videos should be posted sooner, most notable the discussion
-tutorials, they were really helpful but were posted a couple days
-late</li>
-<li>Some labs did not have videos associated with them which sometimes
-sucked (i mean yeah I should've went to my discussion but still).</li>
-</ul>
+<li><p>
+Please include some additional practice material for the tests. The
+homework assignments are good, but oftentimes don't reflect the
+format of the material on the test.
+</p>
 <blockquote>
 <p>
-Videos are popular with students but are extra work for staff. This is
-the first semester videos for discussions were provided. The most
-timely coverage is gotten by ATTENDING the session your registered
-for. Videos always came later if at all.
+I'll review the HW but last time I checked, it aligns pretty well with
+exam-style questions. That is my intent when I write exams ans HWs.
 </p>
-</blockquote>
+</blockquote></li>
 
-<ul class="org-ul">
-<li>Discussion could be changed to be some sort of handwritten
-practice/review for the week's content.</li>
-</ul>
+<li><p>
+I think the discussions could go over test like practice problems
+related to lecture instead of the lab to help better prepare
+students
+</p>
 <blockquote>
 <p>
-Some TAs indicated they might like to do some handwritten worksheets
-and such.  Other TAs indicated that they much prefer to actually
-code. I'll consider this but there are a variety of  issues associted
-with such a change: will worksheet be graded, how they will they be
-graded, how will students who miss discussion be given a chance to
-make up the credit, and so on.  
+Several pre-exam discussions had review exercises with exactly this
+intent. If you don't think those exercises were adequate, sate which
+ones were lacking.
 </p>
-</blockquote>
+</blockquote></li>
+
+<li><p>
+I do think discussion, at times, could benefit from being online. I
+know a few commuter students who had to miss discussion on a few
+days because of traffic or bad weather, and I think having an online
+option especially for earlier discussion sections pre 10:00 might be
+helpful.
+</p>
+<blockquote>
+<p>
+This is an in-person course. We meet in-person.  There are quite a few
+resources provided for those that need to occasionally miss class due
+to other commitments. All assignments can be completed outside of
+class save for exams, lectures are recorded and posted, lab demos are
+recorded and posted and so on. If you want a truly online experience,
+find an online program in which to enroll. This is not that.
+</p>
+</blockquote></li>
+</ul>
 </div>
 </div>
-
-
-<div id="outline-container-org61f3ab8" class="outline-3">
-<h3 id="org61f3ab8">Engagement</h3>
-<div class="outline-text-3" id="text-org61f3ab8">
+<div id="outline-container-org5e3706b" class="outline-3">
+<h3 id="org5e3706b">Engagement</h3>
+<div class="outline-text-3" id="text-org5e3706b">
 <ul class="org-ul">
-<li>Most people likely got EPs through Piazza and moreso through asking
-questions in lecture, but I am very introverted so I couldn't really
-bring myself to ask or answer anything in front of 100+ people, and
-the few times I tried I was never called on because of where I was
-sitting. I can't think of a replacement/way to rectify this, more
-just bringing awareness to it in case it'll be used for a revision
-of the system.</li>
-<li>The only thing I would suggest is maybe having engagement points for
-discussion sections as well.</li>
-<li>more opportunities for engagement points</li>
-</ul>
+<li><p>
+I was (and still am a bit) confused about the difference between
+engagement and bonus engagement points, if any.  Some more detailed
+description on how these points interact with late project
+submissions would have been great.
+</p>
 <blockquote>
 <p>
-I'll consider adding bonus engagement points to discussions. Last
-semester this was done but there were notable abuses by students and
-general confusion among TAs on how to handle it. One student indicated
-they participated 64 times across the semester despite there being
-only 30 discussion meetings. While extreme, lecture did not have this
-problem.  We can probably resolve this with some training and
-discussion might be a good place for students who'd rather not speak
-in the large lecture to have a chance to engage.
+Perhaps <a href="https://www.cs.umd.edu/~profk/216/syllabus.html#engagement-points">this will help</a>. It's been available to read since the
+beginning of the course.
 </p>
-</blockquote>
+</blockquote></li>
 
-<ul class="org-ul">
-<li>Something found could be improved was the way engagement points were
-calculated because after around 32 lecture participation points it
-doesn't benefit the person that much since you need so many more
-participation just for 1 more engagement point.</li>
-</ul>
+<li><p>
+One of the things I noticed with the Piazza posts/engagement points
+was that some students would take advantage of the bonus points and
+accumulate 50+ responses, one student going as high as 250+. This
+takes away the opportunity for other students to get engagement
+points on Piazza, especially those who cannot respond immediately
+when a post is made. I believe there should be a cap, perhaps at
+20-25 responses, so other students can have the opportunity to
+respond and earn an engagement point. Another possible solution
+could be to apply a maximum number of responses per day, perhaps 2-3
+responses maximum.
+</p>
 <blockquote>
 <p>
-Correct.  This logarithmic scale is expressly designed to ensure there
-is no motivation for students to dominate the lecture discussion.
+I understand the sentiment and the potential benefit from
+"rate-limiting" participation, Piazza does not have the technical
+capability to rate limit posts. If it did, I'd probably rate limit
+Question posting in some fashion first before answer-posting. This
+might encourage students to try harder to post meaningful questions
+and cut down somewhat on "here's my broken code, what's wrong with
+it?" type questions. These take a lot of back and forth of "show us
+the error messages" and "what was the test doing" and "what have you
+tried so far" and so on. Rate limiting might cause students to learn
+more quickly to include such details at the get go. However, we don't
+have any rate limiting capabilities and this is an education community
+anyway so I'd be loathe limit any questioner or those that are helping
+to provide answers.
 </p>
-</blockquote>
 
-<ul class="org-ul">
-<li>I have observed in the class that stupid questions get laughed at by
-everyone.  So a lot of times, I just did not ask questions.</li>
-</ul>
+<p>
+The reward for answering Piazza posts is based on a log2() scale.
+Answering 15 Piazza posts gets 4 bonus EPs, answering 16 more for 31
+total gets 1 more bonus EP.  This is diminishing returns by
+definition. While there may be a few folks that are motivated purely
+by the bonus, I'm betting on such 'profit' motives as waning after the
+returns get small. Rather, many past students who were superstars on
+Piazza did so because they cared. Some of them are now TAs. I'd
+hesitate to do anything to diminish that pipeline. Nothing is
+stopping you from posting Notes about techniques you thought were
+helpful to know and then getting a "good note" endorsement from
+instructors that earns the same as an answer.
+</p>
+</blockquote></li>
+
+<li><p>
+Some students definitely mark dots after lectures when they didn't
+participate or mark an extra dot when they did.
+</p>
 <blockquote>
 <p>
-There were times that student questions generated humor, often due to
-an ill-timed question that had just been answered through a lecture
-example.  However, I don't recall any authentically posed inquiries
-being "laughed at" and I'm sorry that you got this impression. I hope
-you still had a chance to get answers through other means such as
-after lecture or during office hours. 
+Several students wrote to me asking "why don't I have any dots? I know
+I marked them?" Those students got 0 dots because they had clearly
+marked more than was numerically possible in given time periods.
+While I'm sure the honor system didn't prevent everyone from getting
+exactly what they earned, egregious breaches were detected and got
+nothing.
 </p>
-</blockquote>
+</blockquote></li>
 
-<ul class="org-ul">
-<li>An added benefit of the bonus points that I experienced was that I
-would zone out less frequently as I was constantly trying to prepare
-an answer for the next question he would ask.</li>
-</ul>
+<li><p>
+I notice some students seem to mass reply to everything [on Piazza]
+as fast as possible, even when they don't actually know an answer in
+what seems to be some attempt at farming engagement points.
+</p>
 <blockquote>
 <p>
-Glad to hear that the bonus EP incentive helped you zone in.  Mentally
-preparing questions while you listen is a powerful tool. It allows you
-to check your understanding as you go and prepares you for later parts
-of a presentation as you'll be wanting to know things that may be
-covered next.  Every talk I go to now I take some notes but also write
-questions in those notes as we go. Keep doing that and you'll be
-well-versed at absorbing and retaining presentations.
+I agree that the quality of some student answers is lower than what
+I'd like. To boot, some students have taken to making minor edits to
+answers in an effort to get some credit.  I'll thank about how this
+might be handled to preserve the community while limiting the
+gamesmanship. 
 </p>
-</blockquote>
+</blockquote></li>
+</ul>
+
+
+<ul class="org-ul">
+<li><p>
+Please remove the engagement point bonuses on participation and
+answering piazza posts&#x2026;  Please stop the in class participation
+credit too, 50% of the class is someone asking useless questions for
+engagement points.
+</p>
+<blockquote>
+<p>
+According to the self-reported numbers show above on in-class
+questions, about 33% of students indicated they asked questions due to
+pure curiosity with abut 11% indicating they asked questions purely to
+earn bonuses.  An additional 5% indicate they started purely motivated
+by the bonuses but became curious over time.  If you believe in your
+peers honesty, then you are wrong on the motivation front: the
+majority of questions are asked to further the understanding of the
+asker.
+</p>
+
+<p>
+As for the "useless questions" I keep mental track of what I think
+of as useless and not. Rarely does a useless question arise.
+Sometimes I have to repeat myself but that is part of
+education. Sometimes questions lead to tangents but often these are
+incredibly interesting areas to explore and enrich our discussion.
+I cannot say for certain what is useful or not for you but I'm
+suspicious of such blanket assertions especially when I find
+dialogue inspired by questions to be so useful for the class as a
+whole.  If you want there to be better questions, ask some
+yourself. The academy / university is a place where people come
+together to learn from one another through dialogue. If that's
+frustrating for you, find a different environment in which to
+learn. In addition to the technical content of a major, academic
+work should teach you patience and respect for your peers and their
+ideas. That is an essential part of living in a society that allows
+for free inquiry.
+</p>
+
+<p>
+I'm comforted by the fact that 89% of students reported liking
+the engagement points scheme as it is right now. We are not likely
+to ditch the EP system, just continue to refine it.
+</p>
+</blockquote></li>
+</ul>
 </div>
 </div>
-
-<div id="outline-container-org77c9ea6" class="outline-3">
-<h3 id="org77c9ea6">Technical Matters</h3>
-<div class="outline-text-3" id="text-org77c9ea6">
+<div id="outline-container-org1357f1f" class="outline-3">
+<h3 id="org1357f1f">Technical Matters</h3>
+<div class="outline-text-3" id="text-org1357f1f">
 <ul class="org-ul">
-<li>I cannot stand VS-Code. It seems like every time I opened it, I was
-irritated by the incessant pop ups asking me to download an
-extension or plug-in. After the first project, I installed WSL and
-got to work with good old vim.</li>
-</ul>
+<li><p>
+On P4&#x2026; if I ran make update right before I tested, my code would
+pass, and I would have to run make update before I run any test as
+it would somehow reset after every time I updated my code.
+</p>
 <blockquote>
 <p>
-Amen.  I've seen 3-4 iterations of the popular IDE (Eclipse in my
-youth, Atom, VS Code, some others) and they all just seemed to get in
-the way. Perhaps I've never worked on a project that really benefits
-from what these tools provide but their constant interference with just
-writing code always seemed like a terrible value proposition to me. We
-chose VS Code as our "endorsed" editor because it is reasonably easy
-to set up, has a shallow learning curve to get working, and supports
-a few plugins that allow for interactions with GRACE. If you found it
-worked better for you to use a different tooling, that's great: owning
-your own tools is part of this discipline. Vim is a fine editor, just
-not as extensible as Emacs :-P
+P4 involved systems programming which is pretty stateful: behavior
+changes based on whether files/directories exist, time is a factor,
+system load changes the outcome, and so on.  I expect that your code
+modified something in the testing files and that caused the first runs
+to be fine but the change caused subsequent runs to fail. The <code>make
+  update</code> would restore the testing files and allow for passing again.
+P4 tests are among the hardest to write. Try writing some for yourself
+at some point and you'll get the idea.  Then have 300+ students write
+buggy code and see if your tests hold up. I'm always surprised that
+the tests for this project work at all. I'll keep refining them to
+try to catch cases like those you describe but it's always going to be
+a losing battle.
 </p>
-</blockquote>
+</blockquote></li>
 
-<ul class="org-ul">
-<li>I just memorized your URL and wget the lab each week without having
-to even launch a browser. I know that other professors are extremely
-particular about using a very specific IDE or coding environment.</li>
-</ul>
+<li><p>
+Teach us how to set up WSL or install the programs natively on mac,
+I don't want to use that goofy grace server
+</p>
 <blockquote>
 <p>
-Tools are personal. As you evolve, your coding tools should fit your
-like a tailored suite. Folks forget that software is malleable and
-there is no reason you should adapt to it: it should be adaptable to
-your needs.  There is value in some settings for having shared tooling
-but to dictate how you should do something robs you of the chance to
-find tools that fit you.
+Picking an environment in which you can code from this class is hard.
+It's a computer systems class. That means to get the same behavior for
+all students, they need the same computer system.  The easiest way to
+arrange that in the past is for students to log into the same computer
+system, GRACE in our case. It has some drawbacks and I'd like
+something better, but it adopts one set of problems so as to avoid the
+myriad problems that are present in having students run natively.
 </p>
 
 <p>
-I'm glad that you started to learn some tricks that are helpful.  This
-is a good path to pursue and you might augment it even further by
-tailoring your shell to make it even slicker:
+GRACE may be goofy, but so is your machine. You're still on WSL v1 and
+don't know it so the setup process we provide didn't work. Then
+there's your classmate that's still running Windows 10 so has a
+different WSL setup and bugs that come with it. Never mind your
+classmates with old Macs which can't install GCC and its ilk except
+through unofficial 3rd party package managers like Homebrew. Never mind
+the folks that don't bother with this, type <code>gcc</code> and say "see, it's
+installed" not realizing that the brilliant folks at Apple changed
+over to using CLang a decade ago but just symlinked the command <code>gcc</code>
+to a different compiler. And then there are your classmates that have
+newer ARM-based Macs that we can't have code Intel assembly as it
+won't run natively on their machines. "It has an emulator" you might
+say and you'd be right but it doesn't allow you to debug code
+(e.g. GDB won't work through the emulator) which makes it a hell of
+a lot harder for those folks.  Would you like to code P3 without being
+able to use GDB to look at what your code is doing?
 </p>
-</blockquote>
+
+<p>
+I appreciate your desire to want to set up a different environment
+that is more convenient for you. Please always seek to do so. Figure
+out ways to make your workflow better.  Those of us administering the
+course have a different problem: how do we create an environment that
+is fairly uniform and accessible to all students? It's almost
+impossible to give every student individual attention to set up,
+configure, and administer their own environment on their own
+machine in a way that leads to predictable behavior on coursework. The
+effort we put into trying this is effort that can't be spent on the
+actual course content. 
+</p>
+
+<p>
+I've spent considerable time exploring alternatives and arrived at the
+use of remote servers as the quickest, easiest way to get a uniform
+environment for students. I'd like to reconfigure GRACE and have some
+leads on how, but I disagree that local environments for students is
+tractable.  Logging in to remote machines also teaches students how to
+access a remote machine and get work done there. You'll be doing that
+in many later courses and throughout your entire computing career. And
+most of the servers you access will be goofy in one way or another so
+get used to that part too.
+</p>
+</blockquote></li>
+
+<li><p>
+Project 4 was the only thing I found hard in the class, because it
+took me a while to realize that using a shared folder in a virtual
+machine was screwing me over, I moved my project to a different
+folder and all the sudden it worked!!
+</p>
+<blockquote>
+<p>
+Indeed: a shared folder between a virtual machine and the Native OS
+will likely have mixed conventions for the file system and permissions
+which will not go great. Glad you sorted this out: that's good
+knowledge to have as you go ahead as VMs and Containers abound these
+days. This is one of the reasons we are leery to have students use
+native solutions rather than GRACE: bugs are subtle and individual
+the student setup which makes it really hard for staff to debug.
+</p>
+</blockquote></li>
+
+<li>[On P4] I was passing 49/50 tests on Grace, the auto-grader failed
+all of the tests&#x2026; I figured out my file permissions were written
+wrong and I got it to work.</li>
+<li><p>
+There isn't anything seriously wrong with Grace, as far as I am
+concerned.
+</p>
+<blockquote>
+<p>
+The only "serious" problem I see is it's awkward <a href="https://en.wikipedia.org/wiki/Andrew_File_System">Andrew File System</a>
+which does not obey the standard UNIX file <code>rwx</code> permissions
+conventions which makes projects like P4 harder to manage. We'll
+likely have fixes for that stuff in not-to-distant future.
+</p>
+</blockquote></li>
+
+<li>The only thing I found annoying was repeatedly putting in my
+password and verifying duo push whenever I logged into grace or vs
+code, but there's nothing you guys can really do about that.</li>
+<li><p>
+This is somewhat minor, but I would occasionally be dissuaded from
+working on labs/projects because of the overhead from logging into
+Grace. It truly only takes 15 seconds, but there were instances in
+which I had 10 or so minutes of free time to work, but chose not to
+because I'd have to log into Grace.
+</p>
+<blockquote>
+<p>
+The login process is an irritating gumption trap that saps the will
+to work from everyone. It is an irritation I'm working to smooth. I
+have some evidence that we might be able to get a reconfiguration so
+that students don't have as much tedium in terms of logging in. At
+my past universities, login could be done using SSH Keys
+(public/private pair) which allowed password-free login and in some
+cases also spared the need to do Duo/2FA checks.  I'll be working
+with admins this summer to see if we can set that up for servers
+used in 216 to spare students this bit of friction. In most
+industrial settings, if you are frequently logging into a server,
+you'll have such options available so it makes sense to teach about
+that here too.
+</p>
+</blockquote></li>
+
+<li><p>
+My friend told me the trick to manually join less busy servers like
+grace 7 or 9, if I didn't know that trick, I definitely wouldn't
+have submitted some of the projects on time (especially project 4).
+</p>
+<blockquote>
+<p>
+That was a "trick" we pinned on Piazza during P5 as it became
+necessary to get onto certain "well-behaved" nodes.  I regret not
+discovering the changes the admins made to GRACE prior to those
+projects but based on the overall good results students had on the
+projects, I think we managed alright.  Keep such tricks up your sleeve
+as they are likely to come in handy down the line.
+</p>
+</blockquote></li>
+
+<li><p>
+I thought the projects were extremely helpful but I had major issues
+with tests passing in Grace but not passing in Gradescope.
+</p>
+<blockquote>
+<p>
+That again is a pain point as I'd like tooling
+(compiler/Valgrind/library versions) to align between Gradescope and
+GRACE (or whatever server we use for the course). Aligning these will
+mean that student get more reliable results which everyone
+appreciates, especially those of us having to debug problems like the
+one your reported.
+</p>
+</blockquote></li>
+
+<li><p>
+I had a small pet peeve in this course that during the projects the
+description for the code was always pasted below the method as
+opposed to it being above (exception being P5), but I always ended
+up copying and pasting the method specs to be above the method.
+</p>
+<blockquote>
+<p>
+I vacillate between above/below for the documentation comments.  It
+makes sense to me in a function listing to show the function prototype
+first and then a description of what it does like this:
+</p>
+
 <div class="org-src-container">
-<pre class="src src-sh"># put in your $HOME/.bashrc
-
-# retrieve something from the 216 web site
-function kget() {
-    wget https://www.cs.umd.edu/~profk/216/$1
-}
-
-# usage in a shell
-&gt;&gt; kget p1-code.zip
-...
-2025-01-09 15:41:37 (2.76 MB/s) - ‘p1-code.zip’ saved [62492/62492]
-
-&gt;&gt; kget practice1A-SOLUTION.pdf
-...
-2025-01-09 15:45:05 (2.00 MB/s) - ‘practice1A-SOLUTION.pdf’ saved [114123/114123]
+<pre class="src src-c">  int compute_special(int a, int b);
+  // Computes an important value based on a and b. When a and b are
+  // incompatible this function always returns 0.
+  
+  double **outer_prod(double *vec1, int len1, double *vec2, int len2);
+  // Computes the outer produce of the two vectors. Returns a matrix of
+  // dimension len1 * len2 with its memory allocated on the heap.
 </pre>
 </div>
 
-<ul class="org-ul">
-<li>I don't like how you have to authenticate to grace/sftp with duo
-twice every time, but I'm guessing that probably can't be changed</li>
-<li>Having to reconnect Grace and doing the duo two factor
-authentication multiple times in a day was annoying.</li>
-<li>And last but not least, here's an unpopular opinion&#x2026; I think Grace
-is pretty awesome.</li>
-</ul>
+<p>
+This allows the description to reference the arguments in the
+prototype. However, when I'd fill in the body of the function, I'd
+like the doc comment above the prototype like:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">  // Computes an important value based on a and b. When a and b are
+  // incompatible this function always returns 0.
+  int compute_special(int a, int b){
+    ...;
+    ...;
+    ...;
+    ...;
+  }
+  
+  // Computes the outer produce of the two vectors. Returns a matrix of
+  // dimension len1 * len2 with its memory allocated on the heap.
+  double **outer_prod(double *vec1, int len1, double *vec2, int len2){
+    ...;
+    ...;
+    ...;
+    ...;
+  }
+</pre>
+</div>
+
+<p>
+I use script to convert the solution in the 2nd form with its doc
+comments into the 1st outline form for students to read.
+</p>
+
+<p>
+It's largely a matter of taste and you certainly weren't required to
+place the doc comments anywhere in particular in your own code.
+That's part of maturing: you get to see different styles, develop your
+own, and argue endlessly with others about subjective things like the
+"right style".
+</p>
+</blockquote></li>
+
+<li><p>
+I got a really "funny" error on Project 5 with a negative 0. I fixed
+it but the sight was so utterly terrifying it nearly killed my will
+to continue.
+</p>
 <blockquote>
 <p>
-GRACE is a server and a huge benefit from interacting with it is that
-this teaches students about editing code that runs on different system
-than their personal machine. This is by far the most common element of
-feedback that graduated students relate: they learned to be
-comfortable logging into other machines and getting work done.  GRACE
-is tedious as it requires 2-factor authentication and we may use
-another, more ergonomic system in the future. However, students should
-not doubt the skills they acquired working on remote systems will
-prove valuable in the future.
+I helped a few folks debug this kind of thing and it's one of the
+reasons that floating point computations are harder to test: they are
+finicky and have quirks like <code>+0.0</code> AND <code>-0.0</code>.  You can check our
+textbook if you're curious what the bit-level encoding difference is
+between these.  I try to make most of the tests neutral to that kind
+of phenomenon but missed this instance of it. If you ever need to
+write tests for floating point code, you'll likely experience the same
+kind of pain. Something to look forward to&#x2026;
 </p>
-</blockquote>
+</blockquote></li>
+
+<li><p>
+Still not sure what the difference between Unix and Linux is, but
+they were a cool aside to the course.
+</p>
+<blockquote>
+<p>
+UNIX is the family. Linux is a member of the family, though sort of an
+"adoptive member" as it was created independently as a free version
+that mimics the characteristics of the originals. The <a href="https://en.wikipedia.org/wiki/History_of_Unix">Wikipedia
+article</a> has a good account of where Linux joins the party as well as
+this family tree of UNIX.
+</p>
+
+
+<div id="orgf0f3725" class="figure">
+<p><img src="unix-family-tree.png" alt="unix-family-tree.png" style="max-width:100%;" />
+</p>
+</div>
+</blockquote></li>
+
+<li><p>
+When downloading projects early, oftentimes there will be small
+problems that Prof K. will address. A simple 'make update' would
+solve this. However, I noticed that 'make update' would not update
+any comments already in my code which would cause future headaches
+(due to not fully implementing a function properly). While not a big
+deal, it did cause some inconvenience. Also, the numerous typos
+within comments would bug me lol.
+</p>
+<blockquote>
+<p>
+I've though about this some and don't have a good solution. I will
+continue to make mistakes and am also bugged by typos though resigned
+to the fact that I won't catch the them all.  The general problem of
+allowing for an update to occur that modifies the code you've written
+is a bit dangerous: we'd risk overwriting your stuff which would be
+bad. To that end, it's not likely that we can achieve a seamless
+solution to updating inline comments (some students don't even copy
+them over) and simply have to rely on your reading the updated version
+of the project description.
+</p>
+</blockquote></li>
+
+<li><p>
+Most recently Lab12 also had tests which depended on grace and would
+fail and then pass after changing no code.
+</p>
+<blockquote>
+<p>
+That's performance for you: depending on prevailing conditions,
+sometimes its fast and other times less so. It's important to me that
+we teach something about coding for performance but that doesn't make
+it easy.
+</p>
+</blockquote></li>
+
+<li><p>
+Maybe it's just me, but when all three parts of a project are
+unrelated (like in project 2), I'd prefer to have them more
+separated, like in different zip files when we download them just
+because, even though which files are for which are listed in the
+project description, it gets just a little bit confusing. Not that
+big of a deal, though.
+</p>
+<blockquote>
+<p>
+Different strokes for different folks. I agree that problems in
+project 2 are less but it's much simpler to administer to have
+students download one zip versus three.
+</p>
+</blockquote></li>
+
+<li><p>
+I wish we covered some of the more occasionally used language
+features in C. We skipped over some stuff I had learned on my own
+like variadic functions and function pointers, which aren't covered
+in 132 and I feel should be explored by this point. Also wish we
+spent a little more time on gcc/makefiles, compiling and linking,
+and stuff like using dynamic libraries.
+</p>
+<blockquote>
+<p>
+I've taught a course like 216 at another university. The topic
+selection in that course was such that we did talk about several of
+these things with compiling, linking, and libraries being core topics
+in the course. That curriculum was different as student were required
+to take a second systems programming course where system calls,
+operating system interfaces, threads, and various other topics were
+covered.  That also allowed discussion of additional OS topics like
+pipes, signals, sockets, semaphores, and a deeper dive into file
+systems.  
+</p>
+
+<p>
+When I arrived at UMD a few years ago and was assigned to teach
+CMSC216, my reaction to the topic coverage was "Yeesh, it's like the
+topics from two required courses were just pasted into the a single
+course."  I learned recently that's because it is: UMD's CS curriculum
+used to have a required intro computer systems course and a required
+advanced computer systems course, just like my last university.  At
+some point long before my arrival, the curriculum was reformed with
+most topics from the two required courses merged into CMSC216. That
+doesn't leave a lot of space to breath and some hard calls need to be
+made about what's actually done in the course.  
+</p>
+
+<p>
+If you want more info on compilation and linking, Bryant &amp; O'Hallaron
+Chapter 7 has excellent information with coverage of separate
+compilation, linking, loading, and dynamic libraries. If you poke
+around the internet, you can probably find some of my old slides on
+the topic for additional support. As they say, "Never stop learning."
+</p>
+</blockquote></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgd804114" class="outline-3">
+<h3 id="orgd804114">Hard Lessons</h3>
+<div class="outline-text-3" id="text-orgd804114">
+<ul class="org-ul">
+<li><p>
+Towards the end of the semester I started skipping more and reading
+more from the textbook. While this was challenging as the way the
+textbook is formatted the main contents take up a lot of pages of
+dense writing, at least the process was more streamlined.
+</p>
+<blockquote>
+<p>
+Awesome. Learning to read technical literature unlocks myriad
+resources to you to continue your learning. There won't always be
+someone around like me to blather about topics and, as many observed,
+the format of lectures may leave you wanting for a faster pace of some
+sort. Reading books turns out to be a pretty damn useful way to ingest
+information and I'm glad you discovered. Kudos!
+</p>
+</blockquote></li>
+</ul>
+
 
 <ul class="org-ul">
-<li>Project 4 worked on my GRACE machine but failed some Gradescope
-tests due to user permissions. In addition, lab 12 doesn't pass the
-test in GRACE but works on Gradescope. This could be made more
-consistent in the future.</li>
-</ul>
-<blockquote>
-<p>
-Since course staff have little control over GRACE, we have to live
-with its peculiarities which has proved painful over the last few
-semesters. It does not seem that we'll get any major changes to GRACE
-so we are likely to try something different in the future that
-provides students with more concordant behavior between where they
-write their code and Gradescope. Docker containers are a promising
-avenue for this which we are likely to try in the spring.
+<li><p>
+I didn't like the fact that private questions on piazza were not
+answered as fast as public ones.
 </p>
-</blockquote>
-
-<ul class="org-ul">
-<li>Please don't use the hash value comparison to determine if I passed
-since I don't even know which one I got wrong. I often spent 1-2
-hours on the quiz part just to figure out which question was wrong.</li>
-</ul>
 <blockquote>
 <p>
-I can see brute forcing the QUIZ answers taking an hour but reading
-the questions, thinking about them, experimenting with the provided
-code, perhaps discussing with a colleague, and then formulating an
-answer should take less time.  The quiz was meant to be somewhat more
-challenging by nature of the all-or-nothing implementation. There were
-already easy questions on the HW which indicate right/wrong
-immediately. Labs are supposed to be a bit more challenging and it
-sounds like they were for you. I hope that that actually meant you
-learned something from them.
+Private questions could only be addressed by staff and usually
+involved more analysis as it pertained to a specific rather than
+general situation.  That's just the nature of the business. As you
+go forward, if your inquiry is very specific, expect it take longer
+to find answers.
+</p>
+</blockquote></li>
+
+<li><p>
+I wish that Professor Kauffmann could give us an estimated time to
+complete each problem in the projects so that we could schedule time
+to work on the project accordingly, and if we did not complete the
+problem within the estimated time then we will know something is
+wrong and to go to office hours for help.
+</p>
+<blockquote>
+<p>
+Such as estimate would have such high variance as to be
+useless. Students finish project problems between 1 hour and 1
+week. Perhaps it might be good to warn students that if their pace for
+completing problems does improve over a project, they should seek
+help: if problem 1 takes 3 days AND problem 2 also takes 3 days,
+something is probably wrong. The trouble is that students are so
+variable as well. Some will hammer on problems on their own trying the
+same tactics over and over and getting the same errors over and over
+then complain that it take too long. Others will not work on the
+project unless they are sitting in office hours being told what to do
+by a TA and then complain there aren't enough office hours or TAs to
+get the project done. One of the joys of being a unique snowflake is
+that you have to figure out what works for you yourself and what your
+individual strengths and weaknesses are. If you finished the projects
+at all, that's great. If you learned something from them, that's the
+point. If you want to do them faster, come see a staff member as
+sometimes you need to be walked through some processes so you can
+adopt them for yourself. Generally I'd say if your stuck on a
+bug/failed test for an hour, take a break, try another 30min, then go
+find help. But if you're stuck because you don't know how to write a
+function at all, read some, study some lecture notes, and try some
+things first. The point is to learn to write code yourself. If you've
+not done that a lot, you'll take more time than those that are more
+practiced.  That's expected and normal. But it does make it hard for
+us to give estimates on how long it will take you to do things.
+</p>
+</blockquote></li>
+
+<li><p>
+The puzzlebin is project 3 was serious character development haha.
+</p>
+<blockquote>
+<p>
+Ever notice that when someone describes a "learning experience" or
+mentions "it really built character" they are describing a situation
+involving suffering?  Real learning is always uncomfortable. As my
+brawny brother-in-law often quotes, "If it doesn't feel heavy,
+you're not lifting enough." Or, as another great thinker put it&#x2026;
+</p>
+
+
+<div id="orgdfb1530" class="figure">
+<p><img src="one-piece-wrong-path.png" alt="one-piece-wrong-path.png" style="max-width:100%;" />
+</p>
+</div>
+</blockquote></li>
+
+<li><p>
+I struggle to pay attention in lectures and discussions in general,
+so I found the large range of "other" resources offered in this
+course very very helpful, with the lecture slides, lab walkthrough
+videos, and in depth instructions for the projects carrying me
+through the class when it came to understanding the content. I have
+a bad attention span, so I am really thankful for that
+</p>
+<blockquote>
+<p>
+I'm glad that the resources we provided helped you find a firing
+solution that let you learn. If you've identified that your attention
+and ability to focus is impeding you somewhat, spend some time working
+on that.  The ability to focus on the hear and now is crucial to our
+craft so start cultivating it.
+</p>
+
+
+<div id="orge5f24d6" class="figure">
+<p><img src="yoda-focus.png" alt="yoda-focus.png" style="max-width:100%;" />
+</p>
+</div>
+</blockquote></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org3d495cc" class="outline-3">
+<h3 id="org3d495cc">Future Advice</h3>
+<div class="outline-text-3" id="text-org3d495cc">
+<ul class="org-ul">
+<li>One suggestion that I have for future students is to start the
+projects as early as possible, since they will often take you longer
+than you may expect. And if they don't, then you're done early!</li>
+
+<li>I REALLY appreciated the project explanation videos. Whenever I
+didn't watch them, it always took me way longer to understand the
+gist of the assignment and therefore get started in a meaningful way
+(in a way that didn't involve just downloading/creating the files
+etc).</li>
+
+<li>For future students, assembly is extremely hard, not an
+understatement that it's one of the hardest things I've done in my
+life</li>
+
+<li>I know my friends liked to skip discussion and never did the hws
+(til studying for exams), but I found them VERY helpful; I'm good at
+learning through application, so the labs (and ACTUALLY CODING THEM)
+made me cement the concept way faster than looking at code during
+lecture.</li>
+
+<li>I would suggest to future students that they complete the lab and
+homework for a given week before beginning the project. I tended to
+work on the project first, but missed the opportunity to learn
+material in the lab/hw that would have assisted me in completing the
+project.</li>
+
+<li>The more time you spend on any content, whether its a book, math
+problem, or Kauffman's project, the more time you have to interpret
+and understand the niche, edge cases of the material&#x2013; which are the
+parts that generally give you bugs in your code. Start early, finish
+late.</li>
+
+<li>The projects (especially the later ones) really frustrated me at
+times, but I guess those are just growing pains associated with
+becoming a better computer scientist. So now that I get to look
+back, I think it will be good for future students to get to
+experience the same difficulty or harder.</li>
+
+<li>Start projects early, try and retain all available engagement
+points, go to discussions for the labs, have fun!</li>
+</ul>
+
+<blockquote>
+<p>
+Sage advice all around. I'll convey this to future students. Perhaps
+some of them will heed that advice and sidestep the pitfalls that all
+of you warn about.
 </p>
 </blockquote>
 </div>
 </div>
-
-
-<div id="outline-container-orgb514c9e" class="outline-3">
-<h3 id="orgb514c9e">Hard Lessons</h3>
-<div class="outline-text-3" id="text-orgb514c9e">
+<div id="outline-container-orgcb4875e" class="outline-3">
+<h3 id="orgcb4875e">Misc</h3>
+<div class="outline-text-3" id="text-orgcb4875e">
 <ul class="org-ul">
-<li>Overall, what I took away from this class is to succeed you have to
-do A LOT of outside studying/work which I didn't realize until late
-in the semester.</li>
-<li>There were points where we were expected to complete a hard project,
-lab assignment, homework assignment, and review for an upcoming exam
-all in the same week. This would lead to 15-17 hours of working on
-this class.</li>
-</ul>
+<li><p>
+I wish we spent more time on assembly because I enjoyed it alot!
+</p>
 <blockquote>
 <p>
-But you realized it and will be able to act accordingly in the future.
-College students aren't often told the definition of a Credit Hour: "A
-credit hour is an amount of work that reasonably approximates not less
-than one hour of classroom or direct faculty instruction and <b>a
-minimum of two hours of out-of-class work each week</b> for approximately
-15 weeks for one semester (<a href="https://en.wikipedia.org/wiki/Course_credit#Credit_hours">Source</a>)." That means just for CMSC216, a
-4-credit course, students should be spending at a minimum 8 hours per
-week OUTSIDE of course meetings working on assignments and studying
-course topics.  Perhaps some folks can get away with less but lots of
-folks will exceed that minimum. Being a student is a full-time job. If
-you treat it as such, then you'll likely get a lot more out of your
-education. That's why it's also extremely hard for students to hold
-down other jobs or satisfy significant obligations and maintain a good
-academic record. Keep at it and ask for help when you need it.
+There's always one&#x2026; that enjoys Alot of assembly.
 </p>
-</blockquote>
-
-<ul class="org-ul">
-<li>It feels like the offered office hours during those days were
-wasted, while the times where I was struggling most typically were
-the two days before the due dates which unfortunately landed on the
-weekends, which meant aside from piazza, I was sol. (I am not sure
-how this can be solved, since the schedule for things to be done is
-already fairly packed but I figured it could still be mentioned.)</li>
-</ul>
-<blockquote>
-<p>
-Scheduling deadline is very difficult as with 550 students, any
-deadline will be agreeable to some and disagreeable to some. We
-rotated the deadlines a bit but I'm sorry that you got pinched.
-</p>
-</blockquote>
-
-<ul class="org-ul">
-<li>The tests and projects were hard, but overall, not being swamped
-with thousands of assignments helped to balance this class with
-other classes.</li>
-<li>I would spend all my time on projects and it destroyed my ability
-to focus and do work for other classes and ruined almost every
-singly weekend.</li>
-</ul>
-<blockquote>
-<p>
-Folks will have varying experiences with how much time assignments
-take. If you feel like you spent a LOT of time on assignments, take
-that as an investment that will accumulate interest and make future
-work easier, perhaps opening up later weekends for enjoyment. Also,
-see my note above on the time commitment associated with a 4-credit
-course. 
-</p>
-</blockquote>
-
-<ul class="org-ul">
-<li>The first time that I went to office hours, I had around 3 minutes
-of TA time in the span of 2 hours. To be fair, that was on project
-due date and there's not much you can do to change this.</li>
-<li>Office hours is very hectic</li>
-<li>Make office hours more spread out amongst TAs.</li>
-</ul>
-<blockquote>
-<p>
-TAs had nobody to talk to when deadlines were far and too many to talk
-to when deadlines were close. There is not way around this in my
-experience.  I'll try to get TAs to have more coverage of hours during
-the day but there is great advantage for staff when there is some
-overlap of staff office hours, especially near deadlines.
-</p>
-</blockquote>
-
-<ul class="org-ul">
-<li>But it was very disappointing when I would start my projects as soon
-as possible and my peers would start later then finsih before me.
-Im not sure why but I just suck at coding lol.</li>
-</ul>
-<blockquote>
-<p>
-Consider your sample. You might be seeing a few folks that have quite
-a bit of prior experience in CS or specifically in the topics covered
-in this course. If this is your first time coding in any of the
-environments we covered, then you should expect to take longer than
-folks who already have some training. This would be the case if you
-were running with an experienced marathoner: they'll be faster. LOTS
-of students struggled in this course but that struggle is a sign of
-actual growth. Consider, then, that you grew more during the semester
-than those same colleagues. And for the record, EVERYONE sucks at
-coding: it is ridiculously hard and unnatural to humans.
-</p>
-</blockquote>
-
-<ul class="org-ul">
-<li>I felt that although the slides were informative, they lacked the
-syntax required to help me complete the labs/projects. Many times I
-found myself relying more on sites like geeksforgeeks for syntax
-because not all of the syntax was covered in the slides. I felt this
-was different than my previous cs classes where I could resort to
-the slides to learn everything needed to complete the projects/labs.</li>
-</ul>
-<blockquote>
-<p>
-I'd like more specifics on "lacked the syntax required". Just for
-lecture, I provided about 8300 lines of example codes to complement
-what we did in lecture.  While it's fine to get alternative
-perspectives, I'm continually amazed at the student attitude of "never
-mind this prof I've paid several thousand bucks to teach me and the
-textbook/slides/codepacks they've told me to read, I'm just going to
-google for this thing and trust the first link that pops up."
-</p>
-</blockquote>
-
-<ul class="org-ul">
-<li>I think there should be a better way to track your grade in this
-class instead of entering our scores and finding out ourselves using
-the grading calculator.</li>
-</ul>
-<blockquote>
-<p>
-You want me have your up-to-date grade posted at all times.  Sorry,
-but no. If we had a simpler scoring system that didn't have
-engagement, late submission, bonus credit, regrades, a sophisticated
-autograder system, and so forth, this would be easy to do. But, we
-have those things. So you have to punch some numbers into a web
-calculator. A calculator that I wrote for you.
-</p>
-</blockquote>
-
-<ul class="org-ul">
-<li>I have nothing else to add, but I will say one last time how much I
-truly hate assembly and I hope it is un-invented.</li>
-</ul>
-<blockquote>
-<p>
-To "un-invent" assembly would be to un-invent CPUs. That's likely to
-have a deleterious effect on the availability of programming jobs.  I
-saw a talk a while back where the speaker was railing about how
-obscene Assembly code is and how ridiculous it is that it still exists
-in this advanced age. It was very apparent that this person had never
-taken a computing systems course and didn't really understand how
-silly their argument seemed. What would you replace assembly with?
-Rust? Make me a processor that executes Rust natively and I'll get
-behind you.  On trying, you'll find it's intractable and will settle
-for a CPU that has an assembly language.
-</p>
-</blockquote>
-
-<ul class="org-ul">
-<li>While difficult, and needing frequent help, I feel that all my
-struggle helped me in the end - I learned what I didn't know/what
-was wrong, and was able to improve myself throughout the course.</li>
-</ul>
-<blockquote>
-<p>
-That is my goal for everyone in the course: well done!
-</p>
-</blockquote>
-
-<ul class="org-ul">
-<li>Overall, this generous course has taught me a lot of lessons
-(including not just materials, but also about time management and
-procrastination) with very little penalty.</li>
-</ul>
-<blockquote>
-<p>
-The biggest lessons you'll get while a student are not in the
-classroom but are instead about yourself.  Nosce te ipsum: know
-thyself. 
-</p>
-</blockquote>
-
-<ul class="org-ul">
-<li>Just make sure to not mess up the recording audio next time hahaha
-:D</li>
-</ul>
-<blockquote>
-<p>
-I'll check more diligently. I've used this system for a year without
-trouble and all I heard about this semester was the one day the mic
-cut out.
-</p>
-</blockquote>
-</div>
-</div>
 
 
-<div id="outline-container-org693529c" class="outline-3">
-<h3 id="org693529c">Misc</h3>
-<div class="outline-text-3" id="text-org693529c">
-<ul class="org-ul">
-<li>In general I liked the course, even if it made me want to rip my
-hair out at certain moments (assembly project).</li>
-</ul>
-<blockquote>
-<p>
-Don't rip your hair out.  It makes those of us with little hair all
-the more frustrated.
-</p>
-</blockquote>
-
-<ul class="org-ul">
-<li>about the textbook, I recently used it to do some optimizing for the
-final project and I was surprise at how clearly the textbook
-explained optimizations. The problem is I didn't really use the
-textbook throughout the entire Course as I felt there wasn't really
-ever enough time, but I feel I would have benefited if I did.</li>
-</ul>
-<blockquote>
-<p>
-Glad you liked the textbook. Some folks can't stand it but it is among
-the best CS textbooks I've ever encountered and I benefited greatly
-from reading it when it was in it's Alpha version while I was an
-undergraduate.  These days we have a rich set of information, web
-sites, videos, etc. But textbooks are still my favorite: they don't
-have ads, you don't need to subscribe to them, they have infinite
-battery life, and most of them contain very good information. If you
-learn how to read books, you'll always have a wealth of reliable
-information available to you.  
-</p>
-</blockquote>
-
-<ul class="org-ul">
-<li>i liked the course overall but i think the exams were pretty
-difficult and I would have preferred there to be less questions
-about fixing bugs</li>
-</ul>
-<blockquote>
-<p>
-I'm attempting to prepare you for your likely future. (<a href="https://www.quora.com/What-is-the-normal-percentage-of-development-time-at-a-software-company-spent-fixing-bugs">Source</a>)
-</p>
-</blockquote>
-
-
-<div id="orgadb7b05" class="figure">
-<p><img src="bugfix1.png" alt="bugfix1.png" style="max-width:100%;" />
+<div id="org6a76ffc" class="figure">
+<p><img src="alot-of-assembly.png" alt="alot-of-assembly.png" style="max-width:100%;" />
 </p>
 </div>
 
+<p>
+<a href="https://hyperboleandahalf.blogspot.com/2010/04/alot-is-better-than-you-at-everything.html">  More on Alot</a>
+</p>
+</blockquote></li>
 
-<div id="orga4d755b" class="figure">
-<p><img src="bugfix2.png" alt="bugfix2.png" style="max-width:100%;" />
+<li><p>
+If you're reading this, thank you so much for a great semester &amp; I
+forgive you for torturing me with Project 3 :D.
+</p>
+<blockquote>
+<p>
+You're welcome. Come see me in CSMC416 if you're recovered and thirsty
+for more.
+</p>
+</blockquote></li>
+
+<li><p>
+It was fun gaining a bit more insight on how blood gets rendered in
+game engines.
+</p>
+<blockquote>
+<p>
+So much can be learned from games and blood&#x2026;
+</p>
+
+
+<div id="org0fcb8b6" class="figure">
+<p><img src="bloodborne.jpg" alt="bloodborne.jpg" style="max-width:100%;" />
+</p>
+</div>
+</blockquote></li>
+
+<li><p>
+I'm a computer engineering major, and I feel like this class was the
+most engineering-like cs class I've taken so far, which was pretty
+cool.
+</p>
+<blockquote>
+<p>
+CS is a young discipline formed from the hybridization of math
+(analysis and theory) and engineering (computer hardware). I'm told
+that UMD's CS department has its roots from the math and science
+realms which, confirmed to some extend by the <a href="https://www.cs.umd.edu/projects/photohistory/">department history
+available online</a> (you can read more on history of the department <a href="https://www.cs.umd.edu/about/history">here</a>
+if you're experiencing insomnia). That means the culture of the
+department will have a bit of a mathy/theory bent. When I arrived
+here, a few years ago, another faculty member commented that UMD is
+"theory-oriented". My own education was at the University of Minnesota
+where the department grew from the engineering disciplines and had a
+strong emphasis on hardware for much of its history. While every
+instructor imbues their courses with some particular flavors, likely
+you can trace some of my flavor back to the institution that formed me
+that emphasized practical considerations. I'm glad what we did worker
+for you.
+</p>
+</blockquote></li>
+</ul>
+
+
+<ul class="org-ul">
+<li><p>
+P4 was <b>not</b> cooking
+</p>
+<blockquote>
+<p>
+Perhaps you just need a cooking lesson. Try this one from one of my
+mentors. Personally I think he'd make an excellent graduation
+speaker. 
+</p>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/B7UmUX68KtE?si=qmOoVSZ0D44XZqil" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</blockquote></li>
+
+<li><p>
+Student Feedback:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">I came in knowing Java,
+C# and Python too,
+I heard the tales from people loudly praising what you do.
+
+I heard the horror stories,
+that you were just too hard.
+You got into their systems and you left their minds all marred.
+
+I learned about you deeply,
+about your pros and cons.
+You pointed out what I could to do from right to (very) wrong.
+
+I learned you were obsessed,
+with your fruitful memory.
+You liked when your things were allocated or were free.
+
+I found that I could see,
+that you were troubled or disturbed.
+I took things slowly, step by step, until I had you cured.
+
+I learned that one can go
+even deeper than they should
+moving registers around (in a much more sour mood).
+
+I learned about your writings,
+and how you wrote out every word...
+You write words with these numbers? How comically absurd...
+
+I learned about your home,
+where you move bits all around,
+in magnetic spinning disks (which continues to astound).
+
+I learned that you could spin,
+many threads into your realm,
+to carry out your duties while you stayed at the helm.
+
+I learned about your children,
+and your many family trees,
+I never knew that some were orphans (let alone zombies).
+
+I thought I wasn't ready,
+to get to know you all to well.
+But, C, you are wonderful (as far as I can tell...)
+
+I've learned a lot about the workings of the world's computers
+Thank you, 216, but also, what rhymes with computers?
+</pre>
+</div></li>
+</ul>
+
+<blockquote>
+<p>
+Oooh, an actual use case for AI. Let's try.
+</p>
+
+<div id="org78033d6" class="figure">
+<p><img src="what-rhymes-with-computer.png" alt="what-rhymes-with-computer.png" style="max-width:100%;" />
 </p>
 </div>
 
-<ul class="org-ul">
-<li>It assumes we know so much from CMSC132 and 131 despite C being a
-completely new language which was super frustrating.</li>
-</ul>
-<blockquote>
 <p>
-C is not completely new. In fact, Java borrowed heavily from C and C++
-so much of the syntax should be familiar to those coming from
-Java. The expectation that you know things like variables, functions,
-parameters, conditionals, loops, is stated up front.  I'm sorry it was
-frustrating for you but generally your courses will build on each
-other in sequence. That's the nature of a college curriculum.
+I'm running: with
 </p>
-</blockquote>
 
 <ul class="org-ul">
-<li>The culture of the class made it impossible to make friends because
-all the students acted like they knew everything and seemed to
-thrive on the idea of other people doing worse than them. There were
-only men and very few women and the environment was not good(this is
-not the fault of the professor though and it is a deeper issue with
-STEM courses).</li>
+<li>"I've learned a lot about the workings of the world's computers"</li>
+<li>"Thank you, 216, I'm ready for all those future recruiters."</li>
 </ul>
-<blockquote>
+
 <p>
-This was not my experience this semester and I'm very sorry to hear it
-was yours. If you have observed specific things that gave you the
-impression that students were actively wishing for their peers to do
-poorly, mail me to discuss it further: <code>&lt;profk@umd.edu&gt;</code>. I did not
-see nor hear reports of this and it is of great concern to me if this
-was a wide-spread sentiment.
+Not as epic as I'd like but better than what gippity came up
+with:
 </p>
-</blockquote>
-
-<ul class="org-ul">
-<li>I wish this class had some type of GSS or an extra review space. I
-feel I utilized a lot of the resources given to me but still feel
-behind, maybe if there was a GSS that would help.</li>
-</ul>
-<blockquote>
-<p>
-I don't know what a GSS is. Please mail me <code>&lt;profk@umd.edu&gt;</code> to
-explain and I'll see what I can do.
-</p>
-</blockquote>
-
-<ul class="org-ul">
-<li>I feel like projects are what I learned the absolute most
-from. Especially when compared to preparing for and taking exams,
-completing projects offers a much higher return in terms of
-understanding computer systems, C, assembly, etc. Thus, I believe
-that this should be better reflected by the grade weights. Of
-course, I do not know if this is practically possible
-administratively. Perhaps there are certain exam weights imposed
-upon Kauffman by the department?</li>
-</ul>
-<blockquote>
-<p>
-Instructors have broad authority to set up courses as they wish. It is
-my decision to weight projects and exams as indicated. Your argument
-is reasonable, that projects allow students to grow the most and
-therefore should be weighted more heavily. Unfortunately, projects can
-also be completed through means that do not lead to growth. I cannot
-observe students complete project through use of AI, copy off others,
-pay folks, and other means. While I catch some of these violations,
-I'm certain much of this goes undetected. Rather, I can watch folks
-take exams so that they are much more likely to be the sole work of
-the individual who turns it in.  This is reflective of many real-world
-situations: you may get a little credit for practice and preparation,
-but the real acclaim comes from the performance, be it sport, art,
-business, etc. That performance usually reflects whether preparation
-was authentic or mocked. Exams are our performance.
-</p>
-</blockquote>
-
-<ul class="org-ul">
-<li>[The course was] very transparent and does well in reflecting effort.</li>
-</ul>
-<blockquote>
-<p>
-That is our goal; glad you felt as much.
-</p>
-</blockquote>
-
-<ul class="org-ul">
-<li>C is my new favorite programming language.</li>
-</ul>
-<blockquote>
-<p>
-Glad you like it. Keep in mind that such a statement is equivalent to
-a carpenter saying "the screwdriver is my favorite tool". Programming
-languages are tools. Make sure to collect several of them so that when
-faced with a task, you can select an appropriate tool for the job. I
-recommend paying special attention in CMSC330 as OCaml is an
-outstanding tool for many tasks where C falls short. I encourage you
-to pick up Python and some Scheme to round out your collection. And
-AWK; no one loves AWK enough.
-</p>
-</blockquote>
-
-<ul class="org-ul">
-<li>Don't be a Goomba</li>
-</ul>
-<blockquote>
-<p>
-Forever sound advice. 
-</p>
-</blockquote>
 
 
-<div id="org11ed84f" class="figure">
-<p><img src="goombas-super-mario-bros-movie.gif" alt="goombas-super-mario-bros-movie.gif" style="max-width:100%;" />
+<div id="org6b31645" class="figure">
+<p><img src="gippity-kiyay-ya.png" alt="gippity-kiyay-ya.png" style="max-width:100%;" />
 </p>
 </div>
 
-
-<div id="orge169be5" class="figure">
-<p><img src="hahaha-funny.gif" alt="hahaha-funny.gif" style="max-width:100%;" />
+<p>
+Bleck&#x2026; the singularity is definitely not close&#x2026;
 </p>
-</div>
+</blockquote>
+
+
+<ul class="org-ul">
+<li>216 with Kauffman really is a course where you get out what you put in.</li>
+</ul>
+<blockquote>
+<p>
+No higher praise. Thanks.
+</p>
+</blockquote>
+
+
+<ul class="org-ul">
+<li>Hope whoever reads this has a good day :)</li>
+</ul>
+<blockquote>
+<p>
+I have and hope you do too.
+</p>
+</blockquote>
 </div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-01-09 Thu 16:45 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-05-27 Tue 13:20 <br/> </i>
 </div>
 </body>
 </html>
