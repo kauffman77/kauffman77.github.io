@@ -130,7 +130,7 @@ function warn_on_bad_total_weight(){
 function warn_on_project_overage(){
     var proj_total = 0;
     for(var i=0; i<model.length; i++){
-        if(model[i].Id.startsWith("Project")){
+        if(model[i].Id.match(/Project [0-9]+/)){
             proj_total += model[i].Score;
         }
     }

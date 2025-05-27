@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-04-07 Mon 08:37 -->
+<!-- 2025-05-15 Thu 13:24 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Assembly Review Exercise</title>
@@ -331,6 +331,16 @@ margin-left: 0.5em;
 }
 .linenr { font-size: xx-small; }
 th.org-left   { text-align: left;   }
+details > summary {
+padding: 2px 6px;
+font-family: Sans;
+font-size: 0.8em;
+width: fit-content;
+border-radius: 5px;
+background-color: #efefef;
+border: 1px solid black;
+cursor: pointer;
+}
 }
 
 @media print {
@@ -447,12 +457,14 @@ return {
 name: 'interactive',           // language name
 keywords: {
 $pattern: /[^ \t\n]+/,       // lex based on non-whitespace
-keyword: [">>","(shellac)","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+keyword: [">>","(shellac)","[COMMANDO]>>","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+literal: ["[data/script.txt]>>","[data/script1.txt]>>","[data/script6.txt]>>"],
 },
 contains: [
 // hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
-hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
-hljs.COMMENT(/#+/, /$/),     // and a sequence of hashes
+// hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+hljs.COMMENT(/## /, /$/),     // hash-hash-ws for comment
+hljs.COMMENT(/##+/, /$/),     // or a sequence of hashes
 ]
 };
 };
@@ -480,34 +492,34 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2025-04-07 Mon 08:37</i>
+<i>Last Updated: 2025-05-15 Thu 13:24</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Assembly Review Exercise</h1>
-<div id="outline-container-orgcae6367" class="outline-4">
-<h4 id="orgcae6367">CODE DISTRIBUTION: <a href="hw-review-asm-code.zip">hw-review-asm-code.zip</a></h4>
-<div class="outline-text-4" id="text-orgcae6367">
+<div id="outline-container-org2c21d3b" class="outline-4">
+<h4 id="org2c21d3b">CODE DISTRIBUTION: <a href="hw-review-asm-code.zip">hw-review-asm-code.zip</a></h4>
+<div class="outline-text-4" id="text-org2c21d3b">
 <ul class="org-ul">
 <li>Download the code distribution every HW</li>
 <li>See further setup instructions below</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orge4bdd0d" class="outline-4">
-<h4 id="orge4bdd0d">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-orge4bdd0d">
+<div id="outline-container-org2d17e32" class="outline-4">
+<h4 id="org2d17e32">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org2d17e32">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgb108c9a">1. Review Problem 1</a></li>
+<li><a href="#org961dd20">1. Review Problem 1</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgb108c9a" class="outline-2">
-<h2 id="orgb108c9a"><span class="section-number-2">1</span> Review Problem 1</h2>
+<div id="outline-container-org961dd20" class="outline-2">
+<h2 id="org961dd20"><span class="section-number-2">1</span> Review Problem 1</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 On a recent practice exam, an assembly version of the following C
@@ -636,11 +648,10 @@ After completing your code, compile and run it to see if it matches
 the same behavior as the C version.
 </p>
 </div>
-<div id="outline-container-org2fa44f3" class="outline-4">
-<h4 id="org2fa44f3">SOLUTION</h4>
-<div class="outline-text-4" id="text-org2fa44f3">
-<button onclick="document.getElementById('solution1').style.display='block'">Click for Solution</button>
-<div id="solution1" style="display:none;">
+<div id="outline-container-org4c6c522" class="outline-4">
+<h4 id="org4c6c522">SOLUTION</h4>
+<div class="outline-text-4" id="text-org4c6c522">
+<details><summary>Click for Solution</summary>
 
 <div class="org-src-container">
 <pre class="src src-asm">### SOLUTION for setday_main2_asm.s ###
@@ -696,13 +707,13 @@ In other situations, the struct may need to be in memory such as if it
 needs a memory address. In that case, only Method 1 would work.
 </p>
 
-</div>
+</details>
 </div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-04-07 Mon 08:37 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-05-15 Thu 13:24 <br/> </i>
 </div>
 </body>
 </html>
