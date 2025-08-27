@@ -3,13 +3,13 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-01-30 Thu 14:40 -->
+<!-- 2025-08-27 Wed 17:23 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216: Introduction to Computer Systems</title>
 <meta name="author" content="Chris Kauffman" />
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -330,6 +330,17 @@ margin-left: 0.5em;
 }
 }
 .linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
+details > summary {
+padding: 2px 6px;
+font-family: Sans;
+font-size: 0.8em;
+width: fit-content;
+border-radius: 5px;
+background-color: #efefef;
+border: 1px solid black;
+cursor: pointer;
+}
 }
 
 @media print {
@@ -446,11 +457,14 @@ return {
 name: 'interactive',           // language name
 keywords: {
 $pattern: /[^ \t\n]+/,       // lex based on non-whitespace
-keyword: [">>","(shellac)","HM>","TM>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+keyword: [">>","(shellac)","[COMMANDO]>>","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+literal: ["[data/script.txt]>>","[data/script1.txt]>>","[data/script6.txt]>>"],
 },
 contains: [
 // hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
 hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+// hljs.COMMENT(/## /, /$/),     // hash-hash-ws for comment
+hljs.COMMENT(/##+/, /$/),     // or a sequence of hashes
 ]
 };
 };
@@ -458,9 +472,10 @@ hljs.registerLanguage('interactive', interactive_lang);     // register custom l
 
 // Add highlighjs CSS classes to elemens marked with relevant org classes
 lang_map = new Map();              // map of org to hljs languages
-lang_map.set("src-c"    , "language-c");
-lang_map.set("src-text" , "language-plaintext");
-lang_map.set("src-sh"   , "language-interactive");
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
 function add_class(el) {           // applied to each pre.src element
 for (let [org_lang, hljs_lang] of lang_map) {
 if(el.classList.contains(org_lang)){
@@ -477,33 +492,30 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2025-01-30 Thu 14:40</i>
+<i>Last Updated: 2025-08-27 Wed 17:23</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216: Introduction to Computer Systems</h1>
-
-<div id="outline-container-org986e069" class="outline-4">
-<h4 id="org986e069"></h4>
-<div class="outline-text-4" id="text-org986e069">
+<div id="outline-container-org6f37644" class="outline-4">
+<h4 id="org6f37644"></h4>
+<div class="outline-text-4" id="text-org6f37644">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org8c3cee9">Welcome to CMSC216 1xx / 2xx Sections</a></li>
-<li><a href="#orgb93c73f">Calendar of Meetings and Office Hours</a></li>
-<li><a href="#orgb339bd8">Meetings</a></li>
-<li><a href="#org064429c">C Programming Resources</a></li>
-<li><a href="#org62fc5b8">Getting Started</a></li>
+<li><a href="#orgee421e7">Welcome to CMSC216 1xx / 2xx Sections F2025</a></li>
+<li><a href="#org4f4733d">Calendar of Meetings and Office Hours</a></li>
+<li><a href="#orgf97fa1f">Meetings</a></li>
+<li><a href="#orgf7c6d4b">C Programming Resources</a></li>
+<li><a href="#orgbc0399b">Getting Started</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-
-
-<div id="outline-container-org8c3cee9" class="outline-2">
-<h2 id="org8c3cee9">Welcome to CMSC216 1xx / 2xx Sections</h2>
-<div class="outline-text-2" id="text-org8c3cee9">
+<div id="outline-container-orgee421e7" class="outline-2">
+<h2 id="orgee421e7">Welcome to CMSC216 1xx / 2xx Sections F2025</h2>
+<div class="outline-text-2" id="text-orgee421e7">
 <p>
 Essential links are below.
 </p>
@@ -511,26 +523,26 @@ Essential links are below.
 <li><a href="schedule.html">Course Schedule and Materials</a>: topics, slides, code, rough deadlines, projects, labs</li>
 <li><a href="syllabus.html">Syllabus</a>: know our contract</li>
 <li><a href="https://www.gradescope.com/">Gradescope</a>: submit assignments, get grades on assignments/exams, request regrades</li>
-<li><a href="https://piazza.com/umd/spring2025/cmsc216kauffman">Piazza</a>: class discussion board for Q&amp;A</li>
-<li><a href="https://umd.instructure.com/courses/1377846">Canvas Site</a>: take surveys, general coordination</li>
+<li><a href="https://piazza.com/umd/fall2025/cmsc216kauffman">Piazza</a>: class discussion board for Q&amp;A</li>
+<li><a href="https://umd.instructure.com/courses/1388320">Canvas Site</a>: take surveys, general coordination</li>
 <li><a href="https://kauffman77.github.io/216">Mirror Site</a>: to access course materials if CS Servers are down</li>
 <li><a href="https://docs.google.com/document/d/10cfSKKN9nOxgs9uuh-pbvIhgNJYULvZUgL6UDjgMPCs/">CMSC216 Coding Environment</a>: prepare to code</li>
 <li><a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ">CMSC216 C Coding Style Guide</a>: code pretty</li>
-<li><a href="https://umd.instructure.com/courses/1377846/pages/staff-gallery%20">Staff Gallery</a>: pictures of staff to help students learn their names</li>
-<li><a href="https://drive.google.com/drive/folders/1cXA7BgVulipb0FL5q9jB1tKILg8joIOk?usp=sharing">TA Slides / Tutorials</a>: Public Google Drive of TA materials to support lab work</li>
+<li><a href="https://umd.instructure.com/courses/1388320/pages/staff-gallery%20">Staff Gallery</a>: pictures of staff to help students learn their names</li>
+<li><a href="https://drive.google.com/drive/folders/1qw-GJ8tXGL3axTQIiVio0qGrzbMv5dn4">TA Slides / Tutorials</a>: Public Google Drive of TA materials to support lab work</li>
 </ul>
 </div>
 </div>
-
-<div id="outline-container-orgb93c73f" class="outline-2">
-<h2 id="orgb93c73f">Calendar of Meetings and Office Hours</h2>
-<div class="outline-text-2" id="text-orgb93c73f">
+<div id="outline-container-org4f4733d" class="outline-2">
+<h2 id="org4f4733d">Calendar of Meetings and Office Hours</h2>
+<div class="outline-text-2" id="text-org4f4733d">
 <p>
-In-Person TA office hours are in AVW 4166; Online Office hours are via
+In-Person TA office hours are in <b>IRB 1108</b>; Online Office hours are via
 Zoom Links
 </p>
 
-<iframe src="https://calendar.google.com/calendar/embed?wkst=1&ctz=America%2FNew_York&bgcolor=%23ffffff&mode=WEEK&src=c_27adfe4e22dd46279f378a9f9e10bfa0654df39ae338e17441c4f6b9f9e7bbe1@group.calendar.google.com&color=%23F09300" style="border-width:0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
+<iframe src="https://calendar.google.com/calendar/embed?src=c_7db7bcb708105e75f8e005dbacce8ef3b260051ebbd913a2778043961a19787a%40group.calendar.google.com&wkst=1&ctz=America%2FNew_York&bgcolor=%23ffffff&mode=WEEK&color=%23F09300" style="border-width:0" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
+
 
 <br/>
 
@@ -573,8 +585,8 @@ Zoom Links
 </tbody>
 <tbody>
 <tr>
-<td class="org-left">Chenxi Liu</td>
-<td class="org-left">cxliu539@umd.edu</td>
+<td class="org-left">Alexander Stein</td>
+<td class="org-left">astein0@umd.edu</td>
 <td class="org-left">GTA Full</td>
 <td class="org-left">See Canvas</td>
 <td class="org-left">&#xa0;</td>
@@ -582,8 +594,8 @@ Zoom Links
 </tr>
 
 <tr>
-<td class="org-left">Irtaza Shahid</td>
-<td class="org-left">irtaza@umd.edu</td>
+<td class="org-left">Ayushi Mishra</td>
+<td class="org-left">amishr13@umd.edu</td>
 <td class="org-left">GTA Full</td>
 <td class="org-left">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -591,8 +603,44 @@ Zoom Links
 </tr>
 
 <tr>
-<td class="org-left">Shaobo Cui</td>
-<td class="org-left">shaobo@umd.edu</td>
+<td class="org-left">Dongki Jung</td>
+<td class="org-left">jdk9405@umd.edu</td>
+<td class="org-left">GTA Full</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Emir Gencer</td>
+<td class="org-left">egencer@umd.edu</td>
+<td class="org-left">GTA Full</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Jaehoon Choi</td>
+<td class="org-left">kevchoi@umd.edu</td>
+<td class="org-left">GTA Full</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Lasha Koroshinadze</td>
+<td class="org-left">lasha@umd.edu</td>
+<td class="org-left">GTA Full</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Ming Li</td>
+<td class="org-left">mli1211@umd.edu</td>
 <td class="org-left">GTA Full</td>
 <td class="org-left">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -609,6 +657,15 @@ Zoom Links
 </tr>
 
 <tr>
+<td class="org-left">Yufan Zheng</td>
+<td class="org-left">yfzheng@umd.edu</td>
+<td class="org-left">GTA Full</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
 <td class="org-left">Clara Gong</td>
 <td class="org-left">cgong12@terpmail.umd.edu</td>
 <td class="org-left">UTA Head</td>
@@ -618,18 +675,9 @@ Zoom Links
 </tr>
 
 <tr>
-<td class="org-left">Adam Yang</td>
-<td class="org-left">ayang115@umd.edu</td>
-<td class="org-left">UTA</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">Aidan Shaheen</td>
-<td class="org-left">ashahee1@terpmail.umd.edu</td>
-<td class="org-left">UTA</td>
+<td class="org-left">Christian Nygard</td>
+<td class="org-left">cnygard@terpmail.umd.edu</td>
+<td class="org-left">UTA Head</td>
 <td class="org-left">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -637,16 +685,7 @@ Zoom Links
 
 <tr>
 <td class="org-left">Amber Lehmann</td>
-<td class="org-left">alehmann@umd.edu</td>
-<td class="org-left">UTA</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">Christian "CJ" Nygard</td>
-<td class="org-left">cnygard@terpmail.umd.edu</td>
+<td class="org-left">alehmann@terpmail.umd.edu</td>
 <td class="org-left">UTA</td>
 <td class="org-left">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -663,15 +702,6 @@ Zoom Links
 </tr>
 
 <tr>
-<td class="org-left">Iris Guo</td>
-<td class="org-left">iguo@terpmail.umd.edu</td>
-<td class="org-left">UTA</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
 <td class="org-left">Jeffrey Cole</td>
 <td class="org-left">jcole112@terpmail.umd.edu</td>
 <td class="org-left">UTA</td>
@@ -681,53 +711,8 @@ Zoom Links
 </tr>
 
 <tr>
-<td class="org-left">Jeremy Gorfinkel</td>
-<td class="org-left">jgorf@terpmail.umd.edu</td>
-<td class="org-left">UTA</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">Jihyo Park</td>
-<td class="org-left">jihyo@umd.edu</td>
-<td class="org-left">UTA</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">Macy Donahoe</td>
-<td class="org-left">mdonaho2@terpmail.umd.edu</td>
-<td class="org-left">UTA</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">Phan "Anh" Pham</td>
-<td class="org-left">ppham05@umd.edu</td>
-<td class="org-left">UTA</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
 <td class="org-left">Rohan Panigrahi</td>
 <td class="org-left">rpanigr@terpmail.umd.edu</td>
-<td class="org-left">UTA</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">Saloni Shah</td>
-<td class="org-left">sshah37@terpmail.umd.edu</td>
 <td class="org-left">UTA</td>
 <td class="org-left">&#xa0;</td>
 <td class="org-left">&#xa0;</td>
@@ -746,10 +731,9 @@ Zoom Links
 </table>
 </div>
 </div>
-
-<div id="outline-container-orgb339bd8" class="outline-2">
-<h2 id="orgb339bd8">Meetings</h2>
-<div class="outline-text-2" id="text-orgb339bd8">
+<div id="outline-container-orgf97fa1f" class="outline-2">
+<h2 id="orgf97fa1f">Meetings</h2>
+<div class="outline-text-2" id="text-orgf97fa1f">
 <br/>
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -781,51 +765,44 @@ Zoom Links
 </tbody>
 <tbody>
 <tr>
-<td class="org-left">Dis 0101</td>
-<td class="org-left">MW 09:00am - 09:50am</td>
-<td class="org-left">CSI 1122</td>
+<td class="org-left">Dis 101</td>
+<td class="org-left">MW 08:00am - 08:50am</td>
+<td class="org-left">IRB 1207</td>
 <td class="org-left">See Canvas</td>
 </tr>
 
 <tr>
-<td class="org-left">Dis 0102</td>
-<td class="org-left">MW 10:00am - 10:50am</td>
-<td class="org-left">CSI 1122</td>
+<td class="org-left">Dis 102</td>
+<td class="org-left">MW 09:00am - 09:50am</td>
+<td class="org-left">IRB 1207</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left">Dis 0103</td>
-<td class="org-left">MW 10:00am - 10:50am</td>
-<td class="org-left">CSI 2107</td>
+<td class="org-left">Dis 103</td>
+<td class="org-left">MW 09:00am - 09:50am</td>
+<td class="org-left">IRB 2107</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left">Dis 0104</td>
+<td class="org-left">Dis 104</td>
+<td class="org-left">MW 10:00am - 10:50am</td>
+<td class="org-left">IRB 1207</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Dis 105</td>
+<td class="org-left">MW 10:00am - 10:50am</td>
+<td class="org-left">IRB 2107</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Dis 106</td>
 <td class="org-left">MW 11:00am - 11:50am</td>
-<td class="org-left">CSI 2120</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">Dis 0105</td>
-<td class="org-left">MW 02:00pm - 02:50pm</td>
-<td class="org-left">CSI 3118</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">Dis 0107</td>
-<td class="org-left">MW 03:00pm - 03:50pm</td>
-<td class="org-left">CSI 3120</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">Dis 0108</td>
-<td class="org-left">MW 04:00pm - 04:50pm</td>
-<td class="org-left">CSI 3120</td>
+<td class="org-left">IRB 2107</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 </tbody>
@@ -839,54 +816,53 @@ Zoom Links
 </tbody>
 <tbody>
 <tr>
-<td class="org-left">Dis 0202</td>
+<td class="org-left">Dis 201</td>
 <td class="org-left">MW 09:00am - 09:50am</td>
-<td class="org-left">CSI 3120</td>
+<td class="org-left">IRB 2207</td>
 <td class="org-left">See Canvas</td>
 </tr>
 
 <tr>
-<td class="org-left">Dis 0203</td>
-<td class="org-left">MW 09:00am - 09:50am</td>
-<td class="org-left">CSI 3118</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">Dis 0204</td>
+<td class="org-left">Dis 202</td>
 <td class="org-left">MW 10:00am - 10:50am</td>
-<td class="org-left">CSI 3118</td>
+<td class="org-left">IRB 2207</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left">Dis 0205</td>
-<td class="org-left">MW 10:00am - 10:50am</td>
-<td class="org-left">CSI 3120</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">Dis 0206</td>
+<td class="org-left">Dis 203</td>
 <td class="org-left">MW 11:00am - 11:50am</td>
-<td class="org-left">CSI 3120</td>
+<td class="org-left">IRB 2207</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 
 <tr>
-<td class="org-left">Dis 0207</td>
+<td class="org-left">Dis 204</td>
 <td class="org-left">MW 12:00pm - 12:50pm</td>
-<td class="org-left">CSI 2120</td>
+<td class="org-left">IRB 2207</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Dis 205</td>
+<td class="org-left">MW 01:00pm - 01:50pm</td>
+<td class="org-left">IRB 2207</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Dis 206</td>
+<td class="org-left">MW 01:00pm - 01:50pm</td>
+<td class="org-left">IRB 1207</td>
 <td class="org-left">&#xa0;</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-
-<div id="outline-container-org064429c" class="outline-2">
-<h2 id="org064429c">C Programming Resources</h2>
-<div class="outline-text-2" id="text-org064429c">
+<div id="outline-container-orgf7c6d4b" class="outline-2">
+<h2 id="orgf7c6d4b">C Programming Resources</h2>
+<div class="outline-text-2" id="text-orgf7c6d4b">
 <p>
 C programming will play a major role in this class so start exploring.
 </p>
@@ -902,9 +878,9 @@ page</dd>
 </dl>
 </div>
 </div>
-<div id="outline-container-org62fc5b8" class="outline-2">
-<h2 id="org62fc5b8">Getting Started</h2>
-<div class="outline-text-2" id="text-org62fc5b8">
+<div id="outline-container-orgbc0399b" class="outline-2">
+<h2 id="orgbc0399b">Getting Started</h2>
+<div class="outline-text-2" id="text-orgbc0399b">
 <dl class="org-dl">
 <dt>Review the Course Syllabus</dt><dd><p>
 This will be our "contract" for the semester and contains tons of
@@ -932,7 +908,7 @@ C code,</dd>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-01-30 Thu 14:40 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-08-27 Wed 17:23 <br/> </i>
 </div>
 </body>
 </html>
