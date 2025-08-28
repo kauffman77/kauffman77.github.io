@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-08-28 Thu 14:25 -->
+<!-- 2025-08-28 Thu 14:31 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 HW01: C Basics</title>
@@ -330,6 +330,17 @@ margin-left: 0.5em;
 }
 }
 .linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
+details > summary {
+padding: 2px 6px;
+font-family: Sans;
+font-size: 0.8em;
+width: fit-content;
+border-radius: 5px;
+background-color: #efefef;
+border: 1px solid black;
+cursor: pointer;
+}
 }
 
 @media print {
@@ -341,10 +352,147 @@ text-align: justify;
 }
 }
 </style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","[COMMANDO]>>","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+literal: ["[data/script.txt]>>","[data/script1.txt]>>","[data/script6.txt]>>"],
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+// hljs.COMMENT(/## /, /$/),     // hash-hash-ws for comment
+hljs.COMMENT(/##+/, /$/),     // or a sequence of hashes
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2025-08-28 Thu 14:25</i>
+<i>Last Updated: 2025-08-28 Thu 14:31</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 HW01: C Basics</h1>
@@ -352,37 +500,37 @@ text-align: justify;
 <li><b>Due: 11:59pm Sun 07-Sep-2025</b> via Quiz on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 0.83% of total grade</i></li>
 </ul>
-<div id="outline-container-org6709850" class="outline-4">
-<h4 id="org6709850">CODE DISTRIBUTION: <a href="hw01-code.zip">hw01-code.zip</a></h4>
-<div class="outline-text-4" id="text-org6709850">
+<div id="outline-container-org848c304" class="outline-4">
+<h4 id="org848c304">CODE DISTRIBUTION: <a href="hw01-code.zip">hw01-code.zip</a></h4>
+<div class="outline-text-4" id="text-org848c304">
 <ul class="org-ul">
 <li>Download the code distribution</li>
 <li>See further setup instructions below</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org109638a" class="outline-4">
-<h4 id="org109638a">CHANGELOG: Empty</h4>
+<div id="outline-container-orgc01337b" class="outline-4">
+<h4 id="orgc01337b">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-orgf67aa22" class="outline-4">
-<h4 id="orgf67aa22"></h4>
-<div class="outline-text-4" id="text-orgf67aa22">
+<div id="outline-container-org86d68de" class="outline-4">
+<h4 id="org86d68de"></h4>
+<div class="outline-text-4" id="text-org86d68de">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org7049bbd">1. Rationale</a></li>
-<li><a href="#orgc68afc7">2. Codepack</a></li>
-<li><a href="#orgfb67c1a">3. What to Understand</a></li>
-<li><a href="#org69243e0">4. QUESTIONS.txt</a></li>
+<li><a href="#org0f503c4">1. Rationale</a></li>
+<li><a href="#org42a1371">2. Codepack</a></li>
+<li><a href="#org14ed141">3. What to Understand</a></li>
+<li><a href="#orgb2d303b">4. QUESTIONS.txt</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org7049bbd" class="outline-2">
-<h2 id="org7049bbd"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org0f503c4" class="outline-2">
+<h2 id="org0f503c4"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 C programming is as close as most programmers get to the bare metal of
@@ -391,9 +539,9 @@ Completing this HW will cover principles in C of editing, compilation,
 running, basic data types, functions, and control.
 </p>
 </div>
-<div id="outline-container-org3591d4a" class="outline-4">
-<h4 id="org3591d4a">Associated Reading / Preparation</h4>
-<div class="outline-text-4" id="text-org3591d4a">
+<div id="outline-container-orgc6ab55e" class="outline-4">
+<h4 id="orgc6ab55e">Associated Reading / Preparation</h4>
+<div class="outline-text-4" id="text-orgc6ab55e">
 <p>
 Prior programming experience is presumed: students not familiar with
 variable types, loops, conditionals, functions, etc. should review
@@ -424,9 +572,9 @@ of the course syllabus</b>.
 </p>
 </div>
 </div>
-<div id="outline-container-orgb39153a" class="outline-4">
-<h4 id="orgb39153a">Grading Policy</h4>
-<div class="outline-text-4" id="text-orgb39153a">
+<div id="outline-container-org770ca62" class="outline-4">
+<h4 id="org770ca62">Grading Policy</h4>
+<div class="outline-text-4" id="text-org770ca62">
 <p>
 Credit for this HW is earned by taking the associated HW Quiz which is
 linked under <code>Gradescope</code>.  The quiz will ask similar questions as
@@ -447,8 +595,8 @@ See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies 
 </div>
 </div>
 </div>
-<div id="outline-container-orgc68afc7" class="outline-2">
-<h2 id="orgc68afc7"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org42a1371" class="outline-2">
+<h2 id="org42a1371"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -497,8 +645,8 @@ The codepack for the HW contains the following files:
 </table>
 </div>
 </div>
-<div id="outline-container-orgfb67c1a" class="outline-2">
-<h2 id="orgfb67c1a"><span class="section-number-2">3</span> What to Understand</h2>
+<div id="outline-container-org14ed141" class="outline-2">
+<h2 id="org14ed141"><span class="section-number-2">3</span> What to Understand</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Ensure that you understand
@@ -512,8 +660,8 @@ errors that arise due to compilation mistakes</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org69243e0" class="outline-2">
-<h2 id="org69243e0"><span class="section-number-2">4</span> QUESTIONS.txt</h2>
+<div id="outline-container-orgb2d303b" class="outline-2">
+<h2 id="orgb2d303b"><span class="section-number-2">4</span> QUESTIONS.txt</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Analyze the files in the provided codepack and answer the questions
@@ -729,7 +877,7 @@ Review Course Syllabus
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-08-28 Thu 14:25 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-08-28 Thu 14:31 <br/> </i>
 </div>
 </body>
 </html>
