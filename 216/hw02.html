@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-09-07 Sun 13:05 -->
+<!-- 2025-09-07 Sun 13:10 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CMSC216 HW02: C Memory Management</title>
+<title>CMSC216 HW02: C Stack Memory and Structs</title>
 <meta name="author" content="Chris Kauffman" />
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
@@ -344,71 +344,60 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2025-09-07 Sun 13:05</i>
+<i>Last Updated: 2025-09-07 Sun 13:10</i>
 </div>
 <div id="content" class="content">
-<h1 class="title">CMSC216 HW02: C Memory Management</h1>
+<h1 class="title">CMSC216 HW02: C Stack Memory and Structs</h1>
 <ul class="org-ul">
 <li><b>Due: 11:59pm Sun 14-Sep-2025</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 0.83% of total grade</i></li>
 </ul>
-<div id="outline-container-orgc0db7fe" class="outline-4">
-<h4 id="orgc0db7fe">CODE DISTRIBUTION: <a href="hw02-code.zip">hw02-code.zip</a></h4>
+<div id="outline-container-org65ae442" class="outline-4">
+<h4 id="org65ae442">CODE DISTRIBUTION: <a href="hw02-code.zip">hw02-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org0e611d3" class="outline-4">
-<h4 id="org0e611d3">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-org0e611d3">
+<div id="outline-container-orgae1b202" class="outline-4">
+<h4 id="orgae1b202">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orgae1b202">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org99ad6a5">1. Rationale</a>
+<li><a href="#org85960ad">1. Rationale</a>
 <ul>
-<li><a href="#org2f4e873">Associated Reading / Preparation</a></li>
-<li><a href="#org4809792">Grading Policy</a></li>
+<li><a href="#org9c70367">Associated Reading / Preparation</a></li>
+<li><a href="#orgb1df14e">Grading Policy</a></li>
 </ul>
 </li>
-<li><a href="#org494c35c">2. Codepack</a></li>
-<li><a href="#org42fe275">3. What to Understand</a></li>
-<li><a href="#org60b4628">4. Questions</a></li>
+<li><a href="#org000f41d">2. Codepack</a></li>
+<li><a href="#org44fcf89">3. Questions</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org99ad6a5" class="outline-2">
-<h2 id="org99ad6a5"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org85960ad" class="outline-2">
+<h2 id="org85960ad"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-This HW covers the basics of memory layout, C structs,
-allocation/deallocation, string processing, and their use in some
-basic programs. Problems provide practice at creating memory diagrams
-and study the same Linked List program that is the subject of other
-course activities to give more experience with it.
+This HW covers the basics of memory layout and C structs. Problems
+provide practice at creating memory diagrams and address some of the
+conventions associated with struct declaration, and
+usage. Importantly, the distinction between an "actual" struct and a
+pointer to a struct is covered.
 </p>
 </div>
-<div id="outline-container-org2f4e873" class="outline-3">
-<h3 id="org2f4e873">Associated Reading / Preparation</h3>
-<div class="outline-text-3" id="text-org2f4e873">
+<div id="outline-container-org9c70367" class="outline-3">
+<h3 id="org9c70367">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-org9c70367">
 <p>
-From any good C resource review:
-</p>
-<ul class="org-ul">
-<li>Basic I/O using <code>fopen(), fscanf(), fread(), fwrite()</code></li>
-<li><code>struct</code> declarations</li>
-<li>String processing / comparison</li>
-<li><code>malloc()</code> and <code>free()</code></li>
-</ul>
-<p>
-From previous experience with data structures, review how Singly
-Linked Lists are constructed.
+From any good C resource review <code>struct</code> declarations.
 </p>
 </div>
 </div>
-<div id="outline-container-org4809792" class="outline-3">
-<h3 id="org4809792">Grading Policy</h3>
-<div class="outline-text-3" id="text-org4809792">
+<div id="outline-container-orgb1df14e" class="outline-3">
+<h3 id="orgb1df14e">Grading Policy</h3>
+<div class="outline-text-3" id="text-orgb1df14e">
 <p>
 Credit for this HW is earned by taking the associated HW Quiz which is
 linked under <code>Gradescope</code>.  The quiz will ask similar questions as
@@ -429,8 +418,8 @@ See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies 
 </div>
 </div>
 </div>
-<div id="outline-container-org494c35c" class="outline-2">
-<h2 id="org494c35c"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org000f41d" class="outline-2">
+<h2 id="org000f41d"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -462,63 +451,31 @@ The codepack for the HW contains the following files:
 </tr>
 
 <tr>
-<td class="org-left"><code>list_main.c</code></td>
-<td class="org-left">C file for Problem 3/4/5</td>
+<td class="org-left"><code>struct_demo.c</code></td>
+<td class="org-left">Demo C file for Problem 2</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>list_funcs.c</code></td>
-<td class="org-left">C file for Problem 3/4/5</td>
+<td class="org-left"><code>struct_define.c</code></td>
+<td class="org-left">C file to complete for Problem 2</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>list.h</code></td>
-<td class="org-left">C file for Problem 3/4/5</td>
+<td class="org-left"><code>struct_pointer_demo.c</code></td>
+<td class="org-left">Demo file for Problem 2</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>commands.txt</code></td>
-<td class="org-left">Command script for <code>list_main</code>, Problem 3/4/5</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>Makefile</code></td>
-<td class="org-left">Builds <code>list_main</code> application via <code>make</code></td>
-</tr>
-
-<tr>
-<td class="org-left"><code>testy</code></td>
-<td class="org-left">Testing script</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>test_list_main.org</code></td>
-<td class="org-left">Tests for <code>list_main</code>, run via <code>make test</code></td>
+<td class="org-left"><code>struct_pointer_funcs.c</code></td>
+<td class="org-left">C file to create for Problem 2</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<div id="outline-container-org42fe275" class="outline-2">
-<h2 id="org42fe275"><span class="section-number-2">3</span> What to Understand</h2>
+<div id="outline-container-org44fcf89" class="outline-2">
+<h2 id="org44fcf89"><span class="section-number-2">3</span> Questions</h2>
 <div class="outline-text-2" id="text-3">
-<p>
-Ensure that you understand
-</p>
-<ul class="org-ul">
-<li>Basics of memory layout on the stack</li>
-<li>Declaration of structs</li>
-<li>Basics of strings in C</li>
-<li><code>malloc()</code> and <code>free()</code> when using dynamic structures</li>
-<li>Use of Valgrind to begin diagnosing memory errors</li>
-<li>Basic command loops in which a user enters commands which manipulate
-internal program data</li>
-</ul>
-</div>
-</div>
-<div id="outline-container-org60b4628" class="outline-2">
-<h2 id="org60b4628"><span class="section-number-2">4</span> Questions</h2>
-<div class="outline-text-2" id="text-4">
 <p>
 Analyze the files in the provided codepack and answer the questions
 given in <code>QUESTIONS.txt</code>.
@@ -813,7 +770,7 @@ D Pointers to structs in functions
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-09-07 Sun 13:05 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-09-07 Sun 13:10 <br/> </i>
 </div>
 </body>
 </html>
