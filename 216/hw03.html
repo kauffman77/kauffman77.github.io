@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-09-14 Sun 22:05 -->
+<!-- 2025-09-14 Sun 22:09 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 HW03: Basic I/O + Binary Integers</title>
@@ -344,7 +344,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2025-09-14 Sun 22:05</i>
+<i>Last Updated: 2025-09-14 Sun 22:09</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 HW03: Basic I/O + Binary Integers</h1>
@@ -355,47 +355,52 @@ text-align: justify;
 submit your own work but you may freely discuss HW topics with other
 members of the class.</li>
 </ul>
-<div id="outline-container-org280f9fb" class="outline-4">
-<h4 id="org280f9fb">CODE DISTRIBUTION: <a href="hw03-code.zip">hw03-code.zip</a></h4>
-<div class="outline-text-4" id="text-org280f9fb">
+<div id="outline-container-org0e95445" class="outline-4">
+<h4 id="org0e95445">CODE DISTRIBUTION: <a href="hw03-code.zip">hw03-code.zip</a></h4>
+<div class="outline-text-4" id="text-org0e95445">
 <ul class="org-ul">
 <li>Download the code distribution</li>
 <li>See further setup instructions below</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org9526226" class="outline-4">
-<h4 id="org9526226">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org9526226">
+<div id="outline-container-org1d73f67" class="outline-4">
+<h4 id="org1d73f67">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org1d73f67">
 <dl class="org-dl">
-<dt>Sun Sep 14 10:03:46 PM EDT 2025</dt><dd>The initial release of the
+<dt>Sun Sep 14 10:03:46 PM EDT 2025</dt><dd><p>
+The initial release of the
 codepack was missing the file <code>twopass_stack.c</code>. That file has been
 added to the codepack now. Students missing it should download the
-fresh codepack and copy over that file to a location they find useful.</dd>
+fresh codepack and copy over that file to a location they find
+useful.
+</p>
+
+<p>
+Problem and content associated with numeric conversions has been
+removed from the HW and will be placed in a subsequent HW.
+</p></dd>
 </dl>
 
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org2aa1884">1. Rationale</a>
+<li><a href="#org789621b">1. Rationale</a>
 <ul>
-<li><a href="#orge6c2503">Associated Reading / Preparation</a></li>
-<li><a href="#orgc46dbaa">Grading Policy</a></li>
+<li><a href="#orgff7a276">Associated Reading / Preparation</a></li>
+<li><a href="#orgf3670fd">Grading Policy</a></li>
 </ul>
 </li>
-<li><a href="#org384a00d">2. Codepack</a></li>
-<li><a href="#org7c558d4">3. Two's Complement Arithmetic</a></li>
-<li><a href="#orgc675c2e">4. Octal and Hexadecimal Representation of Numbers</a></li>
-<li><a href="#orgc25bddf">5. What to Understand</a></li>
-<li><a href="#orge0311a7">6. Questions</a></li>
+<li><a href="#orgaabf46c">2. Codepack</a></li>
+<li><a href="#org75a1d25">3. Questions</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org2aa1884" class="outline-2">
-<h2 id="org2aa1884"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org789621b" class="outline-2">
+<h2 id="org789621b"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Reading data from files is an essential skill in any programming
@@ -407,39 +412,23 @@ two-pass input strategy for dealing with such situations.
 <p>
 Computers internally represent numbers in a binary encoding scheme
 such as the Two's Complement system. Character data ("strings") are
-also represented this way. In order to int
-</p>
-
-<p>
-Modern computers represent all data using bits, collections of 1's and
-0's.  Integer data pervades many applications so understanding the
-bit-level representation of integers lends insight into their
-strengths and limitations. The two's complement representation for
-integers is by far the most common used by hardware and is therefore
-considered specially in this HW. C provides facilities to manipulate
-data at the bit level using logical and shift operations which are
-also discussed.
+also represented this way. To gain insight into how these two types
+relate, this HW studies some conversion routines between them.
 </p>
 </div>
-<div id="outline-container-orge6c2503" class="outline-3">
-<h3 id="orge6c2503">Associated Reading / Preparation</h3>
-<div class="outline-text-3" id="text-orge6c2503">
+<div id="outline-container-orgff7a276" class="outline-3">
+<h3 id="orgff7a276">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-orgff7a276">
 <p>
 Most C references will contain information on C's standard I/O
 libraries which discuss functions like <code>fopen(), fscanf(), rewind()</code>
 and <code>fclose()</code>.
 </p>
-
-<p>
-Bryant and O'Hallaron: Ch 2.1-2.3 on binary representations of
-integers in unsigned and two's complement signed format. This page
-also includes a <a href="#orgfb072c7">summary of the Two's Complement system</a>.
-</p>
 </div>
 </div>
-<div id="outline-container-orgc46dbaa" class="outline-3">
-<h3 id="orgc46dbaa">Grading Policy</h3>
-<div class="outline-text-3" id="text-orgc46dbaa">
+<div id="outline-container-orgf3670fd" class="outline-3">
+<h3 id="orgf3670fd">Grading Policy</h3>
+<div class="outline-text-3" id="text-orgf3670fd">
 <p>
 Credit for this HW is earned by taking the associated HW Quiz which is
 linked under <code>Gradescope</code>.  The quiz will ask similar questions as
@@ -460,8 +449,8 @@ See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies 
 </div>
 </div>
 </div>
-<div id="outline-container-org384a00d" class="outline-2">
-<h2 id="org384a00d"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orgaabf46c" class="outline-2">
+<h2 id="orgaabf46c"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -506,223 +495,13 @@ The codepack for the HW contains the following files:
 <td class="org-left"><code>convert.c</code></td>
 <td class="org-left">C file for Problem 4</td>
 </tr>
-
-<tr>
-<td class="org-left"><code>twos_complement.c</code></td>
-<td class="org-left">Simple demonstration of C code for twos complement</td>
-</tr>
 </tbody>
 </table>
 </div>
 </div>
-<div id="outline-container-org7c558d4" class="outline-2">
-<h2 id="org7c558d4"><span class="section-number-2">3</span> <a id="orgfb072c7"></a> Two's Complement Arithmetic</h2>
+<div id="outline-container-org75a1d25" class="outline-2">
+<h2 id="org75a1d25"><span class="section-number-2">3</span> Questions</h2>
 <div class="outline-text-2" id="text-3">
-<p>
-Understanding two's complement is necessary to complete a problem
-<code>QUESTIONS.txt</code>. The short presentation below gives the basics of
-two's complement but you should study the material presented in our
-textbook and lecture to supplement it.
-</p>
-
-<p>
-The principles of two's complement representation for integers are as
-follows.
-</p>
-<ul class="org-ul">
-<li>Fix a number of bits to represent integers such as 8 bits or 32 bits</li>
-<li><p>
-Zero is the bit string of all 0s. In 8 bits this is
-</p>
-<pre class="example">
-0000 0000
-</pre></li>
-<li><p>
-Positive numbers always start with a 0. In 8 bits <code>+91</code> would be
-</p>
-<pre class="example">
-0101 1011
-</pre></li>
-<li><p>
-Negative numbers always start with a 1. In 8 bits, the following is
-a negative number
-</p>
-<pre class="example">
-1010 0101
-</pre></li>
-<li><p>
-To determine the value of negative number in two's complement or
-negate it:
-</p>
-<ol class="org-ol">
-<li>Invert the bits: ones become zeros, zeros to ones. The C operator
-invert is the tilde <code>~</code> symbol.</li>
-<li>Add 1</li>
-</ol>
-<p>
-This process on the above negative number is as follows.
-</p>
-<div class="org-src-container">
-<pre class="src src-text">  ~ 1010 0101 = negative number
-  -----------
-    0101 1010 = +90
-  +         1
-  -----------
-    0101 1011 = +91
-</pre>
-</div>
-<p>
-So the above negative number is <code>-91</code> as 91 is its twos complement.
-</p></li>
-<li><p>
-The same process works to convert from positive to negative.
-</p>
-<div class="org-src-container">
-<pre class="src src-text">  ~ 0101 1011 = +91
-  -----------
-  ~ 1010 0100 = negative number
-  +         1
-  -----------
-  ~ 1010 0101 = -91
-</pre>
-</div>
-<p>
-So the above negative number is <code>-91</code> as 91 is its twos complement.
-</p></li>
-<li><p>
-C's unary negation operator performs these two steps of inverting
-and adding 1:
-</p>
-<pre class="example">
-int p = 91;  // 0101 1011
-int n = -p;  // 1010 0101
-</pre></li>
-<li><p>
-The context for interpreting bits matters. When interpreting bits as
-an <b>unsigned</b> quantity, each bit represents a power of 2 that should
-be added.
-</p>
-<div class="org-src-container">
-<pre class="src src-text">  unsigned char p = 0b10100101;
-  //   1   0    1   0   0   1   0   1
-  // 128 + 0 + 32 + 0 + 0 + 4 + 0 + 1
-  // = 165
-</pre>
-</div></li>
-<li><p>
-In contrast, the same bits when interpreted in a signed context are
-a negative quantity. In the 2's complement representation, the
-highest order bit is associated with a negative power of two.
-</p>
-<div class="org-src-container">
-<pre class="src src-text">  char p = 0b10100101;  // signed quantity, negative due to leading 1
-  //    1   0    1   0   0   1   0   1
-  // -128 + 0 + 32 + 0 + 0 + 4 + 0 + 1
-  // = -91
-</pre>
-</div></li>
-<li><p>
-Due to 0 starting with a <code>0</code>, there is one more bit string available
-for negative numbers than for positive numbers. This explains the
-asymmetric range of C data types. 8-bit characters have a range of
--128 to +127 which are the following bit strings
-</p>
-<div class="org-src-container">
-<pre class="src src-text">  +127 = 0111 1111
-  -128 = 1000 0000
-</pre>
-</div></li>
-<li><p>
-Arithmetic in twos complement has some nice properties such as going
-from 0 to -1:
-</p>
-<div class="org-src-container">
-<pre class="src src-text">    0000 0000 = zero
-  + 1111 1111 = -1
-  -----------
-    1111 1111 = -1
-</pre>
-</div>
-<p>
-More details of arithmetic will be discussed later.
-</p></li>
-<li><p>
-For wider bit widths than 8, extend the sign bit for numbers left as
-in the following
-</p>
-<pre class="example">
- 8-bit +91: 0101 1011
-16-bit +91: 0000 0000 0101 1011
- 8-bit -91: 1010 0101
-16-bit -91: 1111 1111 1010 0101
-</pre></li>
-</ul>
-</div>
-</div>
-<div id="outline-container-orgc675c2e" class="outline-2">
-<h2 id="orgc675c2e"><span class="section-number-2">4</span> Octal and Hexadecimal Representation of Numbers</h2>
-<div class="outline-text-2" id="text-4">
-<p>
-The base-10 numbering system is taught rigorously from an early age
-and is familiar to most students.  We have seen in the earlier Two's
-Complement system that numbers can also written in base-2 as
-Binary. This is indicative of numbers being independent of any
-particular notation or base.  Binary is frequently used in computer
-science but is cumbersome as it takes a LOT of digits to write a
-number.  When bits must be written, often they are written in a base-8
-Octal format or base-16 Hexadecimal format.  This is in part due to
-their compactness: the same bits are shown with fewer printed
-characters.  Here is a short example.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-text">|---------+--------------+----------------+----------------+-----------------+-----------------------|
-| Decimal | Byte = 8bits | Byte by 4      | Hexadecimal    | Byte by 3       | Octal                 |
-|---------+--------------+----------------+----------------+-----------------+-----------------------|
-|      87 |     01010111 | bin: 0101 0111 | 57 = 5*16 + 7  | bin: 01 010 111 | 127 = 1*8^2 + 2*8 + 7 |
-|         |              | hex: 5    7    | hex  dec       | oct: 1  2   7   | oct   dec             |
-|         |              |                |                |                 |                       |
-|      60 |     00111100 | bin: 0011 1100 | 3C = 3*16 + 12 | bin: 00 111 100 | 074 = 0*8^2 + 7*8 + 4 |
-|         |              | hex: 3    C=12 | hex  dec       | oct: 0  7   4   | oct   dec             |
-|         |              |                |                |                 |                       |
-|     226 |     11100010 | bin: 1110 0010 | E2 = 14*16 + 2 | bin: 11 100 010 | 342 = 3*8^2 + 4*8 + 2 |
-|         |              | hex: E=14 2    | hex  dec       | oct: 3  4   2   | oct   dec             |
-|---------+--------------+----------------+----------------+-----------------+-----------------------|
-</pre>
-</div>
-<p>
-Several items are of note:
-</p>
-<ul class="org-ul">
-<li>The same number is written in 4 forms, Decimal, Binary, Hexadecimal,
-and Octal</li>
-<li>A single Hexadecimal digit ranges from decimal 0-15. Values larger
-than 9 are written as letters: <code>A=10, B=11, C=12, D=13, E=14, F=15</code></li>
-<li>Converting between Binary and Hexadecimal is easiest when grouping
-bits by 4: each 4 bits corresponds to one hexadecimal digit</li>
-<li>Octal digits ranger from 0-7</li>
-<li>Converting between Binary and Octal is easiest when grouping bits by
-3: each 3 bits corresponds to one octal digit</li>
-</ul>
-</div>
-</div>
-<div id="outline-container-orgc25bddf" class="outline-2">
-<h2 id="orgc25bddf"><span class="section-number-2">5</span> What to Understand</h2>
-<div class="outline-text-2" id="text-5">
-<p>
-Ensure that you understand
-</p>
-<ul class="org-ul">
-<li>Basics of reading data from files and allocating space for it</li>
-<li>Signed vs unsigned representations</li>
-<li>Two's complement representation of integers</li>
-<li>Conversions between binary, decimal, octal, and hexadecimal notation</li>
-</ul>
-</div>
-</div>
-<div id="outline-container-orge0311a7" class="outline-2">
-<h2 id="orge0311a7"><span class="section-number-2">6</span> Questions</h2>
-<div class="outline-text-2" id="text-6">
 <p>
 Analyze the files in the provided codepack and answer the questions
 given in <code>QUESTIONS.txt</code>.
@@ -912,7 +691,7 @@ B
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-09-14 Sun 22:05 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-09-14 Sun 22:09 <br/> </i>
 </div>
 </body>
 </html>
