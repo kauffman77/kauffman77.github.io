@@ -1,4 +1,4 @@
-// UPDATED: Tue Sep 16 01:23:15 PM EDT 2025
+// UPDATED: Tue Sep 16 04:12:27 PM EDT 2025
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -77,7 +77,7 @@ int main(int argc, char *argv[]){
   pb_srand(hash);
   int quote_index = pb_rand() % QUOTE_COUNT;
   char *quote_expect = all_quotes[quote_index];
-  char quote_actual[256];
+  char quote_actual[512];
   strcpy(quote_actual, quote_expect);
   int quote_len = strlen(quote_expect);
   printf("Mangling a quote\n");
