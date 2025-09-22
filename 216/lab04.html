@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-09-22 Mon 15:24 -->
+<!-- 2025-09-22 Mon 15:25 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Lab04: Valgrind and Makefiles</title>
@@ -492,7 +492,7 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2025-09-22 Mon 15:24</i>
+<i>Last Updated: 2025-09-22 Mon 15:25</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Lab04: Valgrind and Makefiles</h1>
@@ -500,14 +500,18 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 <li><b>Due: 11:59pm Sun 28-Sep-2025</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
-<div id="outline-container-org4237930" class="outline-4">
-<h4 id="org4237930">CODE DISTRIBUTION: <a href="lab04-code.zip">lab04-code.zip</a></h4>
+<div id="outline-container-orgf924bda" class="outline-4">
+<h4 id="orgf924bda">CODE DISTRIBUTION: <a href="lab04-code.zip">lab04-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org4c7ae04" class="outline-4">
-<h4 id="org4c7ae04">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org4c7ae04">
+<div id="outline-container-org138e729" class="outline-4">
+<h4 id="org138e729">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org138e729">
 <dl class="org-dl">
+<dt>Mon Sep 22 03:24:51 PM EDT 2025</dt><dd>Associated Reading for the lab
+has been added. Particularly the section in Valgrind's manual on
+error messages may be useful to students.</dd>
+
 <dt>Mon Sep 22 11:44:21 AM EDT 2025</dt><dd><p>
 <a href="https://piazza.com/class/meuaquvb4xy46i/post/133">Post 133</a> reported a testing
 problem where the directory expected by tests is
@@ -530,31 +534,31 @@ intended to make the folder names shorter to type.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org7908236">1. Rationale</a></li>
-<li><a href="#org88c9a2e">2. Codepack</a></li>
-<li><a href="#org5fa094b">3. Problem 1 Background</a>
+<li><a href="#orgff688e5">1. Rationale</a></li>
+<li><a href="#org7616942">2. Codepack</a></li>
+<li><a href="#orga551ffa">3. Problem 1 Background</a>
 <ul>
-<li><a href="#org79d310d">3.1. Context</a></li>
-<li><a href="#org6a0431d">3.2. Intended Behavior</a></li>
-<li><a href="#orgd664c62">3.3. Instructions</a></li>
+<li><a href="#org46524d5">3.1. Context</a></li>
+<li><a href="#org96fb709">3.2. Intended Behavior</a></li>
+<li><a href="#orge085604">3.3. Instructions</a></li>
 </ul>
 </li>
-<li><a href="#org57add97">4. Problem 2 Background: Makefiles</a>
+<li><a href="#orgf4f7dee">4. Problem 2 Background: Makefiles</a>
 <ul>
-<li><a href="#org1807066">4.1. Structure of Makefiles</a></li>
-<li><a href="#org7e833d2">4.2. Variables and Shortcuts in Makefiles</a></li>
-<li><a href="#org2c61ef3">4.3. Dependency Detection</a></li>
+<li><a href="#orgb2d6dde">4.1. Structure of Makefiles</a></li>
+<li><a href="#org7bf3d26">4.2. Variables and Shortcuts in Makefiles</a></li>
+<li><a href="#org30e01d5">4.3. Dependency Detection</a></li>
 </ul>
 </li>
-<li><a href="#org1a664ad">5. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org70102c6">6. Submission</a></li>
+<li><a href="#org9d3c2b6">5. QUESTIONS.txt File Contents</a></li>
+<li><a href="#orgd1007c0">6. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org7908236" class="outline-2">
-<h2 id="org7908236"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orgff688e5" class="outline-2">
+<h2 id="orgff688e5"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Memory problems are inevitable in C programs and learning how to
@@ -578,9 +582,9 @@ shows how building simple C projects can be automated with <code>make</code> and
 its <code>Makefile</code> input format.
 </p>
 </div>
-<div id="outline-container-org62e21f5" class="outline-4">
-<h4 id="org62e21f5">Associated Reading</h4>
-<div class="outline-text-4" id="text-org62e21f5">
+<div id="outline-container-org0cfa1c1" class="outline-4">
+<h4 id="org0cfa1c1">Associated Reading</h4>
+<div class="outline-text-4" id="text-org0cfa1c1">
 <p>
 Valgrind has been discussed in lecture but those looking for a quick
 reference might consult <a href="https://valgrind.org/docs/manual/mc-manual.html#mc-manual.errormsgs">Valgrind's Explanation of error messages</a> as
@@ -595,9 +599,9 @@ widely deployed implementation of <code>make</code> and its manual is thorough.
 </p>
 </div>
 </div>
-<div id="outline-container-orge7bdaec" class="outline-4">
-<h4 id="orge7bdaec">Grading Policy</h4>
-<div class="outline-text-4" id="text-orge7bdaec">
+<div id="outline-container-org5a1c49e" class="outline-4">
+<h4 id="org5a1c49e">Grading Policy</h4>
+<div class="outline-text-4" id="text-org5a1c49e">
 <p>
 Credit for this exercise is earned by completing the code/asnwers here
 and submitting a Zip of the work to Gradescope. Students are
@@ -619,8 +623,8 @@ See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies 
 </div>
 </div>
 </div>
-<div id="outline-container-org88c9a2e" class="outline-2">
-<h2 id="org88c9a2e"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org7616942" class="outline-2">
+<h2 id="org7616942"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for this lab is linked at the top of this
@@ -758,8 +762,8 @@ the following files which are briefly described.
 </table>
 </div>
 </div>
-<div id="outline-container-org5fa094b" class="outline-2">
-<h2 id="org5fa094b"><span class="section-number-2">3</span> Problem 1 Background</h2>
+<div id="outline-container-orga551ffa" class="outline-2">
+<h2 id="orga551ffa"><span class="section-number-2">3</span> Problem 1 Background</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 This problem will focus on debugging an existing C program which was
@@ -769,8 +773,8 @@ Valgrind error messages and using them to locate problems in the code
 and resolve them.
 </p>
 </div>
-<div id="outline-container-org79d310d" class="outline-3">
-<h3 id="org79d310d"><span class="section-number-3">3.1</span> Context</h3>
+<div id="outline-container-org46524d5" class="outline-3">
+<h3 id="org46524d5"><span class="section-number-3">3.1</span> Context</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Your current supervisor has left the following note with the code and
@@ -794,8 +798,8 @@ tests.
 </div>
 </div>
 </div>
-<div id="outline-container-org6a0431d" class="outline-3">
-<h3 id="org6a0431d"><span class="section-number-3">3.2</span> Intended Behavior</h3>
+<div id="outline-container-org96fb709" class="outline-3">
+<h3 id="org96fb709"><span class="section-number-3">3.2</span> Intended Behavior</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 The intended behavior of the program <code>mon_main</code> is to read data files
@@ -844,8 +848,8 @@ Segmentation fault (core dumped)
 </div>
 </div>
 </div>
-<div id="outline-container-orgd664c62" class="outline-3">
-<h3 id="orgd664c62"><span class="section-number-3">3.3</span> Instructions</h3>
+<div id="outline-container-orge085604" class="outline-3">
+<h3 id="orge085604"><span class="section-number-3">3.3</span> Instructions</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 As is indicated (and is often the case with other people's code) the
@@ -858,8 +862,8 @@ to get started.
 </div>
 </div>
 </div>
-<div id="outline-container-org57add97" class="outline-2">
-<h2 id="org57add97"><span class="section-number-2">4</span> Problem 2 Background: Makefiles</h2>
+<div id="outline-container-orgf4f7dee" class="outline-2">
+<h2 id="orgf4f7dee"><span class="section-number-2">4</span> Problem 2 Background: Makefiles</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Building programs often involves compiling separate source files and
@@ -871,8 +875,8 @@ still in use is <code>make</code> and its associated <code>Makefiles</code>.  Th
 covers the basics of how to create a <code>Makefile</code>.
 </p>
 </div>
-<div id="outline-container-org1807066" class="outline-3">
-<h3 id="org1807066"><span class="section-number-3">4.1</span> Structure of Makefiles</h3>
+<div id="outline-container-orgb2d6dde" class="outline-3">
+<h3 id="orgb2d6dde"><span class="section-number-3">4.1</span> Structure of Makefiles</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 The basic structure of a <code>Makefile</code> involves <b>rules</b> which relate
@@ -979,8 +983,8 @@ the program.
 </p>
 </div>
 </div>
-<div id="outline-container-org7e833d2" class="outline-3">
-<h3 id="org7e833d2"><span class="section-number-3">4.2</span> Variables and Shortcuts in Makefiles</h3>
+<div id="outline-container-org7bf3d26" class="outline-3">
+<h3 id="org7bf3d26"><span class="section-number-3">4.2</span> Variables and Shortcuts in Makefiles</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 Makefiles support a large number of features such as explicit
@@ -1025,8 +1029,8 @@ the following invocation allows using a specific file other than that:
 </div>
 </div>
 </div>
-<div id="outline-container-org2c61ef3" class="outline-3">
-<h3 id="org2c61ef3"><span class="section-number-3">4.3</span> Dependency Detection</h3>
+<div id="outline-container-org30e01d5" class="outline-3">
+<h3 id="org30e01d5"><span class="section-number-3">4.3</span> Dependency Detection</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 Makefiles are useful for larger projects to automatically detect
@@ -1081,8 +1085,8 @@ the exectuable program.
 </div>
 </div>
 </div>
-<div id="outline-container-org1a664ad" class="outline-2">
-<h2 id="org1a664ad"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org9d3c2b6" class="outline-2">
+<h2 id="org9d3c2b6"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -1469,8 +1473,8 @@ Problem 2 CODE: makeproblem-create
 </div>
 </div>
 </div>
-<div id="outline-container-org70102c6" class="outline-2">
-<h2 id="org70102c6"><span class="section-number-2">6</span> Submission</h2>
+<div id="outline-container-orgd1007c0" class="outline-2">
+<h2 id="orgd1007c0"><span class="section-number-2">6</span> Submission</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -1480,7 +1484,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-09-22 Mon 15:24 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-09-22 Mon 15:25 <br/> </i>
 </div>
 </body>
 </html>
