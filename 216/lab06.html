@@ -1,0 +1,1118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-10-08 Wed 15:49 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lab06: Assembly Coding</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
+details > summary {
+padding: 2px 6px;
+font-family: Sans;
+font-size: 0.8em;
+width: fit-content;
+border-radius: 5px;
+background-color: #efefef;
+border: 1px solid black;
+cursor: pointer;
+}
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","[COMMANDO]>>","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+literal: ["[data/script.txt]>>","[data/script1.txt]>>","[data/script6.txt]>>"],
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+// hljs.COMMENT(/## /, /$/),     // hash-hash-ws for comment
+hljs.COMMENT(/##+/, /$/),     // or a sequence of hashes
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2025-10-08 Wed 15:49</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">Lab06: Assembly Coding</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Mon 20-Oct-2025</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><i>Approximately 1.00% of total grade</i></li>
+</ul>
+<div id="outline-container-org16b2687" class="outline-4">
+<h4 id="org16b2687">CODE DISTRIBUTION: <a href="lab06-code.zip">lab06-code.zip</a></h4>
+<div class="outline-text-4" id="text-org16b2687">
+</div>
+</div>
+<div id="outline-container-org8263ad2" class="outline-4">
+<h4 id="org8263ad2">CHANGELOG: Empty</h4>
+</div>
+
+<div id="outline-container-org5a80011" class="outline-4">
+<h4 id="org5a80011"></h4>
+<div class="outline-text-4" id="text-org5a80011">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org1d06b9f">1. Rationale</a></li>
+<li><a href="#orgdc4d23f">2. Codepack</a></li>
+<li><a href="#org660c0e1">3. x86-64 General Purpose Registers</a></li>
+<li><a href="#org63ec55a">4. Two Assembly Functions</a></li>
+<li><a href="#org6b0cf6f">5. <code>set_coins</code> Assembly Function</a></li>
+<li><a href="#org8d82e1b">6. <code>total_coins</code> Assembly Function</a></li>
+<li><a href="#orgef95bae">7. Debug Assembly Functions via <code>gdb</code></a></li>
+<li><a href="#org8aef8de">8. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org41bc08f">9. Submission</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org1d06b9f" class="outline-2">
+<h2 id="org1d06b9f"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Assembly coding requires careful attention to detail and can feel
+quite overwhelming initially. This exercise is designed to introduce
+some aspects of assembly coding required to complete upcoming
+projects. It focuses on completing two functions that require partial
+completion and passing automated tests. The exercise allows practice
+on basic assembly instructions, location of argument registers,
+extracting function arguments, and debugging assembly.
+</p>
+</div>
+<div id="outline-container-org79376d1" class="outline-4">
+<h4 id="org79376d1">Associated Reading / Preparation</h4>
+<div class="outline-text-4" id="text-org79376d1">
+<ul class="org-ul">
+<li>Bryant and O'Hallaron: Ch 3.1-3.7 on assembly code instructions in
+x86-64.</li>
+<li>Any overview guide to x86-64 assembly instructions such as <a href="https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf">Brown
+University's x64 Cheat Sheet </a></li>
+<li>To more easily debug assembly, it is useful to be able to run a
+debugger like <code>gdb</code> on the assembly code. Examine the <a href="https://kauffman77.github.io/tutorials/gdb.html#gdb-assembly">Quick Guide to
+GDB</a> which contains information specific to assembly as such as how
+to display the register contents.</li>
+</ul>
+
+<p>
+It is also advisable to configure your editing environment for
+assembly code. For those using VS Code, the following short video
+shows how to install an assembly editing mode that supports the GNU
+Assembler dialect and shows how to block comment/uncomment code.
+</p>
+
+<p>
+<b>Configuring VS Code for x86-64 Assembly</b>: <a href="https://youtu.be/AgmXUFOEgIw">https://youtu.be/AgmXUFOEgIw</a>
+</p>
+</div>
+</div>
+<div id="outline-container-org9ce133a" class="outline-4">
+<h4 id="org9ce133a">Grading Policy</h4>
+<div class="outline-text-4" id="text-org9ce133a">
+<p>
+Credit for this exercise is earned by completing the code/asnwers here
+and submitting a Zip of the work to Gradescope. Students are
+responsible to check that the results produced locally via <code>make test</code>
+are reflected on Gradescope after submitting their completed
+Zip. Successful completion earns 1 Engagement Point.
+</p>
+
+<p>
+Lab Exercises are open resource/open collaboration and <b>students are
+encouraged to cooperate on labs.</b> Students may submit work as groups
+of up to 5 to Gradescope: one person submits then adds the names of
+their group members to the submission.
+</p>
+
+<p>
+See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies in the course syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdc4d23f" class="outline-2">
+<h2 id="orgdc4d23f"><span class="section-number-2">2</span> Codepack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The codepack for the HW contains the following files:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Questions to answer: fill in the multiple choice selections in this file.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>coins_funcs_asm.s</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Incomplete Assembly functions, fill in remaining code</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>coins_main.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">main() function</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>coins.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">C header</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>coins_funcs.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">C functions to be implemented in assembly, code here can be used to test incrementally</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Build</td>
+<td class="org-left">Enables <code>make test</code> and <code>make zip</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>QUESTIONS.txt.bk</code></td>
+<td class="org-left">Backup</td>
+<td class="org-left">Backup copy of the original file to help revert if needed</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>QUESTIONS.md5</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Checksum for answers in questions file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_quiz_filter</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Filter to extract answers from Questions file, used in testing</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_lab06.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for this exercise</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running scripts</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org660c0e1" class="outline-2">
+<h2 id="org660c0e1"><span class="section-number-2">3</span> x86-64 General Purpose Registers</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+The below diagram illustrates the General Purpose registers on 
+x86-64 CPUs and outlines some of their special purposes. It will be
+discussed in lecture and used by staff to help illustrate
+parts of the code studied in this lab.
+</p>
+
+<div class="org-center">
+
+<div id="orgf2338ff" class="figure">
+<p><img src="registers.png" alt="registers.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 1: </span>x86-64 General Purpose Registers used for integer operations and some other special purposes</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org63ec55a" class="outline-2">
+<h2 id="org63ec55a"><span class="section-number-2">4</span> Two Assembly Functions</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+The goal of the exercise is to complete working assembly code for two
+functions that feature in a previous HW.  These are as follows:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">int set_coins(int cents, coins_t *coins);
+// Calculate number of quarters, dimes, nickels, pennies of
+// change. Param cents is the number of cents, 0-99. Param coins is a
+// pointer to a structure which will have its fields set to the number
+// of coins of each type. Returns 0 on success.  If cents is out of
+// range, no values are changed and 1 is returned.
+
+int total_coins(coins_t coins);
+// Returns the total number of cents in the given coins struct.
+</pre>
+</div>
+
+<p>
+Implement these functions in the file <code>coins_funcs_asm.s</code>. This file
+contains documentation and partial implementations of the functions:
+complete the code in this file.
+</p>
+
+<p>
+To complete the assembly code, you will need to know about layout of
+the <code>coin_t</code> data type used in the functions.  This information is in
+the <code>coins.h</code> header file and is repeated below:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">typedef struct {     // Type for collections of coins
+  char quarters;
+  char dimes;
+  char nickels;
+  char pennies;
+} coins_t;
+// coint_t has the following memory layout and argument passing
+// properties:
+//
+// |          | Pointer | Packed | Packed |
+// |          |  Memory | Struct | Struct |
+// | Field    |  Offset | Arg#   | Bits   |
+// |----------+---------+--------+--------|
+// | quarters |      +0 | #1     | 0-7    |
+// | dimes    |      +1 | #1     | 8-15   |
+// | nickels  |      +2 | #1     | 16-23  |
+// | pennies  |      +3 | #1     | 24-31  |
+//
+// Since the entire struct is less that 64-bits, it is passed in a
+// single argument register on 64-bit systems when passed as a value
+// such as in the below total_coins() function.
+</pre>
+</div>
+<p>
+Importantly, there is information on
+</p>
+<ol class="org-ol">
+<li>Byte-level layout of a <code>coin_t</code> when it is stored in main
+memory, pertinent to <code>set_coins()</code></li>
+<li>Bit-level layout of <code>coin_t</code> when the struct is packed into an
+argument register, pertinent to <code>total_coins</code></li>
+</ol>
+<p>
+Study this information and examine the existing code to get a sense
+for how to complete the rest. <b>Ask questions</b> of discussion staff if you do
+understand some things that you see. 
+</p>
+
+<p>
+When the function are completed, the <code>coins_main</code> program can be used
+to experiment with them such as in the following examples.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt; make
+gcc -Wall -Werror -g  -o coins_main coins_main.c coins_funcs_asm.s
+
+&gt; ./coins_main 37
+37 cents is...
+1 quarters
+1 dimes
+0 nickels
+2 pennies
+which is 37 cents
+
+&gt; ./coins_main 91
+91 cents is...
+3 quarters
+1 dimes
+1 nickels
+1 pennies
+which is 91 cents
+
+&gt; ./coins_main 9
+9 cents is...
+0 quarters
+0 dimes
+1 nickels
+4 pennies
+which is 9 cents
+
+# Run the tests
+&gt; make test
+gcc -Wall -Werror -g  -o coins_main coins_main.c coins_funcs_asm.s
+./testy test_coins_main.org 
+============================================================
+== test_coins_main.org : coins_main Tests
+== Running 1 / 1 tests
+1)  All Tests            : ok
+============================================================
+RESULTS: 1 / 1 tests passed
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org6b0cf6f" class="outline-2">
+<h2 id="org6b0cf6f"><span class="section-number-2">5</span> <code>set_coins</code> Assembly Function</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-org128009f" class="outline-4">
+<h4 id="org128009f">Use of the Division Instruction</h4>
+<div class="outline-text-4" id="text-org128009f">
+<p>
+The main purpose of <code>set_coins</code> is to repeatedly divide the "cents" by
+different coin values to determine how many quarters, dimes, nickels,
+and pennies are required. Note the use of division instructions to
+accomplish this in the provided code:
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">        ## BLOCK B
+        movl    %edi,%eax       # eax now has cents
+        cqto                    # prep for division
+        movl    $25,%r8d
+        idivl   %r8d
+        movb    %al,0(%rsi)     # coins-&gt;quarters = cents / 25
+        movl    %edx,%eax       # cents = cents % 25
+        ...
+</pre>
+</div>
+<p>
+Take care to understand some unique quirks of the <code>idivl</code> instruction:
+it MUST have the number to be divided in the A-family register, <code>%eax</code>
+in this case and after completing, the <code>%eax / %edx</code> contain the
+quotient and remainder of the division respectively.  The last <code>movl</code>
+instruction sets up the next division to compute the number of dimes
+by moving the remaining cents into <code>%eax</code> again for another division.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd33d11a" class="outline-4">
+<h4 id="orgd33d11a">Setting Struct Fields in Memory</h4>
+<div class="outline-text-4" id="text-orgd33d11a">
+<p>
+Note the use of <code>movb</code> to move a single byte from the A-family
+register into main memory.  
+</p>
+<ul class="org-ul">
+<li><code>%al</code> is the lowest order byte in the <code>%rax / %eax</code> register.  The
+division by <code>25</code> is expected to produce a small number which can be
+represented in a single byte.</li>
+<li><code>movb</code> is chosen to move a single byte from the register into main
+memory. This also matches the size of the <code>quarters</code> field of
+<code>coins_t</code>: it is a <code>char</code> which is only 1 byte big.</li>
+<li>The location <code>0(%rsi)</code> is used as <code>%rsi</code> contains a pointer to a
+<code>coins_t</code> and the <code>quarters</code> field is 0 bytes offset from this
+pointer.  This is the type of assembly instruction that would be
+generated for C code like <code>coins-&gt;quarters = cents / 25;</code></li>
+</ul>
+<p>
+Copy this pattern to other locations noting that the fields for
+<code>dimes / nickels / pennies</code> are at different locations from the
+beginning of the <code>coins_t</code> struct so will require different move
+offsets such as <code>2(%rsi)</code>.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org8d82e1b" class="outline-2">
+<h2 id="org8d82e1b"><span class="section-number-2">6</span> <code>total_coins</code> Assembly Function</h2>
+<div class="outline-text-2" id="text-6">
+</div>
+<div id="outline-container-orga2ce684" class="outline-4">
+<h4 id="orga2ce684">Packed Struct Arguments</h4>
+<div class="outline-text-4" id="text-orga2ce684">
+<p>
+Consider the C prototype and assembly documentation given for the function:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">int total_coins(coins_t coins);
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-asm">.globl  total_coins
+total_coins:
+### args are
+### %rdi packed coin_t struct with struct fields in the following bit rangs
+###  {0-7: quarters, 8-15: dimes, 16-23-: nickels,  24-31: pennies}
+</pre>
+</div>
+<p>
+At the assembly level, an entire <code>coins_t</code> struct is passed into
+<code>total_coins()</code> as a single argument: each field of <code>quarters / dimes
+/ nickels / pennies</code> comes in via the <code>%rdi</code> register.
+</p>
+
+<p>
+To extract each field separately, a series of shift/mask operations
+are performed in assembly via the <code>sarq</code> (shift right) and <code>andq</code>
+(bitwise-and) instructions.  Each field is a single byte big so after
+a right shift, <code>andq</code>-ing onto a mask like <code>0xFF</code> will leave only a
+single field present such as in the provided code to extract the dimes
+field which is in bits 8-15 of the <code>%rdi</code> register:
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">        movq    %rdi,%rdx        # extract dimes: copy arg to work register
+        sarq    $8,%rdx          # move dimes to low order bits
+        andq    $0xFF,%rdx       # rdx = dimes
+</pre>
+</div>
+<p>
+Employ this pattern in the indicated location to complete the
+remainder of the function.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgef95bae" class="outline-2">
+<h2 id="orgef95bae"><span class="section-number-2">7</span> Debug Assembly Functions via <code>gdb</code></h2>
+<div class="outline-text-2" id="text-7">
+<p>
+Debugging assembly code is difficult as there are so many details to
+track. In addition, standard tactics such as use of <code>printf()</code> to show
+information are extremely difficult to employ: setting up function
+calls in assembly is more difficult and changes the state of the
+program quite a bit.  
+</p>
+
+<p>
+Rather, debuggers such as <code>gdb</code> are a more expedient option. Review
+information from the <a href="https://www-users.cse.umn.edu/~kauffman/tutorials/gdb.html#gdb-assembly">CSCI 2021 Quick Guide to gdb: The GNU Debugger</a>
+how to set up GDB to work on your assembly code. This includes tactics
+such as stepping, breaking, and importantly, showing the values in
+registers.
+</p>
+
+<p>
+The <code>coins_main</code> program can be used to easily test code in this way
+as in the following.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; make coins_main
+gcc -Wall -Werror -g  -o coins_main coins_main.c coins_funcs_asm.s coins_funcs.c
+
+&gt; ./coins_main 27
+27 cents is...
+1 quarters
+0 dimes
+0 nickels
+0 pennies
+which is 25 cents
+
+# looks wrong, fire up gdb to see what's happening in the set_coins() 
+# assembly code
+
+&gt;&gt; gdb -tui coins_main
+
+gdb&gt; layout regs                # turn on registers
+gdb&gt; break set_coins            # set breakpoint at misbehaving assembly function 
+gdb&gt; set args 27                # set commandline arg to 27 cents
+gdb&gt; run                        # run to breakpoint
+...
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org8aef8de" class="outline-2">
+<h2 id="org8aef8de"><span class="section-number-2">8</span> QUESTIONS.txt File Contents</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+Below are the contents of the <code>QUESTIONS.txt</code> file for the exercise.
+Follow the instructions in it to complete the QUIZ and CODE questions
+for the exercise.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                           _________________
+
+                            LAB06 QUESTIONS
+                           _________________
+
+
+Exercise Instructions
+=====================
+
+  Follow the instructions below to experiment with topics related to
+  this exercise.
+  - For sections marked QUIZ, fill in an (X) for the appropriate
+    response in this file. Use the command `make test-quiz' to see if
+    all of your answers are correct.
+  - For sections marked CODE, complete the code indicated. Use the
+    command `make test-code' to check if your code is complete.
+  - DO NOT CHANGE any parts of this file except the QUIZ sections as it
+    may interfere with the tests otherwise.
+  - If your `QUESTIONS.txt' file seems corrupted, restore it by copying
+    over the `QUESTIONS.txt.bk' backup file.
+  - When you complete the exercises, check your answers with `make test'
+    and if all is well, create a zip file with `make zip' and upload it
+    to Gradescope. Ensure that the Autograder there reflects your local
+    results.
+  - IF YOU WORK IN A GROUP only one member needs to submit and then add
+    the names of their group.
+
+
+QUIZ Coding Assembly Functions
+==============================
+
+  Answer the following questions on basic techniques for assembly
+  function coding.
+
+  How are the first 6 arguments to an assembly functions made available
+  within the function?
+  - ( ) Arguments are passed in registers; the first two are in the
+    `%rax' and `%rbx' registers
+  - ( ) Arguments are passed in registers; the first two are in the
+    `%rdi' and `%rsi' registers
+  - ( ) Arguments are in the stack; the first two are available using
+    the stack pointer as `0(%rsp)' and `8(%rsp)'
+  - ( ) Arguments are in the stack; the first two are available using
+    the stack pointer as `8(%rsp)' and `12(%rsp)'
+
+  Which of the following best describes how the kind of arguments passed
+  to the FIRST function `set_coins()' function in assembly?
+  - ( ) An integer in `%edi' and a pointer to a struct in `%rsi'; to
+    get/set fields of the struct syntax like `2(%rsi)' is used
+  - ( ) An integer in `%edi' and a packed struct in `%rsi'; to get/set
+    fields of the struct bitwise shifts and AND operations are used
+  - ( ) An integer in `%esi' and a pointer to a struct in `%rdi'; to
+    get/set fields of the struct syntax like `2(%rsi)' is used
+  - ( ) An integer in `%esi' and a packed struct in `%rdi'; to get/set
+    fields of the struct bitwise shifts and AND operations are used
+
+  Which of the following best describes how the kind of arguments passed
+  to the SECOND function `total_coins()' function in assembly?
+  - ( ) A pointer to a struct in `%rsi'; to get/set fields of the struct
+    syntax like `2(%rsi)' is used
+  - ( ) A packed struct in `%rsi'; to get/set fields of the struct
+    bitwise shifts and AND operations are used
+  - ( ) A pointer to a struct in `%rdi'; to get/set fields of the struct
+    syntax like `2(%rsi)' is used
+  - ( ) A packed struct in `%rdi'; to get/set fields of the struct
+    bitwise shifts and AND operations are used
+
+
+CODE coins_funcs_asm.s
+======================
+
+  Complete the two assembly functions in `coins_funcs_asm.s'. Note that
+  until both functions are complete, the tests will likely fail. Correct
+  output will appear something like the following:
+  ,----
+  | &gt;&gt; make
+  | gcc -Wall -Werror -g  -o coins_main coins_main.c coins_funcs_asm.s
+  | 
+  | &gt;&gt; ./coins_main 88
+  | set_coins():
+  | 88 cents is...
+  | 3 quarters
+  | 1 dimes
+  | 0 nickels
+  | 3 pennies
+  | total_coins():
+  | which is 88 cents
+  | 
+  `----
+
+
+  Make sure to complete both assembly functions and test them via
+  ,----
+  | make test
+  `----
+
+  before using
+  ,----
+  | make zip
+  `----
+
+  to create a zip to submit.
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org41bc08f" class="outline-2">
+<h2 id="org41bc08f"><span class="section-number-2">9</span> Submission</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
+how to upload your completed exercise zip to Gradescope.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-10-08 Wed 15:49 <br/> </i>
+</div>
+</body>
+</html>

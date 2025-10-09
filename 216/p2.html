@@ -1,0 +1,3427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-10-08 Wed 21:02 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMSC216 Project 2: Bit Ops, Debugging, Data Structures</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
+details > summary {
+padding: 2px 6px;
+font-family: Sans;
+font-size: 0.8em;
+width: fit-content;
+border-radius: 5px;
+background-color: #efefef;
+border: 1px solid black;
+cursor: pointer;
+}
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","[COMMANDO]>>","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+literal: ["[data/script.txt]>>","[data/script1.txt]>>","[data/script6.txt]>>"],
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+// hljs.COMMENT(/## /, /$/),     // hash-hash-ws for comment
+hljs.COMMENT(/##+/, /$/),     // or a sequence of hashes
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2025-10-08 Wed 21:02</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CMSC216 Project 2: Bit Ops, Debugging, Data Structures</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Fri 17-Oct-2025</b></li>
+<li><i>Approximately 4.0% of total grade</i></li>
+<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a></li>
+<li>Projects are <b>individual work</b>: no collaboration with other students
+is allowed. Seek help from course staff if you get stuck for too long.</li>
+</ul>
+<div id="outline-container-orgcd73881" class="outline-4">
+<h4 id="orgcd73881">CODE/TEST DISTRIBUTION: <a href="p2-code.zip">p2-code.zip</a></h4>
+</div>
+
+<div id="outline-container-orgc8a0944" class="outline-4">
+<h4 id="orgc8a0944">VIDEO OVERVIEW: <i>Not Yet Available</i></h4>
+</div>
+<div id="outline-container-org8c5187c" class="outline-4">
+<h4 id="org8c5187c">CHANGELOG: Empty</h4>
+</div>
+
+<div id="outline-container-orged941fe" class="outline-4">
+<h4 id="orged941fe"></h4>
+<div class="outline-text-4" id="text-orged941fe">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgfac5352">1. Introduction</a></li>
+<li><a href="#orgadd9178">2. Download Code and Setup</a></li>
+<li><a href="#orgc62d5bb">3. <b>Problem 1</b>: Battery Meter Simulation</a>
+<ul>
+<li><a href="#orga0b1fa5">3.1. Overview</a></li>
+<li><a href="#org7229865">3.2. <code>batt_update.c</code>: Updating the Display with User Code</a></li>
+<li><a href="#orgb969c88">3.3. Battery Meter Simulator</a></li>
+<li><a href="#org82bf4f7">3.4. Sample Runs of <code>batt_main</code></a></li>
+<li><a href="#org824279d">3.5. Problem 1 Grading Criteria</a></li>
+</ul>
+</li>
+<li><a href="#org061e086">4. <b>Problem 2</b>: Debugging the Puzzlebox</a>
+<ul>
+<li><a href="#org2c666fa">4.1. Overview</a></li>
+<li><a href="#orgc63b49d">4.2. <code>input.txt</code> Input File</a></li>
+<li><a href="#org9cefa17">4.3. <code>gdb</code> The GNU Debugger</a></li>
+<li><a href="#orgf3f47f8">4.4. Typical Cycle</a></li>
+<li><a href="#org827ada9">4.5. Kinds of Puzzles</a></li>
+<li><a href="#orge55cb40">4.6. Tests for <code>puzzlebox.c</code></a></li>
+</ul>
+</li>
+<li><a href="#orgdc2a423">5. <b>Problem 3</b>: Tree Sets in C</a>
+<ul>
+<li><a href="#orgcd60363">5.1. Overview</a></li>
+<li><a href="#org499ff18">5.2. <code>treeset_main</code> Demonstration</a></li>
+<li><a href="#org935b5d6">5.3. <code>tree_funcs.c</code>: tree functions</a></li>
+<li><a href="#org20b5a2b">5.4. <code>treeset_main.c</code>: main function / application</a></li>
+<li><a href="#org3a43f06">5.5. Grading Criteria for Problem 3</a></li>
+</ul>
+</li>
+<li><a href="#org3f13947">6. Project Submission</a>
+<ul>
+<li><a href="#org15ec37d">6.1. Submit to Gradescope</a></li>
+<li><a href="#org28ab13b">6.2. Late Policies</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgfac5352" class="outline-2">
+<h2 id="orgfac5352"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+This project addresses more advanced C programming topics each in its
+own problem.
+</p>
+
+<ol class="org-ol">
+<li><b>Bit-level operations</b> are common in C and systems programming.  This
+assignment features a problem in which shifting and bitwise AND/OR-ing
+are required to complete the requirements.</li>
+
+<li>Debugging is also a critical skill enabled by the <b>debugger</b>. The
+second problem in the assignment makes use of the GNU Debugger, <code>gdb</code>,
+to work through a puzzle program requiring specific inputs to pass its
+"phases".</li>
+
+<li>Data structures pervade computing and getting some practice with
+them in C will improve one's skill at pointers and memory usage
+while also giving a great appreciation for garbage collected
+languages.  A basic "set" application which tracks a collection of
+unique values is implemented, backed by a hash table.</li>
+</ol>
+</div>
+<div id="outline-container-org129e342" class="outline-4">
+<h4 id="org129e342">Difficulty Notice</h4>
+<div class="outline-text-4" id="text-org129e342">
+<p>
+Past students have found this content to be <b>more challenging than
+Project 1.</b>
+</p>
+
+<p>
+If you were pressed for time to finish Project 1, start this project
+<b>as early as possible</b>.  Most students have found the first two
+problems (bit manipulations and debugging) only mildly challenging but
+run out of time on the larger third problem.
+</p>
+<div class="org-center">
+<p>
+<b><i>You have been warned.</i></b>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgadd9178" class="outline-2">
+<h2 id="orgadd9178"><span class="section-number-2">2</span> <a id="orge7647e7"></a> Download Code and Setup</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Download the code pack linked at the top of the page. Unzip this which
+will create a project folder. Create new files in this
+folder. Ultimately you will re-zip this folder to submit it.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">State</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>batt_update.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Problem 1 create this file and write required function in it</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batt.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 header file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batt_main.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 main() function for battmeter simulation</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batt_examples.sh</code></td>
+<td class="org-left">Sample</td>
+<td class="org-left">Prints a variety of sample runs of <code>batt_main</code></td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_batt_update.c</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 functions tests for <code>batt_upate.c</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_batt_update.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 testing data file</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>puzzlebox.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2 Debugging problem</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>input.txt</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 2 Input for <code>puzzlebox</code>, fill this in</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>treeset_funcs.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Problem 3 functions to write</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>treeset_main.c</code></td>
+<td class="org-left">CREATE</td>
+<td class="org-left">Problem 3 main function to write</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>treeset.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 3 header file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_treeset.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 3 testing script</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>data/stranger-demo.script</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">Problem 3 sample input scripts to main program</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>data/1.tree</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">Problem 3 sample tree set save files</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>data/2.tree</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>data/big.tree</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#x2026;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Build file to compile all programs</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running script</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>gradescope-submit</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Script to allow submission from the command line</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="outline-container-org294caed" class="outline-4">
+<h4 id="org294caed">Makefile</h4>
+<div class="outline-text-4" id="text-org294caed">
+<p>
+As in the first assignment, a <code>Makefile</code> is provided as part of this
+project. The essential targets pertinent to each problem are described
+in those sections. The <code>Makefile</code> is equipped with a brief help
+listing:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; make help
+Typical usage is:
+  &gt; make                          # build all programs
+  &gt; make clean                    # remove all compiled items
+  &gt; make zip                      # create a zip file for submission
+  &gt; make prob1                    # built targets associated with problem 1
+  &gt; make test                     # run all tests
+  &gt; make test-prob2               # run test for problem 2
+  &gt; make test-prob2 testnum=5     # run problem 2 test #5 only
+  &gt; make update                   # download and install any updates to project files
+  &gt; make submit                   # upload submission to Gradescope
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org742e22d" class="outline-4">
+<h4 id="org742e22d">Automated Tests</h4>
+<div class="outline-text-4" id="text-org742e22d">
+<p>
+As in previous assignments, automated tests are provided and
+associated with problems. Each problem describes how to run tests
+associated with it. Generally this is done as before:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; make test-prob1
+gcc -Wall -Wno-comment -Werror -g  -c batt_main.c
+gcc -Wall -Wno-comment -Werror -g  -c batt_update.c
+...
+./testy -o md test_batt.org 
+===========================================================================
+== test_batt.org : Problem 1 test_batt_update and batt_main tests
+== Running 40 / 40 tests
+ 1) batt_from_ports_01      : ok
+ 2) batt_from_ports_02      : ok
+ 3) batt_from_ports_03      : ok
+...
+
+&gt;&gt; make test-prob2         # run "tests" associated with problem 2
+... 
+&gt;&gt; ./puzzlebox input.txt   # same as above: run puzzlebox to test answers
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc62d5bb" class="outline-2">
+<h2 id="orgc62d5bb"><span class="section-number-2">3</span> <b>Problem 1</b>: Battery Meter Simulation</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orga0b1fa5" class="outline-3">
+<h3 id="orga0b1fa5"><span class="section-number-3">3.1</span> Overview</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+You are tasked with writing code which will be run by a
+microcontroller in a digital battery meter.  The hardware has the
+following relevant features.
+</p>
+<ul class="org-ul">
+<li>A voltage sensor whose value can be accessed via a memory mapped
+port. In C this is presented as a global variable. Another port
+indicates whether the voltage should be displayed in Volts or
+Percentage of total battery capacity.</li>
+<li>A digital display with a port control port; altering a certain
+global variable will change the display to show information to a
+user of the battery meter.</li>
+<li>User code that you will need to write to update the display based on
+the sensor value.</li>
+<li>A simulator program with <code>Makefile</code> to test your code</li>
+</ul>
+<p>
+Each feature is discussed in subsequent sections.
+</p>
+</div>
+<div id="outline-container-org87e74e0" class="outline-4">
+<h4 id="org87e74e0">Voltage Sensor</h4>
+<div class="outline-text-4" id="text-org87e74e0">
+<p>
+A voltage sensor is attached to the battery meter and can be
+accessed via a C global variable. This is declared in the <code>batt.h</code>
+header file as follows.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">extern short BATT_VOLTAGE_PORT;
+// Sensor tied to the battery, provides a measure of voltage in units
+// of 0.0005 volts (half milli volts). The sensor can sense a wide
+// range of voltages including negatives but the batteries being
+// measured are Full when 3.8V (7600 sensor value) or above is read
+// and Empty when 3.0V (6000 sensor value) or lower is read.
+</pre>
+</div>
+<p>
+You do not need to define this variable as it is already there. You do
+NOT need to set this variable as it is automatically changed by the
+hardware.  Instead, you will need to access its value to determine
+various the voltage level of the attached battery.
+</p>
+
+<p>
+As indicated in the variable documentation, a common (though mildly
+unreliable) means of detecting how much charge is left in a battery is
+to read the voltage on the battery. The type of battery being measured
+in this case has a higher voltage when fully charged and its lower
+voltage continuously lowers as it discharges. Past a certain low
+voltage, the battery is unsafe to discharge and other hardware will
+disable the meter.  The figure below shows the voltage range and
+corresponding Capacity Percentage for the battery.
+</p>
+
+<div class="org-center">
+
+<div id="org41bbb18" class="figure">
+<p><img src="battery-voltage-v-percent2.png" alt="battery-voltage-v-percent2.png" style="max-width:80%;" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Relationship between Voltage and Percent full for batteries being measured by the meter.</p>
+</div>
+</div>
+
+<p>
+Notice the relationship between the Voltage which can be read directly
+and the Percent full which needs to be calculated from the voltage
+using the given formula:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">BattV = BattVoltPort / 2
+Batt% = (BattV - 3000) / 8
+</pre>
+</div>
+<p>
+Note the conversion is done in millivolts (0.001 volts) and the the
+voltage sensor is in units of half millivolts (0.0005 volts).
+</p>
+</div>
+</div>
+<div id="outline-container-orga65aaed" class="outline-4">
+<h4 id="orga65aaed">Voltage Display Mode</h4>
+<div class="outline-text-4" id="text-orga65aaed">
+<p>
+Another global variable exposes whether the user has pressed a button
+which toggles between displaying Volts or Percent full in the battery.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">extern unsigned char BATT_STATUS_PORT;
+// The bit at index 4 indicates whether display should be in Volts (0)
+// or Percent (1); the bit is tied to a user button which will toggle
+// it between modes. Other bits in this char may be set to indicate
+// the status of other parts of the meter and should be ignored: ONLY
+// BIT 4 BIT MATTERS. C code should only read this port. 
+</pre>
+</div>
+<p>
+As per the documentation, only the 4th bit should be used while other
+bits may be nonzero and should be ignored. Bitwise operations are
+useful for this.
+</p>
+</div>
+</div>
+<div id="outline-container-org97075f8" class="outline-4">
+<h4 id="org97075f8">Display Port</h4>
+<div class="outline-text-4" id="text-org97075f8">
+<p>
+The battery meter has a digital display which shows the remaining
+battery capacity. This display is controlled by a special memory area
+exposed as another global variable in C.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">extern int BATT_DISPLAY_PORT;
+// Controls battery meter display. Readable and writable. C code
+// should mostly write this port with a sequence of bits which will
+// light up specific elements of the LCD panel.
+</pre>
+</div>
+<p>
+While listed as in <code>int</code>, each bit of the is actually tied to part of
+the LCD display screen. When bits are set to 1, part of the
+display is lit up while 0 means it is not lit.
+</p>
+
+<p>
+The following diagrams show how various bit patterns will light up
+parts of the LCD display. Some bits correspond to parts of digits like
+"9" and "4" while others light up portions for the decimal place,
+Volt/Percent indicator, and bars of the leftmost visual level
+indicator. Above the display is the bit string which results in the
+elements on the display being turned on with "1" and off with a "0".
+</p>
+
+<p>
+Notice the following.
+</p>
+<ul class="org-ul">
+<li>The <code>BATT_DISPLAY_PORT</code> is a 32-bit integer but only some bits
+control the display</li>
+<li>29 bits are used to control the full battery display (bits 0-28)</li>
+<li>Bit 0 controls whether the '%' Percent indicator is shown</li>
+<li>Bit 1 controls whether the 'V' Voltage indicator is shown</li>
+<li>Bit 2 controls whether the decimal place is on (for Volts) or off
+(for Percent)</li>
+<li>Bits 3-9 control the rightmost digit</li>
+<li>Bits 10-16 control the middle digit</li>
+<li>Bits 17-23 control the left digit</li>
+<li>Each digit follows the same pattern: lowest bit controls the upper
+right LCD digit bar with each higher bit going in a clockwise
+fashion and the middle bar being controlled by the highest order bit</li>
+<li>Bits 24-28 control the 5 'bars' in the visual level indicator</li>
+<li>Bits 29-31 are unused</li>
+</ul>
+
+<div class="org-center">
+
+<div id="orge20a272" class="figure">
+<p><img src="battery-meter-top-first-vp-right.png" alt="battery-meter-top-first-vp-right.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Full examples of how the 29 bits of the <code>BATT_DISPLAY_PORT</code> turns on/off parts of the LCD display.  Each digit follows the same pattern of bit to bar correspondence. The lowest order (rightmost) bits control the percent, voltage, and decimal place indicator. Middle bits control "bar" of each digit starting with the top bar and proceeding around the outside clockwise with the final bit for each digit controlling the middle bar.  This pattern is followed for all 3 digits. The uppermost bits control the level indicator bars.</p>
+</div>
+</div>
+
+<p>
+For reference, each number to be displayed in the LCD battery meter
+follows the same patter of bits which is shown in the below diagram
+with the rightmost digit bit positions.
+</p>
+
+<div class="org-center">
+
+<div id="orgf3b09ce" class="figure">
+<p><img src="digital-digits-top-first.png" alt="digital-digits-top-first.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 3: </span>Pattern of bits for all 10 numerals and a few extra symbols</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org7229865" class="outline-3">
+<h3 id="org7229865"><span class="section-number-3">3.2</span> <code>batt_update.c</code>: Updating the Display with User Code</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Periodically the microcontroller will run code to adjust the battery
+display to show the current battery level.  This function is
+</p>
+<pre class="example">
+int batt_update();
+</pre>
+
+<p>
+and it will be your job to write it.
+</p>
+
+<p>
+Rather than write everything that needs to be done within
+<code>batt_update()</code>, several helper functions will be used to divide this
+task into several more manageable and testable chunks.
+</p>
+
+<p>
+These should all be written in <code>batt_update.c</code> and are as follows.
+</p>
+</div>
+<div id="outline-container-org9ea9196" class="outline-4">
+<h4 id="org9ea9196"><a id="org8a53892"></a> Converting Voltage Values to a Struct</h4>
+<div class="outline-text-4" id="text-org9ea9196">
+<div class="org-src-container">
+<pre class="src src-c">int set_batt_from_ports(batt_t *batt);
+// Uses the two global variables (ports) BATT_VOLTAGE_PORT and
+// BATT_STATUS_PORT to set the fields of the parameter 'batt'.  If
+// BATT_VOLTAGE_PORT is negative, then battery has been wired wrong;
+// no fields of 'batt' are changed and 1 is returned to indicate an
+// error.  Otherwise, sets fields of batt based on reading the voltage
+// value and converting to precent using the provided formula. Returns
+// 0 on a successful execution with no errors. This function DOES NOT
+// modify any global variables but may access global variables.
+//
+// CONSTRAINT: Avoids the use of the division operation as much as
+// possible. Makes use of shift operations in place of division where
+// possible.
+//
+// CONSTRAINT: Uses only integer operations. No floating point
+// operations are used as the target machine does not have a FPU.
+// 
+// CONSTRAINT: Limit the complexity of code as much as possible. Do
+// not use deeply nested conditional structures. Seek to make the code
+// as short, and simple as possible. Code longer than 40 lines may be
+// penalized for complexity.
+</pre>
+</div>
+
+<p>
+This function works with the <code>struct batt_t</code> defined in <code>batt.h</code> which
+has the following layout.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// Breaks battery stats down into constituent parts
+typedef struct{
+  short mlvolts;     // voltage read from port, units of 0.0005 Volts (milli Volts)
+  char  percent;     // percent full converted from voltage
+  char  mode;        // 1 for percent, 2 for volts, set based on bit 4 of BATT_STATUS_PORT
+} batt_t;
+</pre>
+</div>
+
+<p>
+The function <code>set_batt_from_ports()</code> will read the global variables
+mentioned above and fill in values for the struct fields of the
+parameter <code>batt</code>.  Keep the following in mind while implementing the
+function.
+</p>
+
+<ol class="org-ol">
+<li>Read the <code>BATT_VOLTAGE_PORT</code> value directly into the <code>volt</code> field.</li>
+<li><p>
+Use the previously mentioned conversion formula to convert Volts to
+Percentage to fill in the <code>percent</code> field of the struct.
+</p>
+<div class="org-src-container">
+<pre class="src src-text">   BattV = BattVoltPort / 2
+   Batt% = (BattV - 3000) / 8
+</pre>
+</div>
+<p>
+Note the CONSTRAINT that <b>division should be avoided as much as
+possible</b>. Employ shift operations in place of division where
+appropriate.
+</p></li>
+<li><b>Note also the constraint:</b> make use only of integer
+operations. <b>Do not use float or double</b> variables. This is
+emulates the somewhat common situation where simple microprocessors
+cannot perform floating point operations as they lack a <i>Floating
+Point Unit (FPU)</i>.</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org225feee" class="outline-4">
+<h4 id="org225feee">Setting Display from a <code>batt_t</code></h4>
+<div class="outline-text-4" id="text-org225feee">
+<div class="org-src-container">
+<pre class="src src-c">int set_display_from_batt(batt_t batt, int *display);
+// Alters the bits of integer pointed to by 'display' to reflect the
+// data in struct param 'batt'.  Does not assume any specific bit
+// pattern stored at 'display' and completely resets all bits in it on
+// successfully completing.  Selects either to show Volts (mode=1) or
+// Percent (mode=2). If Volts are displayed, only displays 3 digits
+// rounding the lowest digit up or down appropriate to the last digit.
+// Calculates each digit to display changes bits at 'display' to show
+// the volts/percent according to the pattern for each digit. Modifies
+// additional bits to show a decimal place for volts and a 'V' or '%'
+// indicator appropriate to the mode. In both modes, places bars in
+// the level display as indicated by percentage cutoffs in provided
+// diagrams. This function DOES NOT modify any global variables but
+// may access global variables. Always returns 0.
+// 
+// CONSTRAINT: Limit the complexity of code as much as possible. Do
+// not use deeply nested conditional structures. Seek to make the code
+// as short, and simple as possible. Code longer than 65 lines may be
+// penalized for complexity.
+</pre>
+</div>
+
+<p>
+Importantly, this function sets the bits in the integer pointed to by
+<code>display</code> which may or MAY NOT BE the global display variable.
+</p>
+
+<p>
+To properly set the display bits, <code>set_display_from_batt()</code> will need
+to do bit shifting along with bitwise operations to construct the
+correct bit pattern for the display.
+</p>
+
+<p>
+A good trick to use is to create a series of bit patterns that
+correspond to the various digits. For example, according to the
+diagrams above, the bit pattern for <code>9</code> is <code>0b1110111</code>.  If a <code>9</code>
+should appear on the display somewhere, this bit pattern should be
+shifted and combined with the existing bits in <code>display</code> so that a 9
+will show.  Creating similar constant <i>mask</i> patterns for each digit,
+the decimal place, the positions of the Voltage/Percent indicator, and
+the bars for the visual level indicator is a good way to make this
+problem manageable.
+</p>
+
+<p>
+A detailed explanation of one approach to the problem follows.
+</p>
+<ul class="org-ul">
+<li>Create an array of bit masks for each of the digits 0-9. The 0th
+element of the array contains a bit mask like <code>0b0111111</code> which
+represents the bits that should be set for a 0 digit, the 1th
+element of this array has a mask like <code>0b0000011</code> which are the bits
+to be set for a 1. There should be ten entries in this array in
+indices 0-9.</li>
+<li>Use modulo to determine the integer value for right, middle, and
+left digits for the display from <code>volts</code> or <code>percent</code>. Each digit
+should have a value from 0-9 and be Stored in its own variable.</li>
+<li>Start with an integer variable of 0 (all 0 bits).</li>
+<li>Use left digit variable to index into your array of masks to
+determine the bits that should be set for it and shift them over an
+appropriate amount combining with the existin display bits.</li>
+<li>Combining bits here is a bitwise operation of setting all bits that
+are one in the mask to 1 in the display variable. Use an appropriate
+bitwise operation to combine the bits, likely a bitwise OR.</li>
+<li>Repeat this process for the middle and right digits shifting left by
+appropriate to where the digits should line up.</li>
+<li>There are several special cases to consider such as leading 0's in a
+percent should be blanks so nothing should be drawn.</li>
+<li>Don't forget to set the additional bits like the decimal place, the
+V/% indicator, and the level bars for the visual indicator. These
+are low order bits (rightmost).</li>
+<li>Importantly <b>make code as simple as possible</b> as the target CPU has
+a limited amount of RAM and longer codes will occupy more RAM.
+<b>Avoid nesting conditionals</b> very deeply: <code>if/else if/else</code>
+structures are fine but nesting a conditional within this will be
+penalized.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgcf4c484" class="outline-4">
+<h4 id="orgcf4c484">Overall Update Function</h4>
+<div class="outline-text-4" id="text-orgcf4c484">
+<div class="org-src-container">
+<pre class="src src-c">int batt_update();
+// Called to update the battery meter display.  Makes use of
+// set_batt_from_ports() and set_display_from_batt() to access battery
+// voltage sensor then set the display. Checks these functions and if
+// they indicate an error, does NOT change the display.  If functions
+// succeed, modifies BATT_DISPLAY_PORT to show current battery level.
+// 
+// CONSTRAINT: Does not allocate any heap memory as malloc() is NOT
+// available on the target microcontroller.  Uses stack and global
+// memory only.
+</pre>
+</div>
+<p>
+This function makes use of the previous two functions and the global
+variables that correspond to the hardware to alter the display. It
+should be relatively short by making use of the previous functions.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb969c88" class="outline-3">
+<h3 id="orgb969c88"><span class="section-number-3">3.3</span> Battery Meter Simulator</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+While we do not have actual hardware with the features mentioned, a
+simulator for the system is in the provided files <code>batt_main.c /
+batt_sim.c</code>.  You do not need to modify or understand code in either
+file to complete the assignment though it will certainly expand you C
+skills to spend some time examining them.
+</p>
+
+<p>
+The <code>main()</code> function in <code>batt_main.c</code> accepts two command line
+arguments which are the value for the voltage sensor and whether
+to show Voltage or Percent for the battery. It will call your
+functions for this problem and show results for it.  You are
+encouraged to use this <code>main()</code> to test your code incrementally.
+</p>
+<ul class="org-ul">
+<li>Examine whether <code>set_batt_from_ports()</code> is correct based on the first
+part of output in <code>batt_main.c</code></li>
+<li>Once <code>set_batt_from_ports()</code> is complete, examine whether the output
+of <code>set_display_from_batt()</code> is correct based on the latter part
+of the output.</li>
+<li>Once both these functions are correct, examine whether
+<code>batt_update()</code> is correct based on the final part of the output
+of the <code>main()</code> function.</li>
+</ul>
+
+<p>
+Note that there are a variety of functions in the <code>batt_sim.c</code>
+which are used to simulate how the battery meter will display. This is
+also where the global variables like <code>BATT_DISPLAY_PORT</code> are
+defined.  However, you do not need to modify or even understand the
+code; it is only used to show how the display would look when the
+<code>BATT_DISPLAY_PORT</code> bits are set.
+</p>
+</div>
+</div>
+<div id="outline-container-org82bf4f7" class="outline-3">
+<h3 id="org82bf4f7"><span class="section-number-3">3.4</span> Sample Runs of <code>batt_main</code></h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+Below are samples generated by compiling and running the <code>main()</code>
+function in the <code>batt_main.c</code> file.  The code is compiled by using
+the provided <code>Makefile</code> to create the <code>batt_main</code> program.  It
+compiles the the functions you write in the file <code>batt_update.c</code> and
+combines them with functions in <code>batt_main.c</code>.
+</p>
+
+<pre class="example" id="orga6e24a0">
+&gt; make batt_main
+make[1]: Entering directory '/home/kauffman/Dropbox/teaching/216-F2025/projects/p2-bits-gdb-datastructs/solution-p2-216'
+gcc -Wall -Werror -g -fstack-protector-all  -c batt_main.c
+gcc -Wall -Werror -g -fstack-protector-all  -c batt_update.c
+gcc -Wall -Werror -g -fstack-protector-all  -c batt_sim.c
+gcc -Wall -Werror -g -fstack-protector-all  -o batt_main batt_main.o batt_update.o batt_sim.o
+make[1]: Leaving directory '/home/kauffman/Dropbox/teaching/216-F2025/projects/p2-bits-gdb-datastructs/solution-p2-216'
+
+==========Voltage FOR 7884==========
+&gt; ./batt_main 7884 V
+BATT_VOLTAGE_PORT set to: 7884
+BATT_STATUS_PORT  set to: 0x6F
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3942
+  .percent = 100
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 11111 1001111 1101111 1100110 110
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 11111 1001111 1101111 1100110 110
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+  ####   ####  #  #     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
+|#####|  ####   ####  ####  V  
+|#####|     #      #     #     
+|#####|     #      #     #     
++-----+  #### o ####     #     
+
+
+==========Percent FOR 7884==========
+&gt; ./batt_main 7884 P
+BATT_VOLTAGE_PORT set to: 7884
+BATT_STATUS_PORT  set to: 0x91
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3942
+  .percent = 100
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 11111 0000110 0111111 0111111 001
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 11111 0000110 0111111 0111111 001
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+     #   ####  ####     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #  %  
+|#####|     #   #  #  #  #     
++-----+     #   ####  ####     
+
+
+==========Voltage FOR 7600==========
+&gt; ./batt_main 7600 V
+BATT_VOLTAGE_PORT set to: 7600
+BATT_STATUS_PORT  set to: 0x6F
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3800
+  .percent = 100
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 11111 1001111 1111111 0111111 110
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 11111 1001111 1111111 0111111 110
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
+|#####|  ####   ####  #  #  V  
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
++-----+  #### o ####  ####     
+
+
+==========Percent FOR 7600==========
+&gt; ./batt_main 7600 P
+BATT_VOLTAGE_PORT set to: 7600
+BATT_STATUS_PORT  set to: 0x91
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3800
+  .percent = 100
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 11111 0000110 0111111 0111111 001
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 11111 0000110 0111111 0111111 001
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+     #   ####  ####     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #  %  
+|#####|     #   #  #  #  #     
++-----+     #   ####  ####     
+
+
+==========Voltage FOR 7530==========
+&gt; ./batt_main 7530 V
+BATT_VOLTAGE_PORT set to: 7530
+BATT_STATUS_PORT  set to: 0x6F
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3765
+  .percent = 95
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 11111 1001111 0000111 0000111 110
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 11111 1001111 0000111 0000111 110
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|#####|     #      #     #     
+|#####|     #      #     #     
+|#####|  ####      #     #  V  
+|#####|     #      #     #     
+|#####|     #      #     #     
++-----+  #### o    #     #     
+
+
+==========Percent FOR 7530==========
+&gt; ./batt_main 7530 P
+BATT_VOLTAGE_PORT set to: 7530
+BATT_STATUS_PORT  set to: 0x91
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3765
+  .percent = 95
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 11111 0000000 1101111 1101101 001
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 11111 0000000 1101111 1101101 001
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+         ####  ####     
+|#####|         #  #  #        
+|#####|         #  #  #        
+|#####|         ####  ####     
+|#####|            #     #  %  
+|#####|            #     #     
++-----+         ####  ####     
+
+
+==========Voltage FOR 7202==========
+&gt; ./batt_main 7202 V
+BATT_VOLTAGE_PORT set to: 7202
+BATT_STATUS_PORT  set to: 0x6F
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3601
+  .percent = 75
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 01111 1001111 1111101 0111111 110
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 01111 1001111 1111101 0111111 110
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|     |     #   #     #  #     
+|#####|     #   #     #  #     
+|#####|  ####   ####  #  #  V  
+|#####|     #   #  #  #  #     
+|#####|     #   #  #  #  #     
++-----+  #### o ####  ####     
+
+
+==========Percent FOR 7202==========
+&gt; ./batt_main 7202 P
+BATT_VOLTAGE_PORT set to: 7202
+BATT_STATUS_PORT  set to: 0x91
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3601
+  .percent = 75
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 01111 0000000 0000111 1101101 001
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 01111 0000000 0000111 1101101 001
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+         ####  ####     
+|     |            #  #        
+|#####|            #  #        
+|#####|            #  ####     
+|#####|            #     #  %  
+|#####|            #     #     
++-----+            #  ####     
+
+
+==========Voltage FOR 7026==========
+&gt; ./batt_main 7026 V
+BATT_VOLTAGE_PORT set to: 7026
+BATT_STATUS_PORT  set to: 0x6F
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3513
+  .percent = 64
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00111 1001111 1101101 0000110 110
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00111 1001111 1101101 0000110 110
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+  ####   ####     #     
+|     |     #   #        #     
+|     |     #   #        #     
+|#####|  ####   ####     #  V  
+|#####|     #      #     #     
+|#####|     #      #     #     
++-----+  #### o ####     #     
+
+
+==========Percent FOR 7026==========
+&gt; ./batt_main 7026 P
+BATT_VOLTAGE_PORT set to: 7026
+BATT_STATUS_PORT  set to: 0x91
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3513
+  .percent = 64
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00111 0000000 1111101 1100110 001
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00111 0000000 1111101 1100110 001
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+         ####  #  #     
+|     |         #     #  #     
+|     |         #     #  #     
+|#####|         ####  ####     
+|#####|         #  #     #  %  
+|#####|         #  #     #     
++-----+         ####     #     
+
+
+==========Voltage FOR 6666==========
+&gt; ./batt_main 6666 V
+BATT_VOLTAGE_PORT set to: 6666
+BATT_STATUS_PORT  set to: 0x6F
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3333
+  .percent = 41
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00011 1001111 1001111 1001111 110
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00011 1001111 1001111 1001111 110
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|     |     #      #     #     
+|     |     #      #     #     
+|     |  ####   ####  ####  V  
+|#####|     #      #     #     
+|#####|     #      #     #     
++-----+  #### o ####  ####     
+
+
+==========Percent FOR 6666==========
+&gt; ./batt_main 6666 P
+BATT_VOLTAGE_PORT set to: 6666
+BATT_STATUS_PORT  set to: 0x91
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3333
+  .percent = 41
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00011 0000000 1100110 0000110 001
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00011 0000000 1100110 0000110 001
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+         #  #     #     
+|     |         #  #     #     
+|     |         #  #     #     
+|     |         ####     #     
+|#####|            #     #  %  
+|#####|            #     #     
++-----+            #     #     
+
+
+==========Voltage FOR 6596==========
+&gt; ./batt_main 6596 V
+BATT_VOLTAGE_PORT set to: 6596
+BATT_STATUS_PORT  set to: 0x6F
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3298
+  .percent = 37
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00011 1001111 1001111 0111111 110
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00011 1001111 1001111 0111111 110
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|     |     #      #  #  #     
+|     |     #      #  #  #     
+|     |  ####   ####  #  #  V  
+|#####|     #      #  #  #     
+|#####|     #      #  #  #     
++-----+  #### o ####  ####     
+
+
+==========Percent FOR 6596==========
+&gt; ./batt_main 6596 P
+BATT_VOLTAGE_PORT set to: 6596
+BATT_STATUS_PORT  set to: 0x91
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3298
+  .percent = 37
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00011 0000000 1001111 0000111 001
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00011 0000000 1001111 0000111 001
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+         ####  ####     
+|     |            #     #     
+|     |            #     #     
+|     |         ####     #     
+|#####|            #     #  %  
+|#####|            #     #     
++-----+         ####     #     
+
+
+==========Voltage FOR 6214==========
+&gt; ./batt_main 6214 V
+BATT_VOLTAGE_PORT set to: 6214
+BATT_STATUS_PORT  set to: 0x6F
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3107
+  .percent = 13
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00001 1001111 0000110 0000110 110
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00001 1001111 0000110 0000110 110
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+  ####      #     #     
+|     |     #      #     #     
+|     |     #      #     #     
+|     |  ####      #     #  V  
+|     |     #      #     #     
+|#####|     #      #     #     
++-----+  #### o    #     #     
+
+
+==========Percent FOR 6214==========
+&gt; ./batt_main 6214 P
+BATT_VOLTAGE_PORT set to: 6214
+BATT_STATUS_PORT  set to: 0x91
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3107
+  .percent = 13
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00001 0000000 0000110 1001111 001
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00001 0000000 0000110 1001111 001
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+            #  ####     
+|     |            #     #     
+|     |            #     #     
+|     |            #  ####     
+|     |            #     #  %  
+|#####|            #     #     
++-----+            #  ####     
+
+
+==========Voltage FOR 6148==========
+&gt; ./batt_main 6148 V
+BATT_VOLTAGE_PORT set to: 6148
+BATT_STATUS_PORT  set to: 0x6F
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3074
+  .percent = 9
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00001 1001111 0111111 0000111 110
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00001 1001111 0111111 0000111 110
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|     |     #   #  #     #     
+|     |     #   #  #     #     
+|     |  ####   #  #     #  V  
+|     |     #   #  #     #     
+|#####|     #   #  #     #     
++-----+  #### o ####     #     
+
+
+==========Percent FOR 6148==========
+&gt; ./batt_main 6148 P
+BATT_VOLTAGE_PORT set to: 6148
+BATT_STATUS_PORT  set to: 0x91
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3074
+  .percent = 9
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00001 0000000 0000000 1101111 001
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00001 0000000 0000000 1101111 001
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+               ####     
+|     |               #  #     
+|     |               #  #     
+|     |               ####     
+|     |                  #  %  
+|#####|                  #     
++-----+               ####     
+
+
+==========Voltage FOR 6030==========
+&gt; ./batt_main 6030 V
+BATT_VOLTAGE_PORT set to: 6030
+BATT_STATUS_PORT  set to: 0x6F
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3015
+  .percent = 1
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00000 1001111 0111111 1011011 110
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00000 1001111 0111111 1011011 110
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|     |     #   #  #     #     
+|     |     #   #  #     #     
+|     |  ####   #  #  ####  V  
+|     |     #   #  #  #        
+|     |     #   #  #  #        
++-----+  #### o ####  ####     
+
+
+==========Percent FOR 6030==========
+&gt; ./batt_main 6030 P
+BATT_VOLTAGE_PORT set to: 6030
+BATT_STATUS_PORT  set to: 0x91
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3015
+  .percent = 1
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00000 0000000 0000000 0000110 001
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00000 0000000 0000000 0000110 001
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+                  #     
+|     |                  #     
+|     |                  #     
+|     |                  #     
+|     |                  #  %  
+|     |                  #     
++-----+                  #     
+
+
+==========Voltage FOR 6000==========
+&gt; ./batt_main 6000 V
+BATT_VOLTAGE_PORT set to: 6000
+BATT_STATUS_PORT  set to: 0x6F
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3000
+  .percent = 0
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00000 1001111 0111111 0111111 110
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00000 1001111 0111111 0111111 110
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|     |     #   #  #  #  #     
+|     |     #   #  #  #  #     
+|     |  ####   #  #  #  #  V  
+|     |     #   #  #  #  #     
+|     |     #   #  #  #  #     
++-----+  #### o ####  ####     
+
+
+==========Percent FOR 6000==========
+&gt; ./batt_main 6000 P
+BATT_VOLTAGE_PORT set to: 6000
+BATT_STATUS_PORT  set to: 0x91
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 3000
+  .percent = 0
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00000 0000000 0000000 0111111 001
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00000 0000000 0000000 0111111 001
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+               ####     
+|     |               #  #     
+|     |               #  #     
+|     |               #  #     
+|     |               #  #  %  
+|     |               #  #     
++-----+               ####     
+
+
+==========Voltage FOR 5964==========
+&gt; ./batt_main 5964 V
+BATT_VOLTAGE_PORT set to: 5964
+BATT_STATUS_PORT  set to: 0x6F
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 2982
+  .percent = 0
+  .mode    = 2
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00000 1011011 1101111 1111111 110
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00000 1011011 1101111 1111111 110
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+  ####   ####  ####     
+|     |     #   #  #  #  #     
+|     |     #   #  #  #  #     
+|     |  ####   ####  ####  V  
+|     |  #         #  #  #     
+|     |  #         #  #  #     
++-----+  #### o ####  ####     
+
+
+==========Percent FOR 5964==========
+&gt; ./batt_main 5964 P
+BATT_VOLTAGE_PORT set to: 5964
+BATT_STATUS_PORT  set to: 0x91
+
+result = set_batt_from_ports( &amp;batt );
+result: 0
+batt = {
+  .mlvolts = 2982
+  .percent = 0
+  .mode    = 1
+}
+
+result = set_display_from_batt(batt, &amp;display);
+result: 0
+display is
+bits:  000 00000 0000000 0000000 0111111 001
+index:  29    24      17      10       3   0
+
+result = batt_update();
+result: 0
+BATT_DISPLAY_PORT is
+bits:  000 00000 0000000 0000000 0111111 001
+index:  29    24      17      10       3   0
+
+Battery Meter Display:
++-^^^-+               ####     
+|     |               #  #     
+|     |               #  #     
+|     |               #  #     
+|     |               #  #  %  
+|     |               #  #     
++-----+               ####     
+
+
+</pre>
+</div>
+</div>
+<div id="outline-container-org824279d" class="outline-3 grading 30">
+<h3 id="org824279d"><span class="section-number-3">3.5</span> Problem 1 Grading Criteria&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="30">30</span></span></h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+Both sets automated tests can be run with <code>make test-p1</code>
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">AUTOMATED TESTS</td>
+</tr>
+
+<tr>
+<td class="org-right">20</td>
+<td class="org-left"><code>make test-prob1</code> runs 20 tests from <code>test_batt_update.org</code> for correctness</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">1 point per test</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>test_batt_update.c</code> provides tests for functions in <code>batt_update.c</code> and tests for</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>batt_main</code> are built into the testing script</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">MANUAL INSPECTION of <code>batt_update.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left"><code>set_batt_from_ports()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear effort to do error checking of out of bounds values.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear flow to how each field of <code>batt</code> is calculated.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Correctly setting fields of <code>batt</code> via pointer dereference or arrow operator.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Uses shift operations in place of division wherever possible.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><b>Adherence to constraints: no floats, no float math ops, no deeply nested conditionals</b></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Short, simple code that is no more than 40 lines long.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Avoid nested conditionals wherever possible</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Make the code short as you will soon need to <b>translate it to assembly code</b></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><code>set_display_from_batt()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear code that calculates digits to be displayed</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of bit masks corresponding to digits to be displayed</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of bitwise operators to shift bits appropriately</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of bitwise operators to combine shifted digit bits</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear code to turn on decimal place, V/% indicator, and level indicators</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear dereference/set of the integer pointed to by the <code>display</code> parameter</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><b>Adherence to constraints: no floats, no math float ops, no deeply nested conditionals</b></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Short, simple code that is no more than 65 lines long.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Avoid nested conditionals wherever possible</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Make the code short as you will soon need to <b>translate it to assembly code</b></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left"><code>batt_update()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of the global variables like <code>BATT_DISPLAY_PORT</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Does not re-define these variables</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of previous two functions</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Error checking on sensor values</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">No use of <code>malloc()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Short, simple code.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="outline-container-org061e086" class="outline-2">
+<h2 id="org061e086"><span class="section-number-2">4</span> <b>Problem 2</b>: Debugging the Puzzlebox</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org2c666fa" class="outline-3">
+<h3 id="org2c666fa"><span class="section-number-3">4.1</span> Overview</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+The file <code>puzzlebox.c</code> contains source code that reads inputs from a
+file named on the command line. If the inputs are correct, points are
+awarded. If inputs are incorrect, error messages are printed.  
+</p>
+
+<p>
+The <code>puzzlebox</code> is arranged into a series of <i>phases</i> each of which
+has some points associated with it.
+</p>
+<ul class="org-ul">
+<li>Not all phases must be completed to get full credit but the phases
+must done in order.</li>
+<li>Each phase reads inputs from the file provided on the command line
+and performs calculations on them to see if they are "correct"
+according to various criteria</li>
+<li>The very first input is your <b>internet ID</b> like <code>kauf0095</code> (first
+part of your UMN email address).  This input is used to add
+randomness to the puzzle so that <b>your answers will be different
+from most other students</b>. You must you use your own internet ID.</li>
+</ul>
+
+<p>
+<b>The purpose of this problem is get familiar with using a debugger.</b>
+This is a powerful tool that pauses programs, allows internal values
+to be printed and code to be stepped through line by line.  It is
+nearly essential to use as the code in <code>puzzlebox</code> is intentionally
+convoluted in places. Being able to pause execution and print values
+at various points make it <b>much easier</b> to solve the puzzles.
+</p>
+</div>
+</div>
+<div id="outline-container-orgc63b49d" class="outline-3">
+<h3 id="orgc63b49d"><span class="section-number-3">4.2</span> <code>input.txt</code> Input File</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Name your input file <code>input.txt</code> and write in it your
+<b>DirectoryID</b>. Your DrectoryID is the first part of your UMD email
+address as in <code>kauf0095@terpmail.umd.edu</code> would use <code>kauf0095</code> as the
+first token.
+</p>
+
+<p>
+The first phase in Puzzlebox expects numbers as input so write
+something like <code>1 2 3</code>. Then compile and run the <code>puzzlebox</code> program
+on it.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; make puzzlebox                             # compile puzzlebox
+gcc -Wall -g -c puzzlebox.c
+gcc -Wall -g -o puzzlebox puzzlebox.o
+
+&gt;&gt; cat input.txt                              # show contents of input.txt
+bartsim8 1 2 3
+
+&gt;&gt; puzzlebox input.txt
+========================================
+PROBLEM 2: Puzzlebox
+UserID 'KAUF0095' accepted: hash value = 1936486779
+PHASE 1: A puzzle you say? Challenge accepted!
+
+Ah ah ah, you didn't say the magic word...
+Failure: Double debugger burger, order up!
+
+RESULTS: 0 / 30 points
+</pre>
+</div>
+
+<p>
+This is automated with the <code>Makefile</code> target <code>make test-prob2</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; make test-prob2                       # compile/run puzzlebox with input.txt
+gcc -Wall -g -c puzzlebox.c
+gcc -Wall -g -o puzzlebox puzzlebox.o
+puzzlebox input.txt
+========================================
+PROBLEM 2: Puzzlebox
+UserID 'KAUF0095' accepted: hash value = 1936486779
+PHASE 1: A puzzle you say? Challenge accepted!
+
+Ah ah ah, you didn't say the magic word...
+Failure: Double debugger burger, order up!
+
+RESULTS: 0 / 30 points
+</pre>
+</div>
+
+<p>
+These initial forays are not positive (0 / 30 points) but the real
+meat of the problem is in examining the source code and determining
+inputs for <code>input.txt</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-org9cefa17" class="outline-3">
+<h3 id="org9cefa17"><span class="section-number-3">4.3</span> <code>gdb</code> The GNU Debugger</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+You will definitely need to use a debugger to solve the puzzlebox and
+<code>gdb</code> is the quintessential debugger associated with our compiler
+<code>gcc</code>.  It is installed by default on all lab machines and is an easy
+install on must Linux machines.
+</p>
+
+<p>
+For a quick overview of GDB, here are some resources
+</p>
+<ul class="org-ul">
+<li><a href="https://kauffman77.github.io/tutorials/gdb.html">Quick Guide to gdb: The GNU Debugger</a>: Page describing how
+to start the debugger, a sample session using <code>puzzlebox</code>, an
+overview of the most common commands.</li>
+<li><a href="https://www.youtube.com/watch?v%3DPorfLSr3DDI">CppCon 2015: Greg Law "Give me 15 minutes &amp; I'll change your view of
+GDB"</a>: Video giving basic overview of how to run <code>gdb</code> on simple
+programs with an emphasis on differences between "normal" mode and
+TUI mode</li>
+<li><a href="http://www.yolinux.com/TUTORIALS/GDB-Commands.html">GNU GDB Debugger Command Cheat Sheet</a>: Extensive list of commands</li>
+<li><a href="https://sourceware.org/gdb/current/onlinedocs/gdb/">Debugging with GDB</a>: Official manual for <code>gdb</code></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgf3f47f8" class="outline-3">
+<h3 id="orgf3f47f8"><span class="section-number-3">4.4</span> Typical Cycle</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+A typical cycle of working on <code>puzzlebox</code> will be the following.
+</p>
+<ul class="org-ul">
+<li><p>
+Start the debugger with puzzlebox
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">  &gt;&gt; gdb -tui ./puzzlebox
+</pre>
+</div></li>
+<li><p>
+Set the arguments array to <code>input.txt</code>
+</p>
+<pre class="example">
+set args input.txt
+</pre></li>
+<li><p>
+Set a breakpoint at a phase like <code>phase03</code>
+</p>
+<pre class="example">
+break phase03
+</pre></li>
+<li><p>
+Run the program
+</p>
+<pre class="example">
+run
+</pre></li>
+<li><p>
+Do some stepping / nexting
+</p>
+<pre class="example">
+step
+next
+</pre></li>
+<li><p>
+Print some variables
+</p>
+<pre class="example">
+print normal_val
+print/x val_in_hex
+print/t val_in_binary
+</pre></li>
+<li>Make some changes to <code>input.txt</code> in a different window</li>
+<li><p>
+Re-run the program to see if things have changed favorably
+</p>
+<pre class="example">
+kill
+run
+</pre></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org827ada9" class="outline-3">
+<h3 id="org827ada9"><span class="section-number-3">4.5</span> Kinds of Puzzles</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+The puzzles presented in the different phases make use of a variety of
+C program techniques which we have or will discuss including.
+</p>
+<ul class="org-ul">
+<li>Bit-wise operations and their use in place of arithmetic</li>
+<li>String and character array manipulations</li>
+<li>Interpreting bits as one of several kinds of things (integer, float,
+character) through pointers and unions</li>
+<li>More extensive C control structures like <code>goto</code> and labels</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orge55cb40" class="outline-3 grading 30">
+<h3 id="orge55cb40"><span class="section-number-3">4.6</span> Tests for <code>puzzlebox.c</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="30">30</span></span></h3>
+<div class="outline-text-3" id="text-4-6">
+<p>
+<code>puzzlebox.c</code> itself reports how many points one can earn at the end
+of its execution.
+</p>
+
+<p>
+Currently there are <b>40 points available but 30 points is considered
+full credit.</b> 
+</p>
+
+<p>
+If any additional points are earned, they will be counted as <b>Makeup
+Credit for Projects</b> to make up for credit lost on past or future
+projects.  Your total score on All Projects cannot exceed 100% so any
+points beyond will simply be dropped.
+</p>
+
+<p>
+<b>Run the following command to 'test' puzzlebox</b>:
+</p>
+<pre class="example">
+make test-prob2
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdc2a423" class="outline-2">
+<h2 id="orgdc2a423"><span class="section-number-2">5</span> <b>Problem 3</b>: Tree Sets in C</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-orgcd60363" class="outline-3">
+<h3 id="orgcd60363"><span class="section-number-3">5.1</span> Overview</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+This problem implements a rudimentary "tree set" application in C
+along with a program that uses it.  The architecture is similar to a
+past lab problem involving linked lists so reviewing that code can
+provide some insight.
+</p>
+
+<p>
+Basic Binary Search Trees are covered in most introductory data
+structure classes such as CMSC131 and 132.  A "Tree Set" is simply a
+binary search tree which only allows one copy of each unique item in
+it. When searching for an item, the organization of the binary search
+tree is exploited to speed up the location of the time or determine
+that it is not present.  When adding items, duplicate items are
+discarded without altering the tree.
+</p>
+
+<p>
+<b>HINT</b>: The basic structure of this application closely mirrors a
+Discussion Exercise dealing with linked lists. An efficient way to get
+started on the project is to copy over some of the structure from that
+exercise for use here.
+</p>
+</div>
+</div>
+<div id="outline-container-org499ff18" class="outline-3">
+<h3 id="org499ff18"><span class="section-number-3">5.2</span> <code>treeset_main</code> Demonstration</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+The intent of this problem is to develop a small application which
+behaves as the following demo indicates. Study this demo carefully as
+it illustrates most of the capabilities of the application with each
+capability being checked by automated tests.
+</p>
+
+<div class="org-src-container">
+<pre class="src src--n">&gt; make treeset_main  # build with Makefile
+gcc -Wall -Wno-comment -Werror -g  -c treeset_main.c
+gcc -Wall -Wno-comment -Werror -g  -c treeset_funcs.c
+gcc -Wall -Wno-comment -Werror -g  -o treeset_main treeset_main.o treeset_funcs.o
+
+&gt; ./treeset_main                   # run main program
+Treeset Main
+Commands:
+  print:          shows contents of the tree in reverse sorted order
+  size:           prints the number of nodes currently in the tree
+  clear:          eliminates all elements from the tree
+  quit:           exit the program
+  add &lt;name&gt;:     inserts the given string into the tree, duplicates ignored
+  find &lt;name&gt;:    prints FOUND if the name is in the tree, NOT FOUND otherwise
+  preorder:       prints contents of the tree in pre-order which is how it will be saved
+  save &lt;file&gt;:    writes the contents of the tree in pre-order to the given file
+  load &lt;file&gt;:    clears the current tree and loads the one in the given file
+TS#&gt; add Lucas                  # add some data
+TS#&gt; add Mike
+TS#&gt; add Dustin
+TS#&gt; add Will
+TS#&gt; add El
+TS#&gt; size                       # show number of nodes in the tree
+5 nodes
+TS#&gt; print                      # print tree, reverse order, indentation indicates depth/structure
+    Will                        # root-&gt;right-&gt;right
+  Mike                          # root-&gt;right
+Lucas                           # root
+    El                          # root-&gt;left-&gt;right
+  Dustin                        # root-&gt;left
+TS#&gt; preorder                   # show tree in preorder, root first
+Lucas                           # root
+  Dustin                        # root-&gt;left
+    El                          # root
+  Mike                          # root-&gt;right
+    Will                        # root-&gt;right-&gt;right
+TS#&gt; find Mike
+FOUND
+TS#&gt; find Nancy
+NOT FOUND
+TS#&gt; add Nancy                  # add Nancy
+TS#&gt; size                       # show size of tree has increased
+6 nodes
+TS#&gt; print
+    Will
+      Nancy                     # root-&gt;right-&gt;right-&gt;left
+  Mike
+Lucas
+    El
+  Dustin
+TS#&gt; add Mike                   # adding duplicates is ignored
+duplicate element ignored
+TS#&gt; add El
+duplicate element ignored
+TS#&gt; find Max
+NOT FOUND
+TS#&gt; add Max                    # add max
+TS#&gt; print
+    Will
+      Nancy
+  Mike                          # root-&gt;right-&gt;left
+    Max
+Lucas
+    El
+  Dustin
+TS#&gt; find Max
+FOUND
+TS#&gt; find Barb
+NOT FOUND
+TS#&gt; add Barb                   # add Barb
+TS#&gt; print
+    Will
+      Nancy
+  Mike
+    Max
+Lucas
+    El
+  Dustin
+    Barb                        # root-&gt;left-&gt;left
+
+TS#&gt; save stranger.tree         # save tree into named file
+TS#&gt; clear                      # eliminate tree
+TS#&gt; size                       # show tree is empty now
+0 nodes
+TS#&gt; print                      # print shows nothing: empty tree
+TS#&gt; add Demigorgon             # add Demigorgon to empty
+TS#&gt; print
+Demigorgon                      # root
+TS#&gt; load stranger.tree         # clear tree, replace with contents of file
+TS#&gt; size                       # 8 nodes loaded from file
+8 nodes
+TS#&gt; print                      # tree is restored
+    Will
+      Nancy
+  Mike
+    Max
+Lucas
+    El
+  Dustin
+    Barb
+TS#&gt; add Jim                    # add Jim
+TS#&gt; add Joyce                  # add Joyce
+TS#&gt; print                      # show tree
+    Will
+      Nancy
+  Mike
+    Max
+Lucas                           # root
+        Joyce                   # root-&gt;left-&gt;right-&gt;right-&gt;right
+      Jim                       # root-&gt;left-&gt;right-&gt;right
+    El
+  Dustin
+    Barb
+TS#&gt; load stranger.tree         # clear and reload from file
+TS#&gt; print                      # restored to previous contents
+    Will
+      Nancy
+  Mike
+    Max
+Lucas
+    El
+  Dustin
+    Barb
+TS#&gt; quit                       # quit program
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org935b5d6" class="outline-3">
+<h3 id="org935b5d6"><span class="section-number-3">5.3</span> <code>tree_funcs.c</code>: tree functions</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+Examine the header file <code>tree.h</code> to see the two C structs which will
+be used to represent trees.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// Nodes that go into the tree
+typedef struct tsnode {
+  char name[128];               // tsnode data
+  struct tsnode *left;          // left branch,  NULL if not present
+  struct tsnode *right;         // right branch, NULL if not present
+} tsnode_t;
+
+// Type of tree itself
+typedef struct {
+  tsnode_t *root;               // root of tree, NULL if tree empty
+  int size;                     // number of tsnodes in tree
+} treeset_t;
+</pre>
+</div>
+
+<p>
+The tree set will track unique strings each of which is stored in a
+<code>tsnode_t</code> struct.  The <code>treeset_t</code> struct tracks the root of the tree
+along with the total number of nodes in the tree.
+</p>
+
+<p>
+Standard operations are supported by the tree.
+</p>
+<ul class="org-ul">
+<li>Inserting item</li>
+<li>Searching for an element</li>
+<li>Clearing the entire tree</li>
+<li>Printing tree in reverse sorted order which is handy for visualization</li>
+<li>Printing the tree in pre-order (root first, then children) which is
+useful for saving and loading to files</li>
+<li>Saving and loading from a file</li>
+</ul>
+
+<p>
+These are broken down into the following C functions which you will
+need to implement in the file <code>treeset_funcs.c</code>.  Keep in mind that to
+honor the binary search tree property (left less than / right greater
+than), you will need to use the return values of <code>strcmp()</code> function
+calls as string data is present in the tree.
+</p>
+
+<p>
+Below is an outline of the functions that should be present in
+<code>treeset_funcs.c</code> along with guiding documentation about how to
+implement them.
+</p>
+<pre class="example" id="org0760a4b">
+// treeset_funcs.c: Provides a small library of functions that operate
+// on binary search trees of unique strings.
+
+#include "treeset.h"
+
+void treeset_init(treeset_t *tree);
+// Initialize the given tree to have a null root and have size 0.
+
+int treeset_insert(treeset_t *tree, char name[]);
+// Inserts given name into a binary search tree. Uses an ITERATIVE
+// (loopy) approach to insertion which starts a pointer at the root of
+// the tree and changes its location until the correct insertion point
+// is located. Returns 1 if a new tsnode is created and 0 if a duplicate
+// name is found in the tree already in which case the name is not
+// added.
+
+int treeset_find(treeset_t *tree, char name[]);
+// Determines whether name is present or not in the tree using binary
+// search. Returns 1 if name is present and 0 otherwise. Uses an
+// ITERATIVE (loopy) approach which starts a pointer at the root of
+// the tree and changes it until the search name is found or
+// determined to not be in the tree.
+
+void treeset_clear(treeset_t *tree);
+// Eliminate all tsnodes in the tree setting its contents empty. Uses
+// recursive tsnode_remove_all() function to free memory for all tsnodes.
+
+void tsnode_remove_all(tsnode_t *cur);
+// Recursive helper function which visits all tsnodes in a tree and
+// frees the memory associated with them. This requires a post-order
+// traversal: visit left tree, visit right tree, then free the cur
+// tsnode.
+
+void treeset_print_revorder(treeset_t *tree);
+// Prints the elements of the tree in reverse order at differing
+// levels of indentation which shows all elements and their structure
+// in the tree. Visually the tree can be rotated clockwise to see its
+// structure.
+
+void tsnode_print_revorder(tsnode_t *cur, int indent);
+// Recursive helper function which prints all elements in the tree
+// rooted at cur in reverse order: traverses right subtree, prints cur
+// tsnode, traverses left tree. Parameter 'indent' indicates how far to
+// indent (2 spaces per indent level).
+
+void treeset_print_preorder(treeset_t *tree);
+// Print all the data in the tree in pre-order with indentation
+// corresponding to the depth of the tree. Makes use of
+// tsnode_write_preorder() for this.
+
+void treeset_save(treeset_t *tree, char *fname);
+// Saves the tree by opening the named file, writing the tree to it in
+// pre-order with tsnode_write_preorder(), then closing the file.
+
+void tsnode_write_preorder(tsnode_t *cur, FILE *out, int depth);
+// Recursive helper function which writes/prints the tree in pre-order
+// to the given open file handle. The parameter depth gives how far to
+// indent tsnode data, 2 spaces per unit depth. Depth increases by 1 on
+// each recursive call. The function prints the cur tsnode data,
+// traverses the left tree, then traverses the right tree.
+
+int treeset_load(treeset_t *tree, char *fname );
+// Clears the given tree then loads new elements to it from the
+// named. Repeated calls to treeset_insert() are used to add strings read
+// from the file.  If the tree is stored in pre-order in the file, its
+// exact structure will be restored.  Returns 1 if the tree is loaded
+// successfully and 0 if opening the named file fails in which case no
+// changes should be made to the tree.
+
+</pre>
+</div>
+</div>
+<div id="outline-container-org20b5a2b" class="outline-3">
+<h3 id="org20b5a2b"><span class="section-number-3">5.4</span> <code>treeset_main.c</code>: main function / application</h3>
+<div class="outline-text-3" id="text-5-4">
+<p>
+In <code>treeset_main.c</code> implement an interactive program which allows
+users to type commands to manipulate a treeset. Most of these commands
+will dispatch directly to an analogous function in
+<code>treeset_funcs.c</code>. Example: the <code>add</code> command will likely call
+<code>treeset_insert()</code>.
+</p>
+
+<p>
+Once the files <code>treeset_funcs.c</code> and <code>treeset_main.c</code> are present, the
+provided <code>Makefile</code> should compile the complete program and allow it
+to run as follows:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; make treeset_main
+gcc -Wall -Wno-comment -Werror -g  -c treeset_main.c
+gcc -Wall -Wno-comment -Werror -g  -c treeset_funcs.c
+gcc -Wall -Wno-comment -Werror -g  -o treeset_main treeset_main.o treeset_funcs.o
+
+&gt;&gt; ./treeset_main
+Treeset Main
+Commands:
+  print:          shows contents of the tree in reverse sorted order
+  size:           prints the number of nodes currently in the tree
+  clear:          eliminates all elements from the tree
+  quit:           exit the program
+  add &lt;name&gt;:     inserts the given string into the tree, duplicates ignored
+  find &lt;name&gt;:    prints FOUND if the name is in the tree, NOT FOUND otherwise
+  preorder:       prints contents of the tree in pre-order which is how it will be saved
+  save &lt;file&gt;:    writes the contents of the tree in pre-order to the given file
+  load &lt;file&gt;:    clears the current tree and loads the one in the given file
+TS#&gt; 
+</pre>
+</div>
+
+
+<p>
+The following sections provide some implementation details.
+</p>
+</div>
+<div id="outline-container-org40dd95a" class="outline-4">
+<h4 id="org40dd95a">Read commands, Execute</h4>
+<div class="outline-text-4" id="text-org40dd95a">
+<p>
+The basic flow of <code>tree_main.c</code> follows a provided lab exercise code
+closely.
+</p>
+<ul class="org-ul">
+<li>Create a tree variable, likely on the stack as a local variable in
+<code>main()</code></li>
+<li>Start a loop that terminates when the user exits or there is no more
+input</li>
+<li>Each time the user enters a string, read it and check for one of the
+built-in commands</li>
+<li>On identifying the command, potentially read another string if
+needed (commands like <code>add</code> and <code>find</code>)</li>
+<li>Call an appropriate <code>treeset_XXX()</code> function to handle the command</li>
+</ul>
+
+<p>
+Note that each of the commands that is mentioned such as <code>print</code> and
+<code>clear</code> will need to do a specific action in the program so likely a
+large <code>if/else if/else</code> control structure will feature in most
+implementations. 
+</p>
+</div>
+</div>
+<div id="outline-container-org1f0d72d" class="outline-4">
+<h4 id="org1f0d72d">Supported Commands</h4>
+<div class="outline-text-4" id="text-org1f0d72d">
+<p>
+To indicate to users of the program the supported commands, use the
+following code to print out the initial option list.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">  printf("Treeset Main\n");
+  printf("Commands:\n");
+  printf("  print:          shows contents of the tree in reverse sorted order\n");
+  printf("  size:           prints the number of nodes currently in the tree\n");
+  printf("  clear:          eliminates all elements from the tree\n");
+  printf("  quit:           exit the program\n");
+  printf("  add &lt;name&gt;:     inserts the given string into the tree, duplicates ignored\n");
+  printf("  find &lt;name&gt;:    prints FOUND if the name is in the tree, NOT FOUND otherwise\n");
+  printf("  preorder:       prints contents of the tree in pre-order which is how it will be saved\n");
+  printf("  save &lt;file&gt;:    writes the contents of the tree in pre-order to the given file\n");
+  printf("  load &lt;file&gt;:    clears the current tree and loads the one in the given file\n");
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orga60d76a" class="outline-4">
+<h4 id="orga60d76a"><a id="org2ac775b"></a> Paths to Tree files for Saving and Loading</h4>
+<div class="outline-text-4" id="text-orga60d76a">
+<p>
+Saving and loading trees involves writing to files. The names
+associated with the files must be specified as a <i>path</i> so that if
+tree files are to be saved or loaded from subdirectories, include this
+as part of the path.  For example, the <code>stranger.tree</code> file is
+provided in the <code>data/</code> directory so can be loaded as follows.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; ./treeset_main
+...
+TS#&gt; load data/stranger.tree              # load the provided tree from a subdirectory
+TS#&gt; print                                # show in reverse sorted order
+    Will
+      Nancy
+  Mike
+    Max
+Lucas
+    El
+  Dustin
+    Barb
+TS#&gt; preorder                             # show in preorder
+Lucas
+  Dustin
+    Barb
+    El
+  Mike
+    Max
+    Will
+      Nancy
+TS#&gt; add Demigorgon                       # add more data
+TS#&gt; save cur.tree                        # save in the current directory
+TS#&gt; clear
+TS#&gt; print
+TS#&gt; load cur.tree                        # load cur.tree from the current directory
+TS#&gt; print
+    Will
+      Nancy
+  Mike
+    Max
+Lucas
+    El
+  Dustin
+      Demigorgon                          # added prior to the save
+    Barb
+TS#&gt; add Jim                              # add more data
+TS#&gt; save data/other.tree                 # save to a new file in data/ subdir
+TS#&gt; quit
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org66b18e0" class="outline-4">
+<h4 id="org66b18e0">Command Echoing: <code>-echo</code> option to <code>treeset_main</code></h4>
+<div class="outline-text-4" id="text-org66b18e0">
+<p>
+Some users may wish to "script" this the tree program. An example of
+such a script is in <code>data/stranger-demo.script</code> which looks like a lot of
+user commands:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">add Lucas
+add Mike
+add Dustin
+add Will
+add El
+size
+print
+preorder
+find Mike
+find Nancy
+add Nancy
+size
+print
+add Mike
+add El
+find Max
+add Max
+print
+find Max
+find Barb
+add Barb
+print
+save stranger.tree
+clear
+size
+print
+add Demigorgon
+print
+load stranger.tree
+size
+print
+add Jim
+add Joyce
+print
+load stranger.tree
+print
+quit
+</pre>
+</div>
+
+<p>
+This can be fed directly to the program without needing type it using
+Unix pipes as per the following:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt; cat data/tree-demo.script | ./treeset_main -echo
+</pre>
+</div>
+<p>
+Notice the use of a command line argument for <code>treeset_main</code>: the <code>-echo</code>
+option. This is a REQUIRED feature which prints commands typed by
+users to the screen. To implement this, do the following.
+</p>
+
+<p>
+Model the structure of command echoing after what is shown in related
+Lab work.
+</p>
+<ul class="org-ul">
+<li>Use a variable in <code>main()</code> to indicate whether command echoing is on
+or off; set it to off by default</li>
+<li><p>
+Check when <code>main()</code> starts  whether command line argument 1 is set
+to <code>-echo</code> in which case turn echoing on. A condition like the
+following is useful.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">  if(argc &gt; 1 &amp;&amp; strcmp("-echo",argv[1])==0) {
+</pre>
+</div></li>
+<li>Each command should check for echoing and print the command being
+run along with any arguments to it. This technique is demonstrated
+in related lab work.</li>
+</ul>
+
+<p>
+It will take some work to get the exact placement of echoes correct
+but will ultimately lead to nice results that involve LITTLE typing
+like the example below.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; cat data/stranger-demo.script | ./treeset_main -echo
+Treeset Main
+Commands:
+  print:          shows contents of the tree in reverse sorted order
+  size:           prints the number of nodes currently in the tree
+  clear:          eliminates all elements from the tree
+  quit:           exit the program
+  add &lt;name&gt;:     inserts the given string into the tree, duplicates ignored
+  find &lt;name&gt;:    prints FOUND if the name is in the tree, NOT FOUND otherwise
+  preorder:       prints contents of the tree in pre-order which is how it will be saved
+  save &lt;file&gt;:    writes the contents of the tree in pre-order to the given file
+  load &lt;file&gt;:    clears the current tree and loads the one in the given file
+TS#&gt; add Lucas
+TS#&gt; add Mike
+TS#&gt; add Dustin
+TS#&gt; add Will
+TS#&gt; add El
+TS#&gt; size
+5 nodes
+TS#&gt; print
+    Will
+  Mike
+Lucas
+    El
+  Dustin
+TS#&gt; preorder
+Lucas
+  Dustin
+    El
+  Mike
+    Will
+TS#&gt; find Mike
+FOUND
+TS#&gt; find Nancy
+NOT FOUND
+TS#&gt; add Nancy
+TS#&gt; size
+6 nodes
+TS#&gt; print
+    Will
+      Nancy
+  Mike
+Lucas
+    El
+  Dustin
+TS#&gt; add Mike
+duplicate element ignored
+TS#&gt; add El
+duplicate element ignored
+TS#&gt; find Max
+NOT FOUND
+TS#&gt; add Max
+TS#&gt; print
+    Will
+      Nancy
+  Mike
+    Max
+Lucas
+    El
+  Dustin
+TS#&gt; find Max
+FOUND
+TS#&gt; find Barb
+NOT FOUND
+TS#&gt; add Barb
+TS#&gt; print
+    Will
+      Nancy
+  Mike
+    Max
+Lucas
+    El
+  Dustin
+    Barb
+TS#&gt; save stranger.tree
+TS#&gt; clear
+TS#&gt; size
+0 nodes
+TS#&gt; print
+TS#&gt; add Demigorgon
+TS#&gt; print
+Demigorgon
+TS#&gt; load stranger.tree
+TS#&gt; size
+8 nodes
+TS#&gt; print
+    Will
+      Nancy
+  Mike
+    Max
+Lucas
+    El
+  Dustin
+    Barb
+TS#&gt; add Jim
+TS#&gt; add Joyce
+TS#&gt; print
+    Will
+      Nancy
+  Mike
+    Max
+Lucas
+        Joyce
+      Jim
+    El
+  Dustin
+    Barb
+TS#&gt; load stranger.tree
+TS#&gt; print
+    Will
+      Nancy
+  Mike
+    Max
+Lucas
+    El
+  Dustin
+    Barb
+TS#&gt; quit
+&gt;&gt; 
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org3a43f06" class="outline-3 grading 40">
+<h3 id="org3a43f06"><span class="section-number-3">5.5</span> Grading Criteria for Problem 3&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="40">40</span></span></h3>
+<div class="outline-text-3" id="text-5-5">
+<p>
+The following criteria will be checked in this problem.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">AUTOMATED TESTS via <code>make test-prob3</code></td>
+</tr>
+
+<tr>
+<td class="org-right">20</td>
+<td class="org-left"><code>test_treeset.org</code> tests</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">20 tests for <code>treeset_main</code> executable, exercises functions in <code>treeset_funcs.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">All tests run under Valgrind</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">1 point per test passed</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Code compiles without warnings (<code>make clean</code> followed by <code>make test-prob3</code> gives no errors/warnings)</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">NOTE: run individual tests via <code>make test-prob3 testnum=4</code></td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">MANUAL INSPECTION</td>
+</tr>
+
+<tr>
+<td class="org-right">15</td>
+<td class="org-left"><code>treeset_funcs.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear commenting indicating intent during functions such as "go left" or "item found"</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear use of binary search principle: left for less, right for greater, use of string functions for this</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Effective use of iteration in insert and find functions</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Effective use of recursion in printing and removal functions</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Relatively short functions: nothing needs to be too long (40 lines tops)</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Correct order of visiting/freeing in <code>tsnode_remove_all()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of one general <code>tsnode_write_preorder</code> in both <code>treeset_print_preorder()</code> and <code>treeset_save()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Tree cleared prior to load in <code>treeset_load()</code> to prevent memory leaks</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">File closed after finished during saving and loading</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><code>treeset_main.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Comments indicating what high-level command is being implemented in each part of <code>main</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear structure of main loop, reading commands, selecting actions</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of string functions to identify which command to execute</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Easy to recognize reading of additional arguments for <code>add/find/etc.</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear efforts to honor <code>-echo</code> option and echo commands</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear effort to free all memory prior to exit by clearing tree on exit</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="outline-container-org3f13947" class="outline-2">
+<h2 id="org3f13947"><span class="section-number-2">6</span> Project Submission</h2>
+<div class="outline-text-2" id="text-6">
+</div>
+<div id="outline-container-org15ec37d" class="outline-3">
+<h3 id="org15ec37d"><span class="section-number-3">6.1</span> <a id="org6fedd19"></a> Submit to Gradescope</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+Refer to the Project 1 instructions and adapt them for details of how
+to submit to Gradescope. In summary they are
+</p>
+
+<ol class="org-ol">
+<li>Type <code>make zip</code> in the project directory to create <code>p2-complete.zip</code></li>
+<li>Log into <a href="https://www.gradescope.com/">Gradescope</a>, select Project 2, and upload <code>p2-complete.zip</code></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org28ab13b" class="outline-3">
+<h3 id="org28ab13b"><span class="section-number-3">6.2</span> Late Policies</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+You may wish to review the policy on late project submission which
+will cost 1 Engagement Point per day late. <b>No projects will be
+accepted more than 48 hours after the deadline.</b>
+</p>
+
+
+<p>
+<a href="https://www.cs.umd.edu/~profk/216/syllabus.html#late-submission">https://www.cs.umd.edu/~profk/216/syllabus.html#late-submission</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-10-08 Wed 21:02 <br/> </i>
+</div>
+</body>
+</html>
