@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-10-17 Fri 16:54 -->
+<!-- 2025-10-18 Sat 10:50 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Lab07: Stack Space and Function Calls</title>
@@ -492,7 +492,7 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2025-10-17 Fri 16:54</i>
+<i>Last Updated: 2025-10-18 Sat 10:50</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Lab07: Stack Space and Function Calls</h1>
@@ -500,41 +500,41 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 <li><b>Due: 11:59pm Sun 26-Oct-2025</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
-<div id="outline-container-org3d1ecd4" class="outline-4">
-<h4 id="org3d1ecd4">CODE DISTRIBUTION: <a href="lab07-code.zip">lab07-code.zip</a></h4>
+<div id="outline-container-orgbbca98f" class="outline-4">
+<h4 id="orgbbca98f">CODE DISTRIBUTION: <a href="lab07-code.zip">lab07-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org53ed00a" class="outline-4">
-<h4 id="org53ed00a">CHANGELOG: Empty</h4>
+<div id="outline-container-org1223683" class="outline-4">
+<h4 id="org1223683">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-org7326513" class="outline-4">
-<h4 id="org7326513"></h4>
-<div class="outline-text-4" id="text-org7326513">
+<div id="outline-container-orgabc704e" class="outline-4">
+<h4 id="orgabc704e"></h4>
+<div class="outline-text-4" id="text-orgabc704e">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orge1be0e5">1. Rationale</a></li>
-<li><a href="#orgdb44b71">2. Codepack</a></li>
-<li><a href="#org02cc2b3">3. Using Stack Space for Local Variables</a>
+<li><a href="#orgc193286">1. Rationale</a></li>
+<li><a href="#orge554fc4">2. Codepack</a></li>
+<li><a href="#orgf6b2d1c">3. Using Stack Space for Local Variables</a>
 <ul>
-<li><a href="#org4f4e1cd">Locals in the Stack</a></li>
-<li><a href="#org6ec1a05">Creating Stack Space</a></li>
-<li><a href="#orge6b1cef">Address of Locals in Assembly</a></li>
-<li><a href="#org8781911">Calls to <code>printf()</code></a></li>
-<li><a href="#org2eafc79">Grow/Shrink the Stack</a></li>
+<li><a href="#orge6f5253">Locals in the Stack</a></li>
+<li><a href="#org3311098">Creating Stack Space</a></li>
+<li><a href="#orgc01d553">Address of Locals in Assembly</a></li>
+<li><a href="#orgd1b0540">Calls to <code>printf()</code></a></li>
+<li><a href="#orgfb83767">Grow/Shrink the Stack</a></li>
 </ul>
 </li>
-<li><a href="#orgd8de10d">4. QUESTIONS.txt File Contents</a></li>
-<li><a href="#orgf4c49ad">5. Submission</a></li>
+<li><a href="#org97b6db0">4. QUESTIONS.txt File Contents</a></li>
+<li><a href="#orgbb054eb">5. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orge1be0e5" class="outline-2">
-<h2 id="orge1be0e5"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orgc193286" class="outline-2">
+<h2 id="orgc193286"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Debuggers must inherently deal with binary programs as this is what
@@ -567,9 +567,9 @@ require main memory addresses and passes those addresses to another
 function.
 </p>
 </div>
-<div id="outline-container-org5a871e7" class="outline-4">
-<h4 id="org5a871e7">Associated Reading / Preparation</h4>
-<div class="outline-text-4" id="text-org5a871e7">
+<div id="outline-container-org64046a4" class="outline-4">
+<h4 id="org64046a4">Associated Reading / Preparation</h4>
+<div class="outline-text-4" id="text-org64046a4">
 <p>
 PROBLEM 1
 </p>
@@ -589,9 +589,9 @@ local variables and passing arguments to functions.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgc893402" class="outline-4">
-<h4 id="orgc893402">Grading Policy</h4>
-<div class="outline-text-4" id="text-orgc893402">
+<div id="outline-container-orgd02a02c" class="outline-4">
+<h4 id="orgd02a02c">Grading Policy</h4>
+<div class="outline-text-4" id="text-orgd02a02c">
 <p>
 Credit for this exercise is earned by completing the code/asnwers here
 and submitting a Zip of the work to Gradescope. Students are
@@ -613,8 +613,8 @@ See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies 
 </div>
 </div>
 </div>
-<div id="outline-container-orgdb44b71" class="outline-2">
-<h2 id="orgdb44b71"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orge554fc4" class="outline-2">
+<h2 id="orge554fc4"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -738,8 +738,8 @@ The codepack for the HW contains the following files:
 </table>
 </div>
 </div>
-<div id="outline-container-org02cc2b3" class="outline-2">
-<h2 id="org02cc2b3"><span class="section-number-2">3</span> Using Stack Space for Local Variables</h2>
+<div id="outline-container-orgf6b2d1c" class="outline-2">
+<h2 id="orgf6b2d1c"><span class="section-number-2">3</span> Using Stack Space for Local Variables</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 This exercise focuses on situations where local variables in a function
@@ -763,9 +763,9 @@ sections in <code>main()</code> according to the provided outline. Pay careful
 attention to the local variable layout table.</li>
 </ol>
 </div>
-<div id="outline-container-org4f4e1cd" class="outline-3">
-<h3 id="org4f4e1cd">Locals in the Stack</h3>
-<div class="outline-text-3" id="text-org4f4e1cd">
+<div id="outline-container-orge6f5253" class="outline-3">
+<h3 id="orge6f5253">Locals in the Stack</h3>
+<div class="outline-text-3" id="text-orge6f5253">
 <p>
 Demoers will examine code such as the following fragment from <code>main()</code>
 in <code>order2_c.c</code>:
@@ -793,9 +793,9 @@ the locations of all the local variables in the stack.
 </p>
 </div>
 </div>
-<div id="outline-container-org6ec1a05" class="outline-3">
-<h3 id="org6ec1a05">Creating Stack Space</h3>
-<div class="outline-text-3" id="text-org6ec1a05">
+<div id="outline-container-org3311098" class="outline-3">
+<h3 id="org3311098">Creating Stack Space</h3>
+<div class="outline-text-3" id="text-org3311098">
 <p>
 <b>Prior to writing into the stack the stack pointer <code>%rsp</code> must be
 adjusted to grow the stack.</b> Growing the stack is usually done via one
@@ -834,13 +834,13 @@ returning as <code>%rsp</code> must point at the function's return address when
 <p>
 <b>Insert assembly code</b> near the top of <code>main()</code> in the provided
 assembly files to grow the stack by an appropriate amount of
-space. This is discussed further in the <a href="#orgad4c672">Grow/Shrink</a> section later.
+space. This is discussed further in the <a href="#orga1d954c">Grow/Shrink</a> section later.
 </p>
 </div>
 </div>
-<div id="outline-container-orge6b1cef" class="outline-3">
-<h3 id="orge6b1cef">Address of Locals in Assembly</h3>
-<div class="outline-text-3" id="text-orge6b1cef">
+<div id="outline-container-orgc01d553" class="outline-3">
+<h3 id="orgc01d553">Address of Locals in Assembly</h3>
+<div class="outline-text-3" id="text-orgc01d553">
 <p>
 The preceding assembly fragment is followed by additional instructions
 which equate to the address-of <code>&amp;x</code> operator in C to load the stack
@@ -871,9 +871,9 @@ main memory rather than registers.
 </p>
 </div>
 </div>
-<div id="outline-container-org8781911" class="outline-3">
-<h3 id="org8781911">Calls to <code>printf()</code></h3>
-<div class="outline-text-3" id="text-org8781911">
+<div id="outline-container-orgd1b0540" class="outline-3">
+<h3 id="orgd1b0540">Calls to <code>printf()</code></h3>
+<div class="outline-text-3" id="text-orgd1b0540">
 <p>
 Similarly, there are several blocks that need to be COMPLETE'd to call
 <code>printf()</code> to show the results of the ordering. Use the template
@@ -893,9 +893,9 @@ study the linking process.</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-org2eafc79" class="outline-3">
-<h3 id="org2eafc79"><a id="orgad4c672"></a> Grow/Shrink the Stack</h3>
-<div class="outline-text-3" id="text-org2eafc79">
+<div id="outline-container-orgfb83767" class="outline-3">
+<h3 id="orgfb83767"><a id="orga1d954c"></a> Grow/Shrink the Stack</h3>
+<div class="outline-text-3" id="text-orgfb83767">
 <p>
 <b>IMPORTANT</b>: 
 </p>
@@ -939,8 +939,8 @@ locals and (2) prepares for a function call later on in execution.</li>
 </div>
 </div>
 </div>
-<div id="outline-container-orgd8de10d" class="outline-2">
-<h2 id="orgd8de10d"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org97b6db0" class="outline-2">
+<h2 id="org97b6db0"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the exercise.
@@ -1377,8 +1377,8 @@ Alignment
 </div>
 </div>
 </div>
-<div id="outline-container-orgf4c49ad" class="outline-2">
-<h2 id="orgf4c49ad"><span class="section-number-2">5</span> Submission</h2>
+<div id="outline-container-orgbb054eb" class="outline-2">
+<h2 id="orgbb054eb"><span class="section-number-2">5</span> Submission</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -1388,7 +1388,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-10-17 Fri 16:54 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-10-18 Sat 10:50 <br/> </i>
 </div>
 </body>
 </html>
