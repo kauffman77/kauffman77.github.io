@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-10-24 Fri 14:23 -->
+<!-- 2025-10-24 Fri 14:31 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Lab08: Caller / Callee Register Usage</title>
@@ -344,7 +344,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2025-10-24 Fri 14:23</i>
+<i>Last Updated: 2025-10-24 Fri 14:31</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Lab08: Caller / Callee Register Usage</h1>
@@ -352,44 +352,34 @@ text-align: justify;
 <li><b>Due: 11:59pm Mon 07-Apr-2025</b></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
-<div id="outline-container-org09d984d" class="outline-4">
-<h4 id="org09d984d">CODE DISTRIBUTION: <a href="lab08-code.zip">lab08-code.zip</a></h4>
+<div id="outline-container-org8d247fa" class="outline-4">
+<h4 id="org8d247fa">CODE DISTRIBUTION: <a href="lab08-code.zip">lab08-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org0ae7ba5" class="outline-4">
-<h4 id="org0ae7ba5">CHANGELOG: Empty</h4>
+<div id="outline-container-org7f4b204" class="outline-4">
+<h4 id="org7f4b204">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-org2dd1896" class="outline-4">
-<h4 id="org2dd1896"></h4>
-<div class="outline-text-4" id="text-org2dd1896">
+<div id="outline-container-org1c970e4" class="outline-4">
+<h4 id="org1c970e4"></h4>
+<div class="outline-text-4" id="text-org1c970e4">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org8b79c1d">1. Rationale</a></li>
-<li><a href="#orgf37fc13">2. Codepack</a></li>
-<li><a href="#org7858235">3. Register Reference</a></li>
-<li><a href="#orge5653ef">4. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org3ecfcc3">5. Submission</a></li>
+<li><a href="#orgbf4473f">1. Rationale</a></li>
+<li><a href="#org9c61937">2. Codepack</a></li>
+<li><a href="#orge248d79">3. Register Reference</a></li>
+<li><a href="#orgca253e4">4. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org40d989b">5. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org8b79c1d" class="outline-2">
-<h2 id="org8b79c1d"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orgbf4473f" class="outline-2">
+<h2 id="orgbf4473f"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
-<p>
-Modern compilers create programs that will run independent of the
-memory location into which they are placed by the operating
-system. This is a boon to security, but requires some special
-techniques at the assembly level to access global variables. This lab
-demonstrates "RIP-relative" addressing for globals (known more widely
-as Program Counter Relative / PC-Relative addressing) and the syntax
-used to access global variables.
-</p>
-
 <p>
 Processor registers are shared among all programs and functions within
 individual programs. Registers on most modern processor architectures are
@@ -402,10 +392,20 @@ often leading to mistakes when the programmer is unacquainted with the
 conventions. This lab demonstrates some of those common errors
 practices how to safely use and restore Callee-save registers.
 </p>
+
+<p>
+Modern compilers create programs that will run independent of the
+memory location into which they are placed by the operating
+system. This is a boon to security, but requires some special
+techniques at the assembly level to access global variables. This lab
+demonstrates "RIP-relative" addressing for globals (known more widely
+as Program Counter Relative / PC-Relative addressing) and the syntax
+used to access global variables.
+</p>
 </div>
-<div id="outline-container-org944380c" class="outline-4">
-<h4 id="org944380c">Associated Reading / Preparation</h4>
-<div class="outline-text-4" id="text-org944380c">
+<div id="outline-container-org3ea163f" class="outline-4">
+<h4 id="org3ea163f">Associated Reading / Preparation</h4>
+<div class="outline-text-4" id="text-org3ea163f">
 <p>
 Bryant and O'Hallaron Ch 3.7 on assembly procedure call conventions in
 x86-64. Specifically, Ch 3.7.5 discusses caller/callee save
@@ -413,9 +413,9 @@ conventions and the code associated with them.
 </p>
 </div>
 </div>
-<div id="outline-container-org0489882" class="outline-4">
-<h4 id="org0489882">Grading Policy</h4>
-<div class="outline-text-4" id="text-org0489882">
+<div id="outline-container-org13502bc" class="outline-4">
+<h4 id="org13502bc">Grading Policy</h4>
+<div class="outline-text-4" id="text-org13502bc">
 <p>
 Credit for this exercise is earned by completing the code/asnwers here
 and submitting a Zip of the work to Gradescope. Students are
@@ -437,8 +437,8 @@ See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies 
 </div>
 </div>
 </div>
-<div id="outline-container-orgf37fc13" class="outline-2">
-<h2 id="orgf37fc13"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org9c61937" class="outline-2">
+<h2 id="org9c61937"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the lab contains the following files:
@@ -475,69 +475,69 @@ The codepack for the lab contains the following files:
 </tr>
 
 <tr>
-<td class="org-left"><code>prime_funcs.c</code></td>
-<td class="org-left">Study</td>
-<td class="org-left">PROBLEM 1: C version of functions to implement in assembly</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>prime_fucns_asm.s</code></td>
-<td class="org-left">EDIT</td>
-<td class="org-left">PROBLEM 1: Assembly functions to study and complete</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>prime_main.c</code></td>
-<td class="org-left">Provided</td>
-<td class="org-left">PROBLEM 1: Main function which calls C/Assembly functions</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>prime_fact.c</code></td>
-<td class="org-left">Optional</td>
-<td class="org-left">PROBLEM 1: Main function which calls an optional Assembly function</td>
-</tr>
-
-<tr>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
 <td class="org-left"><code>add2strs_asm_a.s</code></td>
 <td class="org-left">Study</td>
-<td class="org-left">PROBLEM 2: A version, broken code to study to understand errors</td>
+<td class="org-left">PROBLEM 1: A version, broken code to study to understand errors</td>
 </tr>
 
 <tr>
 <td class="org-left"><code>add2strs_asm_b.s</code></td>
 <td class="org-left">Study</td>
-<td class="org-left">PROBLEM 2: B version, broken code to study to understand errors</td>
+<td class="org-left">PROBLEM 1: B version, broken code to study to understand errors</td>
 </tr>
 
 <tr>
 <td class="org-left"><code>add2strs_asm_c.s</code></td>
 <td class="org-left">EDIT</td>
-<td class="org-left">PROBLEM 2: C version, complete this version with correct code</td>
+<td class="org-left">PROBLEM 1: C version, complete this version with correct code</td>
 </tr>
 
 <tr>
 <td class="org-left"><code>add2strs_reference.c</code></td>
 <td class="org-left">Provided</td>
-<td class="org-left">PROBLEM 2: C reference implementation of assembly code to write</td>
+<td class="org-left">PROBLEM 1: C reference implementation of assembly code to write</td>
 </tr>
 
 <tr>
 <td class="org-left"><code>add2strs_main.c</code></td>
 <td class="org-left">Provided</td>
-<td class="org-left">PROBLEM 2: Main and utility function calling assembly function</td>
+<td class="org-left">PROBLEM 1: Main and utility function calling assembly function</td>
 </tr>
 
 <tr>
 <td class="org-left"><code>add2strs_clobber_asm.s</code></td>
 <td class="org-left">Provided</td>
-<td class="org-left">PROBLEM 2: Assembly code used to ensure reliable behavior across compiler versions</td>
+<td class="org-left">PROBLEM 1: Assembly code used to ensure reliable behavior across compiler versions</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>prime_funcs.c</code></td>
+<td class="org-left">Study</td>
+<td class="org-left">PROBLEM 2: C version of functions to implement in assembly</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>prime_fucns_asm.s</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">PROBLEM 2: Assembly functions to study and complete</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>prime_main.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">PROBLEM 2: Main function which calls C/Assembly functions</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>prime_fact.c</code></td>
+<td class="org-left">Optional</td>
+<td class="org-left">PROBLEM 2: Main function which calls an optional Assembly function</td>
 </tr>
 </tbody>
 <tbody>
@@ -592,8 +592,8 @@ The codepack for the lab contains the following files:
 </table>
 </div>
 </div>
-<div id="outline-container-org7858235" class="outline-2">
-<h2 id="org7858235"><span class="section-number-2">3</span> Register Reference</h2>
+<div id="outline-container-orge248d79" class="outline-2">
+<h2 id="orge248d79"><span class="section-number-2">3</span> Register Reference</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 This lab deals with the General Purpose Registers and the division
@@ -602,15 +602,15 @@ registers according to which category they are in.
 </p>
 <div class="org-center">
 
-<div id="org41a789b" class="figure">
+<div id="orgbe29ca2" class="figure">
 <p><img src="registers.png" alt="registers.png" style="max-width:100%;" />
 </p>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orge5653ef" class="outline-2">
-<h2 id="orge5653ef"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-orgca253e4" class="outline-2">
+<h2 id="orgca253e4"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the exercise.
@@ -647,7 +647,230 @@ Exercise Instructions
     the names of their group.
 
 
-PROBLEM 1 Overview of prime program
+PROBLEM 1 Overview of addstrs
+=============================
+
+  Survey the provided code and examine the following source files.
+  ------------------------------------------------------------------------------------------------------------------
+   FILE                  Description                                                                                
+  ------------------------------------------------------------------------------------------------------------------
+   add2strs_main.c       A main() and convert() function in C; these are used assembly function add2strs()          
+   add2strs_asm_A.s      A broken version of the add2strs() function in assembly for study                          
+   add2strs_asm_B.s      A broken version of the add2strs() function in assembly for study                          
+   add2strs_asm_C.s      An empty version of add2strs() that needs to be Edited                                     
+   add2strs_reference.c  A reference C implementation of add2strs(): it shows the intended behavior of the function 
+  ------------------------------------------------------------------------------------------------------------------
+
+  The general setup is the following calling sequence:
+  - main() written in C calls...
+  - add2strs() written in Assembly calls...
+  - convert() written in C
+  The middle function add2strs() has several versions which are
+  broken. The goal of the lab is to explain why the A and B versions are
+  incorrect and create a working C version of the function in
+  `add2strs_asm_C.s'.
+
+  The primary reason that the A and B versions broken is a failure to
+  adhere to the usage conventions for caller/callee save registers.
+
+
+PROBLEM 1 QUIZ add2strs_asm_A.s
+===============================
+
+Step 1
+~~~~~~
+
+  Type `make' which will build several executables based on different
+  combinations of the source files
+  ,----
+  | &gt;&gt; make
+  | gcc -Wall -Werror -g  -o add2strs_main_a add2strs_asm_A.s add2strs_main.c add2strs_clobber_asm.s
+  | gcc -Wall -Werror -g  -o add2strs_main_b add2strs_asm_B.s add2strs_main.c add2strs_clobber_asm.s
+  | gcc -Wall -Werror -g  -o add2strs_main_c add2strs_asm_C.s add2strs_main.c add2strs_clobber_asm.s
+  `----
+  Note that there are 3 executables built based on the a/b/c versions of
+  assembly files.
+
+  Run the "A" version of the main program.
+
+  NOTE: If you aren't sure how to run a an executable, now would be a
+  great time to talk with a staff member about what the output of the
+  `make' command above and which parts of it show the executables that
+  are produced and how to run them.
+
+  What is the result of running the A version of the program?
+  - ( ) A segmentation fault occurs while the program runs
+  - ( ) The program runs but prints the error message "Unable to convert
+    string to number"
+  - ( ) The program runs normally but produces obviously incorrect
+    output
+  - ( ) The program runs correctly to completion but returns a non-zero
+    exit code
+
+
+Step 2
+~~~~~~
+
+  To get more insight on what is happening, run the A version of the
+  program under Valgrind to print messages about any memory errors
+  occur. Again, if you're not sure how to run the program under
+  Valgrind, ASK A STAFF MEMBER for help.
+
+  What does Valgrind report about the behavior of the program?
+  - ( ) The `main()' function has a bad memory reference likely due to a
+    faulty return value from the `addstrs()' function.
+  - ( ) There is a bad memory reference by the assembly `addstrs()'
+    function which is called from the C `main()' function
+  - ( ) There is a bad memory reference during the C `convert()'
+    function that is called by the assembly `addstrs()' function
+  - ( ) Trick question: there are no memory problems reported by
+    Valgrind
+
+
+Step 3
+~~~~~~
+
+  Use GDB to step through the execution of `add2strs()' A version. Use
+  the `nexti' command to step line by line through the function but step
+  over any function calls: `convert()' is written in C so there is no
+  reason to expect it is faulty. Look for obviously wrong assumptions in
+  the code for `add2strs()' according to the comments given.
+
+  Which of the following best summarizes the mistakes made in the A
+  version which lead to its wrong behavior?
+  - ( ) The stack is not aligned properly for the function call to
+    succeed
+  - ( ) The stack is not properly restored at the end of the function
+    which causes problems on the return
+  - ( ) Data is not properly loaded into argument registers for the
+    first call to the `convert()' function
+  - ( ) Data such as pointers are stored in Caller save registers that
+    change when the `convert()' function is called
+
+
+PROBLEM 1 QUIZ add2strs_asm_B.s
+===============================
+
+Step 1
+~~~~~~
+
+  Examine the B version of the assembly code in `add2strs_asm_B.s'.
+  Which of the following best describes the different approach taken in
+  the B version compared to the A version.
+
+  - ( ) Callee Save Registers like %rbp and %rbx are used to preserve
+    needed data across the call to `convert()' which clobbers Caller
+    Save Registers
+  - ( ) Adjustments are made to how the argument registers are loaded
+    for the first call to `convert()' so that the function runs
+    correctly.
+  - ( ) The stack is aligned differently for function calls in this
+    version which correct compared to the alignment used in the A
+    version.
+  - ( ) Callee registers that are used are saved and then restored
+    before returning from the function.
+
+
+Step 2
+~~~~~~
+
+  Run the B version of the program which uses this version of the
+  assembly code. Run the program under Valgrind as well. Which of the
+  following best describe the results?
+  - ( ) A segmentation fault still occurs but it happens on the second
+    call to `convert()' during `add2strs()'
+  - ( ) A segmentation fault still occurs but it happens during the
+    `main()' function.
+  - ( ) The program runs but it produces incorrect results and Valgrind
+    reports a "Conditional move/jump depends on uninitialized data"
+  - ( ) The program runs and produces incorrect results but Valgrind
+    does not report any errors.
+
+
+Step 3
+~~~~~~
+
+  Run the B version of the program under GDB.  Set a breakpoint in
+  `add2strs()' and step through the assembly noting its behavior.
+  Again, use the nexti command to step over calls to `convert()'.
+
+  Continue stepping through the return from `add2strs()' which will land
+  back in `main()'.  When the debugger shows the C code for `main()',
+  change its display to the assembly instructions for that C code using
+  the GDB command `layout asm'.
+
+  Which of the following best describes the instructions that appear in
+  `main()' immediately after `call add2strs'?
+  - ( ) These instructions make use of the stack pointer `%rsp' which
+    was not properly restored by `add2strs()' which will create problem
+    for `main()'
+  - ( ) These instructions use a Caller Save register like `%rdi' which
+    was altered by `add2strs()' but not restored which will create
+    problems for `main()'
+  - ( ) These instructions use a Callee Save register like `%rbp' which
+    was altered by `add2strs()' but not restored which will create
+    problems for `main()'
+  - ( ) These instructions perform a buffer overflow check and due to
+    one occurring in `add2strs()', problems are created for `main()'.
+
+
+PROBLEM 1 CODE add2strs_asm_C.s
+===============================
+
+  Fill in a completely correct definition for the `add2strs()' function
+  in the file `add2strs_asm_C.s' which is currently mostly blank. Base
+  your code on the B version but correct the problems you identified in
+  the with that version. Some useful instructions for this purpose are
+  noted below.
+  -----------------------------------------------------------------------
+   INSTRUCTION  EFFECT                                                   
+  -----------------------------------------------------------------------
+   pushq %rxy   Extends the stack and places the current 8-byte value of 
+                register %rxy in the stack to "save" the register        
+                                                                       
+   pop %rxy     Copies the 8-byte value pointed at by the Stack Pointer  
+                into register %rxy "restoring" it then shrinks the stack 
+  -----------------------------------------------------------------------
+
+
+  REMEMBER: For function calls to be compliant with the x86-64 standard,
+  the Stack Pointer must be divisible by 16. Functions that call other
+  functions typically expand the stack by the following number of bytes
+  with a combination of `pushq / subq' instructions.
+  ------------------------------------------------------------------------------------------------
+   PUSHQ / SUBQ GROWTH  RETURN ADDRESSS  TOTAL STACK GROWTH  EXAMPLES                             
+  ------------------------------------------------------------------------------------------------
+   8 bytes              8 bytes          16 bytes            subq $8,%rsp OR pushq %rbx           
+   24 bytes             8 bytes          32 bytes            pushq %rbx; pushq %rbp; subq $8,%rsp 
+   40 bytes             8 bytes          48 bytes            pushq %rbp; subq $32,%rsp            
+  ------------------------------------------------------------------------------------------------
+
+  FINAL NOTE: When writing longer assembly functions, one may "run out"
+  of Caller Save registers. Even if there are no function calls, it is
+  still common practice to push/pop Callee Save registers to allow their
+  use during these longer functions. Just make sure to push/pop in
+  opposite orders to respect stack semantics:
+  ,----
+  | longfunc:
+  |         pushq %reg1             # callee save regs like rbx, rbp, r15
+  |         pushq %reg2
+  |         pushq %reg3
+  |         ...
+  |         ...     # code that needs to use callee save reg1,reg2,reg3
+  | 
+  |         popq %reg3              # last in, first out stack semantics
+  |         popq %reg2
+  |         popq %reg1
+  |         ret
+  `----
+
+  You can test your code for the problem via the provided Makefile:
+  ,----
+  | make test-code testnum=2
+  `----
+
+
+PROBLEM 2 Overview of prime program
 ===================================
 
   Examine the following files related to this problem.
@@ -668,7 +891,7 @@ PROBLEM 1 Overview of prime program
   function.
 
 
-PROBLEM 1 QUIZ
+PROBLEM 2 QUIZ
 ==============
 
   Study the C and Assembly implementations in `prime_funcs.c /
@@ -758,7 +981,7 @@ D
     value from the array into the register `%eax'
 
 
-PROBLEM 1 CODE
+PROBLEM 2 CODE
 ==============
 
   Complete the assembly implementation of `primsums()'. Use the provided
@@ -777,7 +1000,7 @@ PROBLEM 1 CODE
   `----
 
 
-PROBLEM 1 OPTIONAL Code Practice
+PROBLEM 2 OPTIONAL Code Practice
 ================================
 
   For additional practice, complete the optional function `primfact()'
@@ -793,234 +1016,12 @@ PROBLEM 1 OPTIONAL Code Practice
   division which has a number of interesting effects such as clobbering
   several registers. It makes for EXCELLENT practice in preparation for
   projects involving assembly.
-
-
-PROBLEM 2 Overview of addstrs
-=============================
-
-  Survey the provided code and examine the following source files.
-  ------------------------------------------------------------------------------------------------------------------
-   FILE                  Description                                                                                
-  ------------------------------------------------------------------------------------------------------------------
-   add2strs_main.c       A main() and convert() function in C; these are used assembly function add2strs()          
-   add2strs_asm_A.s      A broken version of the add2strs() function in assembly for study                          
-   add2strs_asm_B.s      A broken version of the add2strs() function in assembly for study                          
-   add2strs_asm_C.s      An empty version of add2strs() that needs to be Edited                                     
-   add2strs_reference.c  A reference C implementation of add2strs(): it shows the intended behavior of the function 
-  ------------------------------------------------------------------------------------------------------------------
-
-  The general setup is the following calling sequence:
-  - main() written in C calls...
-  - add2strs() written in Assembly calls...
-  - convert() written in C
-  The middle function add2strs() has several versions which are
-  broken. The goal of the lab is to explain why the A and B versions are
-  incorrect and create a working C version of the function in
-  `add2strs_asm_C.s'. The primary reason that the A and B versions
-  broken is a failure to adhere to the usage conventions for
-  caller/callee save registers.
-
-
-PROBLEM 2 QUIZ add2strs_asm_A.s
-===============================
-
-Step 1
-~~~~~~
-
-  Type `make' which will build several executables based on different
-  combinations of the source files
-  ,----
-  | &gt;&gt; make
-  | gcc -Wall -Werror -g  -o add2strs_main_a add2strs_asm_A.s add2strs_main.c add2strs_clobber_asm.s
-  | gcc -Wall -Werror -g  -o add2strs_main_b add2strs_asm_B.s add2strs_main.c add2strs_clobber_asm.s
-  | gcc -Wall -Werror -g  -o add2strs_main_c add2strs_asm_C.s add2strs_main.c add2strs_clobber_asm.s
-  `----
-  Note that there are 3 executables built based on the a/b/c versions of
-  assembly files.
-
-  Run the "A" version of the main program.
-
-  NOTE: If you aren't sure how to run a an executable, now would be a
-  great time to talk with a staff member about what the output of the
-  `make' command above and which parts of it show the executables that
-  are produced and how to run them.
-
-  What is the result of running the A version of the program?
-  - ( ) A segmentation fault occurs while the program runs
-  - ( ) The program runs but prints the error message "Unable to convert
-    string to number"
-  - ( ) The program runs normally but produces obviously incorrect
-    output
-  - ( ) The program runs correctly to completion but returns a non-zero
-    exit code
-
-
-Step 2
-~~~~~~
-
-  To get more insight on what is happening, run the A version of the
-  program under Valgrind to print messages about any memory errors
-  occur. Again, if you're not sure how to run the program under
-  Valgrind, ASK A STAFF MEMBER for help.
-
-  What does Valgrind report about the behavior of the program?
-  - ( ) The `main()' function has a bad memory reference likely due to a
-    faulty return value from the `addstrs()' function.
-  - ( ) There is a bad memory reference by the assembly `addstrs()'
-    function which is called from the C `main()' function
-  - ( ) There is a bad memory reference during the C `convert()'
-    function that is called by the assembly `addstrs()' function
-  - ( ) Trick question: there are no memory problems reported by
-    Valgrind
-
-
-Step 3
-~~~~~~
-
-  Use GDB to step through the execution of `add2strs()' A version. Use
-  the `nexti' command to step line by line through the function but step
-  over any function calls: `convert()' is written in C so there is no
-  reason to expect it is faulty. Look for obviously wrong assumptions in
-  the code for `add2strs()' according to the comments given.
-
-  Which of the following best summarizes the mistakes made in the A
-  version which lead to its wrong behavior?
-  - ( ) The stack is not aligned properly for the function call to
-    succeed
-  - ( ) The stack is not properly restored at the end of the function
-    which causes problems on the return
-  - ( ) Data is not properly loaded into argument registers for the
-    first call to the `convert()' function
-  - ( ) Data such as pointers are stored in Caller save registers that
-    change when the `convert()' function is called
-
-
-PROBLEM 2 QUIZ add2strs_asm_B.s
-===============================
-
-Step 1
-~~~~~~
-
-  Examine the B version of the assembly code in `add2strs_asm_B.s'.
-  Which of the following best describes the different approach taken in
-  the B version compared to the A version.
-
-  - ( ) Callee Save Registers like %rbp and %rbx are used to preserve
-    needed data across the call to `convert()' which clobbers Caller
-    Save Registers
-  - ( ) Adjustments are made to how the argument registers are loaded
-    for the first call to `convert()' so that the function runs
-    correctly.
-  - ( ) The stack is aligned differently for function calls in this
-    version which correct compared to the alignment used in the A
-    version.
-  - ( ) Callee registers that are used are saved and then restored
-    before returning from the function.
-
-
-Step 2
-~~~~~~
-
-  Run the B version of the program which uses this version of the
-  assembly code. Run the program under Valgrind as well. Which of the
-  following best describe the results?
-  - ( ) A segmentation fault still occurs but it happens on the second
-    call to `convert()' during `add2strs()'
-  - ( ) A segmentation fault still occurs but it happens during the
-    `main()' function.
-  - ( ) The program runs but it produces incorrect results and Valgrind
-    reports a "Conditional move/jump depends on uninitialized data"
-  - ( ) The program runs and produces incorrect results but Valgrind
-    does not report any errors.
-
-
-Step 3
-~~~~~~
-
-  Run the B version of the program under GDB.  Set a breakpoint in
-  `add2strs()' and step through the assembly noting its behavior.
-  Again, use the nexti command to step over calls to `convert()'.
-
-  Continue stepping through the return from `add2strs()' which will land
-  back in `main()'.  When the debugger shows the C code for `main()',
-  change its display to the assembly instructions for that C code using
-  the GDB command `layout asm'.
-
-  Which of the following best describes the instructions that appear in
-  `main()' immediately after `call add2strs'?
-  - ( ) These instructions make use of the stack pointer `%rsp' which
-    was not properly restored by `add2strs()' which will create problem
-    for `main()'
-  - ( ) These instructions use a Caller Save register like `%rdi' which
-    was altered by `add2strs()' but not restored which will create
-    problems for `main()'
-  - ( ) These instructions use a Callee Save register like `%rbp' which
-    was altered by `add2strs()' but not restored which will create
-    problems for `main()'
-  - ( ) These instructions perform a buffer overflow check and due to
-    one occurring in `add2strs()', problems are created for `main()'.
-
-
-PROBLEM 2 CODE add2strs_asm_C.s
-===============================
-
-  Fill in a completely correct definition for the `add2strs()' function
-  in the file `add2strs_asm_C.s' which is currently mostly blank. Base
-  your code on the B version but correct the problems you identified in
-  the with that version. Some useful instructions for this purpose are
-  noted below.
-  -----------------------------------------------------------------------
-   INSTRUCTION  EFFECT                                                   
-  -----------------------------------------------------------------------
-   pushq %rxy   Extends the stack and places the current 8-byte value of 
-                register %rxy in the stack to "save" the register        
-                                                                       
-   pop %rxy     Copies the 8-byte value pointed at by the Stack Pointer  
-                into register %rxy "restoring" it then shrinks the stack 
-  -----------------------------------------------------------------------
-
-
-  REMEMBER: For function calls to be compliant with the x86-64 standard,
-  the Stack Pointer must be divisible by 16. Functions that call other
-  functions typically expand the stack by the following number of bytes
-  with a combination of `pushq / subq' instructions.
-  ------------------------------------------------------------------------------------------------
-   PUSHQ / SUBQ GROWTH  RETURN ADDRESSS  TOTAL STACK GROWTH  EXAMPLES                             
-  ------------------------------------------------------------------------------------------------
-   8 bytes              8 bytes          16 bytes            subq $8,%rsp OR pushq %rbx           
-   24 bytes             8 bytes          32 bytes            pushq %rbx; pushq %rbp; subq $8,%rsp 
-   40 bytes             8 bytes          48 bytes            pushq %rbp; subq $32,%rsp            
-  ------------------------------------------------------------------------------------------------
-
-  FINAL NOTE: When writing longer assembly functions, one may "run out"
-  of Caller Save registers. Even if there are no function calls, it is
-  still common practice to push/pop Callee Save registers to allow their
-  use during these longer functions. Just make sure to push/pop in
-  opposite orders to respect stack semantics:
-  ,----
-  | longfunc:
-  |         pushq %reg1             # callee save regs like rbx, rbp, r15
-  |         pushq %reg2
-  |         pushq %reg3
-  |         ...
-  |         ...     # code that needs to use callee save reg1,reg2,reg3
-  | 
-  |         popq %reg3              # last in, first out stack semantics
-  |         popq %reg2
-  |         popq %reg1
-  |         ret
-  `----
-
-  You can test your code for the problem via the provided Makefile:
-  ,----
-  | make test-code testnum=2
-  `----
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org3ecfcc3" class="outline-2">
-<h2 id="org3ecfcc3"><span class="section-number-2">5</span> Submission</h2>
+<div id="outline-container-org40d989b" class="outline-2">
+<h2 id="org40d989b"><span class="section-number-2">5</span> Submission</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -1030,7 +1031,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-10-24 Fri 14:23 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-10-24 Fri 14:31 <br/> </i>
 </div>
 </body>
 </html>
