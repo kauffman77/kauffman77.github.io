@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-10-24 Fri 14:31 -->
+<!-- 2025-10-25 Sat 11:24 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CMSC216 Lab08: Caller / Callee Register Usage</title>
+<title>CMSC216 Lab08: Caller / Callee Registers and Global Variables in Assembly</title>
 <meta name="author" content="Chris Kauffman" />
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
@@ -344,41 +344,41 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2025-10-24 Fri 14:31</i>
+<i>Last Updated: 2025-10-25 Sat 11:24</i>
 </div>
 <div id="content" class="content">
-<h1 class="title">CMSC216 Lab08: Caller / Callee Register Usage</h1>
+<h1 class="title">CMSC216 Lab08: Caller / Callee Registers and Global Variables in Assembly</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Mon 07-Apr-2025</b></li>
+<li><b>Due: 11:59pm Sun 02-Nov-2025</b></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
-<div id="outline-container-org8d247fa" class="outline-4">
-<h4 id="org8d247fa">CODE DISTRIBUTION: <a href="lab08-code.zip">lab08-code.zip</a></h4>
+<div id="outline-container-orgf183233" class="outline-4">
+<h4 id="orgf183233">CODE DISTRIBUTION: <a href="lab08-code.zip">lab08-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org7f4b204" class="outline-4">
-<h4 id="org7f4b204">CHANGELOG: Empty</h4>
+<div id="outline-container-org55a93df" class="outline-4">
+<h4 id="org55a93df">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-org1c970e4" class="outline-4">
-<h4 id="org1c970e4"></h4>
-<div class="outline-text-4" id="text-org1c970e4">
+<div id="outline-container-org665848b" class="outline-4">
+<h4 id="org665848b"></h4>
+<div class="outline-text-4" id="text-org665848b">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgbf4473f">1. Rationale</a></li>
-<li><a href="#org9c61937">2. Codepack</a></li>
-<li><a href="#orge248d79">3. Register Reference</a></li>
-<li><a href="#orgca253e4">4. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org40d989b">5. Submission</a></li>
+<li><a href="#orgc2349e4">1. Rationale</a></li>
+<li><a href="#org7f897cc">2. Codepack</a></li>
+<li><a href="#org3958190">3. Register Reference</a></li>
+<li><a href="#orgb8bea33">4. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org314960a">5. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgbf4473f" class="outline-2">
-<h2 id="orgbf4473f"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orgc2349e4" class="outline-2">
+<h2 id="orgc2349e4"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Processor registers are shared among all programs and functions within
@@ -403,9 +403,9 @@ as Program Counter Relative / PC-Relative addressing) and the syntax
 used to access global variables.
 </p>
 </div>
-<div id="outline-container-org3ea163f" class="outline-4">
-<h4 id="org3ea163f">Associated Reading / Preparation</h4>
-<div class="outline-text-4" id="text-org3ea163f">
+<div id="outline-container-orgde17c64" class="outline-4">
+<h4 id="orgde17c64">Associated Reading / Preparation</h4>
+<div class="outline-text-4" id="text-orgde17c64">
 <p>
 Bryant and O'Hallaron Ch 3.7 on assembly procedure call conventions in
 x86-64. Specifically, Ch 3.7.5 discusses caller/callee save
@@ -413,9 +413,9 @@ conventions and the code associated with them.
 </p>
 </div>
 </div>
-<div id="outline-container-org13502bc" class="outline-4">
-<h4 id="org13502bc">Grading Policy</h4>
-<div class="outline-text-4" id="text-org13502bc">
+<div id="outline-container-org764a2dc" class="outline-4">
+<h4 id="org764a2dc">Grading Policy</h4>
+<div class="outline-text-4" id="text-org764a2dc">
 <p>
 Credit for this exercise is earned by completing the code/asnwers here
 and submitting a Zip of the work to Gradescope. Students are
@@ -437,8 +437,8 @@ See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies 
 </div>
 </div>
 </div>
-<div id="outline-container-org9c61937" class="outline-2">
-<h2 id="org9c61937"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org7f897cc" class="outline-2">
+<h2 id="org7f897cc"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the lab contains the following files:
@@ -592,8 +592,8 @@ The codepack for the lab contains the following files:
 </table>
 </div>
 </div>
-<div id="outline-container-orge248d79" class="outline-2">
-<h2 id="orge248d79"><span class="section-number-2">3</span> Register Reference</h2>
+<div id="outline-container-org3958190" class="outline-2">
+<h2 id="org3958190"><span class="section-number-2">3</span> Register Reference</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 This lab deals with the General Purpose Registers and the division
@@ -602,15 +602,15 @@ registers according to which category they are in.
 </p>
 <div class="org-center">
 
-<div id="orgbe29ca2" class="figure">
+<div id="org8922517" class="figure">
 <p><img src="registers.png" alt="registers.png" style="max-width:100%;" />
 </p>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgca253e4" class="outline-2">
-<h2 id="orgca253e4"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-orgb8bea33" class="outline-2">
+<h2 id="orgb8bea33"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the exercise.
@@ -684,9 +684,9 @@ Step 1
   combinations of the source files
   ,----
   | &gt;&gt; make
-  | gcc -Wall -Werror -g  -o add2strs_main_a add2strs_asm_A.s add2strs_main.c add2strs_clobber_asm.s
-  | gcc -Wall -Werror -g  -o add2strs_main_b add2strs_asm_B.s add2strs_main.c add2strs_clobber_asm.s
-  | gcc -Wall -Werror -g  -o add2strs_main_c add2strs_asm_C.s add2strs_main.c add2strs_clobber_asm.s
+  | gcc -Wall -Werror -g  -o add2strs_main_A add2strs_asm_A.s add2strs_main.c add2strs_clobber_asm.s
+  | gcc -Wall -Werror -g  -o add2strs_main_B add2strs_asm_B.s add2strs_main.c add2strs_clobber_asm.s
+  | gcc -Wall -Werror -g  -o add2strs_main_C add2strs_asm_C.s add2strs_main.c add2strs_clobber_asm.s
   `----
   Note that there are 3 executables built based on the a/b/c versions of
   assembly files.
@@ -828,7 +828,7 @@ PROBLEM 1 CODE add2strs_asm_C.s
    pushq %rxy   Extends the stack and places the current 8-byte value of 
                 register %rxy in the stack to "save" the register        
                                                                        
-   pop %rxy     Copies the 8-byte value pointed at by the Stack Pointer  
+   popq %rxy    Copies the 8-byte value pointed at by the Stack Pointer  
                 into register %rxy "restoring" it then shrinks the stack 
   -----------------------------------------------------------------------
 
@@ -866,7 +866,7 @@ PROBLEM 1 CODE add2strs_asm_C.s
 
   You can test your code for the problem via the provided Makefile:
   ,----
-  | make test-code testnum=2
+  | make test-code testnum=1
   `----
 
 
@@ -996,7 +996,7 @@ PROBLEM 2 CODE
 
   You can test your code for the problem via the provided Makefile:
   ,----
-  | make test-code testnum=1
+  | make test-code testnum=2
   `----
 
 
@@ -1020,8 +1020,8 @@ PROBLEM 2 OPTIONAL Code Practice
 </div>
 </div>
 </div>
-<div id="outline-container-org40d989b" class="outline-2">
-<h2 id="org40d989b"><span class="section-number-2">5</span> Submission</h2>
+<div id="outline-container-org314960a" class="outline-2">
+<h2 id="org314960a"><span class="section-number-2">5</span> Submission</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -1031,7 +1031,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-10-24 Fri 14:31 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-10-25 Sat 11:24 <br/> </i>
 </div>
 </body>
 </html>
