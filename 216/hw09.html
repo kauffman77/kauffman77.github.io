@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-11-06 Thu 17:34 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMSC216 HW09: Fork, Spoon, and Wait</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2025-11-06 Thu 17:34</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CMSC216 HW09: Fork, Spoon, and Wait</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Sun 16-Nov-2025</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><i>Approximately 0.83% of total grade</i></li>
+</ul>
+<div id="outline-container-org04754e8" class="outline-4">
+<h4 id="org04754e8">CODE DISTRIBUTION: <a href="hw09-code.zip">hw09-code.zip</a></h4>
+<div class="outline-text-4" id="text-org04754e8">
+<ul class="org-ul">
+<li>Download the code distribution every HW</li>
+<li>See further setup instructions below</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgd0fb59c" class="outline-4">
+<h4 id="orgd0fb59c">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orgd0fb59c">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orge1a6f22">1. Rationale</a></li>
+<li><a href="#orgefd1fa3">2. Codepack</a></li>
+<li><a href="#orgb426c3d">3. What to Understand</a></li>
+<li><a href="#orgfe107fe">4. Questions about fork(), wait(), and exec()</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orge1a6f22" class="outline-2">
+<h2 id="orge1a6f22"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Processes are created in Unix by <code>fork()</code>'ing an existing process so
+mastery of these system calls is essential to bringing new running
+programs into the system. Processes created in this way are the
+children of the creating parent process which can detect changes in
+their state using the <code>wait()</code> family of calls. Many programming
+paradigms rely on the parent tracking its children necessitating an
+understanding of the <code>wait()</code> family. Children execute the same code
+code as parents unless a call to a member of the <code>exec()</code> family is
+made which replaces a running child's instructions with a different
+program. After creating child processes with the <code>fork()</code> call, a
+parent is obliged to wait for them at some point but the <code>waitpid()</code>
+provides capabilities such as non-blocking (non-hanging) waits
+illustrated in this HW. This gives insight into how background shell
+commands like <code>./program &amp;</code> may be implemented.
+</p>
+</div>
+<div id="outline-container-orgb8693c1" class="outline-4">
+<h4 id="orgb8693c1">Associated Reading</h4>
+<div class="outline-text-4" id="text-orgb8693c1">
+<p>
+Ch 8.4 of Bryant/O'Hallaron introduces and shows many examples of
+<code>fork(), wait(), exec()</code>
+</p>
+</div>
+</div>
+<div id="outline-container-org6cc153b" class="outline-4">
+<h4 id="org6cc153b">Grading Policy</h4>
+<div class="outline-text-4" id="text-org6cc153b">
+<p>
+Credit for this HW is earned by taking the associated HW Quiz which is
+linked under <code>Gradescope</code>.  The quiz will ask similar questions as
+those that are present in the <code>QUESTIONS.txt</code> file and those that
+complete all answers in <code>QUESTIONS.txt</code> should have no trouble with
+the quiz.
+</p>
+
+<p>
+Homework and Quizzes are open resource/open collaboration. You must
+submit your own work but you may freely discuss HW topics with other
+members of the class.
+</p>
+
+<p>
+See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies in the course syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgefd1fa3" class="outline-2">
+<h2 id="orgefd1fa3"><span class="section-number-2">2</span> Codepack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The codepack for the HW contains the following files:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">State</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">Edit</td>
+<td class="org-left">Questions to answer</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>fork_report.c</code></td>
+<td class="org-left">Edit</td>
+<td class="org-left">C file for Problem 1</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>run_child.c</code></td>
+<td class="org-left">Edit</td>
+<td class="org-left">C file for Problem 2</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>wait_loop.c</code></td>
+<td class="org-left">Edit</td>
+<td class="org-left">C file for Problem 3</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>sleep_print.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 3 program to run in background</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>exec_fail.c</code></td>
+<td class="org-left">Optional</td>
+<td class="org-left">Optional code demoing <code>exec()</code> error checking</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">NOTE: No <code>Makefile</code> is provided; use <code>gcc file.c</code> for these simple programs</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgb426c3d" class="outline-2">
+<h2 id="orgb426c3d"><span class="section-number-2">3</span> What to Understand</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Make sure you get a good understanding of 
+</p>
+<ul class="org-ul">
+<li>How <code>fork</code> is used to clone a running process to create a child</li>
+<li>How each process has a unique <code>pid</code>, process ID, available via
+library calls</li>
+<li>How <code>wait()</code> and <code>waitpid()</code> can be used to ensure order in
+execution by causing a parent to wait for a child to finish</li>
+<li>How <code>execvp()</code> is used to replace a running program with a different
+program</li>
+</ul>
+<p>
+All of these things will show up in projects.
+</p>
+</div>
+</div>
+<div id="outline-container-orgfe107fe" class="outline-2">
+<h2 id="orgfe107fe"><span class="section-number-2">4</span> Questions about fork(), wait(), and exec()</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+<pre class="src src-text">                            ________________
+
+                             HW09 QUESTIONS
+                            ________________
+
+
+Write your answers to the questions below directly in this text file to
+prepare for the associated quiz. Credit for the HW is earned by
+completing the associated online quiz on Gradescope.
+
+
+PROBLEM 1 `fork_report.c'
+=========================
+
+A
+~
+
+  Compile and run the program in `fork_report.c'. Run the program
+  several times. Show the output of a typical run below.
+
+
+B
+~
+
+  Is the output ordered or disordered with respect to the "I am
+  number..." statements? Why?
+
+
+C
+~
+
+  Add calls to the wait() or waitpid() function to ensure that the
+  output is ordered. Compile and rerun the code to ensure that your code
+  will enforce ordered output. Paste your completed code below.
+
+
+D
+~
+
+  How many parents and children are there in this program? What is their
+  arrangement? How are the parent process(es) numbered?
+
+
+PROBLEM 2 `run_child.c'
+=======================
+
+A
+~
+
+  Compile and run the program in `run_child.c'. Show it's output below.
+
+
+B
+~
+
+  Adjust the contents of the `child_argv[]' array. Try removing the "-l"
+  element, try adding on ".." prior to the final NULL, or make other
+  modifications INCLUDING for the 0th "ls" string.  Recompile and
+  describe whether the output has changed.
+
+
+C
+~
+
+  Change the child_cmd string from "ls" to be something else like "gcc"
+  or "cat". A good combination is "gcc" with the "--version" as the only
+  option in the child_argv array. Recompile and explain what happens
+  now.
+
+
+D
+~
+
+  Currently `run_child.c' does not reach the bottom statements.
+  ,----
+  |   printf("------------------\n");
+  |   printf("Child Finished\n");
+  `----
+  Correct this by doing the following:
+  - Fork a child process
+  - Have ONLY the child process call execvp()
+  - Have the parent process wait() for the child
+  Paste your completed code below.
+
+
+PROBLEM 3 `wait_loop.c'
+=======================
+
+  Examine the C file `wait_loop.c'. It implements a primitive
+  interactive loop asking a user to type things while a child process
+  runs in the background. By default, the provided `sleep_print.c'
+  program is used which creates a delay before the program
+  finishes. Make sure to compile `sleep_print' then compile
+  `wait_loop.c' and experiment with its behavior.
+
+  Here is a brief demo.
+  ,----
+  | &gt;&gt; gcc -o sleep_print sleep_print.c 
+  | &gt;&gt; gcc wait_loop.c
+  | &gt;&gt; ./a.out
+  | Type text then press enter to check on child:
+  | input: hello there
+  | Entered text: 'hello there'
+  | Waiting
+  | CHILD: Awake and Done 
+  | CHILD FINISHED: 
+  | 
+  | Type text then press enter to check on child:
+  | input: what?
+  | Entered text: 'what?'
+  | Waiting
+  | Child not finished: wait returned -1
+  | 
+  | Type text then press enter to check on child:
+  | input: stop
+  | Entered text: 'stop'
+  | Waiting
+  | Child not finished: wait returned -1
+  | 
+  | Type text then press enter to check on child:
+  | input:  Ctrl-c
+  | &gt; 
+  `----
+
+
+A
+~
+
+  Alter the code so that when the child has completed execution, the
+  program breaks out of the loop and the program ends normally. Paste in
+  the code you used for this.
+
+
+B
+~
+
+  Adjust the code so that the exit status of the child process is
+  printed when it finishes. Make sure to use the macros
+  `WIFEXITED(status)' and `WEXITSTATUS(status)' to deal with the
+  `status' set by `waitpid()'.  Paste the code you added for your
+  answer.
+
+
+C
+~
+
+  Make changes so that if the user types in the string `quit', the
+  program exits immediately without waiting further for the
+  child. Example:
+  ,----
+  | &gt; a.out
+  | Type text then press enter to check on child:
+  | &gt;&gt; quit
+  | Entered text: 'quit'
+  | Quitting
+  | Exiting wait_loop
+  | &gt; CHILD: Awake and Done 
+  `----
+  Note that the child eventually prints output to the screen which is
+  fine.
+
+  You will need to check the user input using either the `strcmp()'
+  (unsafe) or `strncmp()' (safer) function. Do some research on this
+  function if it is unfamiliar as it will prove generally useful.
+
+  Paste the code you used below.
+
+
+D
+~
+
+  The current call to `waitpid()' blocks, pausing execution of the
+  parent process until the child finishes. Look up the option to pass to
+  `waitpid()' that will allow it to do a non-blocking wait which returns
+  immediately if the child is not finished. A sample behavior is below.
+  ,----
+  | &gt; a.out
+  | Type text then press enter to check on child:
+  | &gt;&gt; stuff
+  | Entered text: 'stuff'
+  | Waiting
+  | Child not finished: wait returned 0
+  | 
+  | Type text then press enter to check on child:
+  | &gt;&gt; more stuff
+  | Entered text: 'more stuff'
+  | Waiting
+  | Child not finished: wait returned 0
+  | 
+  | Type text then press enter to check on child:
+  | &gt;&gt; CHILD: Awake and Done 
+  | Looks like you're finally up
+  | Entered text: 'Looks like you're finally up'
+  | Waiting
+  | CHILD FINISHED: Exit status 5
+  | Exiting wait_loop
+  | &gt; 
+  `----
+
+  Paste your entire code for `wait_loop.c' below.
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-11-06 Thu 17:34 <br/> </i>
+</div>
+</body>
+</html>
