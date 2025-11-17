@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-11-14 Fri 15:46 -->
+<!-- 2025-11-17 Mon 16:52 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Project 4: A Shell Called Shellac</title>
@@ -492,7 +492,7 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2025-11-14 Fri 15:46</i>
+<i>Last Updated: 2025-11-17 Mon 16:52</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Project 4: A Shell Called Shellac</h1>
@@ -503,66 +503,85 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 <li>Projects are <b>individual work</b>: no collaboration with other students
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
-<div id="outline-container-org71d73be" class="outline-4">
-<h4 id="org71d73be">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
+<div id="outline-container-org4033160" class="outline-4">
+<h4 id="org4033160">CODE/TEST DISTRIBUTION: <a href="p4-code.zip">p4-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org99fd1cf" class="outline-4">
-<h4 id="org99fd1cf">VIDEO OVERVIEW: <a href="https://umd.instructure.com/courses/1388320/pages/week11-videos">https://umd.instructure.com/courses/1388320/pages/week11-videos</a></h4>
+<div id="outline-container-org5f89731" class="outline-4">
+<h4 id="org5f89731">VIDEO OVERVIEW: <a href="https://umd.instructure.com/courses/1388320/pages/week11-videos">https://umd.instructure.com/courses/1388320/pages/week11-videos</a></h4>
 </div>
-<div id="outline-container-org9316e8d" class="outline-4">
-<h4 id="org9316e8d">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org9316e8d">
+<div id="outline-container-org45ef480" class="outline-4">
+<h4 id="org45ef480">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org45ef480">
 <dl class="org-dl">
+<dt>Mon Nov 17 04:48:17 PM EST 2025</dt><dd>A few minor typos have been
+corrected.
+<ul class="org-ul">
+<li>When printing jobs via <code>job_print()</code>, if the PID field is 0 or
+negative, print just the number and omit the #
+symbol. Documentation comments have been added to apprise this as
+it affects Problem 2 Test 1.</li>
+<li>If during <code>job_start()</code> a call to an <code>exec()</code>-family function
+fails, the child process should immediately exit with the exit
+code <code>JOBCOND_FAIL_EXEC</code>. Documentation comments have been updated
+to reflect this.</li>
+<li><code>shellac_add_job()</code> should return the integer index (job number)
+of where the job is added into the <code>jobs[]</code> array.</li>
+<li>Documentation strings for some <code>shellac_control.c</code> functions have
+had the incorrect mention of <code>argv[]</code> corrected to <code>jobs[]</code> which
+is the proper field to deal with in those functions.</li>
+<li>A few mentions of incorrect function names have been corrected.</li>
+</ul></dd>
+
 <dt>Fri Nov 14 03:46:28 PM EST 2025</dt><dd>An overview video has been posted
 to the Week 11 Canvas videos:
 <a href="https://umd.instructure.com/courses/1388320/pages/week11-videos">https://umd.instructure.com/courses/1388320/pages/week11-videos</a></dd>
 </dl>
 </div>
 </div>
-<div id="outline-container-orge640ebc" class="outline-4">
-<h4 id="orge640ebc"></h4>
-<div class="outline-text-4" id="text-orge640ebc">
+<div id="outline-container-org5feae69" class="outline-4">
+<h4 id="org5feae69"></h4>
+<div class="outline-text-4" id="text-org5feae69">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orga12ae7b">1. Introduction: A Simple Shell</a></li>
-<li><a href="#org23730a5">2. Download Code and Setup</a></li>
-<li><a href="#org1997275">3. <b>Problem 1</b>: Interactive Loop</a>
+<li><a href="#org076cbf4">1. Introduction: A Simple Shell</a></li>
+<li><a href="#org5d35106">2. Download Code and Setup</a></li>
+<li><a href="#org3c25c23">3. <b>Problem 1</b>: Interactive Loop</a>
 <ul>
-<li><a href="#org1199122">3.1. Basic Interactive Loop</a></li>
-<li><a href="#orgf6017ba">3.2. Sample Session</a></li>
-<li><a href="#orga89182c">3.3. Printing Help</a></li>
-<li><a href="#orgecddb1b">3.4. Other Supported Commands</a></li>
-<li><a href="#orgfd4cfe4">3.5. Input Lines and Tokenization</a></li>
-<li><a href="#org136002c">3.6. Exit on End of Input</a></li>
-<li><a href="#org0ba2dcf">3.7. Command Echoing</a></li>
+<li><a href="#org5c4cb7e">3.1. Basic Interactive Loop</a></li>
+<li><a href="#org2ce5e67">3.2. Sample Session</a></li>
+<li><a href="#orge289415">3.3. Printing Help</a></li>
+<li><a href="#orgd0fcb18">3.4. Other Supported Commands</a></li>
+<li><a href="#org6818e11">3.5. Input Lines and Tokenization</a></li>
+<li><a href="#orgf2451e1">3.6. Exit on End of Input</a></li>
+<li><a href="#orgcbbff50">3.7. Command Echoing</a></li>
 </ul>
 </li>
-<li><a href="#org8fe4753">4. <b>Problem 2</b>: Basic Job Functionality</a>
+<li><a href="#org43e6cff">4. <b>Problem 2</b>: Basic Job Functionality</a>
 <ul>
-<li><a href="#org4e8e911">4.1. Overview</a></li>
-<li><a href="#org23ad636">4.2. Shellac Structs</a></li>
-<li><a href="#org2b592a6">4.3. Outline of <code>shellac_job.c</code></a></li>
-<li><a href="#org0d2d47d">4.4. Outline of <code>shellac_control.c</code></a></li>
-<li><a href="#orgdda782f">4.5. Implementation Notes</a></li>
+<li><a href="#org92c4674">4.1. Overview</a></li>
+<li><a href="#orgd3bbe0e">4.2. Shellac Structs</a></li>
+<li><a href="#org7ceba1b">4.3. Outline of <code>shellac_job.c</code></a></li>
+<li><a href="#org77275ed">4.4. Outline of <code>shellac_control.c</code></a></li>
+<li><a href="#orgba178d0">4.5. Implementation Notes</a></li>
 </ul>
 </li>
-<li><a href="#org6dcf59c">5. <b>Problem 3</b>: I/O Redirection and Background Jobs</a>
+<li><a href="#org064f2ff">5. <b>Problem 3</b>: I/O Redirection and Background Jobs</a>
 <ul>
-<li><a href="#orgd3b4f62">5.1. Overview</a></li>
-<li><a href="#org7965796">5.2. Sample Session</a></li>
-<li><a href="#org5e65fd5">5.3. I/O Redirection</a></li>
-<li><a href="#org2eb304f">5.4. Background Jobs</a></li>
+<li><a href="#org5598a7c">5.1. Overview</a></li>
+<li><a href="#orgaeda891">5.2. Sample Session</a></li>
+<li><a href="#org0a0521c">5.3. I/O Redirection</a></li>
+<li><a href="#org3fc09aa">5.4. Background Jobs</a></li>
 </ul>
 </li>
-<li><a href="#org8b2df65">6. Grading Criteria</a></li>
-<li><a href="#org5c4fd13">7. MAKEUP CREDIT</a></li>
-<li><a href="#org45aa205">8. Assignment Submission</a>
+<li><a href="#org21b8f76">6. Grading Criteria</a></li>
+<li><a href="#org0e80ccc">7. MAKEUP CREDIT</a></li>
+<li><a href="#org8705bdf">8. Assignment Submission</a>
 <ul>
-<li><a href="#org8fea130">8.1. Submit to Gradescope</a></li>
-<li><a href="#org3719d21">8.2. Late Policies</a></li>
+<li><a href="#org32e9914">8.1. Submit to Gradescope</a></li>
+<li><a href="#orgcc9228b">8.2. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -570,8 +589,8 @@ to the Week 11 Canvas videos:
 </div>
 </div>
 </div>
-<div id="outline-container-orga12ae7b" class="outline-2">
-<h2 id="orga12ae7b"><span class="section-number-2">1</span> Introduction: A Simple Shell</h2>
+<div id="outline-container-org076cbf4" class="outline-2">
+<h2 id="org076cbf4"><span class="section-number-2">1</span> Introduction: A Simple Shell</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Command line shells allow one to access the capabilities of a computer
@@ -617,8 +636,8 @@ status every so often</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org23730a5" class="outline-2">
-<h2 id="org23730a5"><span class="section-number-2">2</span> <a id="org0256c32"></a> Download Code and Setup</h2>
+<div id="outline-container-org5d35106" class="outline-2">
+<h2 id="org5d35106"><span class="section-number-2">2</span> <a id="org0c74d23"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -744,12 +763,12 @@ folder. Ultimately you will re-zip this folder to submit it.
 </table>
 </div>
 </div>
-<div id="outline-container-org1997275" class="outline-2">
-<h2 id="org1997275"><span class="section-number-2">3</span> <b>Problem 1</b>: Interactive Loop</h2>
+<div id="outline-container-org3c25c23" class="outline-2">
+<h2 id="org3c25c23"><span class="section-number-2">3</span> <b>Problem 1</b>: Interactive Loop</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org1199122" class="outline-3">
-<h3 id="org1199122"><span class="section-number-3">3.1</span> Basic Interactive Loop</h3>
+<div id="outline-container-org5c4cb7e" class="outline-3">
+<h3 id="org5c4cb7e"><span class="section-number-3">3.1</span> Basic Interactive Loop</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 This Problem will have you complete a basic interactive loop for
@@ -796,8 +815,8 @@ sufficient.
 </p>
 </div>
 </div>
-<div id="outline-container-orgf6017ba" class="outline-3">
-<h3 id="orgf6017ba"><span class="section-number-3">3.2</span> Sample Session</h3>
+<div id="outline-container-org2ce5e67" class="outline-3">
+<h3 id="org2ce5e67"><span class="section-number-3">3.2</span> Sample Session</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 This section provides a sample of how the Shellac interactive loop
@@ -839,8 +858,8 @@ ERROR: No job '2' to wait for
 </div>
 </div>
 </div>
-<div id="outline-container-orga89182c" class="outline-3">
-<h3 id="orga89182c"><span class="section-number-3">3.3</span> Printing Help</h3>
+<div id="outline-container-orge289415" class="outline-3">
+<h3 id="orge289415"><span class="section-number-3">3.3</span> Printing Help</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The required help message for Shellac can be produced using the
@@ -869,8 +888,8 @@ into your <code>shellac_main.c</code>.
 </p>
 </div>
 </div>
-<div id="outline-container-orgecddb1b" class="outline-3">
-<h3 id="orgecddb1b"><span class="section-number-3">3.4</span> Other Supported Commands</h3>
+<div id="outline-container-orgd0fcb18" class="outline-3">
+<h3 id="orgd0fcb18"><span class="section-number-3">3.4</span> Other Supported Commands</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 As the help message indicates, you'll want to add cases for each built
@@ -878,25 +897,25 @@ in commands. Samples of the behavior of each of these are in the
 sample runs but are outlined briefly here.
 </p>
 </div>
-<div id="outline-container-org53528bf" class="outline-4">
-<h4 id="org53528bf"><code>help</code></h4>
-<div class="outline-text-4" id="text-org53528bf">
+<div id="outline-container-orgd808583" class="outline-4">
+<h4 id="orgd808583"><code>help</code></h4>
+<div class="outline-text-4" id="text-orgd808583">
 <p>
 Print the help message; <code>print_help()</code> is ideal for this.
 </p>
 </div>
 </div>
-<div id="outline-container-org9020d1d" class="outline-4">
-<h4 id="org9020d1d"><code>exit</code></h4>
-<div class="outline-text-4" id="text-org9020d1d">
+<div id="outline-container-org97cc7bd" class="outline-4">
+<h4 id="org97cc7bd"><code>exit</code></h4>
+<div class="outline-text-4" id="text-org97cc7bd">
 <p>
 Break out of the interactive loop and quit Shellac.
 </p>
 </div>
 </div>
-<div id="outline-container-org41edadf" class="outline-4">
-<h4 id="org41edadf"><code>jobs</code></h4>
-<div class="outline-text-4" id="text-org41edadf">
+<div id="outline-container-org5b03dbd" class="outline-4">
+<h4 id="org5b03dbd"><code>jobs</code></h4>
+<div class="outline-text-4" id="text-org5b03dbd">
 <p>
 Print out all jobs presently running. Currently this will only print
 the message
@@ -910,9 +929,9 @@ as no job launching functionality is implemented.
 </p>
 </div>
 </div>
-<div id="outline-container-org7e9663e" class="outline-4">
-<h4 id="org7e9663e"><code>pause &lt;secs&gt;</code></h4>
-<div class="outline-text-4" id="text-org7e9663e">
+<div id="outline-container-org0d2f666" class="outline-4">
+<h4 id="org0d2f666"><code>pause &lt;secs&gt;</code></h4>
+<div class="outline-text-4" id="text-org0d2f666">
 <p>
 Sleep shellac for an specified amount of time using the provided
 <code>pause_for()</code> function in <code>shellac_util.c</code>.  This functionality must
@@ -920,18 +939,18 @@ be present but is not likely to be tested.
 </p>
 </div>
 </div>
-<div id="outline-container-orgbaeb761" class="outline-4">
-<h4 id="orgbaeb761"><code>wait &lt;jobnum&gt;</code></h4>
-<div class="outline-text-4" id="text-orgbaeb761">
+<div id="outline-container-orgb9424db" class="outline-4">
+<h4 id="orgb9424db"><code>wait &lt;jobnum&gt;</code></h4>
+<div class="outline-text-4" id="text-orgb9424db">
 <p>
 Block Shellac until the indicated job is complete.  This functionality
 involves background jobs and will be completed in Problem 3.
 </p>
 </div>
 </div>
-<div id="outline-container-org3ff65ef" class="outline-4">
-<h4 id="org3ff65ef"><code>tokens &lt;arg1&gt; &lt;arg2&gt; ...</code></h4>
-<div class="outline-text-4" id="text-org3ff65ef">
+<div id="outline-container-org328f771" class="outline-4">
+<h4 id="org328f771"><code>tokens &lt;arg1&gt; &lt;arg2&gt; ...</code></h4>
+<div class="outline-text-4" id="text-org328f771">
 <p>
 Print out a listing of the tokens in the input line which will look
 like the following:
@@ -954,9 +973,9 @@ debugging.
 </p>
 </div>
 </div>
-<div id="outline-container-org44662b0" class="outline-4">
-<h4 id="org44662b0"><code>cmd &lt;arg1&gt; &lt;arg2&gt; ...</code></h4>
-<div class="outline-text-4" id="text-org44662b0">
+<div id="outline-container-org88153cc" class="outline-4">
+<h4 id="org88153cc"><code>cmd &lt;arg1&gt; &lt;arg2&gt; ...</code></h4>
+<div class="outline-text-4" id="text-org88153cc">
 <p>
 Run a job (child process) according to the command line given. This
 functionality is the subject of later problems and does not need to be
@@ -965,8 +984,8 @@ implemented yet.
 </div>
 </div>
 </div>
-<div id="outline-container-orgfd4cfe4" class="outline-3">
-<h3 id="orgfd4cfe4"><span class="section-number-3">3.5</span> Input Lines and Tokenization</h3>
+<div id="outline-container-org6818e11" class="outline-3">
+<h3 id="org6818e11"><span class="section-number-3">3.5</span> Input Lines and Tokenization</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 The C programming language is not known for its ease of handling
@@ -1040,8 +1059,8 @@ command.
 </p>
 </div>
 </div>
-<div id="outline-container-org136002c" class="outline-3">
-<h3 id="org136002c"><span class="section-number-3">3.6</span> Exit on End of Input</h3>
+<div id="outline-container-orgf2451e1" class="outline-3">
+<h3 id="orgf2451e1"><span class="section-number-3">3.6</span> Exit on End of Input</h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 One can exit Shellac using the <code>exit</code> command as in 
@@ -1073,8 +1092,8 @@ order to detect the end of input.
 </p>
 </div>
 </div>
-<div id="outline-container-org0ba2dcf" class="outline-3">
-<h3 id="org0ba2dcf"><span class="section-number-3">3.7</span> Command Echoing</h3>
+<div id="outline-container-orgcbbff50" class="outline-3">
+<h3 id="orgcbbff50"><span class="section-number-3">3.7</span> Command Echoing</h3>
 <div class="outline-text-3" id="text-3-7">
 <p>
 To be compatible with tests, Shellac must support command echoing as
@@ -1117,9 +1136,9 @@ exit
 </pre>
 </div>
 </div>
-<div id="outline-container-org38e20de" class="outline-4">
-<h4 id="org38e20de">Command Echoing in Scripting</h4>
-<div class="outline-text-4" id="text-org38e20de">
+<div id="outline-container-org6818b9d" class="outline-4">
+<h4 id="org6818b9d">Command Echoing in Scripting</h4>
+<div class="outline-text-4" id="text-org6818b9d">
 <p>
 Echoing commands allows "scripting" of Shellac with scripted sections
 looking like interactive sessions.  Note differences below in the below
@@ -1169,9 +1188,9 @@ tokens[3]: c
 </div>
 </div>
 </div>
-<div id="outline-container-org03adc76" class="outline-4">
-<h4 id="org03adc76">Implementing Echoing</h4>
-<div class="outline-text-4" id="text-org03adc76">
+<div id="outline-container-orgcc0473a" class="outline-4">
+<h4 id="orgcc0473a">Implementing Echoing</h4>
+<div class="outline-text-4" id="text-orgcc0473a">
 <p>
 Echoing is typically done by checking the command line arguments to
 <code>shellac_main</code> for the string <code>--echo</code> and then setting some sort of
@@ -1184,12 +1203,12 @@ the command is not printed.
 </div>
 </div>
 </div>
-<div id="outline-container-org8fe4753" class="outline-2">
-<h2 id="org8fe4753"><span class="section-number-2">4</span> <b>Problem 2</b>: Basic Job Functionality</h2>
+<div id="outline-container-org43e6cff" class="outline-2">
+<h2 id="org43e6cff"><span class="section-number-2">4</span> <b>Problem 2</b>: Basic Job Functionality</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org4e8e911" class="outline-3">
-<h3 id="org4e8e911"><span class="section-number-3">4.1</span> Overview</h3>
+<div id="outline-container-org92c4674" class="outline-3">
+<h3 id="org92c4674"><span class="section-number-3">4.1</span> Overview</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 Completing this problem will add the capability of running commands in
@@ -1200,9 +1219,9 @@ two structs defined in <code>shellac.h</code>. Once these functions are complete
 <code>shellac_main.c</code> can be modified to allow running a single job. 
 </p>
 </div>
-<div id="outline-container-orgf483579" class="outline-4">
-<h4 id="orgf483579">Sample Session</h4>
-<div class="outline-text-4" id="text-orgf483579">
+<div id="outline-container-orgd2c028a" class="outline-4">
+<h4 id="orgd2c028a">Sample Session</h4>
+<div class="outline-text-4" id="text-orgd2c028a">
 <div class="org-src-container">
 <pre class="src src-sh">&gt;&gt; shellac
 
@@ -1247,8 +1266,8 @@ grep: not-there.txt: No such file or directory
 </div>
 </div>
 </div>
-<div id="outline-container-org23ad636" class="outline-3">
-<h3 id="org23ad636"><span class="section-number-3">4.2</span> Shellac Structs</h3>
+<div id="outline-container-orgd3bbe0e" class="outline-3">
+<h3 id="orgd3bbe0e"><span class="section-number-3">4.2</span> Shellac Structs</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 The following structs are defined in <code>shellac.h</code> and encapsulate the
@@ -1290,8 +1309,8 @@ Functions that operate on the structs are in the <code>shellac_job.c</code> and
 </p>
 </div>
 </div>
-<div id="outline-container-org2b592a6" class="outline-3">
-<h3 id="org2b592a6"><span class="section-number-3">4.3</span> Outline of <code>shellac_job.c</code></h3>
+<div id="outline-container-org7ceba1b" class="outline-3">
+<h3 id="org7ceba1b"><span class="section-number-3">4.3</span> Outline of <code>shellac_job.c</code></h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 Most but not all of the functions in <code>shellac_job.c</code> must be completed
@@ -1300,7 +1319,7 @@ they complete. Below is an outline of the required functions. More may
 be added as needed.
 </p>
 
-<pre class="example" id="org53fcfd0">
+<pre class="example" id="org710e27d">
 // shellac_job.c: functions related the job_t struct abstracting a
 // running command. Most functions maninpulate jot_t structs.
 
@@ -1313,7 +1332,11 @@ void job_print(job_t *job);
 // strnull() simplifies printing nice "NULL" strings and
 // job_condition_str() simplifies creating a string based on condition
 // codes.
-// 
+//
+// SPECIAL CASE: If the pid of the child is &lt;= 0, print it just as 0
+// or -2, or whatever negative number it is without the leading #
+// (hash symbol).
+//
 // SAMPLE OUTPUT FORMAT: 
 // job {
 //   .jobname       = 'diff'
@@ -1352,7 +1375,7 @@ job_t *job_new(char *argv[]);
 // shellac_util.c may prove useful to shift over input / output
 // redirection though other methods are possible. Note that the "&gt;"
 // "&lt;" and "&amp;" strings are removed from the command line so must be
-// handled wth care: either don't duplicat them or free() any
+// handled wth care: either don't duplicate them or free() any
 // duplicates of them before returning.
 
 void job_free(job_t *job);
@@ -1368,7 +1391,11 @@ void job_start(job_t *job);
 // the job, sets this up using dup2() calls. For output redirection,
 // ensures any output files are created and if they already exist, are
 // "clobbered" via appropriate options to open(). If input/output
-// redirection fails, the child process should exit with JOBCOND_FAIL_OUTP or INP.
+// redirection fails, the child process should exit with
+// JOBCOND_FAIL_OUTP or JOBCOND_FAIL_INPT.  If a job fails to exec(),
+// the child should exit() with code JOBCOND_FAIL_EXEC. In this case,
+// there is no need for the child process to attempt to de-allocate
+// any memory as the OS will recoup all its resources on exit.
 
 int job_update_status(job_t *job);
 // Checks on the job for a status update. This utilizes a wait() or
@@ -1393,8 +1420,8 @@ int job_update_status(job_t *job);
 </pre>
 </div>
 </div>
-<div id="outline-container-org0d2d47d" class="outline-3">
-<h3 id="org0d2d47d"><span class="section-number-3">4.4</span> Outline of <code>shellac_control.c</code></h3>
+<div id="outline-container-org77275ed" class="outline-3">
+<h3 id="org77275ed"><span class="section-number-3">4.4</span> Outline of <code>shellac_control.c</code></h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 Some of the functions in <code>shellac_control.c</code> must be completed as they
@@ -1402,21 +1429,23 @@ would be used to add/update jobs in the main interactive loop. Below
 is a listing of the required functions that show up in unit tests.
 </p>
 
-<pre class="example" id="orga878b82">
+<pre class="example" id="org5b4a7a6">
 // shellac_control.c: functions related the shellac_t struct that controls
 // multiple jobs
 
 #include "shellac.h"
 
 void shellac_init(shellac_t *shellac);
-// Initialize all fields of the shellac argv[] array to NULL and set
+// Initialize all fields of the shellac jobs[] array to NULL and set
 // the job_count to 0
 
 int shellac_add_job(shellac_t *shellac, job_t *job);
-// Add a single job to the argv[] array. Search for the first NULL
+// Add a single job to the jobs[] array. Search for the first NULL
 // entry in the array and add that on. Does basic error checking to
 // see if array is full and prints an error message of some kind of
-// so.
+// so. Returns the index in the jobs array (job number) where the new
+// job is added. If the jobs array is full, prints an error message
+// and returns -1.
 
 int shellac_remove_job(shellac_t *shellac, int jobnum);
 // Remove the indicated job from the jobs array and replace its entry
@@ -1472,13 +1501,13 @@ void shellac_wait_one(shellac_t *shellac, int jobnum);
 </pre>
 </div>
 </div>
-<div id="outline-container-orgdda782f" class="outline-3">
-<h3 id="orgdda782f"><span class="section-number-3">4.5</span> Implementation Notes</h3>
+<div id="outline-container-orgba178d0" class="outline-3">
+<h3 id="orgba178d0"><span class="section-number-3">4.5</span> Implementation Notes</h3>
 <div class="outline-text-3" id="text-4-5">
 </div>
-<div id="outline-container-org747135b" class="outline-4">
-<h4 id="org747135b">Overall</h4>
-<div class="outline-text-4" id="text-org747135b">
+<div id="outline-container-orga5a3164" class="outline-4">
+<h4 id="orga5a3164">Overall</h4>
+<div class="outline-text-4" id="text-orga5a3164">
 <ol class="org-ol">
 <li>Complete most of the functions in <code>shellac_job.c</code> though not all
 functionality needs to be present yet: some notes are given in the
@@ -1492,9 +1521,9 @@ launch foreground jobs.</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-org740caef" class="outline-4">
-<h4 id="org740caef"><code>Dprintf()</code> for Debugging</h4>
-<div class="outline-text-4" id="text-org740caef">
+<div id="outline-container-org765e4aa" class="outline-4">
+<h4 id="org765e4aa"><code>Dprintf()</code> for Debugging</h4>
+<div class="outline-text-4" id="text-org765e4aa">
 <p>
 It may be worthwhile to utilize the <code>Dprintf()</code> function provided
 in <code>shellac_util.c</code>.  This will print a <code>printf()</code> style message
@@ -1525,9 +1554,9 @@ you work but will be silenced during testing.
 </p>
 </div>
 </div>
-<div id="outline-container-orgc8d18de" class="outline-4">
-<h4 id="orgc8d18de"><code>shellac_job.c</code></h4>
-<div class="outline-text-4" id="text-orgc8d18de">
+<div id="outline-container-org37e736b" class="outline-4">
+<h4 id="org37e736b"><code>shellac_job.c</code></h4>
+<div class="outline-text-4" id="text-org37e736b">
 <ol class="org-ol">
 <li>The <code>job_t</code> is tracks information on a running child process. It's
 most important parts are the <code>argv[]</code> field which is used to name
@@ -1584,9 +1613,9 @@ this.</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-org1e46d92" class="outline-4">
-<h4 id="org1e46d92"><code>shellac_control.c</code></h4>
-<div class="outline-text-4" id="text-org1e46d92">
+<div id="outline-container-org0db993d" class="outline-4">
+<h4 id="org0db993d"><code>shellac_control.c</code></h4>
+<div class="outline-text-4" id="text-org0db993d">
 <ol class="org-ol">
 <li>Most of the functions in <code>shellac_control.c</code> work on the
 <code>shellac_t</code> struct, a glorified array of <code>job_t</code> structs.</li>
@@ -1633,9 +1662,9 @@ to remove a job or start one at a given index are non-NULL.</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-org98cb1ed" class="outline-4">
-<h4 id="org98cb1ed">Modifications to Shellac <code>main()</code></h4>
-<div class="outline-text-4" id="text-org98cb1ed">
+<div id="outline-container-org9f607a8" class="outline-4">
+<h4 id="org9f607a8">Modifications to Shellac <code>main()</code></h4>
+<div class="outline-text-4" id="text-org9f607a8">
 <ul class="org-ul">
 <li>Once the most of the functions are complete, add a <code>shellac_t</code>
 struct to <code>shellac_main.c</code>. On detecting a not-builtin command like
@@ -1650,12 +1679,12 @@ end of Problem 3.</li>
 </div>
 </div>
 </div>
-<div id="outline-container-org6dcf59c" class="outline-2">
-<h2 id="org6dcf59c"><span class="section-number-2">5</span> <b>Problem 3</b>: I/O Redirection and Background Jobs</h2>
+<div id="outline-container-org064f2ff" class="outline-2">
+<h2 id="org064f2ff"><span class="section-number-2">5</span> <b>Problem 3</b>: I/O Redirection and Background Jobs</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-orgd3b4f62" class="outline-3">
-<h3 id="orgd3b4f62"><span class="section-number-3">5.1</span> Overview</h3>
+<div id="outline-container-org5598a7c" class="outline-3">
+<h3 id="org5598a7c"><span class="section-number-3">5.1</span> Overview</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 Completing this problem adds input and output redirection to the shell
@@ -1717,8 +1746,8 @@ used in any combination.
 </table>
 </div>
 </div>
-<div id="outline-container-org7965796" class="outline-3">
-<h3 id="org7965796"><span class="section-number-3">5.2</span> Sample Session</h3>
+<div id="outline-container-orgaeda891" class="outline-3">
+<h3 id="orgaeda891"><span class="section-number-3">5.2</span> Sample Session</h3>
 <div class="outline-text-3" id="text-5-2">
 <div class="org-src-container">
 <pre class="src src-text">(shellac) echo hello world
@@ -1783,8 +1812,8 @@ hello I'm awake
 </div>
 </div>
 </div>
-<div id="outline-container-org5e65fd5" class="outline-3">
-<h3 id="org5e65fd5"><span class="section-number-3">5.3</span> I/O Redirection</h3>
+<div id="outline-container-org0a0521c" class="outline-3">
+<h3 id="org0a0521c"><span class="section-number-3">5.3</span> I/O Redirection</h3>
 <div class="outline-text-3" id="text-5-3">
 <ol class="org-ol">
 <li><p>
@@ -1858,14 +1887,14 @@ and then try the unit tests.</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-org2eb304f" class="outline-3">
-<h3 id="org2eb304f"><span class="section-number-3">5.4</span> Background Jobs</h3>
+<div id="outline-container-org3fc09aa" class="outline-3">
+<h3 id="org3fc09aa"><span class="section-number-3">5.4</span> Background Jobs</h3>
 <div class="outline-text-3" id="text-5-4">
 <ol class="org-ol">
 <li>Revisit <code>job_new()</code> to check for the <code>&amp;</code> background symbol. When
 detected, set the <code>is_background</code> field to 1.</li>
 <li><p>
-Revisit <code>job_update()</code> to respect the <code>is_background</code> field
+Revisit <code>job_update_status()</code> to respect the <code>is_background</code> field
 </p>
 <ul class="org-ul">
 <li><code>is_background==0</code> should block the parent on a <code>waitpid()</code> until
@@ -1895,8 +1924,8 @@ and then try the unit tests.</li>
 </div>
 </div>
 </div>
-<div id="outline-container-org8b2df65" class="outline-2 grading 100">
-<h2 id="org8b2df65"><span class="section-number-2">6</span> Grading Criteria&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="100">100</span></span></h2>
+<div id="outline-container-org21b8f76" class="outline-2 grading 100">
+<h2 id="org21b8f76"><span class="section-number-2">6</span> Grading Criteria&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="100">100</span></span></h2>
 <div class="outline-text-2" id="text-6">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -2087,8 +2116,8 @@ and then try the unit tests.</li>
 </table>
 </div>
 </div>
-<div id="outline-container-org5c4fd13" class="outline-2">
-<h2 id="org5c4fd13"><span class="section-number-2">7</span> MAKEUP CREDIT</h2>
+<div id="outline-container-org0e80ccc" class="outline-2">
+<h2 id="org0e80ccc"><span class="section-number-2">7</span> MAKEUP CREDIT</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 A MAKEUP CREDIT problem <i>may</i> be added which will require additional
@@ -2097,12 +2126,12 @@ Credit will be separate from those that appear for the above problems.
 </p>
 </div>
 </div>
-<div id="outline-container-org45aa205" class="outline-2">
-<h2 id="org45aa205"><span class="section-number-2">8</span> Assignment Submission</h2>
+<div id="outline-container-org8705bdf" class="outline-2">
+<h2 id="org8705bdf"><span class="section-number-2">8</span> Assignment Submission</h2>
 <div class="outline-text-2" id="text-8">
 </div>
-<div id="outline-container-org8fea130" class="outline-3">
-<h3 id="org8fea130"><span class="section-number-3">8.1</span> <a id="orgd0404de"></a> Submit to Gradescope</h3>
+<div id="outline-container-org32e9914" class="outline-3">
+<h3 id="org32e9914"><span class="section-number-3">8.1</span> <a id="org1ed0c18"></a> Submit to Gradescope</h3>
 <div class="outline-text-3" id="text-8-1">
 <p>
 Refer to the Project 1 instructions and adapt them for details of how
@@ -2119,8 +2148,8 @@ appropriate assignment on Gradescope via the sites web interface.</dd>
 </dl>
 </div>
 </div>
-<div id="outline-container-org3719d21" class="outline-3">
-<h3 id="org3719d21"><span class="section-number-3">8.2</span> Late Policies</h3>
+<div id="outline-container-orgcc9228b" class="outline-3">
+<h3 id="orgcc9228b"><span class="section-number-3">8.2</span> Late Policies</h3>
 <div class="outline-text-3" id="text-8-2">
 <p>
 You may wish to review the policy on late project submission which
@@ -2136,7 +2165,7 @@ accepted more than 48 hours after the deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-11-14 Fri 15:46 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-11-17 Mon 16:52 <br/> </i>
 </div>
 </body>
 </html>
