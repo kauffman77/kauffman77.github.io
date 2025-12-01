@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-11-30 Sun 13:36 -->
+<!-- 2025-11-30 Sun 21:01 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Lab12: ~mmap()~ / Thread Performance</title>
@@ -344,7 +344,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2025-11-30 Sun 13:36</i>
+<i>Last Updated: 2025-11-30 Sun 21:01</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Lab12: <code>mmap()</code> / Thread Performance</h1>
@@ -352,36 +352,36 @@ text-align: justify;
 <li><b>Due: 11:59pm Mon 08-Dec-2025</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
-<div id="outline-container-orgb196bd0" class="outline-4">
-<h4 id="orgb196bd0">CODE DISTRIBUTION: <a href="lab12-code.zip">lab12-code.zip</a></h4>
+<div id="outline-container-org66b0f05" class="outline-4">
+<h4 id="org66b0f05">CODE DISTRIBUTION: <a href="lab12-code.zip">lab12-code.zip</a></h4>
 </div>
 
-<div id="outline-container-orgcc1bbf6" class="outline-4">
-<h4 id="orgcc1bbf6">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-orgcc1bbf6">
+<div id="outline-container-org23c6c65" class="outline-4">
+<h4 id="org23c6c65">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org23c6c65">
 </div>
 </div>
-<div id="outline-container-orgfbeac70" class="outline-4">
-<h4 id="orgfbeac70"></h4>
-<div class="outline-text-4" id="text-orgfbeac70">
+<div id="outline-container-orga1e46d3" class="outline-4">
+<h4 id="orga1e46d3"></h4>
+<div class="outline-text-4" id="text-orga1e46d3">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org5204e9d">1. Rationale</a></li>
-<li><a href="#orgd928757">2. Codepack</a></li>
-<li><a href="#orgdec18d7">3. Problem 2 Overview and Background</a></li>
-<li><a href="#org769898c">4. Basic Overview of Threads</a></li>
-<li><a href="#org261cc7f">5. Special Note On Testing</a></li>
-<li><a href="#org2218b72">6. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org24cf448">7. Submission</a></li>
+<li><a href="#orgcee9721">1. Rationale</a></li>
+<li><a href="#org2c16ae9">2. Codepack</a></li>
+<li><a href="#org3328785">3. Problem 2 Overview and Background</a></li>
+<li><a href="#org07994b5">4. Basic Overview of Threads</a></li>
+<li><a href="#org82ee2e7">5. Special Note On Testing</a></li>
+<li><a href="#org379ccd3">6. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org04e6926">7. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org5204e9d" class="outline-2">
-<h2 id="org5204e9d"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orgcee9721" class="outline-2">
+<h2 id="orgcee9721"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Programs can request virtual memory to be mapped into their address
@@ -400,17 +400,17 @@ threads, divvying up work, and synchronizing the threads as they
 contribute a shared result.
 </p>
 </div>
-<div id="outline-container-orgd7cc6ff" class="outline-4">
-<h4 id="orgd7cc6ff">Associated Reading / Preparation</h4>
-<div class="outline-text-4" id="text-orgd7cc6ff">
+<div id="outline-container-org67b92cd" class="outline-4">
+<h4 id="org67b92cd">Associated Reading / Preparation</h4>
+<div class="outline-text-4" id="text-org67b92cd">
 <p>
 Bryant and O'Hallaron: Ch 12.3-6 covers threaded programming.
 </p>
 </div>
 </div>
-<div id="outline-container-org4b8ec02" class="outline-4">
-<h4 id="org4b8ec02">Grading Policy</h4>
-<div class="outline-text-4" id="text-org4b8ec02">
+<div id="outline-container-org6f25f9c" class="outline-4">
+<h4 id="org6f25f9c">Grading Policy</h4>
+<div class="outline-text-4" id="text-org6f25f9c">
 <p>
 Credit for this exercise is earned by completing the code/asnwers here
 and submitting a Zip of the work to Gradescope. Students are
@@ -432,8 +432,8 @@ See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies 
 </div>
 </div>
 </div>
-<div id="outline-container-orgd928757" class="outline-2">
-<h2 id="orgd928757"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org2c16ae9" class="outline-2">
+<h2 id="org2c16ae9"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the lab contains the following files:
@@ -544,8 +544,8 @@ The codepack for the lab contains the following files:
 </table>
 </div>
 </div>
-<div id="outline-container-orgdec18d7" class="outline-2">
-<h2 id="orgdec18d7"><span class="section-number-2">3</span> Problem 2 Overview and Background</h2>
+<div id="outline-container-org3328785" class="outline-2">
+<h2 id="org3328785"><span class="section-number-2">3</span> Problem 2 Overview and Background</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 This lab deals with matrices and vectors again similar to a previous
@@ -560,8 +560,8 @@ implementation.
 </p>
 </div>
 </div>
-<div id="outline-container-org769898c" class="outline-2">
-<h2 id="org769898c"><span class="section-number-2">4</span> Basic Overview of Threads</h2>
+<div id="outline-container-org07994b5" class="outline-2">
+<h2 id="org07994b5"><span class="section-number-2">4</span> Basic Overview of Threads</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Threads allow the creation of multiple "threads of execution" within
@@ -596,8 +596,8 @@ function calls used to facilitate it.
 </p>
 </div>
 </div>
-<div id="outline-container-org261cc7f" class="outline-2">
-<h2 id="org261cc7f"><span class="section-number-2">5</span> Special Note On Testing</h2>
+<div id="outline-container-org82ee2e7" class="outline-2">
+<h2 id="org82ee2e7"><span class="section-number-2">5</span> Special Note On Testing</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 The code is tuned to run properly on most NORMAL GRACE nodes (not the
@@ -684,8 +684,8 @@ col_sum_threaded wall time: 4.8283e-02 sec
 </div>
 </div>
 </div>
-<div id="outline-container-org2218b72" class="outline-2">
-<h2 id="org2218b72"><span class="section-number-2">6</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org379ccd3" class="outline-2">
+<h2 id="org379ccd3"><span class="section-number-2">6</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -787,7 +787,7 @@ PROBLEM 1 CODE: Complete mapped_array.c
   `----
 
 
-PROBLEM 2 QUIZ: mmap() Allocation
+PROBLEM 1 QUIZ: mmap() Allocation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   After gaining an understanding of mapped_array.c, answer the following
@@ -899,7 +899,7 @@ PROBLEM 2 QUIZ: col_sums_A() vs col_sums_B()
   - ( ) One version uses a row-major matrix while the other uses a
     column-major matrix meaning that the underlying memory layout of the
     matrices used is different between the functions
-  - ( ) They both compute the sums of all columsn but traverse the
+  - ( ) They both compute the sums of all columns but traverse the
     matrix in a different order
   - ( ) They compute two different properties of the columns of the
     matrix and therefore necessarily need to traverse the matrix in a
@@ -930,8 +930,8 @@ PROBLEM 2 QUIZ: Thread Startup and Shutdown
 (A) Thread Creation and Completion
 ----------------------------------
 
-  Examine `csum_thread_main.c' and `csum_thread_func.c'. Determine where
-  worker threads are created and the function used to do so.
+  Examine `csum_thread_main.c' and `csum_thread_funcs.c'. Determine
+  where worker threads are created and the function used to do so.
   - ( ) Worker threads are created in `main()' using a version of
     `fork()' with optional arguments that were not previously used to
     create processes.
@@ -950,7 +950,7 @@ PROBLEM 2 QUIZ: Thread Startup and Shutdown
 ---------------------
 
   Research the function that is used to block a thread until another
-  thread completes.  This is used in `csum_thread_func.c' to block the
+  thread completes.  This is used in `csum_thread_funcs.c' to block the
   "main" thread until all worker threads have completed.  Which of the
   following is the most appropriate function to block until a thread has
   completed.
@@ -1088,8 +1088,8 @@ PROBLEM 2 CODE: Complete col_sums_thread()
 </div>
 </div>
 </div>
-<div id="outline-container-org24cf448" class="outline-2">
-<h2 id="org24cf448"><span class="section-number-2">7</span> Submission</h2>
+<div id="outline-container-org04e6926" class="outline-2">
+<h2 id="org04e6926"><span class="section-number-2">7</span> Submission</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -1099,7 +1099,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-11-30 Sun 13:36 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-11-30 Sun 21:01 <br/> </i>
 </div>
 </body>
 </html>
