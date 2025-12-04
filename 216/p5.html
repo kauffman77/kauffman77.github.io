@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-12-04 Thu 16:23 -->
+<!-- 2025-12-04 Thu 16:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Project 5: Heaps and Performance Optimization</title>
@@ -492,7 +492,7 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2025-12-04 Thu 16:23</i>
+<i>Last Updated: 2025-12-04 Thu 16:27</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Project 5: Heaps and Performance Optimization</h1>
@@ -503,59 +503,59 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 <li>Projects are <b>individual work</b>: no collaboration with other students
 is allowed. Seek help from course staff if you get stuck for too long.</li>
 </ul>
-<div id="outline-container-org66a9be1" class="outline-4">
-<h4 id="org66a9be1">CODE/TEST DISTRIBUTION: <a href="p5-code.zip">p5-code.zip</a></h4>
+<div id="outline-container-org43a013d" class="outline-4">
+<h4 id="org43a013d">CODE/TEST DISTRIBUTION: <a href="p5-code.zip">p5-code.zip</a></h4>
 </div>
-<div id="outline-container-org0e49fe7" class="outline-4">
-<h4 id="org0e49fe7">Video Overview: <i>Not Yet Available</i></h4>
+<div id="outline-container-orga88584f" class="outline-4">
+<h4 id="orga88584f">Video Overview: <i>Not Yet Available</i></h4>
 </div>
-<div id="outline-container-orge9781bd" class="outline-4">
-<h4 id="orge9781bd">CHANGELOG: Empty</h4>
+<div id="outline-container-orgbdba79f" class="outline-4">
+<h4 id="orgbdba79f">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-orgfa587a3" class="outline-4">
-<h4 id="orgfa587a3"></h4>
-<div class="outline-text-4" id="text-orgfa587a3">
+<div id="outline-container-org7eade49" class="outline-4">
+<h4 id="org7eade49"></h4>
+<div class="outline-text-4" id="text-org7eade49">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org361d855">1. Introduction</a></li>
-<li><a href="#orgdc8e3fa">2. Download Code and Setup</a></li>
-<li><a href="#org496cf2e">3. <b>Problem 1</b> : EL Malloc</a>
+<li><a href="#orgeddcba2">1. Introduction</a></li>
+<li><a href="#org878996b">2. Download Code and Setup</a></li>
+<li><a href="#org845ebd9">3. <b>Problem 1</b> : EL Malloc</a>
 <ul>
-<li><a href="#org0358681">3.1. EL Malloc Data Structures</a></li>
-<li><a href="#org3a6eb1c">3.2. Block Header/Footer</a></li>
-<li><a href="#orgb912804">3.3. Blocks Above/Below</a></li>
-<li><a href="#orgb6b5759">3.4. Block Lists and Global Control</a></li>
-<li><a href="#orgb177c04">3.5. Pointers and "Actual" Space</a></li>
-<li><a href="#org41b94d8">3.6. Doubly Linked List Operations</a></li>
-<li><a href="#orgb7d2d5f">3.7. Allocation via Block Splitting</a></li>
-<li><a href="#orga8aae8e">3.8. Freeing Blocks and Merging</a></li>
-<li><a href="#orge3b4747">3.9. Expanding the Heap</a></li>
-<li><a href="#org9e14ebc">3.10. Overall Code Structure of EL Malloc</a></li>
-<li><a href="#orgbda85f8">3.11. Demo Run using EL Malloc</a></li>
-<li><a href="#orgbda640d">3.12. Grading Criteria for Problem 1</a></li>
+<li><a href="#orgd2e9d62">3.1. EL Malloc Data Structures</a></li>
+<li><a href="#orgb4c7f81">3.2. Block Header/Footer</a></li>
+<li><a href="#org292ab8c">3.3. Blocks Above/Below</a></li>
+<li><a href="#orgfb43ea3">3.4. Block Lists and Global Control</a></li>
+<li><a href="#org1319654">3.5. Pointers and "Actual" Space</a></li>
+<li><a href="#org6d5c136">3.6. Doubly Linked List Operations</a></li>
+<li><a href="#org75d8e2b">3.7. Allocation via Block Splitting</a></li>
+<li><a href="#org8992f8b">3.8. Freeing Blocks and Merging</a></li>
+<li><a href="#org9e6a733">3.9. Expanding the Heap</a></li>
+<li><a href="#org9c597a5">3.10. Overall Code Structure of EL Malloc</a></li>
+<li><a href="#orgf1a4416">3.11. Demo Run using EL Malloc</a></li>
+<li><a href="#org1c5c6ee">3.12. Grading Criteria for Problem 1</a></li>
 </ul>
 </li>
-<li><a href="#orgcb8080a">4. <b>Problem 2</b>: MATATA Operation</a>
+<li><a href="#orga97a1d8">4. <b>Problem 2</b>: MATATA Operation</a>
 <ul>
-<li><a href="#org37dc348">4.1. Overview</a></li>
-<li><a href="#org977964a">4.2. Optimize MATATA</a></li>
-<li><a href="#orgff93454">4.3. Evaluation on Grace</a></li>
-<li><a href="#orgbf681a9">4.4. <code>matata_print.c</code> Testing Program</a></li>
-<li><a href="#org88f0fec">4.5. Optimization Suggestions and Documentation</a></li>
-<li><a href="#orgbd58aeb">4.6. Hints on Cache-Friendly Memory Traversals</a></li>
-<li><a href="#org050e7f5">4.7. Hints on Multi-threading</a></li>
-<li><a href="#orgb900ad4">4.8. Constraints</a></li>
-<li><a href="#orge5af794">4.9. Additional Optimizations for MAKEUP Credit</a></li>
-<li><a href="#org646d44f">4.10. Grading Criteria for Problem 1 (55%)</a></li>
+<li><a href="#org5231829">4.1. Overview</a></li>
+<li><a href="#org55a42a3">4.2. Optimize MATATA</a></li>
+<li><a href="#org13b5b0f">4.3. Evaluation on Grace</a></li>
+<li><a href="#org8157486">4.4. <code>matata_print.c</code> Testing Program</a></li>
+<li><a href="#org032fdaf">4.5. Optimization Suggestions and Documentation</a></li>
+<li><a href="#org3ac56ae">4.6. Hints on Cache-Friendly Memory Traversals</a></li>
+<li><a href="#org7242e54">4.7. Hints on Multi-threading</a></li>
+<li><a href="#org8389e57">4.8. Constraints</a></li>
+<li><a href="#org8658d76">4.9. Additional Optimizations for MAKEUP Credit</a></li>
+<li><a href="#org48566c7">4.10. Grading Criteria for Problem 1 (55%)</a></li>
 </ul>
 </li>
-<li><a href="#orga9daadb">5. Assignment Submission</a>
+<li><a href="#org4e40fef">5. Assignment Submission</a>
 <ul>
-<li><a href="#orgd143d20">5.1. Submit to Gradescope</a></li>
-<li><a href="#orgc72fc74">5.2. Late Policies</a></li>
+<li><a href="#org92f2dbd">5.1. Submit to Gradescope</a></li>
+<li><a href="#orgf18e40e">5.2. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -563,8 +563,8 @@ is allowed. Seek help from course staff if you get stuck for too long.</li>
 </div>
 </div>
 </div>
-<div id="outline-container-org361d855" class="outline-2">
-<h2 id="org361d855"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orgeddcba2" class="outline-2">
+<h2 id="orgeddcba2"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This project features a two required problems pertaining to the
@@ -584,8 +584,8 @@ and enabling multi-threading to further boost performance.</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-orgdc8e3fa" class="outline-2">
-<h2 id="orgdc8e3fa"><span class="section-number-2">2</span> <a id="orgb3490dd"></a> Download Code and Setup</h2>
+<div id="outline-container-org878996b" class="outline-2">
+<h2 id="org878996b"><span class="section-number-2">2</span> <a id="org200f70f"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -656,43 +656,43 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tbody>
 <tbody>
 <tr>
-<td class="org-left"><code>colnorm_optm.c</code></td>
+<td class="org-left"><code>matata_optm.c</code></td>
 <td class="org-left">EDIT</td>
 <td class="org-left">Problem 2 create and fill in optimized function definition</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>colnorm_benchmark.c</code></td>
+<td class="org-left"><code>matata_benchmark.c</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Problem 2 main benchmark</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>colnorm_print.c</code></td>
+<td class="org-left"><code>matata_print.c</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Problem 2 testing program</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>colnorm_base.c</code></td>
+<td class="org-left"><code>matata_base.c</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Problem 2 baseline function to beat</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>colnorm.h</code></td>
+<td class="org-left"><code>matata.h</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Problem 2 header file</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>colnorm_util.c</code></td>
+<td class="org-left"><code>matata_util.c</code></td>
 <td class="org-left">Provided</td>
 <td class="org-left">Problem 2 utility functions for matrices/vectors</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>test_colnorm.org</code></td>
+<td class="org-left"><code>test_matata.org</code></td>
 <td class="org-left">Testing</td>
 <td class="org-left">Tests to check for memory issues in problem 2</td>
 </tr>
@@ -700,8 +700,8 @@ folder. Ultimately you will re-zip this folder to submit it.
 </table>
 </div>
 </div>
-<div id="outline-container-org496cf2e" class="outline-2">
-<h2 id="org496cf2e"><span class="section-number-2">3</span> <b>Problem 1</b> : EL Malloc</h2>
+<div id="outline-container-org845ebd9" class="outline-2">
+<h2 id="org845ebd9"><span class="section-number-2">3</span> <b>Problem 1</b> : EL Malloc</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 A <b>memory allocator</b> is small system which manages heap memory,
@@ -751,8 +751,8 @@ fragmentation of memory, the newly available block is <b>merged</b> with
 adjacent available blocks if possible.</li>
 </ul>
 </div>
-<div id="outline-container-org0358681" class="outline-3">
-<h3 id="org0358681"><span class="section-number-3">3.1</span> EL Malloc Data Structures</h3>
+<div id="outline-container-orgd2e9d62" class="outline-3">
+<h3 id="orgd2e9d62"><span class="section-number-3">3.1</span> EL Malloc Data Structures</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Several data structures defined in <code>el_malloc.h</code> should be studied so
@@ -762,8 +762,8 @@ the required functions should implement.
 </p>
 </div>
 </div>
-<div id="outline-container-org3a6eb1c" class="outline-3">
-<h3 id="org3a6eb1c"><span class="section-number-3">3.2</span> Block Header/Footer</h3>
+<div id="outline-container-orgb4c7f81" class="outline-3">
+<h3 id="orgb4c7f81"><span class="section-number-3">3.2</span> Block Header/Footer</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Each block of memory tracked by EL Malloc is preceded and succeeded by
@@ -807,7 +807,7 @@ shown below.
 </p>
 <div class="org-center">
 
-<div id="org1439c0c" class="figure">
+<div id="org33759d0" class="figure">
 <p><img src="el_block.png" alt="el_block.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Block data preceded by a header (<code>el_blockhead_t</code>) and followed by a footer (<code>el_blockfoot_t</code>)._</p>
@@ -815,8 +815,8 @@ shown below.
 </div>
 </div>
 </div>
-<div id="outline-container-orgb912804" class="outline-3">
-<h3 id="orgb912804"><span class="section-number-3">3.3</span> Blocks Above/Below</h3>
+<div id="outline-container-org292ab8c" class="outline-3">
+<h3 id="org292ab8c"><span class="section-number-3">3.3</span> Blocks Above/Below</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 One might wonder why the footer appears.  In tracking blocks, there
@@ -831,7 +831,7 @@ This is illustrated in the diagram below.
 </p>
 <div class="org-center">
 
-<div id="orgbdcfe21" class="figure">
+<div id="org994be86" class="figure">
 <p><img src="el_headfoot.png" alt="el_headfoot.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Finding preceding block header using footer (<code>el_block_below(header)</code>)</p>
@@ -876,8 +876,8 @@ useful for doing pointer operations involving bytes.
 </div>
 </div>
 </div>
-<div id="outline-container-orgb6b5759" class="outline-3">
-<h3 id="orgb6b5759"><span class="section-number-3">3.4</span> Block Lists and Global Control</h3>
+<div id="outline-container-orgfb43ea3" class="outline-3">
+<h3 id="orgfb43ea3"><span class="section-number-3">3.4</span> Block Lists and Global Control</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 The main purpose of the memory allocator is to track the available and
@@ -924,7 +924,7 @@ structure <code>el_ctl</code> has two lists for available and used space.
 
 <div class="org-center">
 
-<div id="orgfc6444a" class="figure">
+<div id="orgcbabd5e" class="figure">
 <p><img src="el_listsglobal.png" alt="el_listsglobal.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 3: </span>Structure of heap with several used/available blocks. Pointers from <code>el_ctl</code> lists allow access to these blocks.</p>
@@ -944,8 +944,8 @@ void el_cleanup();
 </div>
 </div>
 </div>
-<div id="outline-container-orgb177c04" class="outline-3">
-<h3 id="orgb177c04"><span class="section-number-3">3.5</span> Pointers and "Actual" Space</h3>
+<div id="outline-container-org1319654" class="outline-3">
+<h3 id="org1319654"><span class="section-number-3">3.5</span> Pointers and "Actual" Space</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 In several structures, there appear pointers named <code>xxx</code> and structs
@@ -985,8 +985,8 @@ the struct for the list.
 </p>
 </div>
 </div>
-<div id="outline-container-org41b94d8" class="outline-3">
-<h3 id="org41b94d8"><span class="section-number-3">3.6</span> Doubly Linked List Operations</h3>
+<div id="outline-container-org6d5c136" class="outline-3">
+<h3 id="org6d5c136"><span class="section-number-3">3.6</span> Doubly Linked List Operations</h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 A large number of operations in EL Malloc boil down to doubly linked
@@ -1036,8 +1036,8 @@ void el_remove_block(el_blocklist_t *list, el_blockhead_t *block);
 </div>
 </div>
 </div>
-<div id="outline-container-orgb7d2d5f" class="outline-3">
-<h3 id="orgb7d2d5f"><span class="section-number-3">3.7</span> <a id="org404b6fd"></a> Allocation via Block Splitting</h3>
+<div id="outline-container-org75d8e2b" class="outline-3">
+<h3 id="org75d8e2b"><span class="section-number-3">3.7</span> <a id="orgf21987c"></a> Allocation via Block Splitting</h3>
 <div class="outline-text-3" id="text-3-7">
 <p>
 The basic operation of granting memory on a call to <code>el_malloc(size)</code>
@@ -1059,7 +1059,7 @@ Available or Used lists but will be in later functions.
 
 <div class="org-center">
 
-<div id="org1751703" class="figure">
+<div id="org23c519a" class="figure">
 <p><img src="el_split_cases.png" alt="el_split_cases.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 4: </span>Shows the behavior of the <code>el_split_block()</code> function in two cases, a block large enough to split and one that is large enough to meet a request but cannot be split.</p>
@@ -1083,7 +1083,7 @@ user data within the now Used block is returned.</li>
 
 <div class="org-center">
 
-<div id="org7a455c5" class="figure">
+<div id="org39e7804" class="figure">
 <p><img src="el_malloc_steps.png" alt="el_malloc_steps.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 5: </span>Steps for <code>el_malloc()</code> when Splitting a block in an allocation request. The rough progression is shown after finding an appropriately sized block which is split into parts with list membership adjusted for both parts.</p>
@@ -1102,8 +1102,8 @@ void *el_malloc(size_t nbytes);
 </div>
 </div>
 </div>
-<div id="outline-container-orga8aae8e" class="outline-3">
-<h3 id="orga8aae8e"><span class="section-number-3">3.8</span> Freeing Blocks and Merging</h3>
+<div id="outline-container-org8992f8b" class="outline-3">
+<h3 id="org8992f8b"><span class="section-number-3">3.8</span> Freeing Blocks and Merging</h3>
 <div class="outline-text-3" id="text-3-8">
 <p>
 Freeing memory passes in a pointer to the user area that was
@@ -1135,7 +1135,7 @@ The diagrams below show two of these cases.
 </p>
 <div class="org-center">
 
-<div id="orgb82df80" class="figure">
+<div id="orgdedeee7" class="figure">
 <p><img src="el_free-merge.png" alt="el_free-merge.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 6: </span>Two cases of freeing blocks. The 2nd involves merging adjacent nodes with available space.</p>
@@ -1158,8 +1158,8 @@ void el_free(void *ptr);
 </div>
 </div>
 </div>
-<div id="outline-container-orge3b4747" class="outline-3">
-<h3 id="orge3b4747"><span class="section-number-3">3.9</span> Expanding the Heap</h3>
+<div id="outline-container-org9e6a733" class="outline-3">
+<h3 id="org9e6a733"><span class="section-number-3">3.9</span> Expanding the Heap</h3>
 <div class="outline-text-3" id="text-3-9">
 <p>
 El Malloc initializes the heap with just a single page of memory
@@ -1231,8 +1231,8 @@ heap expansion has failed.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org9e14ebc" class="outline-3">
-<h3 id="org9e14ebc"><span class="section-number-3">3.10</span> Overall Code Structure of EL Malloc</h3>
+<div id="outline-container-org9c597a5" class="outline-3">
+<h3 id="org9c597a5"><span class="section-number-3">3.10</span> Overall Code Structure of EL Malloc</h3>
 <div class="outline-text-3" id="text-3-10">
 <p>
 Below is the code structure of the EL Malloc library.  Some of the
@@ -1240,7 +1240,7 @@ functions have been implemented already while those marked <code>REQUIRED</code>
 must be completed for full credit on the problem.
 </p>
 
-<pre class="example" id="org8698d18">
+<pre class="example" id="org308b295">
 // el_malloc.c: implementation of explicit list malloc functions.
 
 #include "el_malloc.h"
@@ -1430,8 +1430,8 @@ int el_append_pages_to_heap(int npages);
 </pre>
 </div>
 </div>
-<div id="outline-container-orgbda85f8" class="outline-3">
-<h3 id="orgbda85f8"><span class="section-number-3">3.11</span> Demo Run using EL Malloc</h3>
+<div id="outline-container-orgf1a4416" class="outline-3">
+<h3 id="orgf1a4416"><span class="section-number-3">3.11</span> Demo Run using EL Malloc</h3>
 <div class="outline-text-3" id="text-3-11">
 <p>
 Below is a run showing the behavior of a series of <code>el_malloc() /
@@ -1439,9 +1439,9 @@ el_free()</code> calls.  They are performed in the provided <code>el_demo.c</cod
 program. 
 </p>
 </div>
-<div id="outline-container-org88aa9b8" class="outline-4">
-<h4 id="org88aa9b8">Source for <code>el_demo.c</code></h4>
-<div class="outline-text-4" id="text-org88aa9b8">
+<div id="outline-container-org4a5b5e2" class="outline-4">
+<h4 id="org4a5b5e2">Source for <code>el_demo.c</code></h4>
+<div class="outline-text-4" id="text-org4a5b5e2">
 <div class="org-src-container">
 <pre class="src src-c">// el_demo.c: Shows use cases for el_malloc() and el_free(). This file
 // can be used for testing but is not itself a test.
@@ -1555,9 +1555,9 @@ int main(){
 </div>
 </div>
 </div>
-<div id="outline-container-org91fc8de" class="outline-4">
-<h4 id="org91fc8de"><a id="org3d48e9d"></a> Output of El Malloc Demo</h4>
-<div class="outline-text-4" id="text-org91fc8de">
+<div id="outline-container-orgff85f2b" class="outline-4">
+<h4 id="orgff85f2b"><a id="org83a77f1"></a> Output of El Malloc Demo</h4>
+<div class="outline-text-4" id="text-orgff85f2b">
 <div class="org-src-container">
 <pre class="src src-text">EL_BLOCK_OVERHEAD: 40
 INITIAL
@@ -2297,8 +2297,8 @@ HEAP BLOCKS:
 </div>
 </div>
 </div>
-<div id="outline-container-orgbda640d" class="outline-3 grading 45">
-<h3 id="orgbda640d"><span class="section-number-3">3.12</span> <a id="org61b336c"></a> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="45">45</span></span></h3>
+<div id="outline-container-org1c5c6ee" class="outline-3 grading 45">
+<h3 id="org1c5c6ee"><span class="section-number-3">3.12</span> <a id="orgbcb0f02"></a> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="45">45</span></span></h3>
 <div class="outline-text-3" id="text-3-12">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -2561,12 +2561,12 @@ HEAP BLOCKS:
 </div>
 </div>
 </div>
-<div id="outline-container-orgcb8080a" class="outline-2">
-<h2 id="orgcb8080a"><span class="section-number-2">4</span> <b>Problem 2</b>: MATATA Operation</h2>
+<div id="outline-container-orga97a1d8" class="outline-2">
+<h2 id="orga97a1d8"><span class="section-number-2">4</span> <b>Problem 2</b>: MATATA Operation</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org37dc348" class="outline-3">
-<h3 id="org37dc348"><span class="section-number-3">4.1</span> Overview</h3>
+<div id="outline-container-org5231829" class="outline-3">
+<h3 id="org5231829"><span class="section-number-3">4.1</span> Overview</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 A problem that occasionally arises in numerical computing when working
@@ -2582,13 +2582,13 @@ The MATATA operation is a special case of general <a href="https://en.wikipedia.
 multiplication</a> and students unfamiliar with this operation should
 study it to get some context for the present work.  The diagram below
 illustrates a sample matrix A, its transpose A<sup>T</sup> that exchanges rows
-and coluns, and the results of computing A<sup>T</sup> × A. Note that for
+and columns, and the results of computing A<sup>T</sup> × A. Note that for
 rectangular matrices with R rows and C columns, the results of
 </p>
 
 <div class="org-center">
 
-<div id="org179e243" class="figure">
+<div id="orgbae67ae" class="figure">
 <p><img src="matata.plain.svg" alt="matata.plain.svg" class="org-svg" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 7: </span>4 by 3 matrix <code>A</code> with colored elements, its transpose <code>At</code>, and the result of multiplying <code>At × A</code>.</p>
@@ -2692,8 +2692,8 @@ fairly slow when executing on most modern computing systems.
 </p>
 </div>
 </div>
-<div id="outline-container-org977964a" class="outline-3">
-<h3 id="org977964a"><span class="section-number-3">4.2</span> Optimize MATATA</h3>
+<div id="outline-container-org55a42a3" class="outline-3">
+<h3 id="org55a42a3"><span class="section-number-3">4.2</span> Optimize MATATA</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 The purpose of this problem is to write <code>matata_OPTM()</code> which is a
@@ -2718,7 +2718,7 @@ the matrix in memory is essential to unlocking performance.</li>
 <li>To achieve this goal, several optimizations must be implemented and
 suggestions are given in a later section.</li>
 <li>There is one additional parameter to the optimized function:
-<code>colnorm_OPTM(mat,avg,std,thread_count)</code>.  This indicates the
+<code>matata_OPTM(mat,avg,std,thread_count)</code>.  This indicates the
 number of threads that should be used during the computation: one
 of the optimizations that is essential is to add multi-threading
 support.</li>
@@ -2732,8 +2732,8 @@ Some details are provided in subsequent sections.
 </p>
 </div>
 </div>
-<div id="outline-container-orgff93454" class="outline-3">
-<h3 id="orgff93454"><span class="section-number-3">4.3</span> Evaluation on Grace</h3>
+<div id="outline-container-org13b5b0f" class="outline-3">
+<h3 id="org13b5b0f"><span class="section-number-3">4.3</span> Evaluation on Grace</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 The file <code>matata_benchmark.c</code> provides a benchmark for the speed of
@@ -2776,14 +2776,14 @@ submission.
 </p>
 
 <p>
-The output of the <code>colnorm_benchmark</code> is shown below.
+The output of the <code>matata_benchmark</code> is shown below.
 </p>
 <ul class="org-ul">
 <li><code>ROWS/COLS</code>: the size of the matrix being used.</li>
-<li><code>BASE</code>: the time it takes for <code>colnorm_BASE()</code> to complete.</li>
-<li><code>T</code>: number of threads used for running <code>colnorm_OPTM()</code></li>
-<li><code>OPTM</code>: the time it takes for <code>colnorm_OPTM()</code> to complete.</li>
-<li><code>SPDUP</code>: the speedup of <code>colnorm_OPTM()</code> over <code>colnorm_BASE()</code> which
+<li><code>BASE</code>: the time it takes for <code>matata_BASE()</code> to complete.</li>
+<li><code>T</code>: number of threads used for running <code>matata_OPTM()</code></li>
+<li><code>OPTM</code>: the time it takes for <code>matata_OPTM()</code> to complete.</li>
+<li><code>SPDUP</code>: the speedup of <code>matata_OPTM()</code> over <code>matata_BASE()</code> which
 is <code>BASE / OPTM</code>.</li>
 <li><p>
 <code>POINT</code>: points earned on this run according to the following code:
@@ -2809,7 +2809,7 @@ Below are several demonstration runs of the benchmark.
 <div class="org-src-container">
 <pre class="src src-sh"># ###############################################################################
 # RUN ON INCORRECT MACHINE (NOT grace nodes), NOTE WARNINGS
-homputer&gt;&gt; ./colnorm_benchmark 
+homputer&gt;&gt; ./matata_benchmark 
 WARNING: UNEXPECTED HOST 'val'
 WARNING: ensure you are on an normal GRACE node
 WARNING: timing results / scoring will not reflect actual scoring
@@ -2866,7 +2866,7 @@ WARNING:   grace10.umd.edu
 # PARTIAL CREDIT RUN
 &gt;&gt; ssh grace.umd.edu
 ...
-grace4&gt;&gt; ./colnorm_benchmark 
+grace4&gt;&gt; ./mata_benchmark 
 ./matata_benchmark
 ==== Matrix A^T*A Benchmark Version 2.0 ====
 Performing 12 runs with 2 thread_counts (max 2)
@@ -2902,7 +2902,7 @@ TOTAL POINTS: 17 / 35
 # FULL CREDIT RUN
 &gt;&gt; ssh grace.umd.edu
 ...
-grace3&gt;&gt; ./colnorm_benchmark 
+grace3&gt;&gt; ./matata_benchmark 
 ==== Matrix A^T*A Benchmark Version 2.0 ====
 Performing 12 runs with 2 thread_counts (max 2)
   ROWS   COLS   BASE  T   OPTM SPDUP POINT TOTAL 
@@ -2953,8 +2953,8 @@ optimizations.
 </blockquote>
 </div>
 </div>
-<div id="outline-container-orgbf681a9" class="outline-3">
-<h3 id="orgbf681a9"><span class="section-number-3">4.4</span> <code>matata_print.c</code> Testing Program</h3>
+<div id="outline-container-org8157486" class="outline-3">
+<h3 id="org8157486"><span class="section-number-3">4.4</span> <code>matata_print.c</code> Testing Program</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 As one works on implementing optimizations in <code>matata_OPTM()</code>, bugs
@@ -3064,8 +3064,8 @@ BASE/OPTM Element Comparison:
 </div>
 </div>
 </div>
-<div id="outline-container-org88f0fec" class="outline-3">
-<h3 id="org88f0fec"><span class="section-number-3">4.5</span> <a id="org0b27cbc"></a> Optimization Suggestions and Documentation</h3>
+<div id="outline-container-org032fdaf" class="outline-3">
+<h3 id="org032fdaf"><span class="section-number-3">4.5</span> <a id="org13e2df7"></a> Optimization Suggestions and Documentation</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 Labs and lectures have covered several kinds of optimizations which
@@ -3078,8 +3078,8 @@ favors cache. <b>Unless memory accesses favor cache, it is unlikely
 that any other optimizations will provide much speedup.</b> There are
 several possibilities to optimizing cache so make sure to read the
 section on alternatives.</li>
-<li>Use threads to split up the work of normalization. The problem has
-a high degree of parallelism in it with many portions that can be
+<li>Use threads to split up the work of computation. The problem has a
+high degree of parallelism in it with many portions that can be
 computed in worker threads independently from others. <b>Assume that
 the number of threads to use will be small</b> compared to the size of
 the matrix. For example, the benchmark uses at most 2 threads and
@@ -3093,8 +3093,8 @@ to assist you along with more discussion in this document</b>.
 </p>
 </div>
 </div>
-<div id="outline-container-orgbd58aeb" class="outline-3">
-<h3 id="orgbd58aeb"><span class="section-number-3">4.6</span> Hints on Cache-Friendly Memory Traversals</h3>
+<div id="outline-container-org3ac56ae" class="outline-3">
+<h3 id="org3ac56ae"><span class="section-number-3">4.6</span> Hints on Cache-Friendly Memory Traversals</h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
 There are two approaches to getting more out of cache in this setting.
@@ -3125,7 +3125,7 @@ solution.
 
 <div class="org-center">
 
-<div id="org042ae47" class="figure">
+<div id="org8bc0edb" class="figure">
 <p><img src="matata-order.plain.svg" alt="matata-order.plain.svg" class="org-svg" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 8: </span>Illustration of how to favor row-wise access to compute squared matrix. Computation of first row of the answer matrix is shown with natural extensions to rows beyond that.</p>
@@ -3133,13 +3133,13 @@ solution.
 </div>
 </div>
 </div>
-<div id="outline-container-org050e7f5" class="outline-3">
-<h3 id="org050e7f5"><span class="section-number-3">4.7</span> Hints on Multi-threading</h3>
+<div id="outline-container-org7242e54" class="outline-3">
+<h3 id="org7242e54"><span class="section-number-3">4.7</span> Hints on Multi-threading</h3>
 <div class="outline-text-3" id="text-4-7">
 </div>
-<div id="outline-container-orgef9af00" class="outline-4">
-<h4 id="orgef9af00">Division of Matrix Among Threads</h4>
-<div class="outline-text-4" id="text-orgef9af00">
+<div id="outline-container-org99fe758" class="outline-4">
+<h4 id="org99fe758">Division of Matrix Among Threads</h4>
+<div class="outline-text-4" id="text-org99fe758">
 <p>
 The matrix must be divided among worker threads. The bulk of the work
 that is done by BASE algorithm is computing the "upper triangle" of
@@ -3230,9 +3230,9 @@ other threads.
 </p>
 </div>
 </div>
-<div id="outline-container-org7108b0f" class="outline-4">
-<h4 id="org7108b0f">Use of Mutexes</h4>
-<div class="outline-text-4" id="text-org7108b0f">
+<div id="outline-container-org1c367fb" class="outline-4">
+<h4 id="org1c367fb">Use of Mutexes</h4>
+<div class="outline-text-4" id="text-org1c367fb">
 <p>
 Whenever a thread must access a memory element that other threads may
 reference, protect the access to that memory with a <b>Mutex</b>. Each
@@ -3248,9 +3248,9 @@ required.
 </p>
 </div>
 </div>
-<div id="outline-container-org92d7cb4" class="outline-4">
-<h4 id="org92d7cb4">Use of Barriers</h4>
-<div class="outline-text-4" id="text-org92d7cb4">
+<div id="outline-container-org387a29f" class="outline-4">
+<h4 id="org387a29f">Use of Barriers</h4>
+<div class="outline-text-4" id="text-org387a29f">
 <p>
 Later parts of the computation may require all threads to complete
 earlier parts.  For example, without having the maximum element across
@@ -3307,13 +3307,13 @@ void *worker(void *){
 </div>
 </div>
 </div>
-<div id="outline-container-orgb900ad4" class="outline-3">
-<h3 id="orgb900ad4"><span class="section-number-3">4.8</span> Constraints</h3>
+<div id="outline-container-org8389e57" class="outline-3">
+<h3 id="org8389e57"><span class="section-number-3">4.8</span> Constraints</h3>
 <div class="outline-text-3" id="text-4-8">
 </div>
-<div id="outline-container-org6b96717" class="outline-4">
-<h4 id="org6b96717">Use a Mutex</h4>
-<div class="outline-text-4" id="text-org6b96717">
+<div id="outline-container-orgae5d55a" class="outline-4">
+<h4 id="orgae5d55a">Use a Mutex</h4>
+<div class="outline-text-4" id="text-orgae5d55a">
 <p>
 While it may be possible to implement a completely lock-free solution
 with threads, <b>your implementation MUST use mutexes to coordinate
@@ -3324,9 +3324,9 @@ coordination.
 </p>
 </div>
 </div>
-<div id="outline-container-org33a8012" class="outline-4">
-<h4 id="org33a8012">Avoid Global Variables</h4>
-<div class="outline-text-4" id="text-org33a8012">
+<div id="outline-container-org74449b7" class="outline-4">
+<h4 id="org74449b7">Avoid Global Variables</h4>
+<div class="outline-text-4" id="text-org74449b7">
 <p>
 In many simple threaded programs, global variables are a convenient
 way to give worker threads/functions access to shared data. <b>AVOID
@@ -3348,9 +3348,9 @@ might look
 </p>
 </div>
 </div>
-<div id="outline-container-org3ce03ff" class="outline-4">
-<h4 id="org3ce03ff">Respect Thread Count</h4>
-<div class="outline-text-4" id="text-org3ce03ff">
+<div id="outline-container-orgfa35547" class="outline-4">
+<h4 id="orgfa35547">Respect Thread Count</h4>
+<div class="outline-text-4" id="text-orgfa35547">
 <p>
 The last parameter to the optimized function indicates the maximum
 number of threads to use while. During manual inspection, graders will
@@ -3362,8 +3362,8 @@ performance points to 0.
 </div>
 </div>
 </div>
-<div id="outline-container-orge5af794" class="outline-3">
-<h3 id="orge5af794"><span class="section-number-3">4.9</span> Additional Optimizations for MAKEUP Credit</h3>
+<div id="outline-container-org8658d76" class="outline-3">
+<h3 id="org8658d76"><span class="section-number-3">4.9</span> Additional Optimizations for MAKEUP Credit</h3>
 <div class="outline-text-3" id="text-4-9">
 <p>
 Additional optimizations may be performed to further speed up the
@@ -3382,8 +3382,8 @@ times, find a way to perform it only once.</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-org646d44f" class="outline-3 grading 55">
-<h3 id="org646d44f"><span class="section-number-3">4.10</span> Grading Criteria for Problem 1 (55%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="55">55</span></span></h3>
+<div id="outline-container-org48566c7" class="outline-3 grading 55">
+<h3 id="org48566c7"><span class="section-number-3">4.10</span> Grading Criteria for Problem 1 (55%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="55">55</span></span></h3>
 <div class="outline-text-3" id="text-4-10">
 <p>
 The file <code>P4-WRITEUP.txt</code> has several questions that should be
@@ -3513,12 +3513,12 @@ their use.
 </div>
 </div>
 </div>
-<div id="outline-container-orga9daadb" class="outline-2">
-<h2 id="orga9daadb"><span class="section-number-2">5</span> Assignment Submission</h2>
+<div id="outline-container-org4e40fef" class="outline-2">
+<h2 id="org4e40fef"><span class="section-number-2">5</span> Assignment Submission</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-orgd143d20" class="outline-3">
-<h3 id="orgd143d20"><span class="section-number-3">5.1</span> <a id="org616ffd0"></a> Submit to Gradescope</h3>
+<div id="outline-container-org92f2dbd" class="outline-3">
+<h3 id="org92f2dbd"><span class="section-number-3">5.1</span> <a id="org7e513e4"></a> Submit to Gradescope</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 Refer to the Project 1 instructions and adapt them for details of how
@@ -3535,8 +3535,8 @@ appropriate assignment on Gradescope via the sites web interface.</dd>
 </dl>
 </div>
 </div>
-<div id="outline-container-orgc72fc74" class="outline-3">
-<h3 id="orgc72fc74"><span class="section-number-3">5.2</span> Late Policies</h3>
+<div id="outline-container-orgf18e40e" class="outline-3">
+<h3 id="orgf18e40e"><span class="section-number-3">5.2</span> Late Policies</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 You may wish to review the policy on late project submission which
@@ -3552,7 +3552,7 @@ accepted more than 48 hours after the deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-12-04 Thu 16:23 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-12-04 Thu 16:27 <br/> </i>
 </div>
 </body>
 </html>
