@@ -1,0 +1,3558 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-12-04 Thu 16:20 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMSC216 Project 5: Performance Opt and Threading</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
+details > summary {
+padding: 2px 6px;
+font-family: Sans;
+font-size: 0.8em;
+width: fit-content;
+border-radius: 5px;
+background-color: #efefef;
+border: 1px solid black;
+cursor: pointer;
+}
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","[COMMANDO]>>","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+literal: ["[data/script.txt]>>","[data/script1.txt]>>","[data/script6.txt]>>"],
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+// hljs.COMMENT(/## /, /$/),     // hash-hash-ws for comment
+hljs.COMMENT(/##+/, /$/),     // or a sequence of hashes
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2025-12-04 Thu 16:20</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CMSC216 Project 5: Performance Opt and Threading</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Tue 12-May-2025</b></li>
+<li><i>Approximately 4.0% of total grade</i></li>
+<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a></li>
+<li>Projects are <b>individual work</b>: no collaboration with other students
+is allowed. Seek help from course staff if you get stuck for too long.</li>
+</ul>
+<div id="outline-container-org9a5040a" class="outline-4">
+<h4 id="org9a5040a">CODE/TEST DISTRIBUTION: <a href="p5-code.zip">p5-code.zip</a></h4>
+</div>
+<div id="outline-container-orga0d01ec" class="outline-4">
+<h4 id="orga0d01ec">Video Overview: <a href="https://youtu.be/R5ZyXsVgm_w">https://youtu.be/R5ZyXsVgm_w</a></h4>
+</div>
+<div id="outline-container-org70866ed" class="outline-4">
+<h4 id="org70866ed">CHANGELOG: Empty</h4>
+</div>
+
+<div id="outline-container-org555888d" class="outline-4">
+<h4 id="org555888d"></h4>
+<div class="outline-text-4" id="text-org555888d">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org3d8b4b1">1. Introduction</a></li>
+<li><a href="#org9332f57">2. Download Code and Setup</a></li>
+<li><a href="#org45315a1">3. <b>Problem 1</b> : EL Malloc</a>
+<ul>
+<li><a href="#org0e3b19a">3.1. EL Malloc Data Structures</a></li>
+<li><a href="#org9225571">3.2. Block Header/Footer</a></li>
+<li><a href="#org5f004b2">3.3. Blocks Above/Below</a></li>
+<li><a href="#org639524a">3.4. Block Lists and Global Control</a></li>
+<li><a href="#orgccc8c4e">3.5. Pointers and "Actual" Space</a></li>
+<li><a href="#org3af2e40">3.6. Doubly Linked List Operations</a></li>
+<li><a href="#org79867f6">3.7. Allocation via Block Splitting</a></li>
+<li><a href="#org810b620">3.8. Freeing Blocks and Merging</a></li>
+<li><a href="#orgd373b54">3.9. Expanding the Heap</a></li>
+<li><a href="#org2a0f4ab">3.10. Overall Code Structure of EL Malloc</a></li>
+<li><a href="#org854d9eb">3.11. Demo Run using EL Malloc</a></li>
+<li><a href="#orga18bcee">3.12. Grading Criteria for Problem 1</a></li>
+</ul>
+</li>
+<li><a href="#org3c340c1">4. <b>Problem 2</b>: MATATA Operation</a>
+<ul>
+<li><a href="#orgca0acb5">4.1. Overview</a></li>
+<li><a href="#orgb772093">4.2. Optimize MATATA</a></li>
+<li><a href="#org9d36185">4.3. Evaluation on Grace</a></li>
+<li><a href="#org5f91c85">4.4. <code>matata_print.c</code> Testing Program</a></li>
+<li><a href="#org22b1791">4.5. Optimization Suggestions and Documentation</a></li>
+<li><a href="#org9851f8c">4.6. Hints on Cache-Friendly Memory Traversals</a></li>
+<li><a href="#org34b2b91">4.7. Hints on Multi-threading</a></li>
+<li><a href="#org572bc78">4.8. Constraints</a></li>
+<li><a href="#orgd0965ba">4.9. Additional Optimizations for MAKEUP Credit</a></li>
+<li><a href="#org6906ffe">4.10. Grading Criteria for Problem 1 (55%)</a></li>
+</ul>
+</li>
+<li><a href="#org1f932a0">5. Assignment Submission</a>
+<ul>
+<li><a href="#org75853bc">5.1. Submit to Gradescope</a></li>
+<li><a href="#org8f1ed5f">5.2. Late Policies</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org3d8b4b1" class="outline-2">
+<h2 id="org3d8b4b1"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+This project features a two required problems pertaining to the
+final topics discussed in the course.
+</p>
+<ol class="org-ol">
+<li>EL Malloc implements a simple, explicit list memory allocator.
+This manages heap memory in doubly linked lists of Available and
+Used memory blocks to provide <code>el_malloc() / el_free()</code>. It could
+be extended with some work to be a drop-in replacement for
+<code>malloc() / free()</code>.</li>
+<li>A baseline implementation for a function operating on a matrix is
+provided and students will create an optimzied version of it which
+calculates the same result but in a shorter time.  Doing so will
+involve exploiting knowledge of the memory hierarchy to favor cache
+and enabling multi-threading to further boost performance.</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org9332f57" class="outline-2">
+<h2 id="org9332f57"><span class="section-number-2">2</span> <a id="orgd8f2c85"></a> Download Code and Setup</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Download the code pack linked at the top of the page. Unzip this which
+will create a project folder. Create new files in this
+folder. Ultimately you will re-zip this folder to submit it.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">State</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 &amp; 2 Build file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running script</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>el_malloc.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 header file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>el_demo.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 demo main()</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>el_malloc.c</code></td>
+<td class="org-left">COMPLETE</td>
+<td class="org-left">Problem 1 implemented REQUIRED functions</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_el_malloc.c</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 Testing program for El Malloc</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_el_malloc.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 Testing script for El Malloc</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>colnorm_optm.c</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 2 create and fill in optimized function definition</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>colnorm_benchmark.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2 main benchmark</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>colnorm_print.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2 testing program</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>colnorm_base.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2 baseline function to beat</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>colnorm.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2 header file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>colnorm_util.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2 utility functions for matrices/vectors</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_colnorm.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests to check for memory issues in problem 2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org45315a1" class="outline-2">
+<h2 id="org45315a1"><span class="section-number-2">3</span> <b>Problem 1</b> : EL Malloc</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+A <b>memory allocator</b> is small system which manages heap memory,
+sometimes referred to as the "data" segment of a program.  This
+portion of program memory is a linear set of addresses that form a
+large block which can expand at runtime by making requests to the
+operating system.  Solving the allocation problem forms backbone of
+what <code>malloc()/free()</code> do by keeping track of the space used and
+released by a user program.  Allocators also see use in garbage
+collected languages like Java where there are no explicit <code>free()</code>
+calls but the allocator must still find available space for new
+objects.
+</p>
+
+<p>
+One simple way to implement an allocator is to overlay linked lists
+on the heap which track at a minimum the available chunks of memory
+and possibly also the used chunks.  This comes with a cost: some of
+the bytes of memory in the heap are no longer available for the user
+program but are instead used for the allocator's book-keeping.  
+</p>
+
+<p>
+In this problem, an <i>explicit list</i> allocator is developed, thus the
+name of the system <code>el_malloc</code>.  It uses two lists to track memory in
+the heap:
+</p>
+<ul class="org-ul">
+<li>The <b>Available List</b> of blocks of memory that can be used to answer
+calls to <code>malloc()</code></li>
+<li>The <b>Used List</b> of blocks that have been returned by <code>malloc()</code> and
+should not be returned again until they are <code>free()'d</code></li>
+</ul>
+<p>
+Most operations boil down to manipulating these two lists in some
+form.
+</p>
+<ul class="org-ul">
+<li>Allocating with <code>ptr = el_malloc(size);</code> searches the Available List for a
+block with sufficient size. That block is split into two blocks. One block
+answers the request and is given about <code>size</code> bytes; it is moved to
+the Used List. The second block comprises the remainder of the space
+and remains on the Available List.</li>
+<li>Deallocating with <code>el_free(ptr);</code> moves the block referenced by
+<code>ptr</code> from the Used List to the Available List.  To prevent
+fragmentation of memory, the newly available block is <b>merged</b> with
+adjacent available blocks if possible.</li>
+</ul>
+</div>
+<div id="outline-container-org0e3b19a" class="outline-3">
+<h3 id="org0e3b19a"><span class="section-number-3">3.1</span> EL Malloc Data Structures</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Several data structures defined in <code>el_malloc.h</code> should be studied so
+that one is acquainted with their intent. The following sections
+outline many of these and show diagrams to indicate transformation
+the required functions should implement.
+</p>
+</div>
+</div>
+<div id="outline-container-org9225571" class="outline-3">
+<h3 id="org9225571"><span class="section-number-3">3.2</span> Block Header/Footer</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Each block of memory tracked by EL Malloc is preceded and succeeded by
+some bytes of memory for book keeping.  These are referred to as the
+block "header" and "footer" and are encoded in the <code>el_blockhead_t</code>
+and <code>el_blockfoot_t</code> structs.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">// type which is a "header" for a block of memory; containts info on
+// size, whether the block is available or in use, and links to the
+// next/prev blocks in a doubly linked list. This data structure
+// appears immediately before a block of memory that is tracked by the
+// allocator.
+typedef struct block {
+  size_t size;                  // number of bytes of memory in this block
+  char state;                   // either EL_AVAILABLE or EL_USED
+  struct block *next;           // pointer to next block in same list
+  struct block *prev;           // pointer to previous block in same list
+} el_blockhead_t;
+
+// Type for the "footer" of a block; indicates size of the preceding
+// block so that its header el_blockhead_t can be found with pointer
+// arithmetic. This data appears immediately after an area of memory
+// that may be used by a user or is free. Immediately after it is
+// either another header (el_blockhead_t) or the end of the heap.
+typedef struct {
+  size_t size;
+} el_blockfoot_t;
+</pre>
+</div>
+
+<p>
+As indicated, the blocks use <b>doubly linked nodes</b> in the header which
+will allow easy re-arrangement of the list.
+</p>
+
+<p>
+A picture of a block with its header, footer, and user data area is
+shown below.
+</p>
+<div class="org-center">
+
+<div id="orgb1a994f" class="figure">
+<p><img src="el_block.png" alt="el_block.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Block data preceded by a header (<code>el_blockhead_t</code>) and followed by a footer (<code>el_blockfoot_t</code>)._</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org5f004b2" class="outline-3">
+<h3 id="org5f004b2"><span class="section-number-3">3.3</span> Blocks Above/Below</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+One might wonder why the footer appears.  In tracking blocks, there
+will arise the need to work with a block that immediately precedes
+given block in memory in memory (not the previous in the linked list).
+The footer enables this by tracking the size of the user block of
+memory immediately beneath it.
+</p>
+
+<p>
+This is illustrated in the diagram below.
+</p>
+<div class="org-center">
+
+<div id="org8c42358" class="figure">
+<p><img src="el_headfoot.png" alt="el_headfoot.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Finding preceding block header using footer (<code>el_block_below(header)</code>)</p>
+</div>
+</div>
+
+<p>
+This operation is implemented in the function <code>el_block_below(block)</code> and
+the similar operation <code>el_block_above(block)</code> finds the next header
+immediately following one in memory.
+</p>
+
+<p>
+The following functions use pointer arithmetic to determine block
+locations from a provided pointer.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">el_blockfoot_t *el_get_footer(el_blockhead_t *block);
+el_blockhead_t *el_get_header(el_blockfoot_t *foot);
+el_blockhead_t *el_block_above(el_blockhead_t *block);
+el_blockhead_t *el_block_below(el_blockhead_t *block);
+</pre>
+</div>
+
+<p>
+These functions benefit from macros defined in <code>el_malloc.h</code> that are
+useful for doing pointer operations involving bytes.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// macro to add a byte offset to a pointer, arguments are a pointer
+// and a # of bytes (usually size_t)
+#define PTR_PLUS_BYTES(ptr,off) ((void *) (((size_t) (ptr)) + ((size_t) (off))))
+
+// macro to add a byte offset to a pointer, arguments are a pointer
+// and a # of bytes (usually size_t)
+#define PTR_MINUS_BYTES(ptr,off) ((void *) (((size_t) (ptr)) - ((size_t) (off))))
+
+// macro to add a byte offset to a pointer, arguments are a pointer
+// and a # of bytes (usually size_t)
+#define PTR_MINUS_PTR(ptr,ptq) (((size_t) (ptr)) - ((size_t) (ptq)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org639524a" class="outline-3">
+<h3 id="org639524a"><span class="section-number-3">3.4</span> Block Lists and Global Control</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+The main purpose of the memory allocator is to track the available and
+used blocks in explicit linked lists. This allows used and available
+memory to be distributed throughout the heap. Below are the data
+structures that track these lists and the global control data
+structure which houses information for the entire heap.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">// Type for a list of blocks; doubly linked with a fixed
+// "dummy" node at the beginning and end which do not contain any
+// data. List tracks its length and number of bytes in use.
+typedef struct {
+  el_blockhead_t beg_actual;    // fixed node at beginning of list; state is EL_BEGIN_BLOCK
+  el_blockhead_t end_actual;    // fixed node at end of list; state is EL_END_BLOCK
+  el_blockhead_t *beg;          // pointer to beg_actual
+  el_blockhead_t *end;          // pointer to end_actual
+  size_t length;                // length of the used block list (not counting beg/end)
+  size_t bytes;                 // total bytes in list used including overhead; 
+} el_blocklist_t;
+// NOTE: total available bytes for use/in-use in the list is (bytes - length*EL_BLOCK_OVERHEAD)
+
+// Type for the global control of the allocator. Tracks heap size,
+// start and end addresses, total size, and lists of available and
+// used blocks.
+typedef struct {
+  void *heap_start;             // pointer to where the heap starts
+  void *heap_end;               // pointer to where the heap ends; this memory address is out of bounds
+  size_t heap_bytes;            // number of bytes currently in the heap
+  el_blocklist_t avail_actual;  // space for the available list data
+  el_blocklist_t used_actual;   // space for the used list data
+  el_blocklist_t *avail;        // pointer to avail_actual
+  el_blocklist_t *used;         // pointer to used_actual
+} el_ctl_t;
+</pre>
+</div>
+
+<p>
+The following diagram shows some of the structure induced by use of a
+doubly linked lists overlaid onto the heap. The global control
+structure <code>el_ctl</code> has two lists for available and used space.
+</p>
+
+<div class="org-center">
+
+<div id="org1895948" class="figure">
+<p><img src="el_listsglobal.png" alt="el_listsglobal.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 3: </span>Structure of heap with several used/available blocks. Pointers from <code>el_ctl</code> lists allow access to these blocks.</p>
+</div>
+</div>
+
+
+<p>
+The following functions initialize the global control structures,
+print stats on the heap, and clean up at the end of execution.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">int el_init(int max_bytes);
+void el_print_stats();
+void el_cleanup();
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgccc8c4e" class="outline-3">
+<h3 id="orgccc8c4e"><span class="section-number-3">3.5</span> Pointers and "Actual" Space</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+In several structures, there appear pointers named <code>xxx</code> and structs
+named <code>xxx_actual</code>.  For example, in <code>el_blocklist_t</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">typedef struct {
+  ...
+  el_blockhead_t beg_actual;    // fixed node at beginning of list; state is EL_BEGIN_BLOCK
+  el_blockhead_t *beg;          // pointer to beg_actual
+  ...
+} el_blocklist_t;
+</pre>
+</div>
+<p>
+The intent here is that there will <i>always</i> be a node at the beginning
+of the doubly linked list to make the programming easier.  It makes
+sense to have an actual struct <code>beg_actual</code> present.  However, when
+working with the list, the address of the beginning node is often
+referenced making <code>beg</code> useful. In any case, <code>beg</code> will be initialized
+to <code>&amp;beg_actual</code> as appears in <code>el_init_blocklist()</code>.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">void el_init_blocklist(el_blocklist_t *list){
+  list-&gt;beg        = &amp;(list-&gt;beg_actual); 
+  list-&gt;beg-&gt;state = EL_BEGIN_BLOCK;
+  list-&gt;beg-&gt;size  = EL_UNINITIALIZED;
+  ...  
+}
+</pre>
+</div>
+
+<p>
+Similarly, since there will always be an Available List, <code>el_ctl_t</code>
+has both an <code>avail</code> pointer to the list and <code>avail_actual</code> which is
+the struct for the list.
+</p>
+</div>
+</div>
+<div id="outline-container-org3af2e40" class="outline-3">
+<h3 id="org3af2e40"><span class="section-number-3">3.6</span> Doubly Linked List Operations</h3>
+<div class="outline-text-3" id="text-3-6">
+<p>
+A large number of operations in EL Malloc boil down to doubly linked
+list operations. This includes
+</p>
+<ul class="org-ul">
+<li>Unlinking nodes from the middle of list during <code>el_free()</code></li>
+<li>Adding nodes to the beginning of a headed list (allocation and free)</li>
+<li>Traversing the list to print and search for available blocks</li>
+</ul>
+
+<p>
+Recall that unlinking a node from a doubly linked list involves
+modifying the previous and next node as in the following.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">  node-&gt;prev-&gt;next = node-&gt;next;
+  node-&gt;next-&gt;prev = node-&gt;prev;
+</pre>
+</div>
+<p>
+while adding a new node to the front is typically accomplished via
+</p>
+<div class="org-src-container">
+<pre class="src src-c">  node-&gt;prev = list-&gt;beg;
+  node-&gt;next = list-&gt;beg-&gt;next;
+  node-&gt;prev-&gt;next = node;
+  node-&gt;next-&gt;prev = node;
+</pre>
+</div>
+
+<p>
+You may wish to review doubly linked list operations and do some
+reading on lists with "dummy" nodes at the beginning and ending if
+these concepts are rusty.
+</p>
+
+<p>
+The following functions pertain to block list operations.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">void el_init_blocklist(el_blocklist_t *list);
+void el_print_blocklist(el_blocklist_t *list);
+void el_add_block_front(el_blocklist_t *list, el_blockhead_t *block);
+void el_remove_block(el_blocklist_t *list, el_blockhead_t *block);
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org79867f6" class="outline-3">
+<h3 id="org79867f6"><span class="section-number-3">3.7</span> <a id="orgfd9e434"></a> Allocation via Block Splitting</h3>
+<div class="outline-text-3" id="text-3-7">
+<p>
+The basic operation of granting memory on a call to <code>el_malloc(size)</code>
+involves finding an Available Block with enough bytes for the
+requested amount of memory. In the event that the block is
+significantly larger than the request and has enough space for a new
+header and footer, it can be <b>split</b> into two blocks with one granting
+the user request and another representing the remaining space.
+</p>
+
+<p>
+Note that in some cases, blocks cannot be split: below is a diagram
+showing case analysis for blocks that have sufficient size to meet
+request but cannot be split. The diagram below illustrates the net
+result of <code>el_split_block()</code> which may or may not split a block. Keep
+in mind that any new block created is not assigned to either the
+Available or Used lists but will be in later functions.
+</p>
+
+<div class="org-center">
+
+<div id="org0e7c8a0" class="figure">
+<p><img src="el_split_cases.png" alt="el_split_cases.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 4: </span>Shows the behavior of the <code>el_split_block()</code> function in two cases, a block large enough to split and one that is large enough to meet a request but cannot be split.</p>
+</div>
+</div>
+
+<p>
+<b>The rough steps for the <code>el_malloc()</code> function are shown below</b> for
+the case when block splitting occurs.
+</p>
+<ol class="org-ol">
+<li>A block that is large enough to split is located and removed from
+the Available list.</li>
+<li>If the block is large enough, it is cut into 2 parts: the requested
+size and the remainder with a head/foot in between; the original
+block is set to be part of the Used list and the remainder the
+Available list</li>
+<li>The blocks are added to the required lists and a pointer to the
+user data within the now Used block is returned.</li>
+</ol>
+
+<div class="org-center">
+
+<div id="org1845b55" class="figure">
+<p><img src="el_malloc_steps.png" alt="el_malloc_steps.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 5: </span>Steps for <code>el_malloc()</code> when Splitting a block in an allocation request. The rough progression is shown after finding an appropriately sized block which is split into parts with list membership adjusted for both parts.</p>
+</div>
+</div>
+
+<p>
+The following functions pertain to the location and splitting of
+blocks in the available list to fulfill allocation requests.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">el_blockhead_t *el_find_first_avail(size_t size);
+el_blockhead_t *el_split_block(el_blockhead_t *block, size_t new_size);
+void *el_malloc(size_t nbytes);
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org810b620" class="outline-3">
+<h3 id="org810b620"><span class="section-number-3">3.8</span> Freeing Blocks and Merging</h3>
+<div class="outline-text-3" id="text-3-8">
+<p>
+Freeing memory passes in a pointer to the user area that was
+granted. Immediately preceding this should be a <code>el_blockhead_t</code> and
+it can be found with pointer arithmetic.  
+</p>
+
+<p>
+In order to prevent memory from becoming continually divided into
+smaller blocks, on freeing the system checks to see if adjacent blocks
+can be merged.  Keep in mind that the blocks that can be merged are
+<b>adjacent in memory</b>, not next/previous in some linked list.  Adjacent
+blocks can be located using <code>el_block_above()</code> and <code>el_block_below()</code>.
+</p>
+
+<p>
+To merge, the adjacent blocks must both be Available (not Used).  A
+free can then have several cases.
+</p>
+<ol class="org-ol">
+<li>The freed block cannot be merged with any others</li>
+<li>The freed block can be merged with only the block above it</li>
+<li>The freed block can be merged with only the block below it</li>
+<li>The freed block can be merged with both adjacent blocks</li>
+</ol>
+
+<p>
+The diagrams below show two of these cases.
+</p>
+<div class="org-center">
+
+<div id="orga8213de" class="figure">
+<p><img src="el_free-merge.png" alt="el_free-merge.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 6: </span>Two cases of freeing blocks. The 2nd involves merging adjacent nodes with available space.</p>
+</div>
+</div>
+
+<p>
+With careful use of the below functions and handling of <code>NULL</code>
+arguments, all 4 cases can be handled with very little code.  Keep in
+mind that <code>el_block_above()/below()</code> should return <code>NULL</code> if there is
+no block above or below due to that are being out of the boundaries of
+the heap.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">el_blockhead_t *el_block_above(el_blockhead_t *block);
+el_blockhead_t *el_block_below(el_blockhead_t *block);
+void el_merge_block_with_above(el_blockhead_t *lower);
+void el_free(void *ptr);
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd373b54" class="outline-3">
+<h3 id="orgd373b54"><span class="section-number-3">3.9</span> Expanding the Heap</h3>
+<div class="outline-text-3" id="text-3-9">
+<p>
+El Malloc initializes the heap with just a single page of memory
+(<code>EL_PAGE_BYTES</code> = 4096 bytes) during <code>el_init()</code>.  While good for
+testing, a real application would need more space than this. The
+beginnings of <b>heap expansion</b> are provided via the following
+function.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">int el_append_pages_to_heap(int npages);
+// REQUIRED
+// Attempts to append pages of memory to the heap with mmap(). npages
+// is how many pages are to be appended with total bytes to be
+// appended as npages * EL_PAGE_BYTES. Calls mmap() with similar
+// arguments to those used in el_init() however requests the address
+// of the pages to be at heap_end so that the heap grows
+// contiguously. If this fails, prints the message
+// 
+//  ERROR: Unable to mmap() additional 3 pages
+// 
+// and returns 1.  Otherwise, adjusts heap size and end for the
+// expanded heap. Creates a new block for the freshly allocated pages
+// that is added to the available list. Also attempts to merge this
+// block with the block below it. Returns 0 on success.
+// 
+// NOTE ON mmap() USAGE: mmap() returns one of three things if a
+// specific address is requested (its first argument):
+// 
+// 1. The address requested indicating the memory mapping succeeded
+// 
+// 2. A different address than the one requested if the requeste
+//    address is in use
+// 
+// 3. The constant MAP_FAILED if the address mapping failed.
+//
+// #2 and #3 above should trigger this function to immediate print an
+// #error message and return 1 as the heap cannot be made continuous
+// #in those cases.
+</pre>
+</div>
+
+<p>
+The central idea of the function is to allocate more space for the
+heap through <code>mmap()</code> calls. Since it is desirable to treat the heap
+a contiguous block of memory, the calls to <code>mmap()</code> should attempt to
+map new space for the heap to the <code>el_ctl-&gt;heap_end</code> address thereby
+"appending" the pages the heap.
+</p>
+
+<p>
+Here are a few implementation notes.
+</p>
+<ul class="org-ul">
+<li>In some cases, <code>NULL</code> is passed as the first argument to <code>mmap()</code> as
+a user program does not care what virtual address the OS uses for
+pages of memory. However, El Malloc will have specific addresses
+that it uses for the heap start and expansion.</li>
+<li>Analyze the provided <code>el_init()</code> function which initially uses
+<code>mmap()</code> to create the heap. Many aspects of the setup function can
+be transferred here.</li>
+<li>One difference is that while <code>el_init()</code> allocates the heap at
+<code>EL_HEAP_START_ADDRESS</code>, <code>el_append_pages_to_heap()</code> should map
+pages starting at the heap end. This will create a continuous
+virtual memory space for the heap as it expands.</li>
+<li><b>The Return Value for <code>mmap()</code> is important</b> and will be one of
+three things as the docs indicate: the requested address, a
+different address, or <code>MAP_FAILED</code>. The latter two indicate that
+heap expansion has failed.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org2a0f4ab" class="outline-3">
+<h3 id="org2a0f4ab"><span class="section-number-3">3.10</span> Overall Code Structure of EL Malloc</h3>
+<div class="outline-text-3" id="text-3-10">
+<p>
+Below is the code structure of the EL Malloc library.  Some of the
+functions have been implemented already while those marked <code>REQUIRED</code>
+must be completed for full credit on the problem.
+</p>
+
+<pre class="example" id="orge4a6f85">
+// el_malloc.c: implementation of explicit list malloc functions.
+
+#include "el_malloc.h"
+
+////////////////////////////////////////////////////////////////////////////////
+// Global control functions
+
+el_ctl_t *el_ctl = NULL;
+
+// Global control variable for the allocator. Must be initialized in
+// el_init().
+
+int el_init(uint64_t initial_heap_size);
+// Create an initial block of memory for the heap using
+// mmap(). Initialize the el_ctl data structure to point at this
+// block. The initializ size/position of the heap for the memory map
+// are given in the argument symbol and EL_HEAP_START_ADDRESS.
+// Initialize the lists in el_ctl to contain a single large block of
+// available memory and no used blocks of memory.
+
+void el_cleanup();
+// Clean up the heap area associated with the system which unmaps all
+// pages associated with the heap.
+
+////////////////////////////////////////////////////////////////////////////////
+// Pointer arithmetic functions to access adjacent headers/footers
+
+el_blockfoot_t *el_get_footer(el_blockhead_t *head);
+// Compute the address of the foot for the given head which is at a
+// higher address than the head.
+
+el_blockhead_t *el_get_header(el_blockfoot_t *foot);
+// REQUIRED
+// Compute the address of the head for the given foot which is at a
+// lower address than the foot.
+
+el_blockhead_t *el_block_above(el_blockhead_t *block);
+// Return a pointer to the block that is one block higher in memory
+// from the given block.  This should be the size of the block plus
+// the EL_BLOCK_OVERHEAD which is the space occupied by the header and
+// footer. Returns NULL if the block above would be off the heap.
+// DOES NOT follow next pointer, looks in adjacent memory.
+
+el_blockhead_t *el_block_below(el_blockhead_t *block);
+// REQUIRED
+// Return a pointer to the block that is one block lower in memory
+// from the given block.  Uses the size of the preceding block found
+// in its foot. DOES NOT follow block-&gt;next pointer, looks in adjacent
+// memory. Returns NULL if the block below would be outside the heap.
+// 
+// WARNING: This function must perform slightly different arithmetic
+// than el_block_above(). Take care when implementing it.
+
+////////////////////////////////////////////////////////////////////////////////
+// Block list operations
+
+void el_print_blocklist(el_blocklist_t *list);
+// Print an entire blocklist. The format appears as follows.
+//
+// {length:   2  bytes:  3400}
+//   [  0] head @ 0x600000000000 {state: a  size:   128}
+//   [  1] head @ 0x600000000360 {state: a  size:  3192}
+//
+// Note that the '@' column uses the actual address of items which
+// relies on a consistent mmap() starting point for the heap.
+
+void el_print_block(el_blockhead_t *block);
+// Print a single block during a sequential walk through the heap
+
+void el_print_heap_blocks();
+// Print all blocks in the heap in the order that they appear from
+// lowest addrses to highest address
+
+void el_print_stats();
+// Print out stats on the heap for use in debugging. Shows the
+// available and used list along with a linear walk through the heap
+// blocks.
+
+void el_init_blocklist(el_blocklist_t *list);
+// Initialize the specified list to be empty. Sets the beg/end
+// pointers to the actual space and initializes those data to be the
+// ends of the list.  Initializes length and size to 0.
+
+void el_add_block_front(el_blocklist_t *list, el_blockhead_t *block);
+// REQUIRED
+// Add to the front of list; links for block are adjusted as are links
+// within list.  Length is incremented and the bytes for the list are
+// updated to include the new block's size and its overhead.
+
+void el_remove_block(el_blocklist_t *list, el_blockhead_t *block);
+// REQUIRED
+// Unlink block from the list it is in which should be the list
+// parameter.  Updates the length and bytes for that list including
+// the EL_BLOCK_OVERHEAD bytes associated with header/footer.
+
+////////////////////////////////////////////////////////////////////////////////
+// Allocation-related functions
+
+el_blockhead_t *el_find_first_avail(size_t size);
+// REQUIRED
+// Find the first block in the available list with block size of at
+// least `size`.  Returns a pointer to the found block or NULL if no
+// block of sufficient size is available.
+
+el_blockhead_t *el_split_block(el_blockhead_t *block, size_t new_size);
+// REQUIRED
+// Set the pointed to block to the given size and add a footer to
+// it. Creates another block above it by creating a new header and
+// assigning it the remaining space. Ensures that the new block has a
+// footer with the correct size. Returns a pointer to the newly
+// created block while the parameter block has its size altered to
+// parameter size. Does not do any linking of blocks nor changes of
+// list membership: this is done elsewhere.  If the parameter block
+// does not have sufficient size for a split (at least new_size +
+// EL_BLOCK_OVERHEAD for the new header/footer) makes no changes tot
+// the block and returns NULL indicating no new block was created.
+
+void *el_malloc(size_t nbytes);
+// REQUIRED
+// Return pointer to a block of memory with at least the given size
+// for use by the user.  The pointer returned is to the usable space,
+// not the block header. Makes use of find_first_avail() to find a
+// suitable block and el_split_block() to split it.  Returns NULL if
+// no space is available.
+
+////////////////////////////////////////////////////////////////////////////////
+// De-allocation/free() related functions
+
+void el_merge_block_with_above(el_blockhead_t *lower);
+// REQUIRED
+// Attempt to merge the block lower with the next block in
+// memory. Does nothing if lower is null or not EL_AVAILABLE and does
+// nothing if the next higher block is null (because lower is the last
+// block) or not EL_AVAILABLE.  Otherwise, locates the next block with
+// el_block_above() and merges these two into a single block. Adjusts
+// the fields of lower to incorporate the size of higher block and the
+// reclaimed overhead. Adjusts footer of higher to indicate the two
+// blocks are merged.  Removes both lower and higher from the
+// available list and re-adds lower to the front of the available
+// list.
+
+void el_free(void *ptr);
+// REQUIRED
+// Free the block pointed to by the give ptr.  The area immediately
+// preceding the pointer should contain an el_blockhead_t with information
+// on the block size. Attempts to merge the free'd block with adjacent
+// blocks using el_merge_block_with_above(). If called on a NULL
+// pointer or the block is not in state EL_USED, prints the error
+// 
+//   ERROR: el_free() not called on an EL_USED block
+// 
+// and returns immediately without further action.
+
+////////////////////////////////////////////////////////////////////////////////
+// HEAP EXPANSION FUNCTIONS
+
+int el_append_pages_to_heap(int npages);
+// REQUIRED
+// Attempts to append pages of memory to the heap with mmap(). npages
+// is how many pages are to be appended with total bytes to be
+// appended as npages * EL_PAGE_BYTES. Calls mmap() with similar
+// arguments to those used in el_init() however requests the address
+// of the pages to be at heap_end so that the heap grows
+// contiguously. If this fails, prints the message
+// 
+//  ERROR: Unable to mmap() additional 3 pages
+// 
+// and returns 1.  Otherwise, adjusts heap size and end for the
+// expanded heap. Creates a new block for the freshly allocated pages
+// that is added to the available list. Also attempts to merge this
+// block with the block below it. Returns 0 on success.
+// 
+// NOTE ON mmap() USAGE: mmap() returns one of three things if a
+// specific address is requested (its first argument):
+// 
+// 1. The address requested indicating the memory mapping succeeded
+// 
+// 2. A different address than the one requested if the requeste
+//    address is in use
+// 
+// 3. The constant MAP_FAILED if the address mapping failed.
+//
+// #2 and #3 above should trigger this function to immediate print an
+// #error message and return 1 as the heap cannot be made continuous
+// #in those cases.
+
+</pre>
+</div>
+</div>
+<div id="outline-container-org854d9eb" class="outline-3">
+<h3 id="org854d9eb"><span class="section-number-3">3.11</span> Demo Run using EL Malloc</h3>
+<div class="outline-text-3" id="text-3-11">
+<p>
+Below is a run showing the behavior of a series of <code>el_malloc() /
+el_free()</code> calls.  They are performed in the provided <code>el_demo.c</code>
+program. 
+</p>
+</div>
+<div id="outline-container-orgd820f54" class="outline-4">
+<h4 id="orgd820f54">Source for <code>el_demo.c</code></h4>
+<div class="outline-text-4" id="text-orgd820f54">
+<div class="org-src-container">
+<pre class="src src-c">// el_demo.c: Shows use cases for el_malloc() and el_free(). This file
+// can be used for testing but is not itself a test.
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;assert.h&gt;
+#include "el_malloc.h"
+
+void print_ptr(char *str, void *ptr){
+  if(ptr == NULL){
+    printf("%s: (nil)\n", str);
+  }
+  else{
+    printf("%s: %p\n", str, ptr);
+  }
+}
+
+int main(){
+  printf("EL_BLOCK_OVERHEAD: %lu\n",EL_BLOCK_OVERHEAD);
+  el_init(EL_HEAP_DEFAULT_SIZE);
+
+  printf("INITIAL\n"); el_print_stats(); printf("\n");
+
+  void *p1 = el_malloc(128);
+  void *p2 = el_malloc(48);
+  void *p3 = el_malloc(156);
+  printf("MALLOC 3\n"); el_print_stats(); printf("\n");
+
+  printf("POINTERS\n");
+  print_ptr("p3",p3);
+  print_ptr("p2",p2);
+  print_ptr("p1",p1);
+  printf("\n");
+
+  void *p4 = el_malloc(22);
+  void *p5 = el_malloc(64);
+  printf("MALLOC 5\n"); el_print_stats(); printf("\n");
+
+  printf("POINTERS\n");
+  print_ptr("p5",p5);
+  print_ptr("p4",p4);
+  print_ptr("p3",p3);
+  print_ptr("p2",p2);
+  print_ptr("p1",p1);
+  printf("\n");
+
+  el_free(p1);
+  printf("FREE 1\n"); el_print_stats(); printf("\n");
+
+  el_free(p3);
+  printf("FREE 3\n"); el_print_stats(); printf("\n");
+
+  p3 = el_malloc(32);
+  p1 = el_malloc(200);
+  
+  printf("ALLOC 3,1 AGAIN\n"); el_print_stats(); printf("\n");
+
+  printf("POINTERS\n");
+  print_ptr("p1",p1);
+  print_ptr("p3",p3);
+  print_ptr("p5",p5);
+  print_ptr("p4",p4);
+  print_ptr("p2",p2);
+  printf("\n");
+
+  el_free(p1);
+
+  printf("FREE'D 1\n"); el_print_stats(); printf("\n");
+
+  el_free(p2);
+
+  printf("FREE'D 2\n"); el_print_stats(); printf("\n");
+
+  p1 = el_malloc(3438);
+  p2 = el_malloc(1024);
+  printf("P2 FAILS\n");
+  printf("POINTERS\n");
+  print_ptr("p1",p1);
+  print_ptr("p3",p3);
+  print_ptr("p5",p5);
+  print_ptr("p4",p4);
+  print_ptr("p2",p2);
+  el_print_stats(); printf("\n");
+
+  el_append_pages_to_heap(3);
+  printf("APPENDED PAGES\n"); el_print_stats(); printf("\n");
+
+  p2 = el_malloc(1024);
+  printf("P2 SUCCEEDS\n");
+  printf("POINTERS\n");
+  print_ptr("p1",p1);
+  print_ptr("p3",p3);
+  print_ptr("p5",p5);
+  print_ptr("p4",p4);
+  print_ptr("p2",p2);
+  el_print_stats(); printf("\n");  
+
+  el_free(p1);
+  el_free(p2);
+  el_free(p3);
+  el_free(p4);
+  el_free(p5);
+
+  printf("FREE'D 1-5\n"); el_print_stats(); printf("\n");
+
+  el_cleanup();
+  return 0;
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org1a5e681" class="outline-4">
+<h4 id="org1a5e681"><a id="orgc470339"></a> Output of El Malloc Demo</h4>
+<div class="outline-text-4" id="text-org1a5e681">
+<div class="org-src-container">
+<pre class="src src-text">EL_BLOCK_OVERHEAD: 40
+INITIAL
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   1  bytes:  4096}
+  [  0] head @ 0x612000000000 {state: a  size:  4056}
+USED LIST: {length:   0  bytes:     0}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       4056 (total: 0x1000)
+  prev:       0x610000000018
+  next:       0x610000000038
+  user:       0x612000000020
+  foot:       0x612000000ff8
+  foot-&gt;size: 4056
+
+MALLOC 3
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   1  bytes:  3644}
+  [  0] head @ 0x6120000001c4 {state: a  size:  3604}
+USED LIST: {length:   3  bytes:   452}
+  [  0] head @ 0x612000000100 {state: u  size:   156}
+  [  1] head @ 0x6120000000a8 {state: u  size:    48}
+  [  2] head @ 0x612000000000 {state: u  size:   128}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      u
+  size:       128 (total: 0xa8)
+  prev:       0x6120000000a8
+  next:       0x610000000098
+  user:       0x612000000020
+  foot:       0x6120000000a0
+  foot-&gt;size: 128
+[  1] @ 0x6120000000a8
+  state:      u
+  size:       48 (total: 0x58)
+  prev:       0x612000000100
+  next:       0x612000000000
+  user:       0x6120000000c8
+  foot:       0x6120000000f8
+  foot-&gt;size: 48
+[  2] @ 0x612000000100
+  state:      u
+  size:       156 (total: 0xc4)
+  prev:       0x610000000078
+  next:       0x6120000000a8
+  user:       0x612000000120
+  foot:       0x6120000001bc
+  foot-&gt;size: 156
+[  3] @ 0x6120000001c4
+  state:      a
+  size:       3604 (total: 0xe3c)
+  prev:       0x610000000018
+  next:       0x610000000038
+  user:       0x6120000001e4
+  foot:       0x612000000ff8
+  foot-&gt;size: 3604
+
+POINTERS
+p3: 0x612000000120
+p2: 0x6120000000c8
+p1: 0x612000000020
+
+MALLOC 5
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   1  bytes:  3478}
+  [  0] head @ 0x61200000026a {state: a  size:  3438}
+USED LIST: {length:   5  bytes:   618}
+  [  0] head @ 0x612000000202 {state: u  size:    64}
+  [  1] head @ 0x6120000001c4 {state: u  size:    22}
+  [  2] head @ 0x612000000100 {state: u  size:   156}
+  [  3] head @ 0x6120000000a8 {state: u  size:    48}
+  [  4] head @ 0x612000000000 {state: u  size:   128}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      u
+  size:       128 (total: 0xa8)
+  prev:       0x6120000000a8
+  next:       0x610000000098
+  user:       0x612000000020
+  foot:       0x6120000000a0
+  foot-&gt;size: 128
+[  1] @ 0x6120000000a8
+  state:      u
+  size:       48 (total: 0x58)
+  prev:       0x612000000100
+  next:       0x612000000000
+  user:       0x6120000000c8
+  foot:       0x6120000000f8
+  foot-&gt;size: 48
+[  2] @ 0x612000000100
+  state:      u
+  size:       156 (total: 0xc4)
+  prev:       0x6120000001c4
+  next:       0x6120000000a8
+  user:       0x612000000120
+  foot:       0x6120000001bc
+  foot-&gt;size: 156
+[  3] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x612000000100
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  4] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x610000000078
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  5] @ 0x61200000026a
+  state:      a
+  size:       3438 (total: 0xd96)
+  prev:       0x610000000018
+  next:       0x610000000038
+  user:       0x61200000028a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3438
+
+POINTERS
+p5: 0x612000000222
+p4: 0x6120000001e4
+p3: 0x612000000120
+p2: 0x6120000000c8
+p1: 0x612000000020
+
+FREE 1
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   2  bytes:  3646}
+  [  0] head @ 0x612000000000 {state: a  size:   128}
+  [  1] head @ 0x61200000026a {state: a  size:  3438}
+USED LIST: {length:   4  bytes:   450}
+  [  0] head @ 0x612000000202 {state: u  size:    64}
+  [  1] head @ 0x6120000001c4 {state: u  size:    22}
+  [  2] head @ 0x612000000100 {state: u  size:   156}
+  [  3] head @ 0x6120000000a8 {state: u  size:    48}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       128 (total: 0xa8)
+  prev:       0x610000000018
+  next:       0x61200000026a
+  user:       0x612000000020
+  foot:       0x6120000000a0
+  foot-&gt;size: 128
+[  1] @ 0x6120000000a8
+  state:      u
+  size:       48 (total: 0x58)
+  prev:       0x612000000100
+  next:       0x610000000098
+  user:       0x6120000000c8
+  foot:       0x6120000000f8
+  foot-&gt;size: 48
+[  2] @ 0x612000000100
+  state:      u
+  size:       156 (total: 0xc4)
+  prev:       0x6120000001c4
+  next:       0x6120000000a8
+  user:       0x612000000120
+  foot:       0x6120000001bc
+  foot-&gt;size: 156
+[  3] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x612000000100
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  4] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x610000000078
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  5] @ 0x61200000026a
+  state:      a
+  size:       3438 (total: 0xd96)
+  prev:       0x612000000000
+  next:       0x610000000038
+  user:       0x61200000028a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3438
+
+FREE 3
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   3  bytes:  3842}
+  [  0] head @ 0x612000000100 {state: a  size:   156}
+  [  1] head @ 0x612000000000 {state: a  size:   128}
+  [  2] head @ 0x61200000026a {state: a  size:  3438}
+USED LIST: {length:   3  bytes:   254}
+  [  0] head @ 0x612000000202 {state: u  size:    64}
+  [  1] head @ 0x6120000001c4 {state: u  size:    22}
+  [  2] head @ 0x6120000000a8 {state: u  size:    48}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       128 (total: 0xa8)
+  prev:       0x612000000100
+  next:       0x61200000026a
+  user:       0x612000000020
+  foot:       0x6120000000a0
+  foot-&gt;size: 128
+[  1] @ 0x6120000000a8
+  state:      u
+  size:       48 (total: 0x58)
+  prev:       0x6120000001c4
+  next:       0x610000000098
+  user:       0x6120000000c8
+  foot:       0x6120000000f8
+  foot-&gt;size: 48
+[  2] @ 0x612000000100
+  state:      a
+  size:       156 (total: 0xc4)
+  prev:       0x610000000018
+  next:       0x612000000000
+  user:       0x612000000120
+  foot:       0x6120000001bc
+  foot-&gt;size: 156
+[  3] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x6120000000a8
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  4] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x610000000078
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  5] @ 0x61200000026a
+  state:      a
+  size:       3438 (total: 0xd96)
+  prev:       0x612000000000
+  next:       0x610000000038
+  user:       0x61200000028a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3438
+
+ALLOC 3,1 AGAIN
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   3  bytes:  3530}
+  [  0] head @ 0x61200000035a {state: a  size:  3198}
+  [  1] head @ 0x612000000148 {state: a  size:    84}
+  [  2] head @ 0x612000000000 {state: a  size:   128}
+USED LIST: {length:   5  bytes:   566}
+  [  0] head @ 0x61200000026a {state: u  size:   200}
+  [  1] head @ 0x612000000100 {state: u  size:    32}
+  [  2] head @ 0x612000000202 {state: u  size:    64}
+  [  3] head @ 0x6120000001c4 {state: u  size:    22}
+  [  4] head @ 0x6120000000a8 {state: u  size:    48}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       128 (total: 0xa8)
+  prev:       0x612000000148
+  next:       0x610000000038
+  user:       0x612000000020
+  foot:       0x6120000000a0
+  foot-&gt;size: 128
+[  1] @ 0x6120000000a8
+  state:      u
+  size:       48 (total: 0x58)
+  prev:       0x6120000001c4
+  next:       0x610000000098
+  user:       0x6120000000c8
+  foot:       0x6120000000f8
+  foot-&gt;size: 48
+[  2] @ 0x612000000100
+  state:      u
+  size:       32 (total: 0x48)
+  prev:       0x61200000026a
+  next:       0x612000000202
+  user:       0x612000000120
+  foot:       0x612000000140
+  foot-&gt;size: 32
+[  3] @ 0x612000000148
+  state:      a
+  size:       84 (total: 0x7c)
+  prev:       0x61200000035a
+  next:       0x612000000000
+  user:       0x612000000168
+  foot:       0x6120000001bc
+  foot-&gt;size: 84
+[  4] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x6120000000a8
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  5] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x612000000100
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  6] @ 0x61200000026a
+  state:      u
+  size:       200 (total: 0xf0)
+  prev:       0x610000000078
+  next:       0x612000000100
+  user:       0x61200000028a
+  foot:       0x612000000352
+  foot-&gt;size: 200
+[  7] @ 0x61200000035a
+  state:      a
+  size:       3198 (total: 0xca6)
+  prev:       0x610000000018
+  next:       0x612000000148
+  user:       0x61200000037a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3198
+
+POINTERS
+p1: 0x61200000028a
+p3: 0x612000000120
+p5: 0x612000000222
+p4: 0x6120000001e4
+p2: 0x6120000000c8
+
+FREE'D 1
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   3  bytes:  3770}
+  [  0] head @ 0x61200000026a {state: a  size:  3438}
+  [  1] head @ 0x612000000148 {state: a  size:    84}
+  [  2] head @ 0x612000000000 {state: a  size:   128}
+USED LIST: {length:   4  bytes:   326}
+  [  0] head @ 0x612000000100 {state: u  size:    32}
+  [  1] head @ 0x612000000202 {state: u  size:    64}
+  [  2] head @ 0x6120000001c4 {state: u  size:    22}
+  [  3] head @ 0x6120000000a8 {state: u  size:    48}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       128 (total: 0xa8)
+  prev:       0x612000000148
+  next:       0x610000000038
+  user:       0x612000000020
+  foot:       0x6120000000a0
+  foot-&gt;size: 128
+[  1] @ 0x6120000000a8
+  state:      u
+  size:       48 (total: 0x58)
+  prev:       0x6120000001c4
+  next:       0x610000000098
+  user:       0x6120000000c8
+  foot:       0x6120000000f8
+  foot-&gt;size: 48
+[  2] @ 0x612000000100
+  state:      u
+  size:       32 (total: 0x48)
+  prev:       0x610000000078
+  next:       0x612000000202
+  user:       0x612000000120
+  foot:       0x612000000140
+  foot-&gt;size: 32
+[  3] @ 0x612000000148
+  state:      a
+  size:       84 (total: 0x7c)
+  prev:       0x61200000026a
+  next:       0x612000000000
+  user:       0x612000000168
+  foot:       0x6120000001bc
+  foot-&gt;size: 84
+[  4] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x6120000000a8
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  5] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x612000000100
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  6] @ 0x61200000026a
+  state:      a
+  size:       3438 (total: 0xd96)
+  prev:       0x610000000018
+  next:       0x612000000148
+  user:       0x61200000028a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3438
+
+FREE'D 2
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   3  bytes:  3858}
+  [  0] head @ 0x612000000000 {state: a  size:   216}
+  [  1] head @ 0x61200000026a {state: a  size:  3438}
+  [  2] head @ 0x612000000148 {state: a  size:    84}
+USED LIST: {length:   3  bytes:   238}
+  [  0] head @ 0x612000000100 {state: u  size:    32}
+  [  1] head @ 0x612000000202 {state: u  size:    64}
+  [  2] head @ 0x6120000001c4 {state: u  size:    22}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       216 (total: 0x100)
+  prev:       0x610000000018
+  next:       0x61200000026a
+  user:       0x612000000020
+  foot:       0x6120000000f8
+  foot-&gt;size: 216
+[  1] @ 0x612000000100
+  state:      u
+  size:       32 (total: 0x48)
+  prev:       0x610000000078
+  next:       0x612000000202
+  user:       0x612000000120
+  foot:       0x612000000140
+  foot-&gt;size: 32
+[  2] @ 0x612000000148
+  state:      a
+  size:       84 (total: 0x7c)
+  prev:       0x61200000026a
+  next:       0x610000000038
+  user:       0x612000000168
+  foot:       0x6120000001bc
+  foot-&gt;size: 84
+[  3] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x610000000098
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  4] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x612000000100
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  5] @ 0x61200000026a
+  state:      a
+  size:       3438 (total: 0xd96)
+  prev:       0x612000000000
+  next:       0x612000000148
+  user:       0x61200000028a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3438
+
+P2 FAILS
+POINTERS
+p1: 0x61200000028a
+p3: 0x612000000120
+p5: 0x612000000222
+p4: 0x6120000001e4
+p2: (nil)
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000001000
+total_bytes: 4096
+AVAILABLE LIST: {length:   2  bytes:   380}
+  [  0] head @ 0x612000000000 {state: a  size:   216}
+  [  1] head @ 0x612000000148 {state: a  size:    84}
+USED LIST: {length:   4  bytes:  3716}
+  [  0] head @ 0x61200000026a {state: u  size:  3438}
+  [  1] head @ 0x612000000100 {state: u  size:    32}
+  [  2] head @ 0x612000000202 {state: u  size:    64}
+  [  3] head @ 0x6120000001c4 {state: u  size:    22}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       216 (total: 0x100)
+  prev:       0x610000000018
+  next:       0x612000000148
+  user:       0x612000000020
+  foot:       0x6120000000f8
+  foot-&gt;size: 216
+[  1] @ 0x612000000100
+  state:      u
+  size:       32 (total: 0x48)
+  prev:       0x61200000026a
+  next:       0x612000000202
+  user:       0x612000000120
+  foot:       0x612000000140
+  foot-&gt;size: 32
+[  2] @ 0x612000000148
+  state:      a
+  size:       84 (total: 0x7c)
+  prev:       0x612000000000
+  next:       0x610000000038
+  user:       0x612000000168
+  foot:       0x6120000001bc
+  foot-&gt;size: 84
+[  3] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x610000000098
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  4] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x612000000100
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  5] @ 0x61200000026a
+  state:      u
+  size:       3438 (total: 0xd96)
+  prev:       0x610000000078
+  next:       0x612000000100
+  user:       0x61200000028a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3438
+
+APPENDED PAGES
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000004000
+total_bytes: 16384
+AVAILABLE LIST: {length:   3  bytes: 12668}
+  [  0] head @ 0x612000001000 {state: a  size: 12248}
+  [  1] head @ 0x612000000000 {state: a  size:   216}
+  [  2] head @ 0x612000000148 {state: a  size:    84}
+USED LIST: {length:   4  bytes:  3716}
+  [  0] head @ 0x61200000026a {state: u  size:  3438}
+  [  1] head @ 0x612000000100 {state: u  size:    32}
+  [  2] head @ 0x612000000202 {state: u  size:    64}
+  [  3] head @ 0x6120000001c4 {state: u  size:    22}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       216 (total: 0x100)
+  prev:       0x612000001000
+  next:       0x612000000148
+  user:       0x612000000020
+  foot:       0x6120000000f8
+  foot-&gt;size: 216
+[  1] @ 0x612000000100
+  state:      u
+  size:       32 (total: 0x48)
+  prev:       0x61200000026a
+  next:       0x612000000202
+  user:       0x612000000120
+  foot:       0x612000000140
+  foot-&gt;size: 32
+[  2] @ 0x612000000148
+  state:      a
+  size:       84 (total: 0x7c)
+  prev:       0x612000000000
+  next:       0x610000000038
+  user:       0x612000000168
+  foot:       0x6120000001bc
+  foot-&gt;size: 84
+[  3] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x610000000098
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  4] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x612000000100
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  5] @ 0x61200000026a
+  state:      u
+  size:       3438 (total: 0xd96)
+  prev:       0x610000000078
+  next:       0x612000000100
+  user:       0x61200000028a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3438
+[  6] @ 0x612000001000
+  state:      a
+  size:       12248 (total: 0x3000)
+  prev:       0x610000000018
+  next:       0x612000000000
+  user:       0x612000001020
+  foot:       0x612000003ff8
+  foot-&gt;size: 12248
+
+P2 SUCCEEDS
+POINTERS
+p1: 0x61200000028a
+p3: 0x612000000120
+p5: 0x612000000222
+p4: 0x6120000001e4
+p2: 0x612000001020
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000004000
+total_bytes: 16384
+AVAILABLE LIST: {length:   3  bytes: 11604}
+  [  0] head @ 0x612000001428 {state: a  size: 11184}
+  [  1] head @ 0x612000000000 {state: a  size:   216}
+  [  2] head @ 0x612000000148 {state: a  size:    84}
+USED LIST: {length:   5  bytes:  4780}
+  [  0] head @ 0x612000001000 {state: u  size:  1024}
+  [  1] head @ 0x61200000026a {state: u  size:  3438}
+  [  2] head @ 0x612000000100 {state: u  size:    32}
+  [  3] head @ 0x612000000202 {state: u  size:    64}
+  [  4] head @ 0x6120000001c4 {state: u  size:    22}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       216 (total: 0x100)
+  prev:       0x612000001428
+  next:       0x612000000148
+  user:       0x612000000020
+  foot:       0x6120000000f8
+  foot-&gt;size: 216
+[  1] @ 0x612000000100
+  state:      u
+  size:       32 (total: 0x48)
+  prev:       0x61200000026a
+  next:       0x612000000202
+  user:       0x612000000120
+  foot:       0x612000000140
+  foot-&gt;size: 32
+[  2] @ 0x612000000148
+  state:      a
+  size:       84 (total: 0x7c)
+  prev:       0x612000000000
+  next:       0x610000000038
+  user:       0x612000000168
+  foot:       0x6120000001bc
+  foot-&gt;size: 84
+[  3] @ 0x6120000001c4
+  state:      u
+  size:       22 (total: 0x3e)
+  prev:       0x612000000202
+  next:       0x610000000098
+  user:       0x6120000001e4
+  foot:       0x6120000001fa
+  foot-&gt;size: 22
+[  4] @ 0x612000000202
+  state:      u
+  size:       64 (total: 0x68)
+  prev:       0x612000000100
+  next:       0x6120000001c4
+  user:       0x612000000222
+  foot:       0x612000000262
+  foot-&gt;size: 64
+[  5] @ 0x61200000026a
+  state:      u
+  size:       3438 (total: 0xd96)
+  prev:       0x612000001000
+  next:       0x612000000100
+  user:       0x61200000028a
+  foot:       0x612000000ff8
+  foot-&gt;size: 3438
+[  6] @ 0x612000001000
+  state:      u
+  size:       1024 (total: 0x428)
+  prev:       0x610000000078
+  next:       0x61200000026a
+  user:       0x612000001020
+  foot:       0x612000001420
+  foot-&gt;size: 1024
+[  7] @ 0x612000001428
+  state:      a
+  size:       11184 (total: 0x2bd8)
+  prev:       0x610000000018
+  next:       0x612000000000
+  user:       0x612000001448
+  foot:       0x612000003ff8
+  foot-&gt;size: 11184
+
+FREE'D 1-5
+HEAP STATS (overhead per node: 40)
+heap_start:  0x612000000000
+heap_end:    0x612000004000
+total_bytes: 16384
+AVAILABLE LIST: {length:   1  bytes: 16384}
+  [  0] head @ 0x612000000000 {state: a  size: 16344}
+USED LIST: {length:   0  bytes:     0}
+HEAP BLOCKS:
+[  0] @ 0x612000000000
+  state:      a
+  size:       16344 (total: 0x4000)
+  prev:       0x610000000018
+  next:       0x610000000038
+  user:       0x612000000020
+  foot:       0x612000003ff8
+  foot-&gt;size: 16344
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orga18bcee" class="outline-3 grading 45">
+<h3 id="orga18bcee"><span class="section-number-3">3.12</span> <a id="orgdb063fe"></a> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="45">45</span></span></h3>
+<div class="outline-text-3" id="text-3-12">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><b>Automated Tests</b></td>
+</tr>
+
+<tr>
+<td class="org-right">20</td>
+<td class="org-left"><code>make test-prob1</code> runs tests for correctness with Valgrind enabled</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">20 tests, 1 point per test</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">25</td>
+<td class="org-left"><b>Manual Inspection</b></td>
+</tr>
+
+<tr>
+<td class="org-right">4</td>
+<td class="org-left"><a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">Code Style</a>: Functions adhere to <a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">CMSC 216 C Coding Style Guide</a> which dictates reasonable indentation, commenting, consistency of curly usage, etc.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left"><code>el_get_header()</code> and <code>el_block_below()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of provided macros for pointer arithmetic</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Correct use of <code>sizeof()</code> operator to account for sizes</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>el_block_below()</code> checks for beginning of heap and returns NULL</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left"><code>el_add_block_front()</code> and <code>el_remove_block()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Sensible use of pointers prev/next to link/unlink nodes <b>efficiently; no looping used</b></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Correct updating of list length and bytes</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Accounts for <code>EL_BLOCK_OVERHEAD</code> when updating bytes</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left"><code>el_split_block()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of <code>el_get_foot()</code> to obtain footers for updating size</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Checks to determine if block is large enough to be split; returns NULL if not</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear evidence of placing a new header and footer for new block when splitting</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Accounting for overhead <code>EL_BLOCK_OVERHEAD</code> when calculating new size</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left"><code>el_malloc()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of <code>el_find_first_avail()</code> to locate a node to split</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of <code>el_split_block()</code> to split block into two</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear state change of split blocks to Used and Available</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear movement of lower split blocks to front of Used List</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear movement of upper split blocks to front of Available lists</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of pointer arithmetic macros to computer user address</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left"><code>el_merge_block_with_above()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><code>NULL</code> checks for argument and block above which result in no changes</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear checks of whether both blocks are <code>EL_AVAILABLE</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Use of <code>el_block_above()</code> to find block above</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear updates to size of lower block and higher foot</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Movement of blocks out of available list and merged block to front</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left"><code>el_free()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Error checking that block is <code>EL_USED</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Movement of block from used to available list</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Attempts to merge block with blocks above and below it</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left"><code>el_append_pages_to_heap()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Makes use of <code>mmap()</code> to map in additional pages of virtual memory</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Checks <code>mmap()</code> for failures and prints appropriate error messages</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Maps new heap space to current heap end to create a contiguous heap</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Creates new available block for new space and attempts to merge with existing available blocks</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">45</td>
+<td class="org-left">Problem Total</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="outline-container-org3c340c1" class="outline-2">
+<h2 id="org3c340c1"><span class="section-number-2">4</span> <b>Problem 2</b>: MATATA Operation</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-orgca0acb5" class="outline-3">
+<h3 id="orgca0acb5"><span class="section-number-3">4.1</span> Overview</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+A problem that occasionally arises in numerical computing when working
+with Matrices (2D Arrays) is to multiply the transpose of a matrix by
+itself, notated <b>A<sup>T</sup> × A</b> and referred to here as a the <b>"MATATA"
+operation</b> (short for MATrix A<sup>T</sup> times A, "matata" is not widely used
+to describe this matrix operation and internet searches it are likely
+to turn up <a href="https://www.youtube.com/watch?v=kaOIxll4LCA">unrelated results</a>).
+</p>
+
+<p>
+The MATATA operation is a special case of general <a href="https://en.wikipedia.org/wiki/Matrix_multiplication">matrix
+multiplication</a> and students unfamiliar with this operation should
+study it to get some context for the present work.  The diagram below
+illustrates a sample matrix A, its transpose A<sup>T</sup> that exchanges rows
+and coluns, and the results of computing A<sup>T</sup> × A. Note that for
+rectangular matrices with R rows and C columns, the results of
+</p>
+
+<div class="org-center">
+
+<div id="org6f7a5d9" class="figure">
+<p><img src="matata.plain.svg" alt="matata.plain.svg" class="org-svg" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 7: </span>4 by 3 matrix <code>A</code> with colored elements, its transpose <code>At</code>, and the result of multiplying <code>At × A</code>.</p>
+</div>
+</div>
+
+<p>
+Note that that for each of the elements of the result matrix, the
+elements are the result of a row in the transpose multiplied by a
+column in the original matrix:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">Ans[i][j] = 0;
+for(k = 0 to Ans.cols){
+  Ans[i][j] += At[i][k] * A[k][j];
+}
+</pre>
+</div>
+
+<p>
+After commuting the MATATA, it is often further used in numerical
+operations which are improved by <b>normalizing</b> the matrix to a limited
+range. There are several choices for this but here we will favor the
+<b>maximum absolute value</b> of elements in the MATATA and divide all
+other elements in the MATATA by it to normalize the matrix (the
+maximum absolute value of a vector or matrix is often referred to as
+its <i>infinity norm</i> in technical literature).
+</p>
+
+<p>
+The file <code>matata_base.c</code> provides a baseline function that performs
+the MATATA and normalization in a direct fashion as the above
+definition indicates The algorithm uses the most "natural" approach of
+multiplying each row of the transpose by each column of the original
+to produce the result in the for each part of the squared result. The
+transposed matrix is formed via a <code>malloc()</code>, copying elements, then
+performing the multiply.  As you survey the code, note the use of
+various convenience macros such as <code>MGET(mat,i,j)</code> interact with the
+matrix type used.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c"><span class="linenr"> 1: </span>#include "matata.h"
+<span class="linenr"> 2: </span>
+<span class="linenr"> 3: </span>// exploits symmetry, uses a transpose matrix, does not have a good
+<span class="linenr"> 4: </span>// memory access pattern and is "serial" - single threaded
+<span class="linenr"> 5: </span>int matata_BASE(matrix_t mat, matrix_t ans) {
+<span class="linenr"> 6: </span>  matrix_t tra;                                 // allocate space for transpose matrix 
+<span class="linenr"> 7: </span>  matrix_init(&amp;tra, mat.cols, mat.rows);
+<span class="linenr"> 8: </span>
+<span class="linenr"> 9: </span>  for(int i=0; i&lt;mat.rows; i++){                // copy elements into transpose matrix
+<span class="linenr">10: </span>    for(int j=0; j&lt;mat.cols; j++){
+<span class="linenr">11: </span>      float mij = MGET(mat, i, j);
+<span class="linenr">12: </span>      MSET(tra, j, i, mij);
+<span class="linenr">13: </span>    }
+<span class="linenr">14: </span>  }
+<span class="linenr">15: </span>
+<span class="linenr">16: </span>  for(int i=0; i&lt;mat.cols; i++){                // compute ans = A^T * A
+<span class="linenr">17: </span>    for(int j=i; j&lt;mat.cols; j++){              // compute upper triangle elements
+<span class="linenr">18: </span>      float sum = 0;
+<span class="linenr">19: </span>      for(int k=0; k&lt;mat.rows; k++){            // sum over dot(row, col)
+<span class="linenr">20: </span>        sum += MGET(tra, i, k)*MGET(mat, k, j);
+<span class="linenr">21: </span>      }
+<span class="linenr">22: </span>      MSET(ans, i, j, sum);                     // exploit symmetry: assign upper
+<span class="linenr">23: </span>      MSET(ans, j, i, sum);                     // trianble element to lower triangle
+<span class="linenr">24: </span>    }
+<span class="linenr">25: </span>  }
+<span class="linenr">26: </span>
+<span class="linenr">27: </span>  float max = -INFINITY;                        // calculate absolute max in ans
+<span class="linenr">28: </span>  for(int i=0; i&lt;mat.cols; i++){
+<span class="linenr">29: </span>    for(int j=0; j&lt;mat.cols; j++){
+<span class="linenr">30: </span>      float mij = fabsf(MGET(ans, i, j));
+<span class="linenr">31: </span>      if(mij &gt; max){
+<span class="linenr">32: </span>        max = mij;
+<span class="linenr">33: </span>      }
+<span class="linenr">34: </span>    }
+<span class="linenr">35: </span>  }
+<span class="linenr">36: </span>  for(int i=0; i&lt;mat.cols; i++){                // normalize matrix by dividing
+<span class="linenr">37: </span>    for(int j=0; j&lt;mat.cols; j++){              // by absolute maximum value
+<span class="linenr">38: </span>      float mij = MGET(ans, i, j);
+<span class="linenr">39: </span>      MSET(ans,i,j, mij / max);
+<span class="linenr">40: </span>    }
+<span class="linenr">41: </span>  }
+<span class="linenr">42: </span>
+<span class="linenr">43: </span>  matrix_free_data(&amp;tra);                       // de-allocate transpose mat
+<span class="linenr">44: </span>
+<span class="linenr">45: </span>  return 0;                                     // return success
+<span class="linenr">46: </span>}
+</pre>
+</div>
+
+<p>
+Note that the original matrix comes in as the parameter <code>mat</code> and the
+normalized MATATA result is stored in the parameter <code>ans</code>.
+</p>
+
+<p>
+While this algorithm is a direct translation of how humans would
+visually calculate the MATATA of small matrices, it is unfortunately
+fairly slow when executing on most modern computing systems.
+</p>
+</div>
+</div>
+<div id="outline-container-orgb772093" class="outline-3">
+<h3 id="orgb772093"><span class="section-number-3">4.2</span> Optimize MATATA</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+The purpose of this problem is to write <code>matata_OPTM()</code> which is a
+faster version of the provided <code>matata_BASE()</code> to calculate the
+results.
+</p>
+
+<p>
+Write your code in the file <code>matata_optm.c</code>.
+</p>
+
+<p>
+Keep the following things in mind.
+</p>
+<ol class="org-ol">
+<li>You will need to acquaint yourself with the functions and types
+related to matrices and vectors provided in the <code>matata.h</code> and
+demonstrated in the baseline function. Understanding the layout of
+the matrix in memory is essential to unlocking performance.</li>
+<li>The goal of <code>matata_OPTM()</code> is to exceed the performance of
+<code>matata_BASE()</code> by as much as possible.</li>
+<li>To achieve this goal, several optimizations must be implemented and
+suggestions are given in a later section.</li>
+<li>There is one additional parameter to the optimized function:
+<code>colnorm_OPTM(mat,avg,std,thread_count)</code>.  This indicates the
+number of threads that should be used during the computation: one
+of the optimizations that is essential is to add multi-threading
+support.</li>
+<li>Part of your grade will be based on the speed of the optimized code
+on <code>grace.umd.edu</code>. The main routine <code>matata_benchmark.c</code> will be
+used for this.</li>
+</ol>
+
+<p>
+Some details are provided in subsequent sections.
+</p>
+</div>
+</div>
+<div id="outline-container-org9d36185" class="outline-3">
+<h3 id="org9d36185"><span class="section-number-3">4.3</span> Evaluation on Grace</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+The file <code>matata_benchmark.c</code> provides a benchmark for the speed of
+the algorithms. It will be used by graders to evaluate the submitted
+code and should be used during development to gauge performance
+improvements. It runs both the Baseline and Optimized versions
+(from <code>matata_base.c</code> and <code>matata_optm.c</code> respectively) and compares
+their performance.
+</p>
+
+<p>
+<b>Students must paste their benchmark results from GRACE into their
+<code>matata_optm.c file</code></b>. During grading, staff will independently
+evaluate your code performance on a grace node and take the best score
+from 3 runs of the benchmark.
+</p>
+
+<p>
+While the benchmark runs on any machine, it is specifically tailored
+to run on the following machines:
+</p>
+<div class="org-src-container">
+<pre class="src src-text"> grace3.umd.edu
+ grace4.umd.edu
+ grace5.umd.edu
+ grace6.umd.edu
+ grace7.umd.edu
+ grace8.umd.edu
+ grace9.umd.edu
+grace10.umd.edu
+</pre>
+</div>
+<p>
+These Grace nodes have a reasonably large cache and fast processor
+while other Grace nodes have slower, older processors.  The scoring
+present in <code>matata_benchmark.c</code> is "tuned" to these machines and will
+likely report incorrect results on other machines.  Test your
+performance on these nodes so that no unexpected results occur after
+submission.
+</p>
+
+<p>
+The output of the <code>colnorm_benchmark</code> is shown below.
+</p>
+<ul class="org-ul">
+<li><code>ROWS/COLS</code>: the size of the matrix being used.</li>
+<li><code>BASE</code>: the time it takes for <code>colnorm_BASE()</code> to complete.</li>
+<li><code>T</code>: number of threads used for running <code>colnorm_OPTM()</code></li>
+<li><code>OPTM</code>: the time it takes for <code>colnorm_OPTM()</code> to complete.</li>
+<li><code>SPDUP</code>: the speedup of <code>colnorm_OPTM()</code> over <code>colnorm_BASE()</code> which
+is <code>BASE / OPTM</code>.</li>
+<li><p>
+<code>POINT</code>: points earned on this run according to the following code:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">    double points = log(speedup_OPTM) / log(2.0) * 2.0;
+</pre>
+</div>
+<p>
+This scheme means that unless actual optimizations are implemented,
+0 points will be scored. Each speedup by a factor of 2X earns 2
+point2: finishing in half the time (2X speedup) of the Baseline earns
+2.0 points, one quarter of time (4X speedup) earns 4.0 points, 1/8th
+the time (8X speedup) 6.0 points, and so on.
+</p></li>
+<li><code>TOTAL</code>: the running total of points accumulated after running each
+segment of the benchmark.</li>
+</ul>
+
+<p>
+Below are several demonstration runs of the benchmark.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"># ###############################################################################
+# RUN ON INCORRECT MACHINE (NOT grace nodes), NOTE WARNINGS
+homputer&gt;&gt; ./colnorm_benchmark 
+WARNING: UNEXPECTED HOST 'val'
+WARNING: ensure you are on an normal GRACE node
+WARNING: timing results / scoring will not reflect actual scoring
+WARNING: run on one of the following hosts for accurate results
+WARNING:   grace3.umd.edu
+WARNING:   grace4.umd.edu
+WARNING:   grace5.umd.edu
+WARNING:   grace6.umd.edu
+WARNING:   grace7.umd.edu
+WARNING:   grace8.umd.edu
+WARNING:   grace9.umd.edu
+WARNING:   grace10.umd.edu
+==== Matrix A^T*A Benchmark Version 2.0 ====
+Performing 11 runs with 2 thread_counts (max 2)
+  ROWS   COLS   BASE  T   OPTM SPDUP POINT TOTAL 
+   128    128  0.007  1  0.008  0.96  0.00  0.00 
+                      2  0.004  1.70  1.53  1.53 
+   171    151  0.012  1  0.013  0.92  0.00  1.53 
+                      2  0.007  1.67  1.49  3.01 
+   196    180  0.019  1  0.021  0.94  0.00  3.01 
+                      2  0.011  1.71  1.54  4.56 
+   256    128  0.013  1  0.019  0.70  0.00  4.56 
+                      2  0.010  1.30  0.76  5.32 
+   256    256  0.066  1  0.077  0.86  0.00  5.32 
+                      2  0.040  1.64  1.42  6.74 
+   512    256  0.179  1  0.181  0.99  0.00  6.74 
+                      2  0.099  1.81  1.71  8.45 
+   512    512  0.784  1  0.787  1.00  0.00  8.45 
+                      2  0.424  1.85  1.78 10.22 
+   640    512  0.992  1  0.920  1.08  0.22 10.44 
+                      2  0.517  1.92  1.88 12.32 
+   640    640  1.175  1  1.437  0.82  0.00 12.32 
+                      2  0.685  1.71  1.56 13.88 
+   768    640  1.539  1  1.689  0.91  0.00 13.88 
+                      2  0.850  1.81  1.71 15.59 
+   801    800  1.991  1  2.154  0.92  0.00 15.59 
+                      2  1.086  1.83  1.75 17.34 
+RAW POINTS: 17.34
+TOTAL POINTS: 17 / 35
+WARNING: UNEXPECTED HOST 'val'
+WARNING: ensure you are on an normal GRACE node
+WARNING: timing results / scoring will not reflect actual scoring
+WARNING: run on one of the following hosts for accurate results
+WARNING:   grace3.umd.edu
+WARNING:   grace4.umd.edu
+WARNING:   grace5.umd.edu
+WARNING:   grace6.umd.edu
+WARNING:   grace7.umd.edu
+WARNING:   grace8.umd.edu
+WARNING:   grace9.umd.edu
+WARNING:   grace10.umd.edu
+
+# ###############################################################################
+# PARTIAL CREDIT RUN
+&gt;&gt; ssh grace.umd.edu
+...
+grace4&gt;&gt; ./colnorm_benchmark 
+./matata_benchmark
+==== Matrix A^T*A Benchmark Version 2.0 ====
+Performing 12 runs with 2 thread_counts (max 2)
+  ROWS   COLS   BASE  T   OPTM SPDUP POINT TOTAL 
+   128    128  0.008  1  0.009  0.88  0.00  0.00 
+                      2  0.005  1.64  1.43  1.43 
+   171    151  0.015  1  0.016  0.98  0.00  1.43 
+                      2  0.008  1.90  1.85  3.28 
+   196    180  0.025  1  0.027  0.94  0.00  3.28 
+                      2  0.018  1.41  1.00  4.28 
+   216    128  0.015  1  0.015  0.98  0.00  4.28 
+                      2  0.009  1.70  1.54  5.81 
+   256    128  0.018  1  0.019  0.96  0.00  5.81 
+                      2  0.010  1.89  1.83  7.64 
+   256    256  0.093  1  0.078  1.19  0.51  8.16 
+                      2  0.052  1.81  1.71  9.86 
+   512    256  0.138  1  0.167  0.83  0.00  9.86 
+                      2  0.099  1.39  0.95 10.82 
+   512    512  0.648  1  0.725  0.89  0.00 10.82 
+                      2  0.370  1.75  1.62 12.43 
+   640    512  0.847  1  0.959  0.88  0.00 12.43 
+                      2  0.475  1.78  1.67 14.10 
+   640    640  1.095  1  1.357  0.81  0.00 14.10 
+                      2  0.684  1.60  1.36 15.46 
+   768    640  1.377  1  1.642  0.84  0.00 15.46 
+                      2  0.830  1.66  1.46 16.92 
+   801    800  2.211  1  2.953  0.75  0.00 16.92 
+                      2  1.981  1.12  0.32 17.23 
+RAW POINTS: 17.23
+TOTAL POINTS: 17 / 35
+
+# ###############################################################################
+# FULL CREDIT RUN
+&gt;&gt; ssh grace.umd.edu
+...
+grace3&gt;&gt; ./colnorm_benchmark 
+==== Matrix A^T*A Benchmark Version 2.0 ====
+Performing 12 runs with 2 thread_counts (max 2)
+  ROWS   COLS   BASE  T   OPTM SPDUP POINT TOTAL 
+   128    128  0.008  1  0.007  1.15  0.39  0.39 
+                      2  0.004  1.88  1.82  2.21 
+   171    151  0.016  1  0.013  1.16  0.44  2.65 
+                      2  0.007  2.19  2.27  4.92 
+   196    180  0.026  1  0.021  1.23  0.60  5.51 
+                      2  0.011  2.27  2.37  7.88 
+   216    128  0.015  1  0.012  1.22  0.56  8.45 
+                      2  0.007  2.14  2.20 10.65 
+   256    128  0.017  1  0.014  1.24  0.62 11.27 
+                      2  0.007  2.30  2.40 13.67 
+   256    256  0.068  1  0.055  1.24  0.62 14.29 
+                      2  0.031  2.16  2.22 16.51 
+   512    256  0.137  1  0.106  1.29  0.74 17.25 
+                      2  0.057  2.40  2.52 19.77 
+   512    512  0.596  1  0.429  1.39  0.94 20.72 
+                      2  0.225  2.65  2.81 23.53 
+   640    512  0.833  1  0.533  1.56  1.29 24.81 
+                      2  0.273  3.05  3.22 28.03 
+   640    640  1.086  1  0.839  1.29  0.75 28.78 
+                      2  0.420  2.59  2.74 31.52 
+   768    640  1.314  1  1.002  1.31  0.78 32.30 
+                      2  0.548  2.40  2.53 34.83 
+   801    800  2.199  1  2.070  1.06  0.18 35.00 
+                      2  0.828  2.66  2.82 37.82 
+RAW POINTS: 37.82
+TOTAL POINTS: 35 / 35
+
+</pre>
+</div>
+
+<p>
+Note that it is possible to exceed the score associated with maximal
+performance (as seen in the RAW POINTS reported) but no more than the
+final reported points will be given for the performance portion of the
+problem.
+</p>
+
+<blockquote>
+<p>
+Significantly exceeding the max score may garner some MAKEUP credit:
+you'll know you earned this as the benchmark will report as much. See
+the later section for suggestions of potential additional
+optimizations. 
+</p>
+</blockquote>
+</div>
+</div>
+<div id="outline-container-org5f91c85" class="outline-3">
+<h3 id="org5f91c85"><span class="section-number-3">4.4</span> <code>matata_print.c</code> Testing Program</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+As one works on implementing optimizations in <code>matata_OPTM()</code>, bugs
+which compute incorrect results are often introduced.  To aid in
+testing, the <code>matata_print()</code> program runs both the BASE and OPTM
+versions on the same matrix and shows all results. The matrix size is
+determined from the command line and is printed on the screen to
+enable hand verification. Examples are below.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">################################################################################
+# RUN 1: Single threaded, Correct Results
+&gt;&gt; ./matata_print 6 4 1                      # run on a 6 by 4 matrix, 1 thread
+==== Matrix A^T*A Print ====
+Original Matrix:                             # original matrix
+6 x 4 matrix
+   0:   0.00   1.00   2.00   3.00 
+   1:   4.00   5.00   6.00   7.00 
+   2:   8.00   9.00  10.00  11.00 
+   3:  12.00  13.00  14.00  15.00 
+   4:  16.00  17.00  18.00  19.00 
+   5:  20.00  21.00  22.00  23.00 
+
+BASE Matrix A^T*A :                          # results computed by matata_BASE()
+4 x 4 matrix
+   0: 0.680062 0.726430 0.772798 0.819165 
+   1: 0.726430 0.777434 0.828439 0.879444 
+   2: 0.772798 0.828439 0.884080 0.939722 
+   3: 0.819165 0.879444 0.939722 1.000000 
+
+OPTM Matrix A^T*A :                          # results computed by matata_OPTM()
+4 x 4 matrix
+   0: 0.680062 0.726430 0.772798 0.819165 
+   1: 0.726430 0.777434 0.828439 0.879444 
+   2: 0.772798 0.828439 0.884080 0.939722 
+   3: 0.819165 0.879444 0.939722 1.000000 
+
+BASE/OPTM Element Comparison:                # comparison of elements
+[  i][  j]:         BASE         OPTM
+[  0][  0]:     0.680062     0.680062        # all match - CORRECT RESULTS
+[  0][  1]:     0.726430     0.726430 
+[  0][  2]:     0.772798     0.772798 
+[  0][  3]:     0.819165     0.819165 
+[  1][  0]:     0.726430     0.726430 
+[  1][  1]:     0.777434     0.777434 
+[  1][  2]:     0.828439     0.828439 
+[  1][  3]:     0.879444     0.879444 
+[  2][  0]:     0.772798     0.772798 
+[  2][  1]:     0.828439     0.828439 
+[  2][  2]:     0.884080     0.884080 
+[  2][  3]:     0.939722     0.939722 
+[  3][  0]:     0.819165     0.819165 
+[  3][  1]:     0.879444     0.879444 
+[  3][  2]:     0.939722     0.939722 
+[  3][  3]:     1.000000     1.000000 
+
+
+################################################################################
+# RUN 2: Two threads, Incorrect Results
+&gt;&gt; ./matata_print 6 4 2                      # run on a 6 by 4 matrix with 2 threads
+==== Matrix A^T*A Print ====
+Original Matrix:
+6 x 4 matrix
+   0:   0.00   1.00   2.00   3.00 
+   1:   4.00   5.00   6.00   7.00 
+   2:   8.00   9.00  10.00  11.00 
+   3:  12.00  13.00  14.00  15.00 
+   4:  16.00  17.00  18.00  19.00 
+   5:  20.00  21.00  22.00  23.00 
+
+BASE Matrix A^T*A :
+4 x 4 matrix
+   0: 0.680062 0.726430 0.772798 0.819165 
+   1: 0.726430 0.777434 0.828439 0.879444 
+   2: 0.772798 0.828439 0.884080 0.939722 
+   3: 0.819165 0.879444 0.939722 1.000000 
+
+OPTM Matrix A^T*A :
+4 x 4 matrix
+   0: 0.510029 0.540115 0.570201 0.600287 
+   1: 0.604585 0.647564 0.690544 0.733524 
+   2: 0.699140 0.755014 0.810888 0.866762 
+   3: 0.793696 0.862464 0.931232 1.000000 
+
+BASE/OPTM Element Comparison:
+[  i][  j]:         BASE         OPTM
+[  0][  0]:     0.680062     0.510029 ***    # most elements mismatch
+[  0][  1]:     0.726430     0.540115 ***    # likely bugs in thread implementation
+[  0][  2]:     0.772798     0.570201 ***
+[  0][  3]:     0.819165     0.600287 ***
+[  1][  0]:     0.726430     0.604585 ***
+[  1][  1]:     0.777434     0.647564 ***
+[  1][  2]:     0.828439     0.690544 ***
+[  1][  3]:     0.879444     0.733524 ***
+[  2][  0]:     0.772798     0.699140 ***
+[  2][  1]:     0.828439     0.755014 ***
+[  2][  2]:     0.884080     0.810888 ***
+[  2][  3]:     0.939722     0.866762 ***
+[  3][  0]:     0.819165     0.793696 ***
+[  3][  1]:     0.879444     0.862464 ***
+[  3][  2]:     0.939722     0.931232 ***
+[  3][  3]:     1.000000     1.000000 
+
+
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org22b1791" class="outline-3">
+<h3 id="org22b1791"><span class="section-number-3">4.5</span> <a id="orgac076d7"></a> Optimization Suggestions and Documentation</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+Labs and lectures have covered several kinds of optimizations which
+are useful to improve the speed of <code>matata_OPTM()</code>.  These techniques
+include:
+</p>
+<ol class="org-ol">
+<li>Re-ordering memory accesses to be as sequential as possible which
+favors cache. <b>Unless memory accesses favor cache, it is unlikely
+that any other optimizations will provide much speedup.</b> There are
+several possibilities to optimizing cache so make sure to read the
+section on alternatives.</li>
+<li>Use threads to split up the work of normalization. The problem has
+a high degree of parallelism in it with many portions that can be
+computed in worker threads independently from others. <b>Assume that
+the number of threads to use will be small</b> compared to the size of
+the matrix. For example, the benchmark uses at most 2 threads and
+the smallest matrix is 128 rows by 128 columns.</li>
+</ol>
+
+<p>
+In most cases, implementing these two optimizations correctly will
+yield full performance points. <b>Look for examples in Lecture and Lab
+to assist you along with more discussion in this document</b>.
+</p>
+</div>
+</div>
+<div id="outline-container-org9851f8c" class="outline-3">
+<h3 id="org9851f8c"><span class="section-number-3">4.6</span> Hints on Cache-Friendly Memory Traversals</h3>
+<div class="outline-text-3" id="text-4-6">
+<p>
+There are two approaches to getting more out of cache in this setting.
+</p>
+<ol class="org-ol">
+<li>Attempt to use the Transpose matrix which inverts rows and
+columns. This is a quick and easy way to get more speed as it
+allows traversing rows instead of columns which tends to favor
+cache. However, the transpose matrix must be created which takes a
+fair amount of time and is extremely hard to make cache
+friendly. For the ultimate speed, a different approach is
+necessary.</li>
+<li>Utilize a completely different iteration pattern that still allows
+the answer matrix to be computed but favors cache while doing so.</li>
+</ol>
+
+<p>
+<b>Relying on the creation of the Transpose matrix will likely not earn
+full credit.</b> Instead, study the diagram below which suggests a way to
+compute a row the answer matrix in a cache friendly fashion.  It
+favors repeatedly traversing the matrix in a row-wise fashion to avoid
+the stride required for column-wise access.  <b>Consider implementing
+the approach illustrated before implementing any threading.</b> Threads
+that exhibit poor cache behavior tend to slow each other down; more
+benefit comes from adding multi-threading to a cache-friendly serial
+solution.
+</p>
+
+<div class="org-center">
+
+<div id="org229d72f" class="figure">
+<p><img src="matata-order.plain.svg" alt="matata-order.plain.svg" class="org-svg" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 8: </span>Illustration of how to favor row-wise access to compute squared matrix. Computation of first row of the answer matrix is shown with natural extensions to rows beyond that.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org34b2b91" class="outline-3">
+<h3 id="org34b2b91"><span class="section-number-3">4.7</span> Hints on Multi-threading</h3>
+<div class="outline-text-3" id="text-4-7">
+</div>
+<div id="outline-container-org615d503" class="outline-4">
+<h4 id="org615d503">Division of Matrix Among Threads</h4>
+<div class="outline-text-4" id="text-org615d503">
+<p>
+The matrix must be divided among worker threads. The bulk of the work
+that is done by BASE algorithm is computing the "upper triangle" of
+the output values in this part of the code:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">int matata_BASE(matrix_t mat, matrix_t ans) {
+  ...;
+  for(int i=0; i&lt;mat.cols; i++){                // compute ans = A^T * A
+    for(int j=i; j&lt;mat.cols; j++){              // compute upper triangle elements
+      float sum = 0;
+      for(int k=0; k&lt;mat.rows; k++){            // sum over dot(row, col)
+        sum += MGET(tra, i, k)*MGET(mat, k, j);
+      }
+      MSET(ans, i, j, sum);                     // exploit symmetry: assign upper
+      MSET(ans, j, i, sum);                     // trianble element to lower triangle
+    }
+  }
+  ...
+}
+</pre>
+</div>
+<p>
+It is natural to then subdivide this computation among threads,
+possibly dividing the <code>i</code>, <code>j</code>, or <code>k</code> loops among multiple
+threads. 
+</p>
+
+<p>
+<b>Students are encouraged to divide the outer <code>i</code> loop among
+threads</b>. The reasons for this are worth discussion but the most
+efficient explanation is that this is how the solution code that gets
+full points is constructed. Note also that the cache-friendly
+computation technique described in another section also an outer <code>i</code>
+loop and it is wise to take the same approach of dividing the outer
+loop among threads.
+</p>
+
+<p>
+<b>Use caution when assign threads to outer loop iterations</b>. The
+structure of the code computes a "triangle": 
+</p>
+<ul class="org-ul">
+<li>The <code>i=0</code> outer iteration loops from <code>j=i=0</code> to <code>mat.cols</code></li>
+<li>The <code>i=1</code> outer iteration loops from <code>j=i=1</code> to <code>mat.cols</code>, one
+fewer than at <code>i=0</code></li>
+<li>The <code>i=mat.cols-1</code> iteration loops from <code>j=i=mat.cols-1</code> to
+<code>mat.cols</code>, only a single iteration.</li>
+</ul>
+<p>
+That means if Thread 0 is assigned rows 0 to 49, it has a LARGE part
+of the triangle while Thread 1 assigned to rows 50-99 has a SMALL part
+of the triangle.
+</p>
+
+<p>
+Ideally an equal division of work among threads is used. An easy way
+to arrange this is with the following code pattern:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">int matata_OPTM(matrix_t mat, matrix_t ans, int tc){
+  ...;
+  for(int i=thread_id; i&lt;mat.cols; i+=thread_count){
+    ...
+  }
+  ...
+}
+</pre>
+</div>
+<p>
+Here threads will alternate rows; with 2 threads
+</p>
+<ul class="org-ul">
+<li>Thread 0 will take rows 0,2,4,6,&#x2026;</li>
+<li>Thread 1 will take rows 1,3,5,7,&#x2026;</li>
+</ul>
+<p>
+which will lead to an even amount of work and may actually help cache
+performance as threads will be more likely to work on adjacent rows.
+</p>
+
+<p>
+Note as well that the number of threads will be small so that it is
+likely several hundred or several thousands rows/cols will be assigned
+dot each thread. This will allow well-written code the have each
+thread work independently on portions of the matrix in parallel with
+other threads.
+</p>
+</div>
+</div>
+<div id="outline-container-org856d667" class="outline-4">
+<h4 id="org856d667">Use of Mutexes</h4>
+<div class="outline-text-4" id="text-org856d667">
+<p>
+Whenever a thread must access a memory element that other threads may
+reference, protect the access to that memory with a <b>Mutex</b>. Each
+thread should lock the mutex, make changes to the data, then unlock
+the mutex. Failure to do this when altering shared data may result in
+incorrect results. Try to keep the code between lock/unlock as short
+and fast as possible as only one thread can execute it at a time.
+</p>
+
+<p>
+For this problem, it is likely that a single lock/unlock will be
+required.
+</p>
+</div>
+</div>
+<div id="outline-container-org7a7be14" class="outline-4">
+<h4 id="org7a7be14">Use of Barriers</h4>
+<div class="outline-text-4" id="text-org7a7be14">
+<p>
+Later parts of the computation may require all threads to complete
+earlier parts.  For example, without having the maximum element across
+the entire MATATA answer matrix, the answer matrix cannot be
+normalized correctly. If multiple threads are cooperating to compute a
+shared result, all threads must finish their task before any should
+move ahead. In these cases, a <b>Barrier</b> is useful.
+</p>
+
+<p>
+Below is a basic code synopsis of how to use a barrier. Most solutions
+to MATATA will use 1-3 <code>pthread_barrier_wait()</code> calls and can utilize
+the same barrier for all of them.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">// global variable, may also be a local variable in a struct
+pthread_barrier_t barrier;
+
+void main_thread(int thread_count) {
+  // main thread sets up the barrier
+  pthread_barrier_init(&amp;barrier, NULL, thread_count);
+
+  // main thread creates threads
+  for(int i=0; i&lt;thread_count; i++){
+    ...;
+    pthread_create(..., worker, ...);
+  }
+  ...;
+}
+
+void *worker(void *){
+  // worker threads compute PART A of the computation
+  ...;
+  
+  // before continuing to PART B, all threads must finish PART A
+  // use the barrier to wait until  
+  pthread_barrier_wait(barrier);
+  // all threads now finished with PART A, safe to proceed to part B
+
+  // worker threads compute PART B of the computation
+  ...;
+
+  // before continuing to PART C, all threads must finish PART B
+  // use the barrier to wait until  
+  pthread_barrier_wait(barrier);
+  // all threads now finished with PART B, safe to proceed to part C
+
+  // worker threads compute PART C of the computation
+  ...;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org572bc78" class="outline-3">
+<h3 id="org572bc78"><span class="section-number-3">4.8</span> Constraints</h3>
+<div class="outline-text-3" id="text-4-8">
+</div>
+<div id="outline-container-orgfc310f2" class="outline-4">
+<h4 id="orgfc310f2">Use a Mutex</h4>
+<div class="outline-text-4" id="text-orgfc310f2">
+<p>
+While it may be possible to implement a completely lock-free solution
+with threads, <b>your implementation MUST use mutexes to coordinate
+threads</b> as they access shard data in some part of the code. Credit
+will be deducted if you do not illustrate use of mutexes as one of the
+course goals for students to demonstrate proficiency with thread
+coordination. 
+</p>
+</div>
+</div>
+<div id="outline-container-org4bd0ed7" class="outline-4">
+<h4 id="org4bd0ed7">Avoid Global Variables</h4>
+<div class="outline-text-4" id="text-org4bd0ed7">
+<p>
+In many simple threaded programs, global variables are a convenient
+way to give worker threads/functions access to shared data. <b>AVOID
+THIS</b> for full credit. Use "contexts" instead: define a struct type
+that contains the data necessary for a worker thread to
+contribute. Then pass this struct to the worker thread on
+creation. Common elements of such structs are
+</p>
+<ul class="org-ul">
+<li>A numeric thread id</li>
+<li>A total thread count</li>
+<li>References (structs or pointers) to data for the computation</li>
+<li>Pointers to any shared locks that are needed to coordinate access</li>
+<li>Pointers to any shared barriers that are needed to coordinate access</li>
+</ul>
+<p>
+Lecture and discussion demos will provide some examples of how this
+might look 
+</p>
+</div>
+</div>
+<div id="outline-container-org50217bc" class="outline-4">
+<h4 id="org50217bc">Respect Thread Count</h4>
+<div class="outline-text-4" id="text-org50217bc">
+<p>
+The last parameter to the optimized function indicates the maximum
+number of threads to use while. During manual inspection, graders will
+check code to ensure that no more than the indicated number of worker
+threads will be started by the code (e.g. <code>thread_count=1</code> but 4
+worker threads are started).  Attempts to violate this will reduce
+performance points to 0.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd0965ba" class="outline-3">
+<h3 id="orgd0965ba"><span class="section-number-3">4.9</span> Additional Optimizations for MAKEUP Credit</h3>
+<div class="outline-text-3" id="text-4-9">
+<p>
+Additional optimizations may be performed to further speed up the
+computations. Some of these are described in Chapter 5 of
+Bryant/O'Hallaron.
+</p>
+<ol class="org-ol">
+<li>Replacing repeated memory references with local non-pointer data
+which will likely be assigned to registers to alleviate slow-down
+from memory accesses.</li>
+<li>Increasing potential processor pipelining by adjusting the
+destinations of arithmetic operations.</li>
+<li>Decreasing any unnecessary work such as memory accesses or
+arithmetic operations. If a computation is performed multiple
+times, find a way to perform it only once.</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org6906ffe" class="outline-3 grading 55">
+<h3 id="org6906ffe"><span class="section-number-3">4.10</span> Grading Criteria for Problem 1 (55%)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="55">55</span></span></h3>
+<div class="outline-text-3" id="text-4-10">
+<p>
+The file <code>P4-WRITEUP.txt</code> has several questions that should be
+answered in a similar fashion to lab write-ups. These document the
+optimizations used in <code>matata_OPTM()</code> require a justification for
+their use.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Weight</th>
+<th scope="col" class="org-left">Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">AUTOMATED TESTS</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">No output/memory errors reported  <code>make test-prob2</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">PERFORMANCE EVALUATION</td>
+</tr>
+
+<tr>
+<td class="org-right">35</td>
+<td class="org-left">Performance of <code>matata_OPTM()</code> on <code>grace.umd.edu</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">As measured by the provided <code>matata_benchmark</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Best score of 3 runs done by graders after submission closes</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">MAKEUP CREDIT can be earned by greatly exceeding the maximum points possible</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Credit earned in this way will be obvious based on the output of the benchmark</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">MANUAL INSPECTION of <code>matata_optm.c</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Effort to optimize memory access pattern in <code>matata_OPTM()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Effort to utilize threads in <code>matata_OPTM()</code></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Clear effort to coordinate thread access to shared data using a mutex</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Avoids the use of Global Variables in favor of local "contexts" to give threads data they need</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Respects the <code>thread_count</code> parameter and does not start excess worker threads</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><b>Includes timing results from <code>matata_benchmark</code> in a commented table at top of file</b></td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left"><a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">Code Style</a>: Functions adhere to <a href="https://docs.google.com/document/d/1V6W1GBcL2cgOoiIeaz5V83U3BUbfK7wqYia71i0AeXQ/edit?usp=sharing">CMSC 216 C Coding Style Guide</a> which dictates reasonable indentation, commenting, consistency of curly usage, etc.</td>
+</tr>
+
+<tr>
+<td class="org-right">&#xa0;</td>
+<td class="org-left">Includes comments describing the overall flow of optimized code, intent and purpose of loops.</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">55</td>
+<td class="org-left">Problem Total</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="outline-container-org1f932a0" class="outline-2">
+<h2 id="org1f932a0"><span class="section-number-2">5</span> Assignment Submission</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-org75853bc" class="outline-3">
+<h3 id="org75853bc"><span class="section-number-3">5.1</span> <a id="orgb53e3d9"></a> Submit to Gradescope</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+Refer to the Project 1 instructions and adapt them for details of how
+to submit to Gradescope. In summary they are
+</p>
+
+<dl class="org-dl">
+<dt>Command Line Submission</dt><dd>Type <code>make submit</code> to create a zip file
+and upload it to Gradescope; enter your login information when
+prompted.</dd>
+<dt>Manual Submission</dt><dd>Type <code>make zip</code> to create <code>pX-complete.zip</code>,
+transfer this file to a local device, then upload it to the
+appropriate assignment on Gradescope via the sites web interface.</dd>
+</dl>
+</div>
+</div>
+<div id="outline-container-org8f1ed5f" class="outline-3">
+<h3 id="org8f1ed5f"><span class="section-number-3">5.2</span> Late Policies</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+You may wish to review the policy on late project submission which
+will cost 1 Engagement Point per day late. <b>No projects will be
+accepted more than 48 hours after the deadline.</b>
+</p>
+
+<p>
+<a href="https://www.cs.umd.edu/~profk/216/syllabus.html#late-submission">https://www.cs.umd.edu/~profk/216/syllabus.html#late-submission</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2025-12-04 Thu 16:20 <br/> </i>
+</div>
+</body>
+</html>
