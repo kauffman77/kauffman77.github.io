@@ -1,0 +1,1965 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2026-01-21 Wed 12:04 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 5451 Assignment 1: Parallel Architecture and Theory</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
+details > summary {
+padding: 2px 6px;
+font-family: Sans;
+font-size: 0.8em;
+width: fit-content;
+border-radius: 5px;
+background-color: #efefef;
+border: 1px solid black;
+cursor: pointer;
+}
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","[COMMANDO]>>","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+literal: ["[data/script.txt]>>","[data/script1.txt]>>","[data/script6.txt]>>"],
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+// hljs.COMMENT(/## /, /$/),     // hash-hash-ws for comment
+hljs.COMMENT(/##+/, /$/),     // or a sequence of hashes
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
+<style type="text/css">
+.org-ol { list-style-type: upper-alpha; }
+</style>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src=""https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js"">
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2026-01-21 Wed 12:04</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CSCI 5451 Assignment 1: Parallel Architecture and Theory</h1>
+<ul class="org-ul">
+<li><b>Due: Thu 11-Feb-2026 by 11:59 pm</b></li>
+<li><i>Approximately 5% of total grade</i></li>
+<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a> in PDF format</li>
+<li>You may work in groups of 1 or 2 and submit one assignment per group.</li>
+</ul>
+
+<blockquote>
+<p>
+Note: some of the math fonts used throughout the assignment may not
+display correctly. I have tested the display on Google Chrome and
+Mozilla Firefox and seen it work when connected to the network. Notify
+Prof Kauffman via email if it does not render properly.
+</p>
+</blockquote>
+<div id="outline-container-orgad25892" class="outline-4">
+<h4 id="orgad25892">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orgad25892">
+</div>
+</div>
+<div id="outline-container-org675f7e3" class="outline-4">
+<h4 id="org675f7e3"></h4>
+<div class="outline-text-4" id="text-org675f7e3">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgc55c963">1. (15pts) <b>Problem 1</b>: Store-and-forward Routing (Grama 2.26)</a></li>
+<li><a href="#org8eb8999">2. (10pts) <b>Problem 2</b>: Embedding a Ring Network in a Tree Network</a></li>
+<li><a href="#org0d0be1f">3. (10pts) <b>Problem 3</b>: Task-dependence Graphs (Grama 3.2)</a></li>
+<li><a href="#org4936860">4. (15pts) <b>Problem 4</b>: Parallel Histogram</a></li>
+<li><a href="#org4b3ebdf">5. (10pts) <b>Problem 5</b>: Parallel One-to-All Broadcast in 2D Torus</a></li>
+<li><a href="#org71f27ce">6. (15pts) <b>Problem 6</b>: Bring the Heat</a></li>
+<li><a href="#org1bf6fe8">7. (15pts) <b>Problem 7</b>: C Proficiency / K-Means Preparation</a>
+<ul>
+<li><a href="#org48762aa">Brief Overview of K-Means Clustering</a></li>
+<li><a href="#org458b8e8">Notes On Implementation</a></li>
+<li><a href="#orgb6bd060">Python Code</a></li>
+<li><a href="#orgbc528fd">Sample Runs of kmeans.py</a></li>
+<li><a href="#org684f257">Timing Results to Provide</a></li>
+<li><a href="#org75dde12">Submission Notes</a></li>
+</ul>
+</li>
+<li><a href="#orgc72f647">8. (10pts) <b>Work Disclosure</b></a></li>
+<li><a href="#org702373b">9. Submission Instructions</a>
+<ul>
+<li><a href="#org5bcd1cf">Picture Sequence of Uploading an Assignment</a></li>
+<li><a href="#orgdf60c07">Adding a Group Member on Gradescope</a></li>
+<li><a href="#orge283ac1">Late Submission</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc55c963" class="outline-2">
+<h2 id="orgc55c963"><span class="section-number-2">1</span> (15pts) <b>Problem 1</b>: Store-and-forward Routing (Grama 2.26)</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Consider the routing of messages in a parallel computer that uses
+store-and-forward routing. In such a network, the cost of sending a
+single message of size \(m\) from \(P_{source}\) to \(P_{destination}\) via a
+path of length \(d\) is \(t_s + t_w \times d \times m\). An alternate way
+of sending a message of size m is as follows. The user breaks the
+message into \(k\) parts each of size \(m/k\), and then sends these \(k\)
+distinct messages one by one from \(P_{source}\) to
+\(P_{destination}\). For this new method, derive the expression for time
+to transfer a message of size \(m\) to a node \(d\) hops away under the
+following two cases:
+</p>
+
+<ol class="org-ol">
+<li>Assume that another message can be sent from \(P_{source}\) as soon
+as the previous message has reached the next node in the path.</li>
+<li>Assume that another message can be sent from \(P_{source}\) only after the
+previous message has reached \(P_{destination}\).</li>
+</ol>
+
+<p>
+For each case, comment on the value of this expression as the value of
+\(k\) varies between 1 and \(m\). Also, what is the optimal value of \(k\)
+if \(t_s\) is very large, or if \(t_s = 0\)?
+</p>
+
+<p>
+<b>Clarification</b>: To start sending any message, a cost of \(t_s\) must be
+paid.  For example sending \(m=10\) words in its entirety costs 
+\[t_s + t_w \times d \times 10\]
+Sending the same message broken into two 5-word chunks costs
+\[(t_s + t_w \times d \times 5) + (t_s + t_w \times d \times 5)\]
+if the sending does not overlap.
+</p>
+</div>
+<div id="outline-container-orgd1cc29f" class="outline-4">
+<h4 id="orgd1cc29f"><a id="org29680e2"></a> Example</h4>
+<div class="outline-text-4" id="text-orgd1cc29f">
+<p>
+To increase the clarity, below is a concrete example of the problem
+setting with communication according to both sets of
+assumptions. Studying it may help with visualizing the nature of the
+problem.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">* ****** EXAMPLE PROBLEM PARAMETERS ****** *
+m=10 : 10 words of data
+k=2  : message in two parts, 5 words each [A5 B5]
+d=3  : Source to Destination is 3 hops
+
+* ****** A ASSUMPTIONS ****** *
+After S sends A5, can immediately send B5 to "follow" it
+
+TIME=0
+S:0 ---- 1 ---- 2 ---- D:3
+A5,B5
+
+Initiate sending A5
+
+TIME=1*5*t_w + t_s
+S:0 ---- 1 ---- 2 ---- D:3
+B5      A5
+
+Initiate sending B5
+
+TIME=2*5*t_w + t_s + t_s
+S:0 ---- 1 ---- 2 ---- D:3
+        B5     A5
+
+TIME=3*5*t_w + t_s + t_s
+S:0 ---- 1 ---- 2 ---- D:3
+               B5      A5
+
+TIME=4*5*t_w + t_s + t_s
+S:0 ---- 1 ---- 2 ---- D:3
+                       A5,B5
+
+* ****** B ASSUMPTIONS ****** *
+After sending A5, S must wait until it arrives at D before send B5.
+
+TIME=0
+S:0 ---- 1 ---- 2 ---- D:3
+A5,B5
+
+Initiate sending A5
+
+TIME=1*5*t_w + t_s
+S:0 ---- 1 ---- 2 ---- D:3
+B5      A5
+
+TIME=2*5*t_w + t_s
+S:0 ---- 1 ---- 2 ---- D:3
+B5             A5
+
+TIME=3*5*t_w + t_s
+S:0 ---- 1 ---- 2 ---- D:3
+B5                     A5
+
+A5 Arrived
+Initiate sending B5
+
+TIME=4*5*t_w + t_s + t_s
+S:0 ---- 1 ---- 2 ---- D:3
+        B5             A5
+
+TIME=5*5*t_w + t_s + t_s
+S:0 ---- 1 ---- 2 ---- D:3
+               B5      A5
+
+TIME=6*5*t_w + t_s + t_s
+S:0 ---- 1 ---- 2 ---- D:3
+                       A5,B5
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org8eb8999" class="outline-2">
+<h2 id="org8eb8999"><span class="section-number-2">2</span> (10pts) <b>Problem 2</b>: Embedding a Ring Network in a Tree Network</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Section 2.7 of Grama discusses a number techniques to evaluate how
+well one type of network interconnect may be embedded in another.  Two
+important characteristics of such embedding are identified in Grama
+2.7:
+</p>
+<ul class="org-ul">
+<li><b>Congestion</b>: The maximum number of links in the source network
+mapped to a single link in the destination network.</li>
+<li><b>Dilation</b>: The maximum number of links traversed in the destination
+network which correspond to a single link in the source network.</li>
+</ul>
+
+<p>
+We briefly discussed this at a high level in lecture indicating that
+embedding a 2D Mesh into Hypercube is possible as the former has many
+fewer links than the latter. We were able to informally show that
+mapping a source 2D Mesh network to a destination Hypercube network
+would yield a Congestion of 1 (all links in the mesh had a unique link
+in the Hypercube) and a Dilation of 1 (adjacent procs in the Mesh were
+adjacent in the Hypercube).
+</p>
+
+<p>
+Below is a diagram of an 8-node Ring network (linear array with
+wrap-around) and an 8-node Binary Tree network (with intermediary
+switches as squares).
+</p>
+
+<div class="org-center">
+
+<div id="orge603f12" class="figure">
+<p><img src="ring-tree.png" alt="ring-tree.png" style="max-width: 100%;" />
+</p>
+</div>
+</div>
+
+<p>
+Discuss how one can map/embed the Ring to the Tree.  Be detailed,
+perhaps annotating the diagrams to show the specific mapping. Give the
+numeric values for Congestion and Dilation in this mapping.
+</p>
+
+<p>
+Generalize your answer for a \(2^D\) node Ring mapped to a \(2^D\) node
+Tree. Provide an analytic expression for Congestion and
+Dilation. Informally justify your answers (no need for a formal
+proof).
+</p>
+</div>
+</div>
+<div id="outline-container-org0d0be1f" class="outline-2">
+<h2 id="org0d0be1f"><span class="section-number-2">3</span> (10pts) <b>Problem 3</b>: Task-dependence Graphs (Grama 3.2)</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+For the task graphs given in Figure 3.42 (below), determine the following:
+</p>
+
+<ol class="org-ol">
+<li>Maximum degree of concurrency.</li>
+<li>Critical path length.</li>
+<li>Maximum achievable speedup over one process assuming that an arbitrarily large number of processors is available.</li>
+<li>The minimum number of processors needed to obtain the maximum possible speedup.</li>
+<li>The maximum achievable speedup if the number of processors is limited to 2, 4, and 8.</li>
+</ol>
+
+<p>
+Assume that each task node takes an equal amount of time to execute.
+</p>
+
+<div class="org-center">
+<p>
+<b>Figure 3.42. Task-dependency graphs for this Problem.</b>
+</p>
+
+
+<div id="org30e6804" class="figure">
+<p><img src="task-graphs.png" alt="task-graphs.png" style="max-width: 100%;" />
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org4936860" class="outline-2">
+<h2 id="org4936860"><span class="section-number-2">4</span> (15pts) <b>Problem 4</b>: Parallel Histogram</h2>
+<div class="outline-text-2" id="text-4">
+<blockquote>
+<p>
+This problem is a variant of Grama 3.19 + 3.20 which discusses Bucket
+Sort but focuses on the simpler task of computing Histograms.
+</p>
+</blockquote>
+
+
+<p>
+Consider parallelizing a simple histogram algorithm on a <b>distributed
+memory computer</b>.
+</p>
+
+<ul class="org-ul">
+<li>Input consists of an array <code>A[]</code> of <code>N</code> random integers in the range
+<code>{0...(R-1)}</code>.</li>
+<li>The algorithm should compute the array of counts <code>H[]</code> where element
+<code>H[i]</code> is the total number of times integer <code>i</code> appeared in input
+array <code>A[]</code>.</li>
+<li>All <code>P</code> processors on the parallel computer are assumed to have
+access to the entire array <code>A[]</code> which can be loaded from permanent
+storage. However if the size <code>N</code> gets large enough, only parts of
+<code>A[]</code> can be held in memory for an individual processor.</li>
+<li>At the end of the algorithm execution, at least one processor must
+contain the entire array <code>H[]</code> which may involve some communication.</li>
+</ul>
+
+<p>
+EXAMPLE:
+</p>
+<ul class="org-ul">
+<li>Input: <code>R=4</code> and <code>A[]</code> of size <code>N=10</code> is <code>A[] = {0, 2, 1, 3, 2, 1,
+  1, 0, 0, 1}</code></li>
+<li>Output: <code>H[]</code> of size <code>R=4</code> is <code>H[] = {3, 4, 2, 1}</code> as <code>H[i]</code> is the
+number of occurrences of <code>i</code> throughout <code>A[]</code></li>
+</ul>
+
+<p>
+Describe two ways to decompose this problem into a parallel
+program. Compare these two.
+</p>
+
+<ol class="org-ol">
+<li>Describe a decomposition based on <b>partitioning the input data</b>
+(i.e., the array <code>A[]</code>) and an appropriate mapping onto p
+processors. Describe briefly how the resulting parallel algorithm
+would work.</li>
+<li>Describe a decomposition based on <b>partitioning the output data</b>
+(i.e., the array <code>H[]</code>) and an appropriate mapping onto p
+processors. Describe briefly how the resulting parallel algorithm
+would work.</li>
+<li>Discuss the advantages and disadvantages of these two parallel
+formulations.  Describe circumstances under which each is
+preferred. Such circumstances should consider
+<ul class="org-ul">
+<li><code>P</code> the number of processors</li>
+<li><code>R</code> the number of different data possibilities (size of <code>H[]</code>)</li>
+<li><code>A[]</code> the input array and <code>n</code> its size</li>
+<li>Potentially also the cost to communicate between the processors</li>
+</ul></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org4b3ebdf" class="outline-2">
+<h2 id="org4b3ebdf"><span class="section-number-2">5</span> (10pts) <b>Problem 5</b>: Parallel One-to-All Broadcast in 2D Torus</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Assume processor 0 has a message that must be sent to all other
+processors in a distributed memory parallel computer.  Describe an
+efficient algorithm to do this in a 2D Torus (wrap-around mesh) with
+<code>R</code> rows and <code>C</code> columns.
+</p>
+
+<p>
+Account for the following in your answers.
+</p>
+<ul class="org-ul">
+<li>A processor can send a message to any other processor.  Any
+processor between the source and destination does not receive the
+message, only forwards it along the path. However, once a processor
+has actually received the message, it can subsequently be a source
+and send it to other processors.</li>
+<li>Processors can be indexed with 2D coordinates as in processor (0,2)
+sends a message to processor (5,4)</li>
+<li>Give rough pseudocode for how this algorithm will look</li>
+<li>Give a cost estimate of this communication in terms of the number or
+rows <code>R</code> and columns <code>C</code> in the network.  The cost of a single
+communication between nodes that are \(d\) hops away is \[t_{single} =
+  t_s + t_w \times m \times d\] You may assume that <code>R</code> and <code>C</code> are
+powers of two in your analysis to simplify the expression for the
+total communication time \(t_{comm}\).</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org71f27ce" class="outline-2">
+<h2 id="org71f27ce"><span class="section-number-2">6</span> (15pts) <b>Problem 6</b>: Bring the Heat</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Consider a simple physical simulation of heat transfer.  A rod of
+material is insulated except at its ends to which are attached two
+constant sources of heat/cold.  
+</p>
+
+<div class="org-center">
+
+<div id="orgd2862cf" class="figure">
+<p><img src="heat-model.png" alt="heat-model.png" style="max-width: 100%;" />
+</p>
+</div>
+</div>
+
+<p>
+The rod is broken into discrete chunks, sometimes referred to as
+finite elements, and it is assumed that throughout each element the
+temperature is uniform.  The reservoir elements of heat/cold at the
+left and right remain at a constant temperature.  For the other
+elements, the temperature is updated at each time step by examining
+the temperature of its neighbors compared to itself.  This dependence
+is indicated in the lower part of the diagram and the exact update for
+an element is given in the code below.
+</p>
+
+<p>
+The following C code implements a simple version of this simulation.
+A row of the matrix <code>H</code> contains the temperature of all elements in
+the rod at a time step with the leftmost and rightmost elements
+remaining constant. Ultimately, the program computes the entire matrix
+<code>H</code> which contains temperatures of all elements at all time steps.
+Examine this code carefully.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+//  HEAT TRANSFER SIMULATION
+//  
+//  Simple physical simulation of a rod connected at the left and right
+//  ends to constant temperature heat/cold sources.  All positions on
+//  the rod are set to an initial temperature.  Each time step, that
+//  temperature is altered by computing the difference between a cells
+//  temperature and its left and right neighbors.  A constant k
+//  (thermal conductivity) adjusts these differences before altering
+//  the heat at a cell.  Use the following model to compute the heat
+//  for a position on the rod according to the finite difference
+//  method.
+// 
+//     left_diff  = H[t][p] - H[t][p-1];
+//     right_diff = H[t][p] - H[t][p+1];
+//     delta = -k*( left_diff + right_diff )
+//     H[t+1][p] = H[t][p] + delta
+//  
+//  Substituting the above, one can get the following
+// 
+//    H[t+1][p] = H[t][p] + k*H[t][p-1] - 2*k*H[t][p] + k*H[t][p+1]
+// 
+//  The matrix H is computed for all time steps and all positions on
+//  the rod and displayed after running the simulation.  The simulation
+//  is run for a fixed number of time steps rather than until
+//  temperatures reach steady state.
+
+int main(int argc, char **argv){
+  int max_time = 50;            // Number of time steps to simulate 
+  int width = 20;               // Number of cells in the rod 
+  double initial_temp = 50.0;   // Initial temp of internal cells  
+  double L_bound_temp = 20.0;   // Constant temp at Left end of rod 
+  double R_bound_temp = 10.0;   // Constant temp at Right end of rod 
+  double k = 0.5;               // thermal conductivity constant 
+  double **H;                   // 2D array of temps at times/locations  
+
+  // Allocate memory  
+  H = malloc(sizeof(double*)*max_time); 
+  int t,p;
+  for(t=0;t&lt;max_time;t++){
+    H[t] = malloc(sizeof(double*)*width);
+  }
+
+  // Initialize constant left/right boundary temperatures 
+  for(t=0; t&lt;max_time; t++){
+    H[t][0] = L_bound_temp;
+    H[t][width-1] = R_bound_temp;
+  }
+
+  // Initialize temperatures at time 0 
+  t = 0;
+  for(p=1; p&lt;width-1; p++){
+    H[t][p] = initial_temp;
+  }
+
+  // Simulate the temperature changes for internal cells
+  for(t=0; t&lt;max_time-1; t++){
+    for(p=1; p&lt;width-1; p++){
+      double left_diff  = H[t][p] - H[t][p-1];
+      double right_diff = H[t][p] - H[t][p+1];
+      double delta = -k*( left_diff + right_diff );
+      H[t+1][p] = H[t][p] + delta;
+    }
+  }
+
+  // Print results 
+  printf("Temperature results for 1D rod\n");
+  printf("Time step increases going down rows\n");
+  printf("Position on rod changes going accross columns\n");
+
+  // Column headers 
+  printf("%3s| ","");
+  for(p=0; p&lt;width; p++){
+    printf("%5d ",p);
+  }
+  printf("\n");
+  printf("%3s+-","---");
+  for(p=0; p&lt;width; p++){
+    printf("------");
+  }
+  printf("\n");
+  // Row headers and data 
+  for(t=0; t&lt;max_time; t++){
+    printf("%3d| ",t);
+    for(p=0; p&lt;width; p++){
+      printf("%5.1f ",H[t][p]);
+    }
+    printf("\n");
+  }
+
+  return 0;
+}
+</pre>
+</div>
+
+<p>
+Answer the following questions about how to parallelize this code.
+</p>
+
+<ol class="org-ol">
+<li>A typical approach to parallelizing programs is to select a loop
+and split iterations of work between available processors.
+Describe how one might do this for the heat program.  Make sure to
+indicate any loops for which this approach is not feasible and any
+which seem more viable to you.</li>
+<li>Describe how you would divide the data for the heat transfer
+problem among many processors in a distributed memory
+implementation to facilitate efficient communication and
+processing.  Describe a network architecture that seems to fit this
+problem well and balances the cost of the network well.</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org1bf6fe8" class="outline-2">
+<h2 id="org1bf6fe8"><span class="section-number-2">7</span> (15pts) <b>Problem 7</b>: C Proficiency / K-Means Preparation</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+CODEPACK: <a href="kmeans-code.zip">kmeans-code.zip</a>
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">FILE</th>
+<th scope="col" class="org-left">DESCRIPTION</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>kmeans.py</code></td>
+<td class="org-left">Python kmeans clustering program to convert to C</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>python-demo.txt</code></td>
+<td class="org-left">Demo of running the Python version, C version should produce similar results</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>filestats.c</code></td>
+<td class="org-left">Parsing routine to help process data files in C</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>sample-mnist-data/</code></td>
+<td class="org-left">Directory with data files for clustering</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>kmeans_serial.c</code></td>
+<td class="org-left">CREATE this file with your C version</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+In the next Assignment, you will be responsible for coding a parallel
+implementation of K-Means clustering. This will be coded in the C
+language. Many students may be rusty or uncertain about their C coding
+skills. To prepare for the parallel coding exercise, convert the a
+Python program to a C version. The provided Python code is
+downloadable with associated data files in the codepack linked at the
+top of this problem.
+</p>
+</div>
+<div id="outline-container-org48762aa" class="outline-3">
+<h3 id="org48762aa">Brief Overview of K-Means Clustering</h3>
+<div class="outline-text-3" id="text-org48762aa">
+<p>
+K-Means clustering will be discussed in lecture several times to
+introduce it and later to discuss various approaches to parallelizing
+the serial algorithm. For a additional details, examine <a href="https://en.wikipedia.org/wiki/K-means_clustering">the Wikipedia
+article on K-Means Clustering</a>. Below is a brief overview of the
+central ideas.
+</p>
+
+<p>
+The algorithm can be summarized as follows:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">- Input: data + #of clusters desired
+- Output: assignment of each data to a cluster + cluster centers 
+- Algorithm: Iterates between
+  1. Calculate cluster centers
+  2. Calculate cluster assignments
+  Until no data changes clusters
+</pre>
+</div>
+
+<p>
+Each point to be clustered is described as a vector of numerical
+features. In the below sample picture, each data has 2 such features
+so can be easily plotted in 2 dimensions. The figure starts with two
+random cluster centers, then iterates above between assigning data to
+clusters, then recomputing cluster centers, then assigning, etc.
+</p>
+
+<div class="org-center">
+
+<div id="org4678062" class="figure">
+<p><img src="kmeansViz.png" alt="kmeansViz.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Example of progression of K-means clustering algorithm. <a href="https://stanford.edu/~cpiech/cs221/handouts/kmeans.html">Source: K-Means by Chris Piech. Based on a handout by Andrew Ng.</a></p>
+</div>
+</div>
+
+<p>
+K-means requires one to specify how many clusters to group data into.
+Our K-means clustering initially assigns each data randomly to one
+cluster. Then the cluster centers are computed by summing the features
+of each data in a cluster and dividing by the number of data in the
+cluster. Finally, each data is compared against each cluster center
+and re-assigned to it if it is closer than its current cluster's
+center.  The distance can be a variety of metrics but Euclidean
+distance is common.
+</p>
+
+<p>
+The algorithm iterates between calculating new cluster centers and
+then re-assigning each data to new clusters.  Under very mild
+conditions, cluster assignments will converge and this can be detected
+by counting how many data are assigned to different clusters than in
+the last iteration. When this count is 0, the algorithm has converged.
+</p>
+
+<p>
+For our application, we will be clustering small images of
+hand-written digits so the features for the intensities of pixels in
+the image. A small image file like this one:
+</p>
+<div class="org-center">
+
+<div id="orgd2dea4e" class="figure">
+<p><img src="five.png" alt="five.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Sample of a small hand-written digit in graymap</p>
+</div>
+</div>
+<p>
+may have pixel data in 2 dimensions like this (here written in the
+Portable Gray Map [PGM] format):
+</p>
+<div class="org-src-container">
+<pre class="src src-text">P2    # file type
+5 7   # 5 columns by 7 rows
+15    # max intensity 15
+0  0  0  0  0
+0 10 15 15  0
+0 14  0  0  0
+0 15 15  9  0
+4  0  0  12 3
+0 13  14 9  0
+0  0  8  0  0
+</pre>
+</div>
+<p>
+Such a data point is written as a 5x7 = 35 element vector by
+concatenating the rows of pixels as in:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">0  0  0  0  0  0 10 15 15  0  0 14  0  0  0  0 15 15  9  0  4  0  0  12 3  0 13  14 9  0  0  0  8  0  0
+</pre>
+</div>
+<p>
+Our application will cluster such collections of such images. Each
+image appears as its own line in a text file starting with a label as
+a digit of <code>0, 1, 2,... 9</code>. This is followed by a colon, then then
+image pixels:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">5 : 0  0  0  0  0  0 10 15 15  0  0 14  0  0  0  0 15 15  9  0  4  0  0  12 3  0 13  14 9  0  0  0  8  0  0
+5 : 0  0  0  0  0  1 12 15 13  0  0 12  0  0  0  0 14 14  8  1  3  0  0  15 6  0 12  11 9  0  0  0  8  2  0
+3 : 0  0  0  0  0  0 10 15 15  0  0  0  0 14  0  0  4 15 11  0  0  0  0  12 3  0 13  14 9  0  0  0  8  0  0 
+...
+</pre>
+</div>
+<p>
+The data we will be clustering are images from the well-known <a href="http://yann.lecun.com/exdb/mnist/">MNIST
+Database</a> which are 28x28 pixel graymap images with a range of 0 for
+black to 255 for white. The original binary formats have been
+converted to text formats like those about for somewhat easier
+interpretability and to processing.
+</p>
+</div>
+</div>
+<div id="outline-container-org458b8e8" class="outline-3">
+<h3 id="org458b8e8">Notes On Implementation</h3>
+<div class="outline-text-3" id="text-org458b8e8">
+<ul class="org-ul">
+<li>The Python version has 2 "classes" at the top which represent the 
+main datatype associated with the problem. These should become C
+<code>structs</code> in the C version as standard C does not support classes
+and they are unnecessary in this case anyway.</li>
+<li>All numerical calculations should be done in floating point format
+using C's 32-bit <code>float</code> type. It is recommended for performance
+reasons that the integer pixel data be read in as floats so that one
+can avoid doing unnecessary conversions.</li>
+<li>Python automatically allocates data and can extend its lists while C
+involves manual memory allocation. In this application, after
+setting up data from the input file, no further memory allocation is
+required so most of the application logic will be identical between
+the Python and the C versions.</li>
+<li>Mirror the functions and flow used in the Python version closely in
+your C version. Some Pythonesque function such as <code>split()</code> and
+<code>append()</code> methods are not available in C. Instead, pre-allocating
+appropriate amounts of memory and using standard input functions
+like <code>fscanf()</code> will suffice.</li>
+<li>When reading in data from the input files, it may useful to employ
+the following function which calculates the lines and total tokens
+in a data file. It is provided in the indicated source file in the
+problem codepack.</li>
+<li>Using this C function allows one to calculate how much memory must
+be allocated for the data structure that will hold the input file:
+each line of the input files starts with an integer then a colon
+then 784 integers (28x28 pixels).</li>
+</ul>
+<button onclick="document.getElementById('filestats_c').style.display='block'">Click to Show Code</button>
+<div id="filestats_c" style="display:none;">
+<div class="org-src-container">
+<pre class="src src-c">// filestats.c : provides a useful routine for parsing some input data
+// files in C, particularly the file used in the K-Means program.
+
+#include &lt;stdio.h&gt;
+#include &lt;ctype.h&gt;  // for isspace() etc.
+
+int filestats(char *filename, ssize_t *tot_tokens, ssize_t *tot_lines){
+// Sets number of lines and total number of whitespace separated
+// tokens in the file. Returns -1 if file can't be opened, 0 on
+// success.
+//
+// EXAMPLE: int ret = filestats("digits_all_1e1.txt", &amp;toks, &amp;lines);
+// toks  is now 7860 : 10 lines with 786 tokens per line, label + ":" + 28x28 pixels
+// lines is now 10   : there are 10 lines in the file
+  FILE *fin = fopen(filename,"r");
+  if(fin == NULL){
+    printf("Failed to open file '%s'\n",filename);
+    return -1;
+  }
+
+  ssize_t ntokens=0, nlines=0, column=0;
+  int intoken=0, token;
+  while((token = fgetc(fin)) != EOF){
+    if(token == '\n'){          // reached end of line
+      column = 0;
+      nlines++;
+    }
+    else{
+      column++;
+    }
+    if(isspace(token) &amp;&amp; intoken==1){ // token to whitespace
+      intoken = 0;
+    }
+    else if(!isspace(token) &amp;&amp; intoken==0){ // whitespace to token
+      intoken = 1;
+      ntokens++;
+    }
+  }
+  if(column != 0){              // didn't end with a newline
+    nlines++;                   // add a line on to the count
+  }
+  *tot_tokens = ntokens;
+  *tot_lines = nlines;
+  fclose(fin);
+  // printf("DBG: tokens: %lu\n",ntokens);
+  // printf("DBG: lines: %lu\n",nlines);
+  return 0;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb6bd060" class="outline-3">
+<h3 id="orgb6bd060">Python Code</h3>
+<div class="outline-text-3" id="text-orgb6bd060">
+<p>
+The Python code version is provided below but is also in the codepack.
+</p>
+<button onclick="document.getElementById('kmeans_py').style.display='block'">Click to Show Code</button>
+<div id="kmeans_py" style="display:none;">
+<div class="org-src-container">
+<pre class="src src-python">#!/usr/bin/env python3
+#
+# usage: kmeans.py &lt;datafile&gt; &lt;nclust&gt; [savedir] [maxiter]
+
+import struct
+import sys
+import os
+import math
+
+class KMData:                      # Data set to be clustered
+  ndata    = 0                     # count of data
+  dim      = 0                     # dimension of features for data
+  features = []                    # pointers to individual features
+  assigns  = []                    # cluster to which data is assigned
+  labels   = []                    # label for data if available
+  nlabels  = []                    # max value of labels +1, number 0,1,...,nlabel0
+
+class KMClust:                     # Cluster information
+  nclust   = 0                     # number of clusters, the "k" in kmeans
+  dim      = 0                     # dimension of features for data
+  features = []                    # 2D indexing for individual cluster center features
+  counts   = []                    # number of data in each cluster
+  
+
+# Load a data set from the named file. Data should be formatted as a
+# text file as:
+# 
+# 7 :  84 185 159 151  60  36   0   0   0   0   0   0
+# 2 :   0  77 251 210  25   0   0   0 122 248 253  65
+# 1 :   0   0   0   0   0   0   0   0   0  45 244 150
+# 0 :   0   0   0   0 110 190 251 251 251 253 169 109
+# 4 :   0   0   0   4 195 231   0   0   0   0   0   0
+# 1 :   0   0   0   0   0   0   0   0   0  81 254 254
+# 4 :   0  20 189 253 147   0   0   0   0   0   0   0
+# 9 :   0   0   0   0  91 224 253 253  19   0   0   0
+# 5 :   0   0   0   0   0   0  63 253 253 253 253 253
+# 9 :   0   0   0   0   0   0   0  36  56 137 201 199
+#
+# with the lead number being an optional correct label for the data
+# and remaining numbers being floating point values that are space
+# separated which are the feature vector for each data. The abve
+# example does not have any fractional values for features but it
+# could.
+def kmdata_load(datafile):
+  data = KMData()
+  with open(datafile,"r") as fin:
+    for line in fin:
+      data.ndata += 1
+      tokens = line.split()
+      data.labels.append(int(tokens[0]))
+      feats = []
+      for f in tokens[2:]:
+        feats.append(float(f))
+      data.features.append(feats)
+  
+  data.dim = len(data.features[0])
+  data.nlabels = max(data.labels)+1
+  return data
+
+# Allocate space for clusters in an object
+def kmclust_new(nclust, dim):
+  clust = KMClust()
+  clust.nclust = nclust
+  clust.dim = dim
+  for c in range(nclust):
+    clust.features.append([0.0] * dim)
+    clust.counts.append(0)
+  return clust
+  
+
+# Save clust centers in the PGM (portable gray map) image format;
+# plain text and can be displayed in many image viewers. File names re
+# cent_0000.pgm and so on.
+def save_pgm_files(clust,savedir):
+  dim_root = int(math.sqrt(clust.dim))
+  if clust.dim % dim_root == 0:                    # check if this looks like a square image
+    print(f"Saving cluster centers to {savedir}/cent_0000.pgm ...")
+    maxfeat = max(map(max,clust.features))
+    for c in range(clust.nclust):
+      outfile=f"{savedir}/cent_{c:04}.pgm"
+      with open(outfile,"w") as pgm:               # output the cluster centers as
+        print("P2",file=pgm)                       # pgm files, a simple image format which
+        print(f"{dim_root} {dim_root}",file=pgm)   # can be viewed in most image
+        print(f"{maxfeat:.0f}",file=pgm)           # viewers to show how the cluster center
+        for d in range(clust.dim):                 # actually appears; nomacs is a good viwer
+          if d &gt; 0 and d%dim_root == 0:
+            print(file=pgm)
+          print(f"{clust.features[c][d]:3.0f} ",end="",file=pgm)
+        print(file=pgm)
+
+#### MAIN FUNCTION ####
+def main():
+  if len(sys.argv) &lt; 3:
+    sys.exit("usage: kmeans.py &lt;datafile&gt; &lt;nclust&gt; [savedir] [maxiter]")
+  
+  datafile = sys.argv[1]
+  nclust = int(sys.argv[2])
+  savedir = "."
+  MAXITER = 100                        # bounds the iterations
+  
+  if len(sys.argv) &gt; 3:                # create save directory if specified
+    savedir = sys.argv[3]
+    os.system(f"mkdir -p {savedir}")
+  
+  if len(sys.argv) &gt; 4:
+    MAXITER = int(sys.argv[4])
+  
+  print("datafile:",datafile)
+  print("nclust:",nclust)
+  print("savedir:",savedir)
+  
+
+  data = kmdata_load(datafile)         # read in the data file, allocate cluster space
+  clust = kmclust_new(nclust, data.dim)
+
+  print("ndata:",data.ndata)
+  print("dim:",data.dim)
+  print()
+  
+  for i in range(data.ndata):          # random, regular initial cluster assignment
+    c = i % clust.nclust
+    data.assigns.append(c)
+
+  for c in range(clust.nclust):
+    icount = data.ndata // clust.nclust  # IMPORTANT: use integer division via //
+    extra = 0
+    if c &lt; (data.ndata % clust.nclust):
+      extra = 1                        # extras in earlier clusters
+    clust.counts[c] = icount + extra;
+  
+  
+  ################################################################################
+  # THE MAIN ALGORITHM
+  curiter = 1                          # current iteration
+  nchanges = data.ndata                # check for changes in cluster assignment; 0 is converged
+  print(f"==CLUSTERING: MAXITER {MAXITER}==")
+  print(f"ITER NCHANGE CLUST_COUNTS")
+  
+  while nchanges &gt; 0 and curiter &lt;= MAXITER: # loop until convergence
+
+    # DETERMINE NEW CLUSTER CENTERS
+    for c in range(clust.nclust):      # reset cluster centers to 0.0
+      for d in range(clust.dim):
+        clust.features[c][d] = 0.0
+  
+    for i in range(data.ndata):        # sum up data in each cluster
+      c = data.assigns[i]
+      for d in range(clust.dim):
+        clust.features[c][d] += data.features[i][d]
+  
+    for c in range(clust.nclust):      # divide by ndatas of data to get mean of cluster center
+      if clust.counts[c] &gt; 0:
+        for d in range(clust.dim):        
+          clust.features[c][d] = clust.features[c][d] / clust.counts[c]
+        
+    # DETERMINE NEW CLUSTER ASSIGNMENTS FOR EACH DATA
+    for c in range(clust.nclust):      # reset cluster counts to 0
+      clust.counts[c] = 0              # re-init here to support first iteration
+  
+    nchanges = 0
+    for i in range(data.ndata):        # iterate over all data
+      best_clust = None
+      best_distsq = float("inf")
+      for c in range(clust.nclust):    # compare data to each cluster and assign to closest
+        distsq = 0.0
+        for d in range(clust.dim):     # calculate squared distance to each data dimension
+          diff = data.features[i][d] - clust.features[c][d]
+          distsq += diff*diff
+          # print(f"DBG: curiter {curiter} i {i} c {c} d {d} diff {diff:.6f}")
+        if distsq &lt; best_distsq:       # if closer to this cluster than current best
+          best_clust = c
+          best_distsq = distsq
+      clust.counts[best_clust] += 1
+      if best_clust != data.assigns[i]:  # assigning data to a different cluster?
+        # print(f"DBG: data {i} changing clusters: {data_assign[i]} to {best_clust}")
+        nchanges += 1                    # indicate cluster assignment has changed
+        data.assigns[i] = best_clust     # assign to new cluster
+    
+    # Print iteration information at the end of the iter
+    print(f"{curiter:3}: {nchanges:5} |", end="") 
+    for c in range(nclust):
+      print(f" {clust.counts[c]:4}",end="")
+    print()
+    curiter += 1
+  
+  # Loop has converged
+  if curiter &gt; MAXITER:
+    print(f"WARNING: maximum iteration {MAXITER} exceeded, may not have conveged")
+  else:
+    print(f"CONVERGED: after {curiter} iterations")
+  print()
+  
+
+  ################################################################################
+  # CLEANUP + OUTPUT
+
+  # CONFUSION MATRIX
+  confusion = []                         # confusion matrix: labels * clusters big
+  for i in range(data.nlabels):
+    confusion.append([0] * nclust)
+  
+  for i in range(data.ndata):            # count which labels in which clusters
+    confusion[data.labels[i]][data.assigns[i]] += 1
+  
+  print("==CONFUSION MATRIX + COUNTS==")
+  print("LABEL \ CLUST")
+  
+  print(f"{'':2} ",end="")               # confusion matrix header
+  for j in range(clust.nclust):
+    print(f" {j:&gt;4}",end="")
+  print(f" {'TOT':&gt;4}")
+  
+  for i in range(data.nlabels):          # each row of confusion matrix
+    print(f"{i:&gt;2}:",end="")
+    tot = 0
+    for j in range(clust.nclust):
+      print(f" {confusion[i][j]:&gt;4}",end="")
+      tot += confusion[i][j]
+    print(f" {tot:&gt;4}")
+  
+  print("TOT",end="")                    # final total row of confusion matrix
+  tot = 0
+  for c in range(clust.nclust):
+    print(f" {clust.counts[c]:&gt;4}",end="")
+    tot += clust.counts[c]
+  print(f" {tot:&gt;4}")
+  print()
+  
+  # LABEL FILE OUTPUT
+  outfile = f"{savedir}/labels.txt"    
+  print(f"Saving cluster labels to file {outfile}")
+  with open(outfile,"w") as fout:
+    for i in range(data.ndata):
+      print(f"{data.labels[i]:2} {data.assigns[i]:2}",file=fout)
+  
+
+  # SAVE PGM FILES CONDITIONALLY
+  save_pgm_files(clust,savedir)
+### END MAIN ###      
+  
+main()
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgbc528fd" class="outline-3">
+<h3 id="orgbc528fd">Sample Runs of kmeans.py</h3>
+<div class="outline-text-3" id="text-orgbc528fd">
+<p>
+A demo of the Python version is shown below. 
+</p>
+<button onclick="document.getElementById('demo').style.display='block'">Click to Show Demo</button>
+<div id="demo" style="display:none;">
+<div class="org-src-container">
+<pre class="src src-txt"># Demo of running the python kmeans clustering on several provided
+# data files. The C version you construct should behave similarly.
+
+&gt;&gt; cd kmeans-code
+
+&gt;&gt; ls
+filestats.c  kmeans.py	sample-mnist-data
+
+&gt;&gt; chmod u+x kmeans.py
+
+&gt;&gt; ./kmeans.py
+usage: kmeans.py &lt;datafile&gt; &lt;nclust&gt; [savedir] [maxiter]
+
+&gt;&gt; ./kmeans.py sample-mnist-data/digits_all_1e2.txt 10 outdir
+datafile: sample-mnist-data/digits_all_1e2.txt
+nclust: 10
+savedir: outdir
+ndata: 100
+dim: 784
+
+==CLUSTERING: MAXITER 100==
+ITER NCHANGE CLUST_COUNTS
+  1:    35 |    9   14    9    7   10    6   15   10    8   12
+  2:    15 |    8   14    9    6    9    6   16   12    8   12
+  3:     8 |    8   15    9    6   10    4   16   15    8    9
+  4:     4 |    9   15    9    7   10    4   14   15    8    9
+  5:     2 |    9   14    9    7   10    4   14   16    8    9
+  6:     0 |    9   14    9    7   10    4   14   16    8    9
+CONVERGED: after 7 iterations
+
+==CONFUSION MATRIX + COUNTS==
+LABEL \ CLUST
+       0    1    2    3    4    5    6    7    8    9  TOT
+ 0:    0    1    0    4    0    1    0    0    2    0    8
+ 1:    0    0    0    0    9    0    0    5    0    0   14
+ 2:    0    3    1    0    0    1    0    3    0    0    8
+ 3:    4    0    1    0    1    0    0    0    5    0   11
+ 4:    0    0    3    1    0    1    8    1    0    0   14
+ 5:    0    0    1    2    0    1    0    2    1    0    7
+ 6:    0    9    1    0    0    0    0    0    0    0   10
+ 7:    5    0    0    0    0    0    3    3    0    4   15
+ 8:    0    1    0    0    0    0    0    1    0    0    2
+ 9:    0    0    2    0    0    0    3    1    0    5   11
+TOT    9   14    9    7   10    4   14   16    8    9  100
+
+Saving cluster labels to file outdir/labels.txt
+Saving cluster centers to outdir/cent_0000.pgm ...
+&gt;&gt; ls outdir/
+cent_0000.pgm  cent_0002.pgm  cent_0004.pgm  cent_0006.pgm  cent_0008.pgm  labels.txt
+cent_0001.pgm  cent_0003.pgm  cent_0005.pgm  cent_0007.pgm  cent_0009.pgm
+&gt;&gt; ./kmeans.py sample-mnist-data/digits_1x9_2e3.txt 4 two-nine-dir
+datafile: sample-mnist-data/digits_1x9_2e3.txt
+nclust: 4
+savedir: two-nine-dir
+ndata: 2000
+dim: 784
+
+==CLUSTERING: MAXITER 100==
+ITER NCHANGE CLUST_COUNTS
+  1:  1398 |  530  393  548  529
+  2:   591 |  734  359  369  538
+  3:   180 |  738  397  294  571
+  4:   119 |  674  423  322  581
+  5:    86 |  612  435  379  574
+  6:    68 |  563  444  423  570
+  7:    54 |  522  451  462  565
+  8:    33 |  501  456  480  563
+  9:    17 |  488  458  490  564
+ 10:     8 |  481  459  496  564
+ 11:     5 |  476  459  501  564
+ 12:     5 |  471  459  506  564
+ 13:     4 |  468  460  508  564
+ 14:     5 |  464  461  511  564
+ 15:     5 |  461  462  514  563
+ 16:     2 |  460  463  514  563
+ 17:     1 |  459  463  515  563
+ 18:     1 |  458  463  516  563
+ 19:     0 |  458  463  516  563
+CONVERGED: after 20 iterations
+
+==CONFUSION MATRIX + COUNTS==
+LABEL \ CLUST
+       0    1    2    3  TOT
+ 0:    0    0    0    0    0
+ 1:    1  450    1  548 1000
+ 2:    0    0    0    0    0
+ 3:    0    0    0    0    0
+ 4:    0    0    0    0    0
+ 5:    0    0    0    0    0
+ 6:    0    0    0    0    0
+ 7:    0    0    0    0    0
+ 8:    0    0    0    0    0
+ 9:  457   13  515   15 1000
+TOT  458  463  516  563 2000
+
+Saving cluster labels to file two-nine-dir/labels.txt
+Saving cluster centers to two-nine-dir/cent_0000.pgm ...
+&gt;&gt; ls two-nine-dir/
+cent_0000.pgm  cent_0001.pgm  cent_0002.pgm  cent_0003.pgm  labels.txt
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org684f257" class="outline-3">
+<h3 id="org684f257">Timing Results to Provide</h3>
+<div class="outline-text-3" id="text-org684f257">
+<p>
+Time both the provided Python version and your C version of the
+K-means clustering. Provide timing on any Linux/Unix machine using the
+following commands.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">## Time Python and C versions on with these parameters
+## dataset:  sample-mnist-data/digits_3x7_2e3.txt 
+## numclust: 4
+
+################################################################################
+## TIME PYTHON VERSION on digits_3x7_2e3.txt 4 clusters
+&gt;&gt; time ./kmeans.py sample-mnist-data/digits_3x7_2e3.txt 4 outdir1
+datafile: sample-mnist-data/digits_3x7_2e3.txt
+nclust: 4
+savedir: outdir1
+ndata: 2000
+dim: 784
+
+==CLUSTERING: MAXITER 100==
+ITER NCHANGE CLUST_COUNTS
+  1:  1427 |  450  503  240  807
+  2:   521 |  247  535  247  971
+...
+TOT  465  518  450  567 2000
+
+Saving cluster labels to file outdir/labels.txt
+Saving cluster centers to outdir/cent_0000.pbm ...
+
+real	XXXXXX  # include all output including these last timing numbers
+user	XXXXXX
+sys	XXXXXX
+
+################################################################################
+## TIME C VERSION on digits_3x7_2e3.txt 4 clusters
+&gt;&gt; time ./kmeans_serial sample-mnist-data/digits_3x7_2e3.txt 4 outdir2
+datafile: sample-mnist-data/digits_3x7_2e3.txt
+nclust: 4
+savedir: outdir2
+ndata: 2000
+dim: 784
+
+==CLUSTERING: MAXITER 100==
+ITER NCHANGE CLUST_COUNTS
+  1:  1427 |  450  503  240  807
+  2:   521 |  247  535  247  971
+...
+TOT  465  518  450  567 2000
+
+Saving cluster labels to file outdir2/labels.txt
+Saving cluster centers to outdir2/cent_0000.pbm ...
+
+real	XXXXXX  # include all output including these last timing numbers
+user	XXXXXX
+sys	XXXXXX
+</pre>
+</div>
+
+<p>
+C is often used when speed is important for an application so expect a
+speed bump over the Python version. The size of the bump will vary but
+should be substantial in most cases.
+</p>
+</div>
+</div>
+<div id="outline-container-org75dde12" class="outline-3">
+<h3 id="org75dde12">Submission Notes</h3>
+<div class="outline-text-3" id="text-org75dde12">
+<ul class="org-ul">
+<li>Paste the entirety of your C code into the document that you have
+written your other answers in. If your code is spread across several
+files, include all of them.</li>
+<li>Also paste the timing results of your C version on the datasets
+indicated compared to the Python results.</li>
+<li>Your solution will not be run by graders, only manually inspected to
+determine if it appears sane.</li>
+<li>This serial version will serve as your starting point for A2 in
+which you must parallelize the code so failure to complete this
+problem now will put you at a disadvantage for the next
+Assignment. No serial C version will be provided to students for A2,
+only the Python version.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc72f647" class="outline-2">
+<h2 id="orgc72f647"><span class="section-number-2">8</span> (10pts) <b>Work Disclosure</b></h2>
+<div class="outline-text-2" id="text-8">
+<p>
+Include at the end of your document a section titled "Work Disclosure"
+which has sections and content as indicated in the template below.
+</p>
+
+
+<hr/>
+<p>
+<span class="underline"><b>WORK DISCLOSURE</b></span>
+</p>
+
+<p>
+(A) <b>Human Collaborators:</b> Aside from the 1-2 people submitting this assignment, the
+following people contributed ideas and discussion to the completion of
+this work INCLUDING course staff members. (Write NONE if no
+collaborators were involved.)
+</p>
+<ul class="org-ul">
+<li>Person 1 &lt;person1@email.com&gt; helped understand Problem X and the
+meaning of &#x2026;</li>
+<li>Person 2 &lt;person2@email.com&gt; helped debug Cod for Problem Y&#x2026;</li>
+<li>etc.</li>
+</ul>
+
+<p>
+(B) <b>Resource Utilization:</b> The following resources such as websites,
+course notes, artificial intelligence tools (LLMs/ChatBots/etc.) were
+utilized in the completion of this work. Include course materials such
+as textbooks and lecture slides as well. (Write NONE if no resources
+were used [which would be hard to believe]).
+</p>
+<ul class="org-ul">
+<li>Resource 1 is here <a href="https://some.resource.org/useful_stuff.html">https://some.resource.org/useful_stuff.html</a> and
+provided help for Problem Z to understand &#x2026;.</li>
+<li>Resource 2 is the book "Parallel Analysis" by Auth Or with chapter 8
+helping a lot with Problem W</li>
+<li>Resource 3 is here <a href="https://airegurgitator.com">https://airegurgitator.com</a> and provided AI
+refinements for the writing of problem Q and helped debug code for
+Problem N.</li>
+<li>etc.</li>
+</ul>
+
+<p>
+(C) <b>Ownership of Work</b>: I / We affirm that all parties listed below
+have contributed to each solution presented in this document.  All
+parties are capable of describing how the solutions were derived, how
+they apply to the problem, and that they were created in accordance
+with the course's PRIME DIRECTIVE.
+</p>
+
+<p>
+Signed,
+</p>
+
+<p>
+NAME(S) OF SUBMITTERS
+</p>
+<hr/>
+
+<p>
+Including this section will earn full credit. Failure to include this
+statement of effort may result in additional penalties aside from the
+loss of points indicated.
+</p>
+</div>
+</div>
+<div id="outline-container-org702373b" class="outline-2">
+<h2 id="org702373b"><span class="section-number-2">9</span> Submission Instructions</h2>
+<div class="outline-text-2" id="text-9">
+<ul class="org-ul">
+<li>Complete the problems in each section labelled <b>Problem</b></li>
+<li>This is a <b>pair assignment:</b> you may select one partner to work with
+on this assignment as a group of 2. You may also opt to work alone
+as a group of 1.</li>
+<li><b>Only 1 member of your group should submit the HW Writeup on
+Gradescope.</b> If you are working in a partnership, <b>add your partner
+after submitting</b> as described below.</li>
+<li><p>
+Make sure the Writeup has all group member's information in it:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">  CS 5451 A1
+  Group of 2
+  Turanga Leela tleela4@umn.edu 
+  Philip J Fry pfry99@umn.edu
+</pre>
+</div></li>
+<li><b>Submit a PDF (portable document format, .pdf)</b> of your
+work. Whatever program you write your answers in (Microsoft Word,
+Apple Words, Google Docs, Latex, etc.) make sure you can export or
+"save as" a PDF.</li>
+<li><b>Submit</b> your work to Gradescope under Assignment 1
+<ul class="org-ul">
+<li>Log into Gradescope</li>
+<li>Assignment 1</li>
+<li>Select your PDF for upload</li>
+<li>Use the Gradescope system to indicate which of your answers are on
+which page of your PDF submission - this will make things easier
+on your grader (you want a happy grader).</li>
+<li>After uploading, <b>add your partner as a group member</b> if you had
+one.</li>
+</ul></li>
+</ul>
+</div>
+<div id="outline-container-org5bcd1cf" class="outline-3">
+<h3 id="org5bcd1cf">Picture Sequence of Uploading an Assignment</h3>
+<div class="outline-text-3" id="text-org5bcd1cf">
+<div class="org-center">
+<p>
+<b>Selecting a PDF to upload</b>
+</p>
+
+<div id="orgbd4bcab" class="figure">
+<p><img src="gradescope-submit-1.png" alt="gradescope-submit-1.png" style="max-width:100%;" />
+</p>
+</div>
+
+
+<div id="orgb9ae2fe" class="figure">
+<p><img src="gradescope-submit-2.png" alt="gradescope-submit-2.png" style="max-width:100%;" />
+</p>
+</div>
+
+
+<div id="orgd995495" class="figure">
+<p><img src="gradescope-submit-3.png" alt="gradescope-submit-3.png" style="max-width:100%;" />
+</p>
+</div>
+
+<p>
+<b>Indicate problem answers on each page</b>
+</p>
+
+<div id="org2dc2fb2" class="figure">
+<p><img src="gradescope-submit-4.png" alt="gradescope-submit-4.png" style="max-width:100%;" />
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdf60c07" class="outline-3">
+<h3 id="orgdf60c07">Adding a Group Member on Gradescope</h3>
+<div class="outline-text-3" id="text-orgdf60c07">
+<div class="org-center">
+<p>
+<b>Submitter should edit the group associated with the submission</b>
+</p>
+
+<div id="org5fe9b6f" class="figure">
+<p><img src="gradescope-submit-5.png" alt="gradescope-submit-5.png" style="max-width:100%;" />
+</p>
+</div>
+
+<p>
+<b>Find your partner in the search box</b>
+</p>
+
+<div id="org7c1f982" class="figure">
+<p><img src="gradescope-submit-6.png" alt="gradescope-submit-6.png" style="max-width:100%;" />
+</p>
+</div>
+
+<p>
+<b>Ensure your partner is listed</b>
+</p>
+
+<div id="org1354dac" class="figure">
+<p><img src="gradescope-submit-7.png" alt="gradescope-submit-7.png" style="max-width:100%;" />
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orge283ac1" class="outline-3">
+<h3 id="orge283ac1">Late Submission</h3>
+<div class="outline-text-3" id="text-orge283ac1">
+<p>
+As described in the <a href="syllabus.html">Course Syllabus</a>, late submissions are penalized as
+follows.
+</p>
+<ul class="org-ul">
+<li>On-time submissions receive no penalties</li>
+<li>Submitting 1-24 hours will result in the loss of 10% absolute credit</li>
+<li>Submitting 25-48 hours late will result in the loss 20% absolute
+credit</li>
+<li><b>No submissions will be accepted more than 48 hours after a deadline.</b></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:kauffman@umn.edu">kauffman@umn.edu</a>) <br/> Date: 2026-01-21 Wed 12:04 <br/> </i>
+</div>
+</body>
+</html>
