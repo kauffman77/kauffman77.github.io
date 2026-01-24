@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-01-24 Sat 14:08 -->
+<!-- 2026-01-24 Sat 14:18 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216: Introduction to Computer Systems</title>
@@ -330,6 +330,17 @@ margin-left: 0.5em;
 }
 }
 .linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
+details > summary {
+padding: 2px 6px;
+font-family: Sans;
+font-size: 0.8em;
+width: fit-content;
+border-radius: 5px;
+background-color: #efefef;
+border: 1px solid black;
+cursor: pointer;
+}
 }
 
 @media print {
@@ -341,10 +352,147 @@ text-align: justify;
 }
 }
 </style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","[COMMANDO]>>","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+literal: ["[data/script.txt]>>","[data/script1.txt]>>","[data/script6.txt]>>"],
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+// hljs.COMMENT(/## /, /$/),     // hash-hash-ws for comment
+hljs.COMMENT(/##+/, /$/),     // or a sequence of hashes
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2026-01-24 Sat 14:08</i>
+<i>Last Updated: 2026-01-24 Sat 14:18</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216: Introduction to Computer Systems</h1>
@@ -353,67 +501,67 @@ text-align: justify;
 <h2> University of Maryland</h2>
 <h2> 4 credits, Spring 2026 </h2>
 </div>
-<div id="outline-container-orgfb6d967" class="outline-4">
-<h4 id="orgfb6d967"></h4>
-<div class="outline-text-4" id="text-orgfb6d967">
+<div id="outline-container-org11dd277" class="outline-4">
+<h4 id="org11dd277"></h4>
+<div class="outline-text-4" id="text-org11dd277">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgb7dedd6">1. Basic Information</a>
+<li><a href="#org6c91e79">1. Basic Information</a>
 <ul>
-<li><a href="#org0ffc5e1">1.1. Catalog Description</a></li>
-<li><a href="#orgc83054d">1.2. Prerequisites</a></li>
-<li><a href="#org69a4f47">1.3. Course Goals</a></li>
-<li><a href="#orga5fbddb">1.4. Staff</a></li>
-<li><a href="#org5dc99d0">1.5. Meetings</a></li>
-<li><a href="#orgd6b7228">1.6. Course Materials</a></li>
-<li><a href="#org4ad02e9">1.7. Office Hours</a></li>
-<li><a href="#org55313be">1.8. Communication</a></li>
+<li><a href="#orgac12334">1.1. Catalog Description</a></li>
+<li><a href="#orga246528">1.2. Prerequisites</a></li>
+<li><a href="#org965ecdd">1.3. Course Goals</a></li>
+<li><a href="#org8d64910">1.4. Staff</a></li>
+<li><a href="#org5458a63">1.5. Meetings</a></li>
+<li><a href="#org526bf30">1.6. Course Materials</a></li>
+<li><a href="#org16d609b">1.7. Office Hours</a></li>
+<li><a href="#orgdc068db">1.8. Communication</a></li>
 <li><a href="#contact">1.9. Contacting Staff</a></li>
 </ul>
 </li>
-<li><a href="#orge9fe0cc">2. Coursework and Grading</a>
+<li><a href="#org36c4dc4">2. Coursework and Grading</a>
 <ul>
-<li><a href="#org9ee08f1">2.1. Course Modality</a></li>
-<li><a href="#orgb8450ab">2.2. Graded Components</a></li>
-<li><a href="#org9385d15">2.3. Final Grade Determination</a></li>
+<li><a href="#org7bb1cef">2.1. Course Modality</a></li>
+<li><a href="#org12ee5c1">2.2. Graded Components</a></li>
+<li><a href="#org63421bf">2.3. Final Grade Determination</a></li>
 <li><a href="#engagement-points">2.4. Engagement Points</a></li>
-<li><a href="#org24ef591">2.5. Lectures and "Hot Seats"</a></li>
-<li><a href="#orgad6f468">2.6. Discussion Meetings</a></li>
-<li><a href="#org7f276c0">2.7. Lab Exercises</a></li>
-<li><a href="#orgcae7916">2.8. Weekly Practice Homework</a></li>
-<li><a href="#org294834f">2.9. Projects</a></li>
+<li><a href="#org76cf800">2.5. Lectures and "Hot Seats"</a></li>
+<li><a href="#org3df07be">2.6. Discussion Meetings</a></li>
+<li><a href="#org1c6c9ba">2.7. Lab Exercises</a></li>
+<li><a href="#org22a18df">2.8. Weekly Practice Homework</a></li>
+<li><a href="#orgfb28239">2.9. Projects</a></li>
 <li><a href="#late-submission">2.10. Late Project Submission</a></li>
-<li><a href="#orgc8f62f1">2.11. Exams</a></li>
-<li><a href="#org065202f">2.12. Regrade Requests</a></li>
-<li><a href="#org75697d2">2.13. Deadlines and Exam Dates</a></li>
-<li><a href="#orgc76a3e6">2.14. Textbook Readings</a></li>
+<li><a href="#orgda0f415">2.11. Exams</a></li>
+<li><a href="#org20a2199">2.12. Regrade Requests</a></li>
+<li><a href="#org23158a8">2.13. Deadlines and Exam Dates</a></li>
+<li><a href="#org6a26ee4">2.14. Textbook Readings</a></li>
 </ul>
 </li>
-<li><a href="#orga8b66eb">3. Academic Integrity</a>
+<li><a href="#org7043215">3. Academic Integrity</a>
 <ul>
-<li><a href="#org88c3be3">3.1. Assignment Regulations</a></li>
-<li><a href="#org757138f">3.2. Assignment Work Disclosures</a></li>
-<li><a href="#org5fd7170">3.3. Appropriate Collaboration on Assignments</a></li>
-<li><a href="#orgcca9f4e">3.4. Public Posting of Assignment Solutions</a></li>
-<li><a href="#org00ac7ce">3.5. Exam Regulations</a></li>
-<li><a href="#orgd44eec7">3.6. Open Resource Exams</a></li>
-<li><a href="#org1e8feeb">3.7. Penalties and Limitations</a></li>
+<li><a href="#org13939d1">3.1. Assignment Regulations</a></li>
+<li><a href="#org53f27f1">3.2. Assignment Work Disclosures</a></li>
+<li><a href="#org5a4a722">3.3. Appropriate Collaboration on Assignments</a></li>
+<li><a href="#org100472d">3.4. Public Posting of Assignment Solutions</a></li>
+<li><a href="#orgb620483">3.5. Exam Regulations</a></li>
+<li><a href="#orgd2fe579">3.6. Open Resource Exams</a></li>
+<li><a href="#org3faf226">3.7. Penalties and Limitations</a></li>
 </ul>
 </li>
-<li><a href="#org96f4411">4. General Policies</a></li>
+<li><a href="#org5da551e">4. General Policies</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgb7dedd6" class="outline-2">
-<h2 id="orgb7dedd6"><span class="section-number-2">1</span> Basic Information</h2>
+<div id="outline-container-org6c91e79" class="outline-2">
+<h2 id="org6c91e79"><span class="section-number-2">1</span> Basic Information</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org0ffc5e1" class="outline-3">
-<h3 id="org0ffc5e1"><span class="section-number-3">1.1</span> Catalog Description</h3>
+<div id="outline-container-orgac12334" class="outline-3">
+<h3 id="orgac12334"><span class="section-number-3">1.1</span> Catalog Description</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Introduction to the interaction between user programs and the
@@ -425,8 +573,8 @@ the Linux Environment.
 </p>
 </div>
 </div>
-<div id="outline-container-orgc83054d" class="outline-3">
-<h3 id="orgc83054d"><span class="section-number-3">1.2</span> Prerequisites</h3>
+<div id="outline-container-orga246528" class="outline-3">
+<h3 id="orga246528"><span class="section-number-3">1.2</span> Prerequisites</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 Minimum grade of C- in CMSC132; and minimum grade of C- in MATH141.
@@ -441,8 +589,8 @@ experience is a must.
 </p>
 </div>
 </div>
-<div id="outline-container-org69a4f47" class="outline-3">
-<h3 id="org69a4f47"><span class="section-number-3">1.3</span> Course Goals</h3>
+<div id="outline-container-org965ecdd" class="outline-3">
+<h3 id="org965ecdd"><span class="section-number-3">1.3</span> Course Goals</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 Students that complete CMSC216 will posses the following
@@ -478,13 +626,13 @@ ability to create and manipulate them programmatically.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orga5fbddb" class="outline-3">
-<h3 id="orga5fbddb"><span class="section-number-3">1.4</span> Staff</h3>
+<div id="outline-container-org8d64910" class="outline-3">
+<h3 id="org8d64910"><span class="section-number-3">1.4</span> Staff</h3>
 <div class="outline-text-3" id="text-1-4">
 </div>
-<div id="outline-container-org8d82a1d" class="outline-4">
-<h4 id="org8d82a1d">Instructor</h4>
-<div class="outline-text-4" id="text-org8d82a1d">
+<div id="outline-container-orga80bec9" class="outline-4">
+<h4 id="orga80bec9">Instructor</h4>
+<div class="outline-text-4" id="text-orga80bec9">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -522,9 +670,9 @@ ability to create and manipulate them programmatically.</li>
 </table>
 </div>
 </div>
-<div id="outline-container-orgae14dcb" class="outline-4">
-<h4 id="orgae14dcb">Teaching Assistants</h4>
-<div class="outline-text-4" id="text-orgae14dcb">
+<div id="outline-container-orge0be16c" class="outline-4">
+<h4 id="orge0be16c">Teaching Assistants</h4>
+<div class="outline-text-4" id="text-orge0be16c">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -613,14 +761,14 @@ ability to create and manipulate them programmatically.</li>
 </table>
 
 <p>
-Staff office hours are described in the <a href="#org4ad02e9">Office Hours Section</a> with
+Staff office hours are described in the <a href="#org16d609b">Office Hours Section</a> with
 times and locations listed on our Canvas site.
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org5dc99d0" class="outline-3">
-<h3 id="org5dc99d0"><span class="section-number-3">1.5</span> Meetings</h3>
+<div id="outline-container-org5458a63" class="outline-3">
+<h3 id="org5458a63"><span class="section-number-3">1.5</span> Meetings</h3>
 <div class="outline-text-3" id="text-1-5">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -692,13 +840,13 @@ times and locations listed on our Canvas site.
 </table>
 </div>
 </div>
-<div id="outline-container-orgd6b7228" class="outline-3">
-<h3 id="orgd6b7228"><span class="section-number-3">1.6</span> Course Materials</h3>
+<div id="outline-container-org526bf30" class="outline-3">
+<h3 id="org526bf30"><span class="section-number-3">1.6</span> Course Materials</h3>
 <div class="outline-text-3" id="text-1-6">
 </div>
-<div id="outline-container-orgcec2b2d" class="outline-4">
-<h4 id="orgcec2b2d">Textbooks</h4>
-<div class="outline-text-4" id="text-orgcec2b2d">
+<div id="outline-container-orgf1cd22f" class="outline-4">
+<h4 id="orgf1cd22f">Textbooks</h4>
+<div class="outline-text-4" id="text-orgf1cd22f">
 <dl class="org-dl">
 <dt><i>Computer Systems: A Programmer's Perspective</i>, Third Edition by R. Bryant, D. O'Hallaron, Pearson, 2016 </dt><dd><b>(Required)</b> This is our main course text and covers a wide range of computer
 architecture issues. The textbook website is here: <a href="http://csapp.cs.cmu.edu/">http://csapp.cs.cmu.edu/</a></dd>
@@ -716,9 +864,9 @@ architecture will be posted online.
 </p>
 </div>
 </div>
-<div id="outline-container-orgd642f76" class="outline-4">
-<h4 id="orgd642f76">Computing</h4>
-<div class="outline-text-4" id="text-orgd642f76">
+<div id="outline-container-org49719af" class="outline-4">
+<h4 id="org49719af">Computing</h4>
+<div class="outline-text-4" id="text-org49719af">
 <p>
 It is assumed you will have access to a computer with the ability to
 edit, compile, and run Linux programs.  Students may attempt to set up
@@ -739,8 +887,8 @@ so are described here:
 </div>
 </div>
 </div>
-<div id="outline-container-org4ad02e9" class="outline-3">
-<h3 id="org4ad02e9"><span class="section-number-3">1.7</span> Office Hours</h3>
+<div id="outline-container-org16d609b" class="outline-3">
+<h3 id="org16d609b"><span class="section-number-3">1.7</span> Office Hours</h3>
 <div class="outline-text-3" id="text-1-7">
 <p>
 Office hours are held by staff members at various times outside of
@@ -779,8 +927,8 @@ while pursuing that goal.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org55313be" class="outline-3">
-<h3 id="org55313be"><span class="section-number-3">1.8</span> Communication</h3>
+<div id="outline-container-orgdc068db" class="outline-3">
+<h3 id="orgdc068db"><span class="section-number-3">1.8</span> Communication</h3>
 <div class="outline-text-3" id="text-1-8">
 <p>
 This offering of the course will be administered in a mixture of
@@ -803,8 +951,8 @@ as illness or emergencies.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org92f8f6c" class="outline-3">
-<h3 id="contact"><a id="org92f8f6c"></a><span class="section-number-3">1.9</span> Contacting Staff</h3>
+<div id="outline-container-orgf73ba3c" class="outline-3">
+<h3 id="contact"><a id="orgf73ba3c"></a><span class="section-number-3">1.9</span> Contacting Staff</h3>
 <div class="outline-text-3" id="text-contact">
 <p>
 Here are common situations for students and the best method to use to
@@ -941,12 +1089,12 @@ extending deadlines, or providing some additional help
 </div>
 </div>
 </div>
-<div id="outline-container-orge9fe0cc" class="outline-2">
-<h2 id="orge9fe0cc"><span class="section-number-2">2</span> Coursework and Grading</h2>
+<div id="outline-container-org36c4dc4" class="outline-2">
+<h2 id="org36c4dc4"><span class="section-number-2">2</span> Coursework and Grading</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org9ee08f1" class="outline-3">
-<h3 id="org9ee08f1"><span class="section-number-3">2.1</span> Course Modality</h3>
+<div id="outline-container-org7bb1cef" class="outline-3">
+<h3 id="org7bb1cef"><span class="section-number-3">2.1</span> Course Modality</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 This is an in-person course but many elements of the course can be
@@ -1115,8 +1263,8 @@ Below is a summary of course elements and their particulars.
 </table>
 </div>
 </div>
-<div id="outline-container-orgb8450ab" class="outline-3">
-<h3 id="orgb8450ab"><span class="section-number-3">2.2</span> Graded Components</h3>
+<div id="outline-container-org12ee5c1" class="outline-3">
+<h3 id="org12ee5c1"><span class="section-number-3">2.2</span> Graded Components</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Final grades will be determined by scores obtained on the components
@@ -1186,8 +1334,8 @@ below according to their associated weight.
 </table>
 </div>
 </div>
-<div id="outline-container-org9385d15" class="outline-3">
-<h3 id="org9385d15"><span class="section-number-3">2.3</span> Final Grade Determination</h3>
+<div id="outline-container-org63421bf" class="outline-3">
+<h3 id="org63421bf"><span class="section-number-3">2.3</span> Final Grade Determination</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Final grades will be assigned <b>without rounding</b> according to the
@@ -1286,8 +1434,8 @@ any past semester.
 </p>
 </div>
 </div>
-<div id="outline-container-org9cbd390" class="outline-3">
-<h3 id="engagement-points"><a id="org9cbd390"></a><span class="section-number-3">2.4</span> <a id="org2da1991"></a> Engagement Points</h3>
+<div id="outline-container-orgb8f7b9d" class="outline-3">
+<h3 id="engagement-points"><a id="orgb8f7b9d"></a><span class="section-number-3">2.4</span> <a id="orgc069a8f"></a> Engagement Points</h3>
 <div class="outline-text-3" id="text-engagement-points">
 <p>
 Throughout the semester, students will have opportunities to earn
@@ -1333,8 +1481,8 @@ earned from submitting projects on time.
 </p>
 </div>
 </div>
-<div id="outline-container-org24ef591" class="outline-3">
-<h3 id="org24ef591"><span class="section-number-3">2.5</span> Lectures and "Hot Seats"</h3>
+<div id="outline-container-org76cf800" class="outline-3">
+<h3 id="org76cf800"><span class="section-number-3">2.5</span> Lectures and "Hot Seats"</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 Lectures will be delivered in person at the times/locations mentioned
@@ -1363,8 +1511,8 @@ announced to students through Piazza and Email.
 </p>
 </div>
 </div>
-<div id="outline-container-orgad6f468" class="outline-3">
-<h3 id="orgad6f468"><span class="section-number-3">2.6</span> Discussion Meetings</h3>
+<div id="outline-container-org3df07be" class="outline-3">
+<h3 id="org3df07be"><span class="section-number-3">2.6</span> Discussion Meetings</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 Discussion sections meet twice per week in the locations
@@ -1390,8 +1538,8 @@ in advance.
 </p>
 </div>
 </div>
-<div id="outline-container-org7f276c0" class="outline-3">
-<h3 id="org7f276c0"><span class="section-number-3">2.7</span> Lab Exercises</h3>
+<div id="outline-container-org1c6c9ba" class="outline-3">
+<h3 id="org1c6c9ba"><span class="section-number-3">2.7</span> Lab Exercises</h3>
 <div class="outline-text-3" id="text-2-7">
 <p>
 Each week a Lab exercise will be assigned for students to
@@ -1409,8 +1557,8 @@ the lab contribution to a student's overall grade.
 </p>
 </div>
 </div>
-<div id="outline-container-orgcae7916" class="outline-3">
-<h3 id="orgcae7916"><span class="section-number-3">2.8</span> Weekly Practice Homework</h3>
+<div id="outline-container-org22a18df" class="outline-3">
+<h3 id="org22a18df"><span class="section-number-3">2.8</span> Weekly Practice Homework</h3>
 <div class="outline-text-3" id="text-2-8">
 <p>
 Each week a set of Homework exercises will be posted online which
@@ -1423,8 +1571,8 @@ staff effort is devoted to deriving new problems.
 </p>
 </div>
 </div>
-<div id="outline-container-org294834f" class="outline-3">
-<h3 id="org294834f"><span class="section-number-3">2.9</span> Projects</h3>
+<div id="outline-container-orgfb28239" class="outline-3">
+<h3 id="orgfb28239"><span class="section-number-3">2.9</span> Projects</h3>
 <div class="outline-text-3" id="text-2-9">
 <p>
 Students will receive a number of programming projects during the
@@ -1455,8 +1603,8 @@ while working on the assignment.</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-orgf58d125" class="outline-3">
-<h3 id="late-submission"><a id="orgf58d125"></a><span class="section-number-3">2.10</span> Late Project Submission</h3>
+<div id="outline-container-orgf0922c2" class="outline-3">
+<h3 id="late-submission"><a id="orgf0922c2"></a><span class="section-number-3">2.10</span> Late Project Submission</h3>
 <div class="outline-text-3" id="text-late-submission">
 <p>
 Late submission of Projects is governed by the following table of
@@ -1511,8 +1659,8 @@ submission for grading.
 </p>
 </div>
 </div>
-<div id="outline-container-orgc8f62f1" class="outline-3">
-<h3 id="orgc8f62f1"><span class="section-number-3">2.11</span> Exams</h3>
+<div id="outline-container-orgda0f415" class="outline-3">
+<h3 id="orgda0f415"><span class="section-number-3">2.11</span> Exams</h3>
 <div class="outline-text-3" id="text-2-11">
 <p>
 There will be a series of midterm exams during the semester and a
@@ -1538,8 +1686,8 @@ of such circumstances will be required for a make-up to be considered.
 </p>
 </div>
 </div>
-<div id="outline-container-org065202f" class="outline-3">
-<h3 id="org065202f"><span class="section-number-3">2.12</span> <a id="orgd5dbc23"></a> Regrade Requests</h3>
+<div id="outline-container-org20a2199" class="outline-3">
+<h3 id="org20a2199"><span class="section-number-3">2.12</span> <a id="orgbcdc2a5"></a> Regrade Requests</h3>
 <div class="outline-text-3" id="text-2-12">
 <p>
 Most coursework will be graded via <b>Gradescope</b> which features a
@@ -1566,8 +1714,8 @@ time will forfeit further opportunity to contest the grade.
 </p>
 </div>
 </div>
-<div id="outline-container-org75697d2" class="outline-3">
-<h3 id="org75697d2"><span class="section-number-3">2.13</span> Deadlines and Exam Dates</h3>
+<div id="outline-container-org23158a8" class="outline-3">
+<h3 id="org23158a8"><span class="section-number-3">2.13</span> Deadlines and Exam Dates</h3>
 <div class="outline-text-3" id="text-2-13">
 <p>
 The deadlines for assignments will be included in the assignments as
@@ -1581,8 +1729,8 @@ The course schedule is here: <a href="schedule.html">schedule.html</a>
 </p>
 </div>
 </div>
-<div id="outline-container-orgc76a3e6" class="outline-3">
-<h3 id="orgc76a3e6"><span class="section-number-3">2.14</span> Textbook Readings</h3>
+<div id="outline-container-org6a26ee4" class="outline-3">
+<h3 id="org6a26ee4"><span class="section-number-3">2.14</span> Textbook Readings</h3>
 <div class="outline-text-3" id="text-2-14">
 <p>
 Readings from the textbook relevant to each lecture are listed in the
@@ -1594,12 +1742,12 @@ textbook which will be posted on the course web page.
 </div>
 </div>
 </div>
-<div id="outline-container-orga8b66eb" class="outline-2">
-<h2 id="orga8b66eb"><span class="section-number-2">3</span> Academic Integrity</h2>
+<div id="outline-container-org7043215" class="outline-2">
+<h2 id="org7043215"><span class="section-number-2">3</span> Academic Integrity</h2>
 <div class="outline-text-2" id="text-3">
 <b>
 <p>
-<a id="org54a8937">PRIME DIRECTIVE</a>: Be able to explain your own work including
+<a id="org60a109f">PRIME DIRECTIVE</a>: Be able to explain your own work including
 assignment answers, program code, and exam solutions. The work you
 submit should be the product of your own effort and reflect your
 personal understanding.
@@ -1608,7 +1756,7 @@ personal understanding.
 
 <p>
 Nearly all cheating in coursework can be averted by adhering to the
-<a href="#org54a8937">PRIME DIRECTIVE</a>. Students may be asked at any time to explain
+<a href="#org60a109f">PRIME DIRECTIVE</a>. Students may be asked at any time to explain
 assignment or exam solutions they submit.  Inability to do so will be
 construed as evidence of misconduct and will be sanctioned.  More
 specific guidelines are given below.
@@ -1620,8 +1768,8 @@ students are encouraged to study them so that they may take</b>
 <b>advantage of resources while abiding by academic integrity rules.</b>
 </p>
 </div>
-<div id="outline-container-org88c3be3" class="outline-3">
-<h3 id="org88c3be3"><span class="section-number-3">3.1</span> Assignment Regulations</h3>
+<div id="outline-container-org13939d1" class="outline-3">
+<h3 id="org13939d1"><span class="section-number-3">3.1</span> Assignment Regulations</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 At-home assignments (projects, labs, HWs) may be done via <b>Free
@@ -1656,8 +1804,8 @@ course.
 </p>
 </div>
 </div>
-<div id="outline-container-org757138f" class="outline-3">
-<h3 id="org757138f"><span class="section-number-3">3.2</span> Assignment Work Disclosures</h3>
+<div id="outline-container-org53f27f1" class="outline-3">
+<h3 id="org53f27f1"><span class="section-number-3">3.2</span> Assignment Work Disclosures</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Certain assignments (projects) will include a "Work Disclosure" in
@@ -1669,8 +1817,8 @@ solutions.
 </p>
 </div>
 </div>
-<div id="outline-container-org5fd7170" class="outline-3">
-<h3 id="org5fd7170"><span class="section-number-3">3.3</span> Appropriate Collaboration on Assignments</h3>
+<div id="outline-container-org5a4a722" class="outline-3">
+<h3 id="org5a4a722"><span class="section-number-3">3.3</span> Appropriate Collaboration on Assignments</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The goal of this course and most others is for students to improve
@@ -1718,8 +1866,8 @@ above and the following:
 </ul>
 </div>
 </div>
-<div id="outline-container-orgcca9f4e" class="outline-3">
-<h3 id="orgcca9f4e"><span class="section-number-3">3.4</span> Public Posting of Assignment Solutions</h3>
+<div id="outline-container-org100472d" class="outline-3">
+<h3 id="org100472d"><span class="section-number-3">3.4</span> Public Posting of Assignment Solutions</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 Course staff will post solutions to some but not all of the
@@ -1741,8 +1889,8 @@ this semester's cohort.
 </p>
 </div>
 </div>
-<div id="outline-container-org00ac7ce" class="outline-3">
-<h3 id="org00ac7ce"><span class="section-number-3">3.5</span> Exam Regulations</h3>
+<div id="outline-container-orgb620483" class="outline-3">
+<h3 id="orgb620483"><span class="section-number-3">3.5</span> Exam Regulations</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 Exams are where students prove their individual mastery of course
@@ -1790,8 +1938,8 @@ one of your Professor's stories.</i>
 </p>
 </div>
 </div>
-<div id="outline-container-orgd44eec7" class="outline-3">
-<h3 id="orgd44eec7"><span class="section-number-3">3.6</span> Open Resource Exams</h3>
+<div id="outline-container-orgd2fe579" class="outline-3">
+<h3 id="orgd2fe579"><span class="section-number-3">3.6</span> Open Resource Exams</h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 All exams are <b>Open Resource Exams</b> in which many of the resources
@@ -1869,8 +2017,8 @@ regulations to understand the boundaries more thoroughly.
 </p>
 </div>
 </div>
-<div id="outline-container-org1e8feeb" class="outline-3">
-<h3 id="org1e8feeb"><span class="section-number-3">3.7</span> Penalties and Limitations</h3>
+<div id="outline-container-org3faf226" class="outline-3">
+<h3 id="org3faf226"><span class="section-number-3">3.7</span> Penalties and Limitations</h3>
 <div class="outline-text-3" id="text-3-7">
 <p>
 Any instance of misconduct that is detected will investigated and may
@@ -1900,8 +2048,8 @@ though may be able to assist with general course concepts.
 </div>
 </div>
 </div>
-<div id="outline-container-org96f4411" class="outline-2">
-<h2 id="org96f4411"><span class="section-number-2">4</span> General Policies</h2>
+<div id="outline-container-org5da551e" class="outline-2">
+<h2 id="org5da551e"><span class="section-number-2">4</span> General Policies</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 General university policies which apply to our course are listed here:
@@ -1912,9 +2060,9 @@ General university policies which apply to our course are listed here:
 Summaries of those policies are below.
 </p>
 </div>
-<div id="outline-container-orgf3d63ba" class="outline-4">
-<h4 id="orgf3d63ba">Collegiate Behavior</h4>
-<div class="outline-text-4" id="text-orgf3d63ba">
+<div id="outline-container-org56f12c4" class="outline-4">
+<h4 id="org56f12c4">Collegiate Behavior</h4>
+<div class="outline-text-4" id="text-org56f12c4">
 <p>
 Students are expected to maintain a high level of civility for all
 participants in and out of class meetings.  This includes respecting
@@ -1924,9 +2072,9 @@ a respectful manner will be reported to the Office of Student Conduct.
 </p>
 </div>
 </div>
-<div id="outline-container-orgdbe976a" class="outline-4">
-<h4 id="orgdbe976a">Accommodations for Religious Observances</h4>
-<div class="outline-text-4" id="text-orgdbe976a">
+<div id="outline-container-org968fbc1" class="outline-4">
+<h4 id="org968fbc1">Accommodations for Religious Observances</h4>
+<div class="outline-text-4" id="text-org968fbc1">
 <p>
 Observance of religious events will be accommodated for students of
 any faith. If a religious event will interfere with completing
@@ -1934,9 +2082,9 @@ coursework, contact the instructor to discuss accommodations.
 </p>
 </div>
 </div>
-<div id="outline-container-orgd855006" class="outline-4">
-<h4 id="orgd855006">Accommodations for Disabilities</h4>
-<div class="outline-text-4" id="text-orgd855006">
+<div id="outline-container-org7f3a280" class="outline-4">
+<h4 id="org7f3a280">Accommodations for Disabilities</h4>
+<div class="outline-text-4" id="text-org7f3a280">
 <p>
 Students with disabilities will be provided accommodations listed in
 letters from <a href="https://counseling.umd.edu/ads">Accessibility &amp; Disability Services</a> office. Students who
@@ -1946,9 +2094,9 @@ possible, ideally as the semester begins.
 </p>
 </div>
 </div>
-<div id="outline-container-orgab0773e" class="outline-4">
-<h4 id="orgab0773e">Notification of Recording and Use of Recordings</h4>
-<div class="outline-text-4" id="text-orgab0773e">
+<div id="outline-container-orgaeff506" class="outline-4">
+<h4 id="orgaeff506">Notification of Recording and Use of Recordings</h4>
+<div class="outline-text-4" id="text-orgaeff506">
 <p>
 This course will include video and audio recordings of class
 lectures and classroom activities. These recordings will be used for
@@ -1961,9 +2109,9 @@ permission from students whose image or voice are in these recordings.
 </p>
 </div>
 </div>
-<div id="outline-container-org869e92b" class="outline-4">
-<h4 id="org869e92b">Reporting Concerns</h4>
-<div class="outline-text-4" id="text-org869e92b">
+<div id="outline-container-org8bbc59f" class="outline-4">
+<h4 id="org8bbc59f">Reporting Concerns</h4>
+<div class="outline-text-4" id="text-org8bbc59f">
 <p>
 If you have an issue that arises with a student or TA in this class,
 please contact your course instructor first via Email.
@@ -1980,7 +2128,7 @@ Computer Science Department via its Class Concern Form:
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-01-24 Sat 14:08 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-01-24 Sat 14:18 <br/> </i>
 </div>
 </body>
 </html>
