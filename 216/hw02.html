@@ -6,7 +6,7 @@
 <!-- 2026-02-01 Sun 20:48 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CMSC216 HW01: C Basics</title>
+<title>CMSC216 HW02: C Stack Memory and Structs</title>
 <meta name="author" content="Chris Kauffman" />
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
@@ -495,80 +495,56 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 <i>Last Updated: 2026-02-01 Sun 20:48</i>
 </div>
 <div id="content" class="content">
-<h1 class="title">CMSC216 HW01: C Basics</h1>
+<h1 class="title">CMSC216 HW02: C Stack Memory and Structs</h1>
 <p>
 <i>Homeworks are optional practice with no submission and no credit</i>
 </p>
-<div id="outline-container-orga278139" class="outline-4">
-<h4 id="orga278139">CODE DISTRIBUTION: <a href="hw01-code.zip">hw01-code.zip</a></h4>
+<div id="outline-container-org23b7f20" class="outline-4">
+<h4 id="org23b7f20">CODE DISTRIBUTION: <a href="hw02-code.zip">hw02-code.zip</a></h4>
 </div>
 
-<div id="outline-container-orgccb33b5" class="outline-4">
-<h4 id="orgccb33b5">CHANGELOG: Empty</h4>
-</div>
-
-<div id="outline-container-orgc79f0a9" class="outline-4">
-<h4 id="orgc79f0a9"></h4>
-<div class="outline-text-4" id="text-orgc79f0a9">
+<div id="outline-container-orge0676e9" class="outline-4">
+<h4 id="orge0676e9">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orge0676e9">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgc52c5d3">1. Rationale</a></li>
-<li><a href="#org5a9b083">2. Codepack</a></li>
-<li><a href="#org0953f6a">3. What to Understand</a></li>
-<li><a href="#org7f5c620">4. QUESTIONS.txt</a></li>
+<li><a href="#orgd5cee39">1. Rationale</a>
+<ul>
+<li><a href="#org4852571">Associated Reading / Preparation</a></li>
+<li><a href="#orgdad86cd">Grading Policy</a></li>
+</ul>
+</li>
+<li><a href="#orgcfb1168">2. Codepack</a></li>
+<li><a href="#orgfe92877">3. Questions</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgc52c5d3" class="outline-2">
-<h2 id="orgc52c5d3"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orgd5cee39" class="outline-2">
+<h2 id="orgd5cee39"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-C programming is as close as most programmers get to the bare metal of
-computer systems and is an essential tool in any programmers toolkit.
-Completing this HW will cover principles in C of editing, compilation,
-running, basic data types, functions, and control.
+This HW covers the basics of memory layout and C structs. Problems
+provide practice at creating memory diagrams and address some of the
+conventions associated with struct declaration, and
+usage. Importantly, the distinction between an "actual" struct and a
+pointer to a struct is covered.
 </p>
 </div>
-<div id="outline-container-orgdafee33" class="outline-4">
-<h4 id="orgdafee33">Associated Reading / Preparation</h4>
-<div class="outline-text-4" id="text-orgdafee33">
+<div id="outline-container-org4852571" class="outline-3">
+<h3 id="org4852571">Associated Reading / Preparation</h3>
+<div class="outline-text-3" id="text-org4852571">
 <p>
-Prior programming experience is presumed: students not familiar with
-variable types, loops, conditionals, functions, etc. should review
-them quickly.
-</p>
-
-<p>
-Basic familiarity with the Unix command line environment is also
-presumed.  If you have never worked in this type of environment, spend
-some time getting oriented with staff help during office hours or
-discussion sections.
-</p>
-
-<p>
-Study any good C resource/tutorial particularly those listed on the course
-web site or the optional text and C programming:
-</p>
-
-<p>
-<i>C Programming Language</i> Second Edition by Brian Kernighan and
-Dennis M. Ritchie, Prentice Hall 1988
-</p>
-
-<p>
-Also make sure to consult the <a href="syllabus.html">Course Syllabus</a> prior to taking the Quiz
-associated with the HW. Some questions on the Quiz <b>may test knowledge
-of the course syllabus</b>.
+From any good C resource review <code>struct</code> declarations.
 </p>
 </div>
 </div>
-<div id="outline-container-org8450f66" class="outline-4">
-<h4 id="org8450f66">Grading Policy</h4>
-<div class="outline-text-4" id="text-org8450f66">
+<div id="outline-container-orgdad86cd" class="outline-3">
+<h3 id="orgdad86cd">Grading Policy</h3>
+<div class="outline-text-3" id="text-orgdad86cd">
 <p>
 Homework provides optional extra practice for students looking for
 it. No submission is collected and the HW is not worth any course
@@ -581,8 +557,8 @@ be constructed.
 </div>
 </div>
 </div>
-<div id="outline-container-org5a9b083" class="outline-2">
-<h2 id="org5a9b083"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orgcfb1168" class="outline-2">
+<h2 id="orgcfb1168"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the HW contains the following files:
@@ -609,251 +585,322 @@ The codepack for the HW contains the following files:
 </tr>
 
 <tr>
-<td class="org-left"><code>age.c</code></td>
+<td class="org-left"><code>diagram.c</code></td>
 <td class="org-left">C file for Problem 1</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>collatz_main.c</code></td>
-<td class="org-left">C file for Problem 2</td>
+<td class="org-left"><code>struct_demo.c</code></td>
+<td class="org-left">Demo C file for Problem 2</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>collatz_funcs.c</code></td>
-<td class="org-left">C file for Problem 2</td>
+<td class="org-left"><code>struct_define.c</code></td>
+<td class="org-left">C file to complete for Problem 2</td>
 </tr>
 
 <tr>
-<td class="org-left"><code>collatz.h</code></td>
-<td class="org-left">C file for Problem 2</td>
+<td class="org-left"><code>struct_pointer_demo.c</code></td>
+<td class="org-left">Demo file for Problem 2</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>struct_pointer_funcs.c</code></td>
+<td class="org-left">C file to create for Problem 2</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<div id="outline-container-org0953f6a" class="outline-2">
-<h2 id="org0953f6a"><span class="section-number-2">3</span> What to Understand</h2>
+<div id="outline-container-orgfe92877" class="outline-2">
+<h2 id="orgfe92877"><span class="section-number-2">3</span> Questions</h2>
 <div class="outline-text-2" id="text-3">
-<p>
-Ensure that you understand
-</p>
-<ul class="org-ul">
-<li>Basic C syntax for functions, conditions, loops</li>
-<li>How to compile C programs on the command line with <code>gcc</code> and some
-errors that arise due to compilation mistakes</li>
-<li>Some inkling about the limits of binary number representations</li>
-<li>A basic understanding of the course Syllabus</li>
-</ul>
-</div>
-</div>
-<div id="outline-container-org7f5c620" class="outline-2">
-<h2 id="org7f5c620"><span class="section-number-2">4</span> QUESTIONS.txt</h2>
-<div class="outline-text-2" id="text-4">
 <p>
 Analyze the files in the provided codepack and answer the questions
 given in <code>QUESTIONS.txt</code>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-text">                           _________________
+<pre class="src src-text">                            ________________
 
-                            HW 01 QUESTIONS
-                           _________________
+                             HW02 QUESTIONS
+                            ________________
 
 
 HWs are optional practice and there is no submission.
 
 
-ADVISORY: HW is PRACTICE
-========================
+PROBLEM 1: Memory in diagram.c
+==============================
 
-  HWs are practice.  To earn credit for doing this HW, you will at some
-  point visit Gradescope and take an online quiz which asks about items
-  studied in the HW; the multiple choice quiz will inform you of
-  correct/incorrect answers making it hard not get full credit.
+  Lecture has introduced the basic memory model that C uses where
+  variables are placed in memory at runtime at locations chosen by the
+  compiler.  The space required for variables is dictated by their
+  type. This problem gives some practice at working with variables in
+  memory and pointers.
 
-  In the spaces below you'll be asked to "write your answer" or "do this
-  and paste what you see." No staff will check these answers except if
-  you want them. Credit for the HW is earned through the online quiz,
-  not writing answers to the questions. Solutions to the HW will also be
-  posted some time after the due date.
+  For each of the C blocks below, give a memory diagram of the block
+  indicating memory locations and contents of cells. These blocks appear
+  in the file `diagram.c' which you can modify to print results if you
+  want to verify your answers.
 
-  Knowing that your written answers won't be checked may disincline you
-  to actually write anything down. Just keep in mind that exam questions
-  are similar but more difficult and WILL require you to write an
-  answer. That makes HW a good chance to practice studying code, editing
-  it, running it, and writing about it.  Writing down your answers will
-  also make it quick and simple to get full credit on the multiple
-  choice quiz questions for the HW as they are easier to solve than full
-  written answers. Finally, it's a great tactic to write your own
-  answers, then compare then later to the provided solutions as a means
-  to study and identify weak points in your understanding.
+  MAKE SURE to accurately express the standard sizes for each of the
+  kinds of variables ON A 64-BIT MACHINE in your diagrams by placing
+  them at appropriate memory addresses that are tightly packed. A
+  reminder: on 64-bit machines, all pointers are 64 bits / 8 bytes.
 
-  Office hours or discussion sections are a good time to chat up a staff
-  member if you are perplexed by HW content. Students sometimes approach
-  staff and ask for extra practice problems. They will be asked, "sure,
-  but first show me your written answers to the last few HWs."  In 6
-  semesters, staff have not yet needed to create more practice problems
-  as students asking for them invariably skipped doing the provided HW
-  problems.
+  The specific order of variables appear in memory will be chosen by the
+  compiler. In graded problems, so long as answers are internally
+  consistent, they will receive full credit; that means allocating
+  enough space for variables in whatever order is chosen and ensuring
+  that pointer point at the location of the indicated variables.
 
-
-PROBLEM 1 `age.c'
-=================
 
 A
 ~
 
-  Examine the source code for `age.c'. Compile it using the following
-  invocation of `gcc'
   ,----
-  | gcc age.c
+  |   // BLOCK A
+  |   int a = 5;
+  |   int b = 7;
+  |   double x = 4.5;
+  |   int *ip = &amp;a;
+  |   ip = &amp;b;
+  |   int c = *ip;
+  |   *ip = 19;
+  |   // DRAW MEMORY HERE 
   `----
-  This should create the executable `a.out'. Run this program using the
-  invocation.
+
   ,----
-  | ./a.out
+  | | ADDR  | SYMBOL | VAL |
+  | |-------+--------+-----|
+  | | #1048 | a      |     |
+  | | #1044 | b      |     |
+  | |       |        |     |
+  | |       |        |     |
+  | |       |        |     |
   `----
-  Perform several runs of the program with the following values and
-  paste your output in the space below.
-  - Enter 16
-  - Enter 18
-  - Enter 25
-  - Enter 44
 
 
 B
 ~
 
-  Analyze the code for `age.c' and describe a flaw in the conditional
-  structure towards the end that prevents the output:
   ,----
-  | You can vote, drink, and be president.
-  | Try all three at once!
-  `----
-  from being printed.
-
-  Alter the code to fix this bug so that for ages 35 and larger, the
-  above text is printed. Paste your fixed code for the conditional below
-  and test it by recompiling and showing a demo run.
-
-
-C
-~
-
-  Attempt to enter some absurd ages for the age computation.
-  - Enter 5000
-  - Enter -5000
-  Describe anything strange that seems to be happening based your
-  understanding of how basic arithmetic is supposed to work.
-
-  If you happen to know WHY this strangeness is happening, describe it
-  below.  If not, you will find out soon.
-
-
-D
-~
-
-  Describe which function is used to print information to the screen.
-  Describe how it seems to work to substitute values into output and
-  what *format specifier* indicates an integer should be substituted.
-
-
-E
-~
-
-  Describe what function is used to read typed input interactively from
-  a user in the `age.c' program.  Describe anything that seems strange
-  about this function or its arguments.
-
-  We will learn in not long why this bit of strangeness is necessary.
-
-
-PROBLEM 2 Collatz
-=================
-
-A
-~
-
-  Examine and compile the code associated with the collatz
-  program. There are three files associated with this program.
-  - `collatz_funcs.c' which defines two utility functions for computing
-    the Collatz sequence
-  - `collatz_main.c' which defines a `main()' function to compute a
-    Collatz sequence
-  - `collatz.h' header file which declares functions in
-    `collatz_funcs.c' so that they are known to `collatz_main.c'
-
-  To compile the program, use the following invocation of `gcc'
-  ,----
-  | gcc -o collatz collatz_funcs.c collatz_main.c
-  `----
-  This should create the program `collatz' which can be run with
-  ,----
-  | ./collatz
+  |   // BLOCK B
+  |   int arr[4] = {12, 14, 16, 18};
+  |   int *arp = arr;
+  |   int brr = 11;
+  |   arr[1] = 23;
+  |   arp[3] = 29;
+  |   arp = &amp;arr[2];
+  |   *arp = brr;
+  |   // DRAW MEMORY HERE 
   `----
 
-  Do so and enter inputs
-  - Starting integer 7
-  - Show output: 1
-
-  Paste the output below.
-
-
-B
-~
-
-  Determine what the "dash-O" option used above for `gcc -o' does. For
-  example, what happens if one runs
   ,----
-  | gcc -o GLIPGLOP collatz_funcs.c collatz_main.c
-  `----
-
-  instead.  You may wish to use the `ls' command to list the files in
-  the current directory.
-
-  Describe what happens if you omit this option `-o' when compiling as
-  in
-  ,----
-  | gcc collatz_funcs.c collatz_main.c
+  | | ADDR  | SYMBOL | VAL |
+  | |-------+--------+-----|
+  | | #2024 | arr[3] |  18 |
+  | | #2020 | arr[2] |  16 |
+  | |       |        |     |
+  | |       |        |     |
+  | |       |        |     |
+  | |       |        |     |
   `----
 
 
 C
 ~
 
-  Attempt to compile only the file `collatz_main.c' by doing
   ,----
-  | gcc -o something collatz_main.c
+  |   // BLOCK C
+  |   char str[8] = "hello";
+  |   str[5] = 'w';
+  |   char *cp = str + 6;
+  |   *cp = '\0';
+  |   str[0] = 'y';
+  |   // DRAW MEMORY HERE 
+  `----
+
+  ,----
+  | 
+  | | ADDR  | SYMBOL | VAL |
+  | |-------+--------+-----|
+  | | #3107 | str[7] | ?   |
+  | | #3106 | str[6] | ?   |
+  | | #3105 | str[5] | \0  |
+  | | #3104 | str[4] | o   |
+  | | #3103 | str[3] | l   |
+  | | #3102 | str[2] | l   |
+  | | #3101 | str[1] | e   |
+  | | #3100 | str[0] | h   |
+  | | #3092 |     cp | ?   |
+  | 
   `----
 
 
-  This should result in an error. Show the output of that error and
-  determine why the compilation fails.
+PROBLEM 2: Structs, Dots, and Arrows
+====================================
 
-
-D
-~
-
-  Attempt to compile only the file `collatz_funcs.c' by doing
+  Lecture will soon discuss structs, a way to aggregate data of
+  different types into a single datum. They are akin to objects in other
+  programming environments but do not have methods or and public/private
+  attributes for fields. There are a half dozen syntactic variants that
+  declare structs but we will favor these two.
   ,----
-  | gcc -o something collatz_funcs.c
+  | typedef struct {                // most common syntax; declares new type mytype_t
+  |   int an_int_field;
+  |   double a_double_field;
+  |   char *a_char_ptr_field;
+  | } mytype_t;
+  | 
+  | typedef struct othertype {      // variant used when a pointer to the type being
+  |   int first_field;              // defined is required such as in linked lists
+  |   char second_field;
+  |   struct othertype *pointer_field;
+  | } othertype_t;  
+  `----
+
+  The use of `_t' at the end of struct names is an convention to
+  indicate that they are a type; it is not a strict rule and some
+  historical types do not end with an `_t' but in all course examples
+  defined types will follow it.
+
+  With these set up, one can declare data of the type of the struct and
+  access fields of the struct using the dot notation. An example appears
+  in the `struct_demo.c' file.
+
+  ,----
+  | int main(int argc, char *argv[]){
+  |   mytype_t mine1;               // first struct
+  |   mine1.an_int_field = 5;
+  |   mine1.a_double_field = 11.6;
+  |   char mychar = 'h';
+  |   mine1.a_char_ptr_field = &amp;mychar;
+  | 
+  |   mytype_t mine2;               // second struct
+  |   mine2.an_int_field = 222;
+  |   mine2.a_double_field = 333.4;
+  |   mine2.a_char_ptr_field = &amp;mychar; // points to same place as first struct does
+  | 
+  |   // print out the fields of the two structs
+  |   printf("mine1: %d %f %p\n",
+  |          mine1.an_int_field, mine1.a_double_field, mine1.a_char_ptr_field);
+  |   printf("mine2: %d %f %p\n",
+  |          mine2.an_int_field, mine2.a_double_field, mine2.a_char_ptr_field);
+  | 
+  |   return 0;
+  | }
   `----
 
 
-  This should result in an error. Show the output of that error and
-  determine why the compilation fails.
+A Basic Struct Definition and Use
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  In the file `struct_define.c' below with a simple struct definition
+  and use to print the fields of a struct.
 
 
-Review Course Syllabus
-======================
+B Memory Layout of Structs
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  Make sure to review the Course Syllabus to acquaint yourself with
-  course policies such as the following.
-  - The PRIME DIRECTIVE to preserve academic integrity
-  - Fair collaboration with other students
-  - Late submission policies on assignments (projects, Labs, Homeworks)
-  - Grading criteria and weighting on exams/assignments
+  Draw a memory diagram of the stack frame for `main()' in
+  `struct_define.c' at the `return' line to show how the structs are
+  likely to lay out in memory. Keep in mind that the compiler will
+  respect the order of struct fields specified in memory with the first
+  struct field declared at the earliest point in memory.
+
+  Below is a table to help you get started.
+  ,----
+  | | FRAME         | Address | Symbol              |     Value |
+  | |---------------+---------+---------------------+-----------|
+  | | main()        |         | grumpycat.is_grumpy |           |
+  | | before return |         |                     |           |
+  | |               |         |                     |           |
+  | |               |         |                     |           |
+  | |               | #4040   | grumpycat.?         |           |
+  | |               | #4039   |                     |       'N' |
+  | |               | #4038   | nyancat.is_active   |       'Y' |
+  | |               |         |                     |        14 |
+  | |               | #4028   |                     |       0.1 |
+  | |               | #4024   | nyancat.views       | 205000000 |
+  `----
+
+
+C Dots vs Arrows
+~~~~~~~~~~~~~~~~
+
+  The "dot" operation in C is for "field access" and is appropriate to
+  use when a variable is an actual struct. C allows for pointers to data
+  and when structs are pointed at, accessing their data requires first a
+  dereference then a field access.  This is done via the "arrow"
+  operator "-&gt;" as in `ptrstrct-&gt;fieldname'.
+
+  In summary
+  - Use . when an actual (non-pointer) struct is in use
+  - Use -&gt; when a pointer to a struct is in use
+
+  A common use of struct pointers is when structs are passed via their
+  addresses (as pointers) to a function that operates on the struct. An
+  example of this is given in `struct_pointer_demo.c' which has a
+  function which halves a field. Study this example which shows how to
+  pass a pointer to a struct into the function and uses the Arrow syntax
+  to modify the struct.
+
+  #include &lt;stdio.h&gt;
+
+  typedef struct { // most common syntax; declares new type mytype_t int
+    an_int_field; double a_double_field; char *a_char_ptr_field; }
+    mytype_t;
+
+  void mytype_halve_double(mytype_t *mine){ mine-&gt;a_double_field =
+    mine-&gt;a_double_field / 2.0; }
+
+  int main(int argc, char *argv[]){ mytype_t mine1; // first struct
+    mine1.an_int_field = 5; mine1.a_double_field = 11.6; char mychar =
+    'h'; mine1.a_char_ptr_field = &amp;mychar;
+
+  mytype_halve_double(&amp;mine1);
+
+  // print out the fields of the two structs printf("mine1: %d %f %p\n",
+  mine1.an_int_field, mine1.a_double_field, mine1.a_char_ptr_field);
+
+    return 0; }
+
+  Create a new file called `struct_pointer_funcs.c' and copy the
+  contents your previous `struct_define.c' file with `cat_t' into it.
+  Add the following two functions to the code which involve pointers to
+  structs and the arrow operator and use them in the way specified.
+
+  ,----
+  | // reduces the weight of the cat to 90% of what it was
+  | void cat_diet(cat_t *cat);
+  | 
+  | // prints all fields of the cat using a format like the following
+  | // views 205000000 weight: 0.100000 age: 14 active: Y grumpy: N
+  | void cat_print(cat_t *cat);
+  | 
+  | // age goes up by one and due to a viral birthday video, views doubles
+  | void cat_birthday_viral(cat *cat);
+  | 
+  | 
+  | // in main(), after data is initialzed as before, grumpycat goes on a
+  | // diet, nyancat has a viral birthday, and both cats are printed using
+  | // the new printing function.
+  | // EXPECTED OUTPUT
+  | // views 410000000 weight: 0.100000 age: age 15 active: Y grumpy: N
+  | // views 8300000 weight: 6.750000 age: age 13 active: N grumpy: Y
+  `----
+
+
+D Pointers to structs in functions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Draw a memory diagram involving the stack frames for both `main()' and
+  `cat_birthday_viral()' at the point in `main()' where `nyancat' has
+  the `cat_birthday_viral()' function called on it. It's a good idea to
+  copy over the memory diagram you previously constructed. Don't forget
+  to add a stack frame for `cat_birthday_viral()'.
 </pre>
 </div>
 </div>
