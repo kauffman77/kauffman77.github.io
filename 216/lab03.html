@@ -1,0 +1,1336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2026-02-06 Fri 11:17 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMSC216 Lab03: Basic File I/O and Valgrind Debugging</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
+details > summary {
+padding: 2px 6px;
+font-family: Sans;
+font-size: 0.8em;
+width: fit-content;
+border-radius: 5px;
+background-color: #efefef;
+border: 1px solid black;
+cursor: pointer;
+}
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","[COMMANDO]>>","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+literal: ["[data/script.txt]>>","[data/script1.txt]>>","[data/script6.txt]>>"],
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+// hljs.COMMENT(/## /, /$/),     // hash-hash-ws for comment
+hljs.COMMENT(/##+/, /$/),     // or a sequence of hashes
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2026-02-06 Fri 11:17</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CMSC216 Lab03: Basic File I/O and Valgrind Debugging</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Sun 21-Sep-2025</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><i>Approximately 1.00% of total grade</i></li>
+</ul>
+<div id="outline-container-org1294a38" class="outline-4">
+<h4 id="org1294a38">CODE DISTRIBUTION: <a href="lab03-code.zip">lab03-code.zip</a></h4>
+</div>
+
+<div id="outline-container-orgaba474c" class="outline-4">
+<h4 id="orgaba474c">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orgaba474c">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgf581842">1. Rationale</a></li>
+<li><a href="#org2fc68b2">2. Codepack</a></li>
+<li><a href="#org8827046">3. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org62c1111">4. Submission</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf581842" class="outline-2">
+<h2 id="orgf581842"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Reading basic data from a file is essential in any programming
+environment. C provides the standard <code>fscanf()</code> function to read
+formatted data. This lab demonstrates its use and provides some
+techniques to read simple, structured data from files into dynamically
+allocated structures. This lab also demonstrates one type of struct
+referring to an array of another type of struct which is a common
+pattern that often appears in class projects. Mastering the syntax
+associated with this situation is an essential C-programming skill.
+</p>
+
+<p>
+Memory problems are inevitable in C programs and learning how to
+effectively identify and resolve them is an essential skill for
+low-level development.  Valgrind is a valuable ally when diagnosing
+memory problems as it gives very good clues about the nature of the
+errors so long as one can interpret its error messages. Part of this
+Lab focuses on fixing existing code where error messages such as
+"Invalid Writes" and "120 bytes Definitely Lost" are
+abundant. Completing the lab will give solid practice on sleuthing out
+memory bugs using such error messages.
+</p>
+</div>
+<div id="outline-container-org56a4715" class="outline-4">
+<h4 id="org56a4715">Associated Reading</h4>
+<div class="outline-text-4" id="text-org56a4715">
+<p>
+Most good C references will cover basic file I/O and uses of functions
+like <code>fscanf()</code>.  K&amp;R's "The C Programming Language" does so as do
+many of the C references listed on the course Canvas page.
+</p>
+
+<p>
+Valgrind will be discussed in lecture but those looking for a quick
+reference might consult <a href="https://valgrind.org/docs/manual/mc-manual.html#mc-manual.errormsgs">Valgrind's Explanation of error messages</a> for
+additional information on how to read its tea leaves.
+</p>
+</div>
+</div>
+<div id="outline-container-org8e28a81" class="outline-4">
+<h4 id="org8e28a81">Grading Policy</h4>
+<div class="outline-text-4" id="text-org8e28a81">
+<p>
+Credit for this lab is earned by completing the code/answers in the
+Lab codepack and submitting a Zip of the work to Gradescope preferably
+via running <code>make submit</code>. Students are responsible to check that the
+results produced locally are reflected on Gradescope after submitting
+their completed Zip.
+</p>
+
+<p>
+Lab Exercises are Free Collaboration and <b>students are encouraged to
+cooperate on labs.</b> Students may submit work as groups of up to 5 to
+Gradescope: one person submits then adds the names of their group
+members to the submission.
+</p>
+
+<p>
+No late submissions are accepted for Lab work but the lowest two lab
+scores for the semester will be dropped including zeros due to missing
+submissions. See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies in the course syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org2fc68b2" class="outline-2">
+<h2 id="org2fc68b2"><span class="section-number-2">2</span> Codepack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The codepack for this lab is linked at the top of this
+document. Always download it and unzip/unpack it.  It should contain
+the following files which are briefly described.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">Use</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>treasure_main.c</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 1 C file to edit and complete; TODO sections are marked in the code</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>treasure.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 header file declaring data types and prototypes</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>map1.tm</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">Problem 1 Data to read in <code>treasure_main.c</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>map2.tm</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">Problem 1 Data to read in <code>treasure_main.c</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_treasure_main.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 CODE tests, used in <code>make test-prob1</code></td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>mon_main.c</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 2 C file to edit and complete; contains bugs that must be fixed</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>mon-top5.txt</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">Problem 2 Data to read in <code>mon_main.c</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>map-all.txt</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">Problem 2 Data to read in <code>mon_main.c</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>mon-*.txt</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">Problem 2 Additional data files</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_mon_main.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 2 CODE tests, used in <code>make test-prob2</code></td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Instructions and Questions to answer: fill in the multiple choice selections in this file.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Build</td>
+<td class="org-left">Enables <code>make test</code> and <code>make zip</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>QUESTIONS.txt.bk</code></td>
+<td class="org-left">Backup</td>
+<td class="org-left">Backup copy of the original file to help revert if needed</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>QUESTIONS.md5</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Checksum for answers in questions file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_quiz_filter</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Filter to extract answers from Questions file, used in testing</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_lab03.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for this lab</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running scripts</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>gradescope-submit</code></td>
+<td class="org-left">Misc</td>
+<td class="org-left">Allows submission to Gradescope from the command line</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org8827046" class="outline-2">
+<h2 id="org8827046"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
+Follow the instructions in it to complete the QUIZ and CODE questions
+for the lab.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                           _________________
+
+                            LAB03 QUESTIONS
+                           _________________
+
+
+Exercise Instructions
+=====================
+
+  Follow the instructions below to experiment with topics related to
+  this exercise.
+  - For sections marked QUIZ, fill in an (X) for the appropriate
+    response in this file. Use the command `make test-quiz' to see if
+    all of your answers are correct.
+  - For sections marked CODE, complete the code indicated. Use the
+    command `make test-code' to check if your code is complete.
+  - DO NOT CHANGE any parts of this file except the QUIZ sections as it
+    may interfere with the tests otherwise.
+  - If your `QUESTIONS.txt' file seems corrupted, restore it by copying
+    over the `QUESTIONS.txt.bk' backup file.
+  - When you complete the exercises, check your answers with `make test'
+    and if all is well. Create a zip file and submit it to Gradescope
+    with `make submit'. Ensure that the Autograder there reflects your
+    local results.
+  - IF YOU WORK IN A GROUP only one member needs to submit and then add
+    the names of their group on Gradescope.
+
+
+PROBLEM 1: Treasuremap I/O Program
+==================================
+
+  Staff will discuss some aspects of the provided treasure_main.c
+  file. This file has some blanks marked with ???? which need to be
+  filled in.  It also demonstrates several important techniques that are
+  common in C program.
+
+  When the application is complete, it will run as shown below on the
+  provided map1.tm and map2.tm files.
+
+  ,----
+  | &gt; make                               # compile
+  | gcc -Wall -Werror -g  -c treasure_main.c
+  | gcc -Wall -Werror -g  -o treasure_main treasure_main.o treasure.h
+  | 
+  | &gt; ./treasure_main                    # run with no file provided
+  | usage: ./treasure_main &lt;treasure_file.tm&gt;
+  | 
+  | &gt; ./treasure_main map1.tm            # run on first treasuremap
+  | Loading treasure map from file 'map1.tm'
+  | Reading map from file 'map1.tm'
+  | Allocating map struct
+  | Map is 7 by 5
+  | 3 treasures on the map
+  | Allocating array of treasure locations
+  | Reading treasures
+  | Treasure at 0 2 called 'Death_Crystals'
+  | Treasure at 4 1 called 'Mega_Seeds'
+  | Treasure at 6 3 called 'Flurbo_stash'
+  | Completed file, closing
+  | Returning pointer to heap-allocated treasure_t
+  | 
+  | ==TREASURE MAP==
+  | ..A..
+  | .....
+  | .....
+  | .....
+  | .B...
+  | .....
+  | ...C.
+  | ================
+  | A: Death_Crystals
+  | B: Mega_Seeds
+  | C: Flurbo_stash
+  | 
+  | Deallocating map
+  | 
+  | 
+  | &gt; ./treasure_main map2.tm            # run on second treasuremap
+  | Loading treasure map from file 'map2.tm'
+  | Reading map from file 'map2.tm'
+  | Allocating map struct
+  | Map is 9 by 13
+  | 10 treasures on the map
+  | Allocating array of treasure locations
+  | Reading treasures
+  | Treasure at 5 2 called 'Goblet_of_Fire'
+  | Treasure at 3 8 called 'Invisibility_Cloak'
+  | Treasure at 4 11 called 'Elder_Wand'
+  | Treasure at 8 10 called 'Mirror_of_Erised'
+  | Treasure at 1 12 called 'Philosophers_Stone'
+  | Treasure at 7 9 called 'Marauders_Map'
+  | Treasure at 8 2 called 'Pensieve'
+  | Treasure at 3 9 called 'Sword_of_Gryffindor'
+  | Treasure at 7 0 called 'Tom_Riddles_Diary'
+  | Treasure at 0 11 called 'Time_Turner'
+  | Completed file, closing
+  | Returning pointer to heap-allocated treasure_t
+  | 
+  | ==TREASURE MAP==
+  | ...........J.
+  | ............E
+  | .............
+  | ........BH...
+  | ...........C.
+  | ..A..........
+  | .............
+  | I........F...
+  | ..G.......D..
+  | ================
+  | A: Goblet_of_Fire
+  | B: Invisibility_Cloak
+  | C: Elder_Wand
+  | D: Mirror_of_Erised
+  | E: Philosophers_Stone
+  | F: Marauders_Map
+  | G: Pensieve
+  | H: Sword_of_Gryffindor
+  | I: Tom_Riddles_Diary
+  | J: Time_Turner
+  | 
+  | Deallocating map
+  `----
+
+
+PROBLEM 1 QUIZ: File Input in treasure_main.c
+=============================================
+
+  Make sure to study the code and ask questions to resolve the following
+  queries about the treasure map application.
+
+
+Command Line Arguments
+----------------------
+
+  The `treasure_main.c' program is run with command line parameters like
+  `&gt; ./treasure_main map1.tm'.  How is the file name `map1.tm' made
+  available in the `main()' function?
+  - ( ) The `fscanf()' function is used to read the command line as the
+    user types it in.
+  - ( ) The global variable `args' will be an array with `args[0]' as
+    the string `map1.tm'
+  - ( ) The `argc' parameter will have value 2 and `argv[1]' will be a
+    pointer to the string `map1.tm'
+  - ( ) The `getenv()' function is used to extract the command line
+    arguments from the environment.
+
+
+Struct Definition
+-----------------
+
+  The `treasuremap_t' struct is defined in the following location which
+  shows its fields (parts):
+  - ( ) In the c file `treasure_main.c'
+  - ( ) In the header `treasure.h'
+  - ( ) In the header `stdio.h'
+  - ( ) Trick question: the definition is read from the user typing
+
+
+File Format
+-----------
+
+  One important part of completing the `treasuremap_load()' function
+  will be to understand the format of the treasuremap files.  According
+  to the documentation for the function and your observations of the
+  `map1.tm' and `map2.tm' files, which of the best describes the format
+  of these files.
+  - ( ) The file looks like how treasure_main prints them, as something
+    like
+    ,----
+    |   ..A..
+    |   .....
+    |   .....
+    |   .....
+    |   .B...
+    |   .....
+    |   ...C.
+    `----
+    and the application should just read the strings in the file into
+    the struct.
+  - ( ) The first line has the the size of the treasuremap AND the
+    number of treasures in the map (N). There are N remaining lines
+    which have treasure positions/descriptions in them.
+  - ( ) The first line has the number of rows/columns in the map and
+    each remaining line is a row/col/description position of a
+    treasure. The number of treasures is not given and must be detected
+    using EOF as a return from `fscanf()'
+  - ( ) The file is stored in binary format and is not easily read by
+    humans. However, it can be read directly into the struct via
+    `fread()'.
+
+
+Nested Struct Syntax
+--------------------
+
+  During `treasuremap_load()' the following line of code is used to read
+  in the row for an individual treasure's location.
+
+  ,----
+  | fscanf(file_handle, "%d", &amp;tmap-&gt;locations[i].row);
+  `----
+
+
+  Which of the following best describes the syntax used based on the
+  `treasuremap_t' type?
+  - ( ) `tmap' is a pointer to a struct so `-&gt;' is used to dereference
+    it to a field; the `locations' field is a pointer to an array so
+    square braces are used to dereference it. `fscanf()' needs an
+    address so `&amp;' is used.
+  - ( ) `tmap' is a normal struct so `-&gt;' is used to access its fields;
+    the `locations' field is a normal array so square braces are used to
+    dereference it. `fscanf()' needs an address so `&amp;' is used.
+  - ( ) `tmap' is a pointer so `&amp;' is used to dereference it with `-&gt;'
+    getting its field.  The `locations' field is a normal array so
+    square braces are used to dereference it.
+  - ( ) Trick Question: The syntax for this line is actually incorrect
+    and won't compile. It is a TODO item to fix its syntax.
+
+
+Nested Struct Memory Allocation
+-------------------------------
+
+  During the program execution, two different memory allocations are
+  made.  Which of the following best describes how allocated memory is
+  related to the nested nature of the structs?
+
+  - ( ) The first allocation creates space for a treasuremap_t
+    struct. The second creates an array for all treasureloc_t structs
+    The address of the array is stored in the locations field of the
+    treasuremap_t struct.
+  - ( ) The first allocation creates space for an array of treasureloc_t
+    structs. The second creates a treasuremap_t struct and then connects
+    it to the array.
+  - ( ) The first allocation creates space for a treasuremap_t struct
+    AND the array of treasure locations. The second allocation is
+    unnecessary and needs to be removed.
+  - ( ) The current implementation is an incorrect method to declare the
+    structures, and it is sufficient to create local variables for both
+    the treasuremap_t struct and an array of treasuremap_loc structs.
+
+
+Two-Dimensional Array Allocation
+--------------------------------
+
+  Analyze the beginning of the `treasuremap_print()' function where the
+  `printspace' variable is established.  Which of the following code
+  patterns is used to create a two-dimensional table of characters that
+  is used later with syntax like `printspace[i][j] = ...;'?
+
+  - ( ) A function called malloc2D(row,col) is used which allocates a
+    two-dimensional table and assign it printspace
+  - ( ) A function called calloc(row,col) is used which allocates a
+    two-dimensional table and assign it printspace
+  - ( ) First one malloc() is used to allocate all row/column elements,
+    then a loop is used to assign pointers to positions within the
+    single large memory block
+  - ( ) First one malloc() is used to allocate an array of pointers
+    sized on the height, then a loop is used to malloc() rows sized on
+    the width with the first array pointing at each row
+
+
+Character Tricks
+----------------
+
+  Locate the function `treasuremap_print()' and find the code with the
+  comment
+  ,----
+  | // an interesting line
+  `----
+
+
+  Analyze what is happening with this line and select the answer below
+  which best describes it.
+
+  - ( ) It is accessing a character from an array such as A, B, C... to
+    display on the treasure map for each treasure.
+  - ( ) It is using pointer arithmetic to find the location of a
+    character in memory to display for each treasure.
+  - ( ) It is adding an integer onto character 'A' to get a new
+    character to display on the treasure map for each treasure.
+  - ( ) It is reading the character to display for the treasure from the
+    input file.
+
+
+Memory De-allocation
+--------------------
+
+  malloc() allocates blocks of memory for structs and arrays and those
+  blocks persist throughout program execution outliving the function
+  which calls malloc(). In order not to exhaust available memory, these
+  blocks must eventually be de-allocated: for very malloc(), a free().
+  treasure_main uses is responsible for de-allocating memory at the end
+  of program execution. Which of the following best describes how it
+  works?
+
+  - ( ) treasuremap_free() only calls free(tmap) which will free all
+    allocated memory associated with that struct
+  - ( ) treasuremap_free() does nothing as C keeps tracks of all
+    malloc'd blocks and automatically de-allocates them before main()
+    finishes.
+  - ( ) treasuremap_free() first free()'s the locations array inside the
+    tmap struct and then free()'s the tmap struct itself. This order is
+    necessary as free()'ing tmap first would lose access to its fields.
+  - ( ) treasuremap_main() actually has some logic bugs where the
+    pointer to the treasuremap struct is lost so cannot be free()'d
+    properly. This is a bug that needs to be fixed in the program to
+    pass test cases.
+
+
+PROBLEM 2 CODE: Complete treasure_main.c
+========================================
+
+  Complete the TODO items in the `treasure_main.c' file so that the two
+  functions marked REQUIRED compile and run successfully. Correct output
+  will look like the demo shown at the top of this file.
+
+  Test that the code behaves correctly via the command
+  ,----
+  | # Run all Problem 1 code tests
+  | &gt;&gt; make test-prob1
+  | 
+  | # Run only Test #2 for Problem 1 code
+  | &gt;&gt; make test-prob1 testnum=2
+  `----
+
+
+PROBLEM 2: A Bit of Debugging
+=============================
+
+  This problem will focus on debugging an existing C program which was
+  written in a rather sloppy fashion leading to some serious flaws in it
+  including memory problems.  This will be a chance to practice reading
+  Valgrind error messages and using them to locate problems in the code
+  and resolve them.
+
+
+Context
+~~~~~~~
+
+  Your current supervisor has left the following note with the code and
+  data files in the code pack.
+
+  ,----
+  | TRAINER: We have most of the data we needed in the mon-*.txt files but
+  | we need to complete the analysis I promised Prof. Birch by the end of
+  | the week.  We need the Median Base Points of the samples in the data
+  | files. I've written a program in mon_main.c to calculate this in a
+  | flexible way but it keeps crashing and I don't have time to debug
+  | it. I'm leaving that to you: Sorry!  I've heard Valgrind may help to
+  | diagnose the memory problems but I never learned to use it
+  | myself. Please make corrections to the code to make it work so we can
+  | determine the median Base Points for the samples outlined in the
+  | tests.
+  | 
+  | -Prof. Oak
+  `----
+
+
+Intended Behavior
+~~~~~~~~~~~~~~~~~
+
+  The intended behavior of the program `mon_main' is to read data files
+  formatted like `mon-top5.txt' which have 3 columns. It will store all
+  the data in an array, sort it, and then print the median (middle)
+  element.
+  ,----
+  | &gt;&gt; make
+  | gcc -Wall -Werror -g  -c mon_main.c
+  | gcc -Wall -Werror -g  -o mon_main mon_main.o
+  | 
+  | &gt;&gt; ./mon_main
+  | usage: ./mon_main &lt;input_file&gt; [filter]
+  | 
+  | &gt;&gt; ./mon_main mon-top5.txt 
+  | Sorted array:
+  |   0: Charmander   309 Fire        
+  |   1: Squirtle     314 Water       
+  |   2: Bulbasaur    318 Grass       
+  |   3: Pikachu      320 Electric    
+  |   4: Psyduck      320 Water       
+  | Median BASE_POINTS is
+  |   2: Bulbasaur 318 Grass
+  | 
+  | &gt;&gt; ./mon_main mon-top5.txt Water
+  | Sorted array:
+  |   0: Squirtle     314 Water       
+  |   1: Psyduck      320 Water       
+  | Median BASE_POINTS is
+  |   1: Psyduck 320 Water
+  | 
+  | &gt;&gt; ./mon_main mon-top5.txt Ground
+  | No elements left after filtering on 'Ground'
+  `----
+
+  Unfortunately the behavior of the program at present is somewhat less
+  helpful.
+  ,----
+  | &gt;&gt; ./mon_main mon-top5.txt 
+  | Segmentation fault (core dumped)
+  `----
+
+
+Instructions
+~~~~~~~~~~~~
+
+  As is indicated (and is often the case with other people's code) the
+  program has some bugs which will need to be corrected. The ultimate
+  goals is to correct the code so that it passes the test cases
+  provided.  The QUIZ questions in `QUESTIONS.txt' relate to some of
+  Error messages that will be produced in the tests and are a good way
+  to get started.
+
+
+PROBLEM 2 QUIZ: Errors in mon_main.c
+====================================
+
+  Study the code and error messages produced by test cases or command
+  line runs of the program to start determining where memory errors
+  occur and how they may be corrected. Answer the following QUIZ
+  questions.
+
+
+First Test
+~~~~~~~~~~
+
+  Run the first test via `make test-prob2' or `make test-prob2
+  testnum=1'. It will fail. Analyze its output, both the Side-by-Side
+  diff output and the Valgrind Report which is lower in the results.
+
+  Check all of the following that are relevant to the bugs reported.
+  - ( ) Valgrind messages indicate that this is likely a bug in Valgrind
+    itself which should be reported to the tool developers ASAP.
+  - ( ) The Valgrind messages indicate that there is likely a memory
+    problem with writing too far into a block of memory.
+  - ( ) The Valgrind Report indicates that a memory Write is being done
+    some distance BEFORE a malloc()'d block
+  - ( ) The Valgrind Report indicates that a memory Write is being done
+    some distance AFTER a malloc()'d block
+  - ( ) The memory Write is problematic because the wrong C syntax is
+    used in the program: no * or -&gt; is used to dereference a pointer.
+  - ( ) The memory Write is problematic because it is assuming a pointer
+    to an array but not enough space has been allocated
+
+
+  The following Valgrind Error message often appears in the VALGRIND
+  REPORT towards the bottom of test results.
+  ,----
+  | ==85164== Invalid write of size 8
+  | ==85164==    at 0x109762: main (mon_main.c:99)
+  | ==85164==  Address 0x4a9e374 is 0 bytes after a block of size 132 alloc'd
+  | ==85164==    at 0x48447A8: malloc (vg_replace_malloc.c:446)
+  | ==85164==    by 0x109661: main (mon_main.c:83)
+  `----
+  Check ALL of the following that correspond to information in this
+  message.
+  - ( ) It reports that some variable / array element is being assigned
+    (write-en to) but the pointer to the variable is out of bounds
+  - ( ) It gives a source code line where the out of bounds access is
+    occurring.
+  - ( ) It shows the exact memory address that is being accessed that is
+    out of bounds (in hexadecimal format)
+  - ( ) It gives the relative position of the memory access as just
+    after a block that was allocated using malloc() and the location in
+    source code where that allocation occurred
+
+  Make some code changes to correct this bug and check that any error
+  messages change.
+
+
+First Test Again
+~~~~~~~~~~~~~~~~
+
+  Run the first test again and check new error messages. Which part of
+  the code seems to be problematic now?
+  - ( ) The loop that reads data from the file into an array
+  - ( ) The loop that prints out the contents of the sorted array
+  - ( ) The insertion sort routine meant to sort the data
+  - ( ) The indexing to determine the median (it accesses an
+    out-of-bounds element)
+
+  Use any nearby hints to fix the code and reduce the errors / generate
+  new errors.
+
+
+First Test AGAIN
+~~~~~~~~~~~~~~~~
+
+  If all has gone well, the output for the first test will now appear
+  correct BUT there are additional problems reported by Valgrind. Check
+  ALL of the following problems appear in the Valgrind report.
+
+  - ( ) There are Invalid reads AFTER a heap-allocated block
+  - ( ) There are Invalid writes BEFORE a heap-allocated block
+  - ( ) Uninitialized memory used to determine a conditional jump/move
+  - ( ) Memory is lost / leaked as it is not de-allocated before the end
+    of the program
+
+  One of the problems identified in the Valgrind output is associated
+  with the following lines which illustrate a common beginner mistake
+  (something one wouldn't expect the seasoned Prof. Oak to do but
+  perhaps C isn't his strong suit...)
+  ,----
+  |   char *filter = malloc(sizeof(char));
+  |   if(argc &gt; 2){                 // filter present
+  |     filter = argv[2];
+  |   }
+  |   else{                         // default to no filtering
+  |     filter = NULL;
+  |   }
+  `----
+  Why is the above code a memory error?
+  - ( ) malloc()'ing memory for filter then re-assigning it to point
+    elsewhere creates a memory leak: the malloc()'d block can never be
+    free()'d
+  - ( ) character pointers like filter should not be pointed to
+    heap-allocated space with malloc()
+  - ( ) When pointers should not be set to NULL as this will cause a
+    segmentation fault
+  - ( ) pointing filter at a string like argv[2] leads to problems later
+    as argv[2] is not heap-allocated so the code that free()'s it will
+    causes an error
+
+  Use the error messages provided in the Valgrind Report to fix the
+  remaining error messages associated with this test.
+
+  Hint: there are 3 changes that need to be made.
+
+
+FIRST TEST!
+~~~~~~~~~~~
+
+  The First test should now pass. In fact, a few more tests may pass.
+
+  Carry on with this pattern of inspecting test results, especially the
+  VALGRIND REPORT to continue diagnosing errors to correct them. A few
+  hints:
+
+  - Any attempt to access a NULL pointer will trigger a segmentation
+    fault; this is reported as an "Invalid Read" or "Invalid Write" of
+    the address 0x0. When working with pointers you know may be NULL,
+    check whether they are NULL before attempting to dereference them.
+
+  - All code paths of exiting must de-allocate all memory. If you are
+    exiting the program early, make sure to free() an malloc()'d blocks
+    and close any files.
+
+  - Opening files can fail, often due to the wrong filename being typed
+    in. Make sure to check for this condition and report appropriate
+    errors. Attempting to work with unopened file is likely to end in
+    crashes.
+
+
+PROBLEM 2 CODE: Repair mon_main.c
+=================================
+
+  As indicated above, continue debugging mon_main.c until all tests
+  pass. A completely corrected program should give the following results
+  on running tests:
+
+  ,----
+  | &gt;&gt; make test-prob2
+  | gcc -Wall -Werror -g -fstack-protector-all  -c mon_main.c
+  | gcc -Wall -Werror -g -fstack-protector-all  -o mon_main mon_main.o
+  | ./testy -o md test_mon_main.org 
+  | =================================================
+  | == test_mon_main.org : mon_main application tests
+  | == Running 8 / 8 tests
+  | 1) ./mon_main mon-lvl1.txt Fire      : ok
+  | 2) ./mon_main mon-all.txt Grass      : ok
+  | 3) ./mon_main mon-top5.txt           : ok
+  | 4) ./mon_main mon-lvl1.txt           : ok
+  | 5) ./mon_main mon-all.txt            : ok
+  | 6) ./mon_main mon-all.txt Ground     : ok
+  | 7) ./mon_main no-file.txt            : ok
+  | 8) ./mon_main mon-lvl2.txt BadFilter : ok
+  | =================================================
+  | RESULTS: 8 / 8 tests passed
+  `----
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org62c1111" class="outline-2">
+<h2 id="org62c1111"><span class="section-number-2">4</span> Submission</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
+how to upload your completed lab zip to Gradescope.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-02-06 Fri 11:17 <br/> </i>
+</div>
+</body>
+</html>
