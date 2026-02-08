@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-02-06 Fri 17:09 -->
+<!-- 2026-02-08 Sun 13:45 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Project 1: C Programming</title>
@@ -492,7 +492,7 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2026-02-06 Fri 17:09</i>
+<i>Last Updated: 2026-02-08 Sun 13:45</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Project 1: C Programming</h1>
@@ -502,65 +502,100 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 <li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a></li>
 <li>Free Collaboration is allowed on projects. See the Syllabus for details.</li>
 </ul>
-<div id="outline-container-org01a5efd" class="outline-4">
-<h4 id="org01a5efd">CODE DISTRIBUTION: <a href="p1-code.zip">p1-code.zip</a></h4>
+<div id="outline-container-org8438421" class="outline-4">
+<h4 id="org8438421">CODE DISTRIBUTION: <a href="p1-code.zip">p1-code.zip</a></h4>
 </div>
-<div id="outline-container-orge336281" class="outline-4">
-<h4 id="orge336281">VIDEO OVERVIEW: <a href="https://umd.instructure.com/courses/1398391/pages/week-02-videos">https://umd.instructure.com/courses/1398391/pages/week-02-videos</a></h4>
+<div id="outline-container-org3b90542" class="outline-4">
+<h4 id="org3b90542">VIDEO OVERVIEW: <a href="https://umd.instructure.com/courses/1398391/pages/week-02-videos">https://umd.instructure.com/courses/1398391/pages/week-02-videos</a></h4>
 </div>
-<div id="outline-container-org5676aca" class="outline-4">
-<h4 id="org5676aca">CHANGELOG: Empty</h4>
+<div id="outline-container-org87230fc" class="outline-4">
+<h4 id="org87230fc">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-org87230fc">
+<dl class="org-dl">
+<dt>Sun Feb  8 01:42:04 PM EST 2026</dt><dd><p>
+<a href="https://piazza.com/class/mkmy0kb448t6wk/post/48">Post 48</a> reported a problem in
+<code>glyph_init()</code>, a provided function that is missing a line. This has
+been fixed in the codepack for students who have not yet downloaded
+<code>p1-code.zip</code>. Students who have already started the project can add
+the line marked <code>MISSING</code> in manually below or just delete the
+entire <code>glyph_init()</code> function and replace it with this updated
+version:
+</p>
+<div class="org-src-container">
+<pre class="src src-c">// PROVIDED: Initializes a glyph to mostly X's except for its
+// codepoint on the first line.
+void glyph_init(glyph_t *glyph, int codepoint){
+  glyph-&gt;is_set = 0;              // MISSING in original posting
+  glyph-&gt;codepoint = codepoint;
+  glyph-&gt;width = 6;
+  for(int i=0; i&lt;MAX_HEIGHT; i++){
+    for(int j=0; j&lt;MAX_WIDTH; j++){
+      if(j == glyph-&gt;width){
+        glyph-&gt;data[i][j] = '\0'; // null terminate
+      }
+      else{
+        glyph-&gt;data[i][j] = 'X';
+      }
+    }
+  }
+  int len = sprintf((char *)glyph-&gt;data, "%d",codepoint); // add codepoint # to glyph
+  glyph-&gt;data[0][len] = 'X';                              // remove null termination char
+}        
+</pre>
+</div></dd>
+</dl>
 </div>
-<div id="outline-container-org7900717" class="outline-4">
-<h4 id="org7900717"></h4>
-<div class="outline-text-4" id="text-org7900717">
+</div>
+<div id="outline-container-org57b6ccc" class="outline-4">
+<h4 id="org57b6ccc"></h4>
+<div class="outline-text-4" id="text-org57b6ccc">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org5a5cf15">1. Introduction</a>
+<li><a href="#orge366682">1. Introduction</a>
 <ul>
-<li><a href="#orgd8c485f">1.1. Grading Criteria</a></li>
-<li><a href="#orgd635b5a">1.2. Getting Started</a></li>
+<li><a href="#orgbc6fcc3">1.1. Grading Criteria</a></li>
+<li><a href="#orgfc23d97">1.2. Getting Started</a></li>
 </ul>
 </li>
-<li><a href="#orga9c5b03">2. Download Code and Setup</a>
+<li><a href="#orgb9c00e4">2. Download Code and Setup</a>
 <ul>
-<li><a href="#orga20c000">2.1. Makefile</a></li>
-<li><a href="#org0ca41c2">2.2. Automated Tests</a></li>
+<li><a href="#org4672aa6">2.1. Makefile</a></li>
+<li><a href="#orgb9115bc">2.2. Automated Tests</a></li>
 </ul>
 </li>
-<li><a href="#org37d5bd1">3. <b>Problem 1</b>: Banlet Support</a>
+<li><a href="#orgc6b2e6e">3. <b>Problem 1</b>: Banlet Support</a>
 <ul>
-<li><a href="#orge71f542">3.1. Overview</a></li>
-<li><a href="#org700e1c6">3.2. Outline of <code>banlet_funcs.c</code></a></li>
-<li><a href="#orgeff06f7">3.3. Editing and Testing</a></li>
-<li><a href="#orgaa95bdf">3.4. String Utility Functions</a></li>
-<li><a href="#org5566423">3.5. Print Fontified</a></li>
+<li><a href="#org0bc894b">3.1. Overview</a></li>
+<li><a href="#org5316b10">3.2. Outline of <code>banlet_funcs.c</code></a></li>
+<li><a href="#orgfe447c8">3.3. Editing and Testing</a></li>
+<li><a href="#orgd3a10bd">3.4. String Utility Functions</a></li>
+<li><a href="#orgbfd4eb6">3.5. Print Fontified</a></li>
 </ul>
 </li>
-<li><a href="#org783973c">4. <b>Problem 2</b>: Banlet Output and Input</a>
+<li><a href="#orgf194f28">4. <b>Problem 2</b>: Banlet Output and Input</a>
 <ul>
-<li><a href="#orga47323b">4.1. Overview</a></li>
-<li><a href="#orgcc68d88">4.2. Printing Multiple Fontified Lines</a></li>
-<li><a href="#org66b0519">4.3. Loading Fonts</a></li>
-<li><a href="#orgd0baf3c">4.4. Loading Text Files (slurp)</a></li>
+<li><a href="#orgd065f01">4.1. Overview</a></li>
+<li><a href="#org62a959f">4.2. Printing Multiple Fontified Lines</a></li>
+<li><a href="#org4f3f01a">4.3. Loading Fonts</a></li>
+<li><a href="#orgc971ca8">4.4. Loading Text Files (slurp)</a></li>
 </ul>
 </li>
-<li><a href="#orge43a9c0">5. <b>Problem 3</b>: Banlet Main</a>
+<li><a href="#org6359f24">5. <b>Problem 3</b>: Banlet Main</a>
 <ul>
-<li><a href="#org0525516">5.1. Overview</a></li>
-<li><a href="#orgafbc921">5.2. Command Line Arguments in C Programs</a></li>
-<li><a href="#org4e8da4f">5.3. Handling Banlet Command Line Arguments</a></li>
-<li><a href="#org955ccdc">5.4. Testing <code>banlet_main</code> Interactively</a></li>
+<li><a href="#orgcd7a159">5.1. Overview</a></li>
+<li><a href="#orgd6450d8">5.2. Command Line Arguments in C Programs</a></li>
+<li><a href="#org743a2c3">5.3. Handling Banlet Command Line Arguments</a></li>
+<li><a href="#orgf8af42c">5.4. Testing <code>banlet_main</code> Interactively</a></li>
 </ul>
 </li>
-<li><a href="#orgaa7aeaf">6. <b>Grading Criteria</b></a></li>
-<li><a href="#org802a0b5">7. Makeup Credit</a></li>
-<li><a href="#org7454d45">8. Project Submission</a>
+<li><a href="#orgfa57ff5">6. <b>Grading Criteria</b></a></li>
+<li><a href="#org1f6374f">7. Makeup Credit</a></li>
+<li><a href="#org1bec71c">8. Project Submission</a>
 <ul>
-<li><a href="#org9af879d">8.1. Submit to Gradescope</a></li>
-<li><a href="#org1e07c40">8.2. Late Policies</a></li>
+<li><a href="#org7f98e1a">8.1. Submit to Gradescope</a></li>
+<li><a href="#org2810e91">8.2. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -568,8 +603,8 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </div>
 </div>
 </div>
-<div id="outline-container-org5a5cf15" class="outline-2">
-<h2 id="org5a5cf15"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orge366682" class="outline-2">
+<h2 id="orge366682"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Basic application programming in C is an essential step downward
@@ -602,8 +637,8 @@ Problems build on each other and should be done in order to complete
 the project.
 </p>
 </div>
-<div id="outline-container-orgd8c485f" class="outline-3">
-<h3 id="orgd8c485f"><span class="section-number-3">1.1</span> Grading Criteria</h3>
+<div id="outline-container-orgbc6fcc3" class="outline-3">
+<h3 id="orgbc6fcc3"><span class="section-number-3">1.1</span> Grading Criteria</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Credit for this assignment will be given based on two categories.
@@ -622,8 +657,8 @@ to the descriptions given so make sure you verify that these work.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd635b5a" class="outline-3">
-<h3 id="orgd635b5a"><span class="section-number-3">1.2</span> Getting Started</h3>
+<div id="outline-container-orgfc23d97" class="outline-3">
+<h3 id="orgfc23d97"><span class="section-number-3">1.2</span> Getting Started</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 Take the following steps to get started
@@ -632,7 +667,7 @@ Take the following steps to get started
 <li>Download the code associated with the project linked at the top of
 the spec. Unzip it and examine some of the provided code.</li>
 <li>Examine the overview of the files provided listed in the
-<a href="#orgf66a39a">Download and Setup</a> section. This gives brief descriptions of files
+<a href="#org79496d6">Download and Setup</a> section. This gives brief descriptions of files
 that already exist and those that you must create.</li>
 <li>Pick a problem and read. There is a lot of information and many
 examples provided for each problem. Reading this will help you
@@ -649,8 +684,8 @@ be accepted more than 48 hours after the deadline.</b></li>
 </div>
 </div>
 </div>
-<div id="outline-container-orga9c5b03" class="outline-2">
-<h2 id="orga9c5b03"><span class="section-number-2">2</span> <a id="orgf66a39a"></a> Download Code and Setup</h2>
+<div id="outline-container-orgb9c00e4" class="outline-2">
+<h2 id="orgb9c00e4"><span class="section-number-2">2</span> <a id="org79496d6"></a> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -811,8 +846,8 @@ folder. Ultimately you will re-zip this folder to submit it.
 </tbody>
 </table>
 </div>
-<div id="outline-container-orga20c000" class="outline-3">
-<h3 id="orga20c000"><span class="section-number-3">2.1</span> Makefile</h3>
+<div id="outline-container-org4672aa6" class="outline-3">
+<h3 id="org4672aa6"><span class="section-number-3">2.1</span> Makefile</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 A <code>Makefile</code> is provided as part of this project. Building programs in
@@ -867,8 +902,8 @@ but it is a very useful tool well worth your time to learn.
 </p>
 </div>
 </div>
-<div id="outline-container-org0ca41c2" class="outline-3">
-<h3 id="org0ca41c2"><span class="section-number-3">2.2</span> <a id="orgfd495b9"></a> Automated Tests</h3>
+<div id="outline-container-orgb9115bc" class="outline-3">
+<h3 id="orgb9115bc"><span class="section-number-3">2.2</span> <a id="org9fd8923"></a> Automated Tests</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Automated tests are included with the code distribution. <b>These tests
@@ -945,12 +980,12 @@ check program results.
 </div>
 </div>
 </div>
-<div id="outline-container-org37d5bd1" class="outline-2">
-<h2 id="org37d5bd1"><span class="section-number-2">3</span> <b>Problem 1</b>: Banlet Support</h2>
+<div id="outline-container-orgc6b2e6e" class="outline-2">
+<h2 id="orgc6b2e6e"><span class="section-number-2">3</span> <b>Problem 1</b>: Banlet Support</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orge71f542" class="outline-3">
-<h3 id="orge71f542"><span class="section-number-3">3.1</span> Overview</h3>
+<div id="outline-container-org0bc894b" class="outline-3">
+<h3 id="org0bc894b"><span class="section-number-3">3.1</span> Overview</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 The overarching project goal is to recreate a simplified version of
@@ -1003,8 +1038,8 @@ required.
 </p>
 </div>
 </div>
-<div id="outline-container-org700e1c6" class="outline-3">
-<h3 id="org700e1c6"><span class="section-number-3">3.2</span> Outline of <code>banlet_funcs.c</code></h3>
+<div id="outline-container-org5316b10" class="outline-3">
+<h3 id="org5316b10"><span class="section-number-3">3.2</span> Outline of <code>banlet_funcs.c</code></h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 The file <code>banlet_funcs.c</code> will contain most of the support functions
@@ -1206,8 +1241,8 @@ char *slurp_file_one_pass(char *filename);
 </div>
 </div>
 </div>
-<div id="outline-container-orgeff06f7" class="outline-3">
-<h3 id="orgeff06f7"><span class="section-number-3">3.3</span> Editing and Testing</h3>
+<div id="outline-container-orgfe447c8" class="outline-3">
+<h3 id="orgfe447c8"><span class="section-number-3">3.3</span> Editing and Testing</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The project code contains a skeleton version of <code>banlet_funcs.c</code> which
@@ -1331,8 +1366,8 @@ to run a single test and see its results.
 </p>
 </div>
 </div>
-<div id="outline-container-orgaa95bdf" class="outline-3">
-<h3 id="orgaa95bdf"><span class="section-number-3">3.4</span> String Utility Functions</h3>
+<div id="outline-container-orgd3a10bd" class="outline-3">
+<h3 id="orgd3a10bd"><span class="section-number-3">3.4</span> String Utility Functions</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 The first 3 functions to implement in <code>banlet_funcs.c</code> are string
@@ -1372,9 +1407,9 @@ find the end of strings.</li>
 the <code>x == y</code> operator in C, NOT the assignment operator <code>=</code>.</li>
 </ol>
 </div>
-<div id="outline-container-org735c6aa" class="outline-4">
-<h4 id="org735c6aa"><code>find_linebreaks()</code></h4>
-<div class="outline-text-4" id="text-org735c6aa">
+<div id="outline-container-org7095a7b" class="outline-4">
+<h4 id="org7095a7b"><code>find_linebreaks()</code></h4>
+<div class="outline-text-4" id="text-org7095a7b">
 <p>
 Consider the prototype for <code>find_linebreaks()</code> which has some
 interesting features:
@@ -1413,13 +1448,13 @@ the function to set
 </div>
 </div>
 </div>
-<div id="outline-container-org5566423" class="outline-3">
-<h3 id="org5566423"><span class="section-number-3">3.5</span> Print Fontified</h3>
+<div id="outline-container-orgbfd4eb6" class="outline-3">
+<h3 id="orgbfd4eb6"><span class="section-number-3">3.5</span> Print Fontified</h3>
 <div class="outline-text-3" id="text-3-5">
 </div>
-<div id="outline-container-orgbcdb8f4" class="outline-4">
-<h4 id="orgbcdb8f4">Glyphs and Fonts</h4>
-<div class="outline-text-4" id="text-orgbcdb8f4">
+<div id="outline-container-org5f76c45" class="outline-4">
+<h4 id="org5f76c45">Glyphs and Fonts</h4>
+<div class="outline-text-4" id="text-org5f76c45">
 <p>
 The function <code>print_fontified_oneline()</code> is used to print single line
 of text in a "font" as defined by the project. Normally fonts have
@@ -1441,9 +1476,9 @@ following <b>glyph</b> is used in builtin font for Banlet.
 </div>
 </div>
 </div>
-<div id="outline-container-orga21c7d6" class="outline-4">
-<h4 id="orga21c7d6">Basic Algorithm for Fontified Printing</h4>
-<div class="outline-text-4" id="text-orga21c7d6">
+<div id="outline-container-orgc3cbdcc" class="outline-4">
+<h4 id="orgc3cbdcc">Basic Algorithm for Fontified Printing</h4>
+<div class="outline-text-4" id="text-orgc3cbdcc">
 <p>
 This presents some interesting challenges when printing sequences of
 such glyphs as one must typically print across rows of text before
@@ -1512,9 +1547,9 @@ Implementing this basic printing algorithm is the purpose of the
 </p>
 </div>
 </div>
-<div id="outline-container-org0ea2315" class="outline-4">
-<h4 id="org0ea2315">Font and Glyph C Types</h4>
-<div class="outline-text-4" id="text-org0ea2315">
+<div id="outline-container-org4251792" class="outline-4">
+<h4 id="org4251792">Font and Glyph C Types</h4>
+<div class="outline-text-4" id="text-org4251792">
 <p>
 The <code>font_t</code> and <code>glyph_t</code> data types are defined in the <code>banlet.h</code>
 header file and are as follows.
@@ -1592,9 +1627,9 @@ in <code>printf()</code>.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgb713729" class="outline-4">
-<h4 id="orgb713729">Printing Fontified</h4>
-<div class="outline-text-4" id="text-orgb713729">
+<div id="outline-container-orgbc05e23" class="outline-4">
+<h4 id="orgbc05e23">Printing Fontified</h4>
+<div class="outline-text-4" id="text-orgbc05e23">
 <p>
 Combine the data access pattern and the central algorithm of printing
 each row of each glyph to complete <code>print_fontified_oneline()</code>.  Keep
@@ -1614,12 +1649,12 @@ character at index <code>length</code>.
 </div>
 </div>
 </div>
-<div id="outline-container-org783973c" class="outline-2">
-<h2 id="org783973c"><span class="section-number-2">4</span> <b>Problem 2</b>: Banlet Output and Input</h2>
+<div id="outline-container-orgf194f28" class="outline-2">
+<h2 id="orgf194f28"><span class="section-number-2">4</span> <b>Problem 2</b>: Banlet Output and Input</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orga47323b" class="outline-3">
-<h3 id="orga47323b"><span class="section-number-3">4.1</span> Overview</h3>
+<div id="outline-container-orgd065f01" class="outline-3">
+<h3 id="orgd065f01"><span class="section-number-3">4.1</span> Overview</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 This problem will combine several of the support functions from
@@ -1630,8 +1665,8 @@ program to produce commandline banner letters.
 </p>
 </div>
 </div>
-<div id="outline-container-orgcc68d88" class="outline-3">
-<h3 id="orgcc68d88"><span class="section-number-3">4.2</span> Printing Multiple Fontified Lines</h3>
+<div id="outline-container-org62a959f" class="outline-3">
+<h3 id="org62a959f"><span class="section-number-3">4.2</span> Printing Multiple Fontified Lines</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 The previous <code>print_fontified_oneline()</code> function did not handle
@@ -1716,8 +1751,8 @@ _.        ._             ,_,   ._.
 </div>
 </div>
 </div>
-<div id="outline-container-org66b0519" class="outline-3">
-<h3 id="org66b0519"><span class="section-number-3">4.3</span> Loading Fonts</h3>
+<div id="outline-container-org4f3f01a" class="outline-3">
+<h3 id="org4f3f01a"><span class="section-number-3">4.3</span> Loading Fonts</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 The real flexibility of any font system is being able to select
@@ -1746,9 +1781,9 @@ on the <code>font_load()</code> function which enables new fonts to be created i
 text files and loaded on the fly of use in Banlet.
 </p>
 </div>
-<div id="outline-container-org0a47ca3" class="outline-4">
-<h4 id="org0a47ca3">Font Files</h4>
-<div class="outline-text-4" id="text-org0a47ca3">
+<div id="outline-container-org7635441" class="outline-4">
+<h4 id="org7635441">Font Files</h4>
+<div class="outline-text-4" id="text-org7635441">
 <p>
 A number of demonstration font files are in the <code>data/</code> directory for
 the project.  This includes the <code>font_standard.txt</code> file which is a
@@ -1873,9 +1908,9 @@ have a good sense of the structure of those files.
 </p>
 </div>
 </div>
-<div id="outline-container-orgf033090" class="outline-4">
-<h4 id="orgf033090">Allocating and Initializing Fonts/Glyph Arrays</h4>
-<div class="outline-text-4" id="text-orgf033090">
+<div id="outline-container-org8368bf3" class="outline-4">
+<h4 id="org8368bf3">Allocating and Initializing Fonts/Glyph Arrays</h4>
+<div class="outline-text-4" id="text-org8368bf3">
 <p>
 You'll need to allocate a <code>font_t</code> using <code>malloc()</code> which will
 eventually be returned from <code>font_load()</code>.
@@ -1910,9 +1945,9 @@ XXXXXX
 </div>
 </div>
 </div>
-<div id="outline-container-org1dcf4c5" class="outline-4">
-<h4 id="org1dcf4c5">Reading Font Files</h4>
-<div class="outline-text-4" id="text-org1dcf4c5">
+<div id="outline-container-org3f635cb" class="outline-4">
+<h4 id="org3f635cb">Reading Font Files</h4>
+<div class="outline-text-4" id="text-org3f635cb">
 <p>
 Make use of standard C I/O functions such as <code>fopen()</code> to open the
 glyph files and <code>fscanf()</code> to read from them. Note the following
@@ -1958,8 +1993,8 @@ neglects to close files.</li>
 </div>
 </div>
 </div>
-<div id="outline-container-orgd0baf3c" class="outline-3">
-<h3 id="orgd0baf3c"><span class="section-number-3">4.4</span> Loading Text Files (slurp)</h3>
+<div id="outline-container-orgc971ca8" class="outline-3">
+<h3 id="orgc971ca8"><span class="section-number-3">4.4</span> Loading Text Files (slurp)</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 It will be convenient later for Banlet to be able to load text from a
@@ -2021,18 +2056,18 @@ enough space for this extra character and manually place it.
 
 <p>
 <b>AFTER</b> you complete the two-pass version and the remainder of the
-project, consider implementing the <a href="#orgd248b85">MAKEUP CREDIT</a> version which is a
+project, consider implementing the <a href="#org7252ccc">MAKEUP CREDIT</a> version which is a
 more complex algorithm for input.
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-orge43a9c0" class="outline-2">
-<h2 id="orge43a9c0"><span class="section-number-2">5</span> <b>Problem 3</b>: Banlet Main</h2>
+<div id="outline-container-org6359f24" class="outline-2">
+<h2 id="org6359f24"><span class="section-number-2">5</span> <b>Problem 3</b>: Banlet Main</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org0525516" class="outline-3">
-<h3 id="org0525516"><span class="section-number-3">5.1</span> Overview</h3>
+<div id="outline-container-orgcd7a159" class="outline-3">
+<h3 id="orgcd7a159"><span class="section-number-3">5.1</span> Overview</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 As with all C programs, Banlet needs a <code>main()</code> function. This entry
@@ -2048,8 +2083,8 @@ function call). Details of what to fill in are describe below
 </p>
 </div>
 </div>
-<div id="outline-container-orgafbc921" class="outline-3">
-<h3 id="orgafbc921"><span class="section-number-3">5.2</span> Command Line Arguments in C Programs</h3>
+<div id="outline-container-orgd6450d8" class="outline-3">
+<h3 id="orgd6450d8"><span class="section-number-3">5.2</span> Command Line Arguments in C Programs</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 To determine what text to print, what font to use, and any text data
@@ -2072,8 +2107,8 @@ line arguments in Banlet.
 </p>
 </div>
 </div>
-<div id="outline-container-org4e8da4f" class="outline-3">
-<h3 id="org4e8da4f"><span class="section-number-3">5.3</span> Handling Banlet Command Line Arguments</h3>
+<div id="outline-container-org743a2c3" class="outline-3">
+<h3 id="org743a2c3"><span class="section-number-3">5.3</span> Handling Banlet Command Line Arguments</h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 Banlet will allow arbitrary variation in the order of its command line
@@ -2181,8 +2216,8 @@ line arguments to pass all test cases and complete the program.
 </p>
 </div>
 </div>
-<div id="outline-container-org955ccdc" class="outline-3">
-<h3 id="org955ccdc"><span class="section-number-3">5.4</span> Testing <code>banlet_main</code> Interactively</h3>
+<div id="outline-container-orgf8af42c" class="outline-3">
+<h3 id="orgf8af42c"><span class="section-number-3">5.4</span> Testing <code>banlet_main</code> Interactively</h3>
 <div class="outline-text-3" id="text-5-4">
 <p>
 Once you have completed the <code>main()</code> function can test Banlet
@@ -2250,9 +2285,9 @@ __  |_ _| _ _  _ ._  | \o o|  __|_._ _.
 </pre>
 </div>
 </div>
-<div id="outline-container-orgbdca733" class="outline-4">
-<h4 id="orgbdca733">Optional Enrichment for the Creatively Inclined</h4>
-<div class="outline-text-4" id="text-orgbdca733">
+<div id="outline-container-orge209f6e" class="outline-4">
+<h4 id="orge209f6e">Optional Enrichment for the Creatively Inclined</h4>
+<div class="outline-text-4" id="text-orge209f6e">
 <p>
 Font design is an interesting art form and the Banlet framework gives
 you a little bit of space in which to play. If you are so inclined,
@@ -2270,8 +2305,8 @@ of an artist gets from their work.
 </div>
 </div>
 </div>
-<div id="outline-container-orgaa7aeaf" class="outline-2">
-<h2 id="orgaa7aeaf"><span class="section-number-2">6</span> <b>Grading Criteria</b></h2>
+<div id="outline-container-orgfa57ff5" class="outline-2">
+<h2 id="orgfa57ff5"><span class="section-number-2">6</span> <b>Grading Criteria</b></h2>
 <div class="outline-text-2" id="text-6">
 <p>
 The following criteria will be checked. Some are Automated and
@@ -2443,8 +2478,8 @@ are done Manually by graders after submission.
 </table>
 </div>
 </div>
-<div id="outline-container-org802a0b5" class="outline-2">
-<h2 id="org802a0b5"><span class="section-number-2">7</span> <a id="orgd248b85"></a> Makeup Credit</h2>
+<div id="outline-container-org1f6374f" class="outline-2">
+<h2 id="org1f6374f"><span class="section-number-2">7</span> <a id="org7252ccc"></a> Makeup Credit</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 <b>MAKEUP CREDIT</b> are additional points that allow students to exceed
@@ -2495,12 +2530,12 @@ the code outline and is copied below for reference.</li>
 </div>
 </div>
 </div>
-<div id="outline-container-org7454d45" class="outline-2">
-<h2 id="org7454d45"><span class="section-number-2">8</span> Project Submission</h2>
+<div id="outline-container-org1bec71c" class="outline-2">
+<h2 id="org1bec71c"><span class="section-number-2">8</span> Project Submission</h2>
 <div class="outline-text-2" id="text-8">
 </div>
-<div id="outline-container-org9af879d" class="outline-3">
-<h3 id="org9af879d"><span class="section-number-3">8.1</span> <a id="orgdbddf71"></a> Submit to Gradescope</h3>
+<div id="outline-container-org7f98e1a" class="outline-3">
+<h3 id="org7f98e1a"><span class="section-number-3">8.1</span> <a id="orgf92709e"></a> Submit to Gradescope</h3>
 <div class="outline-text-3" id="text-8-1">
 <p>
 Submission is identical to lab work. There are two options to submit
@@ -2532,8 +2567,8 @@ submitting.
 </p>
 </div>
 </div>
-<div id="outline-container-org1e07c40" class="outline-3">
-<h3 id="org1e07c40"><span class="section-number-3">8.2</span> Late Policies</h3>
+<div id="outline-container-org2810e91" class="outline-3">
+<h3 id="org2810e91"><span class="section-number-3">8.2</span> Late Policies</h3>
 <div class="outline-text-3" id="text-8-2">
 <p>
 You may wish to review the policy on late project submission which
@@ -2549,7 +2584,7 @@ accepted more than 48 hours after the deadline.</b>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-02-06 Fri 17:09 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-02-08 Sun 13:45 <br/> </i>
 </div>
 </body>
 </html>
