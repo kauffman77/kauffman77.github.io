@@ -1,0 +1,987 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2026-02-20 Fri 13:52 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMSC216 Lab04: Debugger Usage and Masking</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
+details > summary {
+padding: 2px 6px;
+font-family: Sans;
+font-size: 0.8em;
+width: fit-content;
+border-radius: 5px;
+background-color: #efefef;
+border: 1px solid black;
+cursor: pointer;
+}
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","[COMMANDO]>>","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+literal: ["[data/script.txt]>>","[data/script1.txt]>>","[data/script6.txt]>>"],
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+// hljs.COMMENT(/## /, /$/),     // hash-hash-ws for comment
+hljs.COMMENT(/##+/, /$/),     // or a sequence of hashes
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2026-02-20 Fri 13:52</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CMSC216 Lab04: Debugger Usage and Masking</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Sun 01-Mar-2026</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><i>Approximately 1.00% of total grade</i></li>
+</ul>
+<div id="outline-container-org687b1f3" class="outline-4">
+<h4 id="org687b1f3">CODE DISTRIBUTION: <a href="lab04-code.zip">lab04-code.zip</a></h4>
+</div>
+
+<div id="outline-container-org1d133f3" class="outline-4">
+<h4 id="org1d133f3">CHANGELOG: None</h4>
+</div>
+
+<div id="outline-container-org2776935" class="outline-4">
+<h4 id="org2776935"></h4>
+<div class="outline-text-4" id="text-org2776935">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org3c23530">1. Rationale</a></li>
+<li><a href="#org73e2006">2. Codepack</a></li>
+<li><a href="#org57aacd7">3. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org6f04506">4. Submission</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org3c23530" class="outline-2">
+<h2 id="org3c23530"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+As C programs become more complex, it is useful to have tools that
+support debugging their problems. GDB is a traditional terminal-based
+debugger that handles C programs well. This labs contains an exercise
+introducing GDB and to inspect a program with behavior that is not
+easily understood from its source code alone.
+</p>
+
+<p>
+Certain applications utilize bits at an individual level. This is
+enabled by support for bit-level operations in most processors which
+are presented in C programs as bit-wise logical and shift
+operations. This lab explores the basic mechanics of these operations
+in preparation for project work which will provide a concrete
+application for them. It also includes a callback to GDB usage to
+remind students of the insight the debugger can have.
+</p>
+</div>
+<div id="outline-container-org96c604a" class="outline-4">
+<h4 id="org96c604a">Associated Reading</h4>
+<div class="outline-text-4" id="text-org96c604a">
+<ul class="org-ul">
+<li>Practical use of GDB is covered in <a href="https://kauffman77.github.io/tutorials/gdb.html">The Quick Guide to GDB</a> with the
+complete account of its capabilities covered in <a href="https://sourceware.org/gdb/current/onlinedocs/gdb/">Debugging with GDB</a>,
+its official manual.</li>
+
+<li>Bryant and O'Hallaron Sections 2.1.6 to 2.1.9 discuss bit-level
+operations in C. Numerous examples are provided that complement
+material presented here.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org004d288" class="outline-4">
+<h4 id="org004d288">Grading Policy</h4>
+<div class="outline-text-4" id="text-org004d288">
+<p>
+Credit for this lab is earned by completing the code/answers in the
+Lab codepack and submitting a Zip of the work to Gradescope preferably
+via running <code>make submit</code>. Students are responsible to check that the
+results produced locally are reflected on Gradescope after submitting
+their completed Zip.
+</p>
+
+<p>
+Lab Exercises are Free Collaboration and <b>students are encouraged to
+cooperate on labs.</b> Students may submit work as groups of up to 5 to
+Gradescope: one person submits then adds the names of their group
+members to the submission.
+</p>
+
+<p>
+No late submissions are accepted for Lab work but the lowest two lab
+scores for the semester will be dropped including zeros due to missing
+submissions. See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies in the course syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org73e2006" class="outline-2">
+<h2 id="org73e2006"><span class="section-number-2">2</span> Codepack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The codepack for this lab is linked at the top of this
+document. Always download it and unzip/unpack it.  It should contain
+the following files which are briefly described.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">Use</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Questions to answer: fill in the multiple choice selections in this file.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>debugger_secrets.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 program to analyze under GDB</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>debugger_input.txt</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 1 input file to edit as input to <code>debugger_secrets.c</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>masking.c</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 2 C file to edit and complete; TODO sections are marked in the code</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>masking_input.txt</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 2 Input file for <code>masking.c</code> which should be edited to contain correct inputs.</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Build</td>
+<td class="org-left">Enables <code>make test</code> and <code>make zip</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>QUESTIONS.txt.bk</code></td>
+<td class="org-left">Backup</td>
+<td class="org-left">Backup copy of the original file to help revert if needed</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>QUESTIONS.md5</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Checksum for answers in questions file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_quiz_filter</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Filter to extract answers from Questions file, used in testing</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_lab04.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for this lab</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_lab04_code.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for the code portion of the lab to allow individual problem testing</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running scripts</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>gradescope-submit</code></td>
+<td class="org-left">Misc</td>
+<td class="org-left">Allows submission to Gradescope from the command line</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org57aacd7" class="outline-2">
+<h2 id="org57aacd7"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
+Follow the instructions in it to complete the QUIZ and CODE questions
+for the lab.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                           _________________
+
+                            LAB03 QUESTIONS
+                           _________________
+
+
+Exercise Instructions
+=====================
+
+  Follow the instructions below to experiment with topics related to
+  this exercise.
+  - For sections marked QUIZ, fill in an (X) for the appropriate
+    response in this file. Use the command `make test-quiz' to see if
+    all of your answers are correct.
+  - For sections marked CODE, complete the code indicated. Use the
+    command `make test-code' to check if your code is complete.
+  - DO NOT CHANGE any parts of this file except the QUIZ sections as it
+    may interfere with the tests otherwise.
+  - If your `QUESTIONS.txt' file seems corrupted, restore it by copying
+    over the `QUESTIONS.txt.bk' backup file.
+  - When you complete the exercises, check your answers with `make test'
+    and if all is well. Create a zip file and submit it to Gradescope
+    with `make submit'. Ensure that the Autograder there reflects your
+    local results.
+  - IF YOU WORK IN A GROUP only one member needs to submit and then add
+    the names of their group on Gradescope.
+
+
+PROBLEM 1: GDB and Debugger Secrets
+===================================
+
+  Staff will survey the `debugger_secrets.c' file which reads input from
+  a text file specified on the command line.  A sample input file is in
+  `debugger_input.txt' and students will nee to put start by putting
+  their terpmail email address on the first line. The file will need to
+  have additional inputs BUT determining exactly what they are is quite
+  challenging even though the source code for the program is available.
+
+  Instead, staff will illustrate how to start the program in a debugging
+  session using GDB, the GNU Debugger. A large amount of detail about
+  how to do so is available on GDB Quick guide which is produced by
+  staff:
+
+  &lt;https://kauffman77.github.io/tutorials/gdb.html&gt;
+
+  A typical session will start with
+  ,----
+  | &gt;&gt; gdb -tui debugger_secrets
+  | 
+  | (gdb) set args debugger_input.txt
+  | (gdb) break main
+  | (gdb) run
+  | ...
+  | (gdb) next
+  | (gdb) print something
+  | ...
+  | (gdb) quit
+  | &gt;&gt; 
+  `----
+
+
+QUIZ Questions
+~~~~~~~~~~~~~~
+
+  To set a breakpoint to stop execution at a specific spot in code one
+  can use the GDB command
+  - ( ) `break 15' which will stop at line 15 in the current file
+  - ( ) `break file.c:15' which will stop at line 15 of `file.c' when it
+    is reached
+  - ( ) `break func_name' which will stop when the function `func_name'
+    is reached
+  - ( ) `break' which will stop when the current line is reached again
+  - ( ) Actually all of these are valid: it's nice to have options!
+
+  The following command will continue executing code until the next
+  break point is reached.
+  - ( ) `run' or `r'
+  - ( ) `continue' or `c'
+  - ( ) `break' or `b'
+  - ( ) `execute' or `e'
+
+  The following lines in the `debugger_secretes.c' do something peculiar
+  and should be analyzed and discussed.
+  ,----
+  | char userid[10] = ...;
+  | ...;
+  | int magic1 = *((int *) userid);
+  `----
+  Which of the following best describes how the value for `magic1' is
+  set?
+  - ( ) The number stored in `userid' is converted from a string to an
+    integer and stored in `magic1'
+  - ( ) The memory address of userid is used as an integer to set
+    `magic1'
+  - ( ) userid is cast as an integer pointer and the 4 bytes at its
+    beginning of it are treated as an int and used to set `magic1'
+  - ( ) This line has unpredictable behavior and changes from one run to
+    the next making it very difficult to get the input correct.
+
+  Which of the following lines that appears later in
+  `debugger_secretes.c' is most related to how `magic1' is set?
+  - ( ) `int hash = magic1 ^ magic2;' because it also uses the same
+    variable
+  - ( ) `int mod1 = pb_rand() % quote_len;' because it involves an
+    unpredictable result that changes from run to run
+  - ( ) `quote_actual[mod1] = '_';' because it involves a character
+    array
+  - ( ) `int *quote_as_int = (int *) quote_actual; quote_as_int[mod3] =
+      1600085855;' because this combination similarly subverts the
+      normal type system treating character data as integers.
+
+
+CODE
+~~~~
+
+  By analyzing the code in `debugger_secrets' and using GDB, determine
+  the correct input needed in `debugger_input.txt' to run the program to
+  completion.
+
+  NOTE: students should use their own @terpmail.umd.edu addresses at the
+  beginning of the input which will lead to slightly different answers
+  being required than other students. Email addresses will be checked on
+  the Gradescope autograder.
+
+  Test that the code behaves correctly via the command
+  ,----
+  | make test-code testnum=1
+  `----
+
+
+PROBLEM 2: Background on masking.c
+==================================
+
+  Study the code in `masking.c' which uses a number of bit-wise
+  operations that have recently been discussed in lecture. These
+  include:
+  ,----
+  | | Operation | Description          |
+  | |-----------+----------------------|
+  | | x &amp; y     | Bit-wise And         |
+  | | x | y     | Bit-wise Or          |
+  | | x ^ y     | Bit-wise Xor         |
+  | | ~x        | Bit-wise inversion   |
+  | | x &lt;&lt; y    | Bit-wise Left-shift  |
+  | | x &gt;&gt; y    | Bit-wise Right-shift |
+  `----
+  Study the examples provided in `masking.c' and ensure you understand
+  their meaning according to the context provided. Then answer the
+  following questions.
+
+
+Terminology
+~~~~~~~~~~~
+
+  - "Low order bits" or simply "the low bits" are written on the right
+    side of binary numbers while "high order bits" appear on the
+    left. The low/high distinction relates to the power of two
+    associated with bits in that position.
+  - "Bit indexes" start with 0 for the low order bit (right-most) and
+    number up when moving to the left.  For example the number
+    `0b10110001' has bits at the following indices:
+    ,----
+    | Value: 1011 0001
+    | Index: 7654 3210  
+    `----
+
+    Bit index 0 is a "1" (the lowest order bit) and bit index 7 is also
+    a 1 (the highest order bit).
+  - "Setting" a given bit means to place a 1 in that position; "Set bit
+    7" means to ensure that the 7th bit from the right is a 1
+  - "Clearing" a give bit means to place a 0 at that position; "Clear
+    bit 7" means to ensure that the 7th bit from the left is a 0
+
+
+PROBLEM 2: QUIZ on masking.c
+============================
+
+Shift with Or
+~~~~~~~~~~~~~
+
+  What is the effect of the following line of code:
+  ,----
+  | x = x | (1 &lt;&lt; 19);
+  `----
+
+  - ( ) Changes `x' so that only its 19th bit is a 1, all other bits are
+    0.
+  - ( ) Changes `x' so that only its 19th bit is a 0, all other bits are
+    unchanged.
+  - ( ) Changes `x' so that its 19th bit is set to 1, all other bits
+    unchanged.
+  - ( ) Changes `x' so that its bits are shifted left by 19 places.
+
+
+Shift with Or with Pattern
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  If `x' is cleared (value all 0's), what is the effect of the following
+  line of code:
+  ,----
+  | x = x | (0b110101 &lt;&lt; 8);
+  `----
+
+  - ( ) Sets the bits of `x' to the given pattern `0b110101' starting
+    with the 8th position.
+  - ( ) Checks that `x' has the given pattern `0b110101' starting with
+    the 8th position.
+  - ( ) Copies the given pattern `0b110101' 8 times throughout `x'
+  - ( ) Adds 53 on the value of `x' faster than normal addition.
+
+
+Shift with Invert with And
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  What is the effect of the following line of code:
+  ,----
+  | x = x &amp; ~(1 &lt;&lt; 8);
+  `----
+
+  - ( ) Changes `x' so that only its 8th bit is a 1, all other bits are
+    0.
+  - ( ) Changes `x' so that only its 8th bit is a 0, all other bits are
+    unchanged.
+  - ( ) Changes `x' so that its 8th bit is set to 1, all other bits
+    unchanged.
+  - ( ) Changes `x' so that its bits are shifted left by 8 places.
+
+
+Shift with And
+~~~~~~~~~~~~~~
+
+  What is the effect of the following line of code:
+  ,----
+  | if( x &amp; (1 &lt;&lt; 13) ){ ... }
+  `----
+
+  - ( ) Conditionally execute only if the 13th bit of `x' is 0 and set
+    that bit subsequently.
+  - ( ) Conditionally execute only if the 13th bit of `x' is 0 but leave
+    `x' unchanged.
+  - ( ) Conditionally execute only if the 13th bit of `x' is 1 and set
+    that bit subsequently.
+  - ( ) Conditionally execute only if the 13th bit of `x' is 1 but leave
+    `x' unchanged.
+
+
+PROBLEM 2: CODE Complete masking.c
+==================================
+
+  Complete the TODO items in the `masking.c' file so that the missing
+  blocks produce the effect mentioned in the `printf()' statements.
+
+  The `masking.c' program ends with an interesting arrangement of bits
+  that must be matched by writing some numbers in an `masking_input.txt'
+  file.  Use GDB to help determine what numbers are appropriate and how
+  they should be placed so that the "shot" is formed correctly to match
+  the "target" leading to a program exit code of 0.
+
+  Test that the code behaves correctly via the command
+  ,----
+  | make test-code testnum=2
+  `----
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org6f04506" class="outline-2">
+<h2 id="org6f04506"><span class="section-number-2">4</span> Submission</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
+how to upload your completed lab zip to Gradescope.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-02-20 Fri 13:52 <br/> </i>
+</div>
+</body>
+</html>
