@@ -1,6 +1,6 @@
 #!/bin/bash
-AN = a2
-CLASS = 416
+AN=a2
+CLASS=416
 
 # echo 'No updates at this time'
 echo 'Creating a backup zip in ../${AN}-complete-backup.zip'
