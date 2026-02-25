@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-02-24 Tue 17:51 -->
+<!-- 2026-02-25 Wed 11:33 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC416 Assignment 2: Distributed Memory Programming with MPI</title>
@@ -492,7 +492,7 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2026-02-24 Tue 17:51</i>
+<i>Last Updated: 2026-02-25 Wed 11:33</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC416 Assignment 2: Distributed Memory Programming with MPI</h1>
@@ -504,13 +504,33 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 <li>Free Collaboration is allowed on assignments. See the Syllabus for
 details.</li>
 </ul>
-<div id="outline-container-orgd988598" class="outline-4">
-<h4 id="orgd988598">CODE DISTRIBUTION: <a href="a2-code.zip">a2-code.zip</a></h4>
+<div id="outline-container-org7f18a55" class="outline-4">
+<h4 id="org7f18a55">CODE DISTRIBUTION: <a href="a2-code.zip">a2-code.zip</a></h4>
 </div>
-<div id="outline-container-org093b570" class="outline-4">
-<h4 id="org093b570">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org093b570">
+<div id="outline-container-org8606554" class="outline-4">
+<h4 id="org8606554">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org8606554">
 <dl class="org-dl">
+<dt>Wed Feb 25 11:18:48 AM EST 2026</dt><dd><p>
+<a href="https://piazza.com/class/mko86kpwbhp47r/post/73">Post 73</a> reported a typo in the
+assignment description mention the <code>mpiopts.sh</code> script; this is not
+needed on Zaratan and has been removed from the assignment and
+description. 
+</p>
+
+<p>
+That post also mentioned a problem running tests that is tied to the
+<code>test_post_filter.awk</code> script not having execute permissions,
+something that happens when unzipping/transferring files between
+systems. This can be corrected with by running either of
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">  &gt;&gt; chmod u+x test_post_filter.awk    # manually correc the permission problem
+  ## OR
+  &gt;&gt; make update                       # update project files, adds above command to Makefile
+</pre>
+</div></dd>
+
 <dt>Tue Feb 24 05:49:34 PM EST 2026</dt><dd>A link to the in-class K-means
 lecture has been corrected. The link previously led to a course I
 offered a long time ago at a university far, far away. We will have
@@ -524,53 +544,53 @@ already started the assignment. <a href="A2-WRITEUP.txt">A2-WRITEUP.txt</a></dd>
 </dl>
 </div>
 </div>
-<div id="outline-container-org10bf525" class="outline-4">
-<h4 id="org10bf525"></h4>
-<div class="outline-text-4" id="text-org10bf525">
+<div id="outline-container-orgf177091" class="outline-4">
+<h4 id="orgf177091"></h4>
+<div class="outline-text-4" id="text-orgf177091">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orge8c0b55">1. Overview</a></li>
-<li><a href="#org971c464">2. Download Code and Setup</a></li>
-<li><a href="#orgb547942">3. <code>A2-WRITEUP.txt</code> Writeup File</a></li>
-<li><a href="#orga7d3e9e">4. <code>mpi_hello.c</code>: A Sample MPI Program</a></li>
-<li><a href="#orge1759ba">5. MPI Jobs on Zaratan</a>
+<li><a href="#org5316732">1. Overview</a></li>
+<li><a href="#org0abca8a">2. Download Code and Setup</a></li>
+<li><a href="#org39d57ad">3. <code>A2-WRITEUP.txt</code> Writeup File</a></li>
+<li><a href="#org98766dc">4. <code>mpi_hello.c</code>: A Sample MPI Program</a></li>
+<li><a href="#orgafc0be2">5. MPI Jobs on Zaratan</a>
 <ul>
-<li><a href="#orga278e84">5.1. Software Modules on Zaratan</a></li>
-<li><a href="#org7935b00">5.2. Batch Jobs on Zaratan</a></li>
+<li><a href="#org8afb7b1">5.1. Software Modules on Zaratan</a></li>
+<li><a href="#orgdb47076">5.2. Batch Jobs on Zaratan</a></li>
 </ul>
 </li>
-<li><a href="#orgc9eb957">6. Testing MPI Codes</a>
+<li><a href="#orgaaac4e4">6. Testing MPI Codes</a>
 <ul>
-<li><a href="#org5352eed">6.1. On Zaratan Machines</a></li>
-<li><a href="#orgdd7a6df">6.2. On Home Machines</a></li>
+<li><a href="#orgd4bbbb8">6.1. On Zaratan Machines</a></li>
+<li><a href="#org0e5f4d8">6.2. On Home Machines</a></li>
 </ul>
 </li>
-<li><a href="#org385ed4d">7. <b>Problem 1</b>: MPI Heat</a>
+<li><a href="#org20750a0">7. <b>Problem 1</b>: MPI Heat</a>
 <ul>
-<li><a href="#orgefa24c8">7.1. The Heat Problem</a></li>
-<li><a href="#org889b119">7.2. MPI Heat</a></li>
-<li><a href="#orgebb050c">7.3. Features of <code>heat_mpi</code></a></li>
-<li><a href="#orgda0792b">7.4. Written Summary of the <code>heat_mpi</code> Results</a></li>
-<li><a href="#org5bffcb3">7.5. Automated Tests for <code>heat_mpi</code></a></li>
-<li><a href="#org527df9a">7.6. Grading Criteria for Problem 1</a></li>
+<li><a href="#org25f14d6">7.1. The Heat Problem</a></li>
+<li><a href="#orgc1a7241">7.2. MPI Heat</a></li>
+<li><a href="#org1be8fae">7.3. Features of <code>heat_mpi</code></a></li>
+<li><a href="#orgbe80033">7.4. Written Summary of the <code>heat_mpi</code> Results</a></li>
+<li><a href="#org4039a5e">7.5. Automated Tests for <code>heat_mpi</code></a></li>
+<li><a href="#org5302d5c">7.6. Grading Criteria for Problem 1</a></li>
 </ul>
 </li>
-<li><a href="#org6f127d4">8. <b>Problem 2</b>: Serial K-Means Clustering</a></li>
-<li><a href="#org6501207">9. <b>Problem 3</b>: MPI K-Means Clustering</a>
+<li><a href="#org68479ec">8. <b>Problem 2</b>: Serial K-Means Clustering</a></li>
+<li><a href="#orgc3f573b">9. <b>Problem 3</b>: MPI K-Means Clustering</a>
 <ul>
-<li><a href="#org0b0c0e0">9.1. Implementation Requirements</a></li>
-<li><a href="#orge384907">9.2. Grading Criteria for Problem 3</a></li>
+<li><a href="#org5f27932">9.1. Implementation Requirements</a></li>
+<li><a href="#org7586894">9.2. Grading Criteria for Problem 3</a></li>
 </ul>
 </li>
-<li><a href="#orge3ddb7d">10. <b>Work Disclosure</b> in A2 Writeup</a></li>
-<li><a href="#org51c3436">11. Project Submission on Gradescope</a>
+<li><a href="#org9c3af60">10. <b>Work Disclosure</b> in A2 Writeup</a></li>
+<li><a href="#org8fb3326">11. Project Submission on Gradescope</a>
 <ul>
-<li><a href="#org56a74dd">11.1. Submitting via the Command Line (RECOMMENDED)</a></li>
-<li><a href="#org0c59998">11.2. Creating a Zip and Submitting Manually</a></li>
-<li><a href="#org579cec6">11.3. Adding Group Members</a></li>
-<li><a href="#orgc9d1476">11.4. Late Policies</a></li>
+<li><a href="#orgbc5679e">11.1. Submitting via the Command Line (RECOMMENDED)</a></li>
+<li><a href="#orgcc35469">11.2. Creating a Zip and Submitting Manually</a></li>
+<li><a href="#orgb290272">11.3. Adding Group Members</a></li>
+<li><a href="#orgc1e70c5">11.4. Late Policies</a></li>
 </ul>
 </li>
 </ul>
@@ -578,8 +598,8 @@ already started the assignment. <a href="A2-WRITEUP.txt">A2-WRITEUP.txt</a></dd>
 </div>
 </div>
 </div>
-<div id="outline-container-orge8c0b55" class="outline-2">
-<h2 id="orge8c0b55"><span class="section-number-2">1</span> Overview</h2>
+<div id="outline-container-org5316732" class="outline-2">
+<h2 id="org5316732"><span class="section-number-2">1</span> Overview</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 The assignment involves programming in MPI and describing the results
@@ -607,8 +627,8 @@ short text file.
 </p>
 </div>
 </div>
-<div id="outline-container-org971c464" class="outline-2">
-<h2 id="org971c464"><span class="section-number-2">2</span> Download Code and Setup</h2>
+<div id="outline-container-org0abca8a" class="outline-2">
+<h2 id="org0abca8a"><span class="section-number-2">2</span> Download Code and Setup</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Download the code pack linked at the top of the page. Unzip this which
@@ -779,8 +799,8 @@ folder. Ultimately you will re-zip this folder to submit it.
 </table>
 </div>
 </div>
-<div id="outline-container-orgb547942" class="outline-2">
-<h2 id="orgb547942"><span class="section-number-2">3</span> <code>A2-WRITEUP.txt</code> Writeup File</h2>
+<div id="outline-container-org39d57ad" class="outline-2">
+<h2 id="org39d57ad"><span class="section-number-2">3</span> <code>A2-WRITEUP.txt</code> Writeup File</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Below is a blank copy of the writeup document included in the code
@@ -927,8 +947,8 @@ Work Disclosure
 </div>
 </div>
 </div>
-<div id="outline-container-orga7d3e9e" class="outline-2">
-<h2 id="orga7d3e9e"><span class="section-number-2">4</span> <code>mpi_hello.c</code>: A Sample MPI Program</h2>
+<div id="outline-container-org98766dc" class="outline-2">
+<h2 id="org98766dc"><span class="section-number-2">4</span> <code>mpi_hello.c</code>: A Sample MPI Program</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 A simple sample program called <code>mpi_hello.c</code> is provided as part of
@@ -1003,8 +1023,8 @@ techniques.
 </p>
 </div>
 </div>
-<div id="outline-container-orge1759ba" class="outline-2">
-<h2 id="orge1759ba"><span class="section-number-2">5</span> MPI Jobs on Zaratan</h2>
+<div id="outline-container-orgafc0be2" class="outline-2">
+<h2 id="orgafc0be2"><span class="section-number-2">5</span> MPI Jobs on Zaratan</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 UMD's Zaratan cluster has facilities to run parallel programs which we
@@ -1030,8 +1050,8 @@ Use the <a href="https://www.cs.umd.edu/~profk/416/setup-guide.html">CMSC416 Set
 Zaratan. 
 </p>
 </div>
-<div id="outline-container-orga278e84" class="outline-3">
-<h3 id="orga278e84"><span class="section-number-3">5.1</span> Software Modules on Zaratan</h3>
+<div id="outline-container-org8afb7b1" class="outline-3">
+<h3 id="org8afb7b1"><span class="section-number-3">5.1</span> Software Modules on Zaratan</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 Zaratan uses a <b>software modules system</b> to specify use of different
@@ -1060,8 +1080,8 @@ profk@login-1 [~]% which mpirun
 </div>
 </div>
 </div>
-<div id="outline-container-org7935b00" class="outline-3">
-<h3 id="org7935b00"><span class="section-number-3">5.2</span> Batch Jobs on Zaratan</h3>
+<div id="outline-container-orgdb47076" class="outline-3">
+<h3 id="orgdb47076"><span class="section-number-3">5.2</span> Batch Jobs on Zaratan</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 Use the <code>sbatch job.sh</code> command to submit a job to the SLURM job
@@ -1143,12 +1163,12 @@ heat-slurm.sh.job-156504577.out
 </div>
 </div>
 </div>
-<div id="outline-container-orgc9eb957" class="outline-2">
-<h2 id="orgc9eb957"><span class="section-number-2">6</span> Testing MPI Codes</h2>
+<div id="outline-container-orgaaac4e4" class="outline-2">
+<h2 id="orgaaac4e4"><span class="section-number-2">6</span> Testing MPI Codes</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-org5352eed" class="outline-3">
-<h3 id="org5352eed"><span class="section-number-3">6.1</span> On Zaratan Machines</h3>
+<div id="outline-container-orgd4bbbb8" class="outline-3">
+<h3 id="orgd4bbbb8"><span class="section-number-3">6.1</span> On Zaratan Machines</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 Testing out codes on Zaratan machines is ideal as it is the same
@@ -1159,8 +1179,8 @@ with more than 16 processors.
 </p>
 </div>
 </div>
-<div id="outline-container-orgdd7a6df" class="outline-3">
-<h3 id="orgdd7a6df"><span class="section-number-3">6.2</span> On Home Machines</h3>
+<div id="outline-container-org0e5f4d8" class="outline-3">
+<h3 id="org0e5f4d8"><span class="section-number-3">6.2</span> On Home Machines</h3>
 <div class="outline-text-3" id="text-6-2">
 <p>
 Setting up a home MPI installation is another option. In most cases a
@@ -1172,12 +1192,12 @@ speedup in these cases but it is extremely useful for debugging.
 </div>
 </div>
 </div>
-<div id="outline-container-org385ed4d" class="outline-2">
-<h2 id="org385ed4d"><span class="section-number-2">7</span> <b>Problem 1</b>: MPI Heat</h2>
+<div id="outline-container-org20750a0" class="outline-2">
+<h2 id="org20750a0"><span class="section-number-2">7</span> <b>Problem 1</b>: MPI Heat</h2>
 <div class="outline-text-2" id="text-7">
 </div>
-<div id="outline-container-orgefa24c8" class="outline-3">
-<h3 id="orgefa24c8"><span class="section-number-3">7.1</span> The Heat Problem</h3>
+<div id="outline-container-org25f14d6" class="outline-3">
+<h3 id="org25f14d6"><span class="section-number-3">7.1</span> The Heat Problem</h3>
 <div class="outline-text-3" id="text-7-1">
 <p>
 A slightly modified version of the heat propagation simulation from
@@ -1231,8 +1251,8 @@ usage: ./heat_serial max_time width print
 </div>
 </div>
 </div>
-<div id="outline-container-org889b119" class="outline-3">
-<h3 id="org889b119"><span class="section-number-3">7.2</span> MPI Heat</h3>
+<div id="outline-container-orgc1a7241" class="outline-3">
+<h3 id="orgc1a7241"><span class="section-number-3">7.2</span> MPI Heat</h3>
 <div class="outline-text-3" id="text-7-2">
 <p>
 The central task of this problem is to create an MPI version of this
@@ -1245,9 +1265,7 @@ machines. Once completed, this program can be run as follows.
 <pre class="src src-sh">&gt;&gt; make heat_mpi                               # build MPI version of heat program
 mpicc -g -Wall -o heat_mpi heat_mpi.c
 
-&gt;&gt; source mpiopts.sh                           # set the MPIOPTS env variable, used to suppress warnings
-
-&gt;&gt; mpirun $MPIOPTS -np 2 ./heat_mpi 10 8 1     # run using 2 procs, 10 steps, 8 elements = 4 per proc
+&gt;&gt; mpirun -np 2 ./heat_mpi 10 8 1              # run using 2 procs, 10 steps, 8 elements = 4 per proc
    |     0     1     2     3     4     5     6     7 
 ---+-------------------------------------------------
   0|  20.0  50.0  50.0  50.0  50.0  50.0  50.0  10.0 
@@ -1261,7 +1279,7 @@ mpicc -g -Wall -o heat_mpi heat_mpi.c
   8|  20.0  26.8  32.0  34.1  33.0  27.6  19.9  10.0 
   9|  20.0  26.0  30.5  32.5  30.9  26.5  18.8  10.0 
 
-&gt;&gt; mpirun $MPIOPTS -np 4 ./heat_mpi 6 12 1     # run using 4 procs, 6 steps, 12 elements = 3 per proc 
+&gt;&gt; mpirun -np 4 ./heat_mpi 6 12 1              # run using 4 procs, 6 steps, 12 elements = 3 per proc 
    |     0     1     2     3     4     5     6     7     8     9    10    11 
 ---+-------------------------------------------------------------------------
   0|  20.0  50.0  50.0  50.0  50.0  50.0  50.0  50.0  50.0  50.0  50.0  10.0 
@@ -1271,16 +1289,16 @@ mpicc -g -Wall -o heat_mpi heat_mpi.c
   4|  20.0  31.2  38.8  46.2  48.1  50.0  50.0  47.5  45.0  35.0  25.0  10.0 
   5|  20.0  29.4  38.8  43.4  48.1  49.1  48.8  47.5  41.2  35.0  22.5  10.0 
 
-&gt;&gt; time mpirun $MPIOPTS -np 4 ./heat_mpi 6 12 0 # same as above but suppress output and time the run
-real	0m0.168s    # wall clock time to report for the run
+&gt;&gt; time mpirun -np 4 ./heat_mpi 6 12 0         # same as above but suppress output and time the run
+real	0m0.168s                               # wall clock time to report for the run
 user	0m0.102s
 sys	0m0.073s
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgebb050c" class="outline-3">
-<h3 id="orgebb050c"><span class="section-number-3">7.3</span> Features of <code>heat_mpi</code></h3>
+<div id="outline-container-org1be8fae" class="outline-3">
+<h3 id="org1be8fae"><span class="section-number-3">7.3</span> Features of <code>heat_mpi</code></h3>
 <div class="outline-text-3" id="text-7-3">
 <ul class="org-ul">
 <li>Name your program <code>heat_mpi.c</code> to be compatible with the provided
@@ -1438,8 +1456,8 @@ an error and exit immediately, etc.).
 </ul>
 </div>
 </div>
-<div id="outline-container-orgda0792b" class="outline-3">
-<h3 id="orgda0792b"><span class="section-number-3">7.4</span> Written Summary of the <code>heat_mpi</code> Results</h3>
+<div id="outline-container-orgbe80033" class="outline-3">
+<h3 id="orgbe80033"><span class="section-number-3">7.4</span> Written Summary of the <code>heat_mpi</code> Results</h3>
 <div class="outline-text-3" id="text-7-4">
 <p>
 Included with the project code is the file <code>A2-WRITEUP.txt</code> which has
@@ -1458,8 +1476,8 @@ and find the output files for the completed jobs.
 </p>
 </div>
 </div>
-<div id="outline-container-org5bffcb3" class="outline-3">
-<h3 id="org5bffcb3"><span class="section-number-3">7.5</span> Automated Tests for <code>heat_mpi</code></h3>
+<div id="outline-container-org4039a5e" class="outline-3">
+<h3 id="org4039a5e"><span class="section-number-3">7.5</span> Automated Tests for <code>heat_mpi</code></h3>
 <div class="outline-text-3" id="text-7-5">
 <p>
 A battery of automated tests are provided to evaluate whether
@@ -1505,8 +1523,8 @@ faults.
 </p>
 </div>
 </div>
-<div id="outline-container-org527df9a" class="outline-3 grading 35">
-<h3 id="org527df9a"><span class="section-number-3">7.6</span> <a id="org5b70b22"></a> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="35">35</span></span></h3>
+<div id="outline-container-org5302d5c" class="outline-3 grading 35">
+<h3 id="org5302d5c"><span class="section-number-3">7.6</span> <a id="org546f798"></a> Grading Criteria for Problem 1&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="35">35</span></span></h3>
 <div class="outline-text-3" id="text-7-6">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1547,8 +1565,8 @@ faults.
 </div>
 </div>
 </div>
-<div id="outline-container-org6f127d4" class="outline-2">
-<h2 id="org6f127d4"><span class="section-number-2">8</span> <b>Problem 2</b>: Serial K-Means Clustering</h2>
+<div id="outline-container-org68479ec" class="outline-2">
+<h2 id="org68479ec"><span class="section-number-2">8</span> <b>Problem 2</b>: Serial K-Means Clustering</h2>
 <div class="outline-text-2" id="text-8">
 <p>
 Assignment 1 introduced the K-Means clustering algorithm and provided
@@ -1568,9 +1586,9 @@ match expectations. The tests also evaluate whether there any memory
 problems with the program.
 </p>
 </div>
-<div id="outline-container-org8175ddd" class="outline-4 grading 15">
-<h4 id="org8175ddd"><a id="orgf850aef"></a> Grading Criteria for Problem 2&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="15">15</span></span></h4>
-<div class="outline-text-4" id="text-org8175ddd">
+<div id="outline-container-org932aa90" class="outline-4 grading 15">
+<h4 id="org932aa90"><a id="org8a00af8"></a> Grading Criteria for Problem 2&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="15">15</span></span></h4>
+<div class="outline-text-4" id="text-org932aa90">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -1600,8 +1618,8 @@ problems with the program.
 </div>
 </div>
 </div>
-<div id="outline-container-org6501207" class="outline-2">
-<h2 id="org6501207"><span class="section-number-2">9</span> <b>Problem 3</b>: MPI K-Means Clustering</h2>
+<div id="outline-container-orgc3f573b" class="outline-2">
+<h2 id="orgc3f573b"><span class="section-number-2">9</span> <b>Problem 3</b>: MPI K-Means Clustering</h2>
 <div class="outline-text-2" id="text-9">
 <p>
 Implement parallel version of the K-means algorithm for distributed
@@ -1611,8 +1629,8 @@ strategy for parallelizing the code during lecture on Thu 16-Feb so
 review the discussion present there if you need guidance.
 </p>
 </div>
-<div id="outline-container-org0b0c0e0" class="outline-3">
-<h3 id="org0b0c0e0"><span class="section-number-3">9.1</span> Implementation Requirements</h3>
+<div id="outline-container-org5f27932" class="outline-3">
+<h3 id="org5f27932"><span class="section-number-3">9.1</span> Implementation Requirements</h3>
 <div class="outline-text-3" id="text-9-1">
 <ol class="org-ol">
 <li><p>
@@ -1653,9 +1671,9 @@ possibilities exist but input partitioning is the most likely to be
 generally useful and lead to speedups.</li>
 </ol>
 </div>
-<div id="outline-container-orga553d8a" class="outline-4">
-<h4 id="orga553d8a">Implementation Notes</h4>
-<div class="outline-text-4" id="text-orga553d8a">
+<div id="outline-container-org76f5f32" class="outline-4">
+<h4 id="org76f5f32">Implementation Notes</h4>
+<div class="outline-text-4" id="text-org76f5f32">
 <ul class="org-ul">
 <li>As before, follow the general flow provided in the Python
 implementation. The MPI version should produce identical results and
@@ -1668,8 +1686,8 @@ distribution and communication required.</li>
 </div>
 </div>
 </div>
-<div id="outline-container-orge384907" class="outline-3 grading 45">
-<h3 id="orge384907"><span class="section-number-3">9.2</span> <a id="org88cd127"></a> Grading Criteria for Problem 3&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="45">45</span></span></h3>
+<div id="outline-container-org7586894" class="outline-3 grading 45">
+<h3 id="org7586894"><span class="section-number-3">9.2</span> <a id="org759874a"></a> Grading Criteria for Problem 3&#xa0;&#xa0;&#xa0;<span class="tag"><span class="grading">grading</span>&#xa0;<span class="45">45</span></span></h3>
 <div class="outline-text-3" id="text-9-2">
 <p>
 Test cases will be provided for <code>kmeans_mpi.c</code> but will be released
@@ -1732,8 +1750,8 @@ contains a target for this, just requires the missing
 </div>
 </div>
 </div>
-<div id="outline-container-orge3ddb7d" class="outline-2">
-<h2 id="orge3ddb7d"><span class="section-number-2">10</span> <b>Work Disclosure</b> in A2 Writeup</h2>
+<div id="outline-container-org9c3af60" class="outline-2">
+<h2 id="org9c3af60"><span class="section-number-2">10</span> <b>Work Disclosure</b> in A2 Writeup</h2>
 <div class="outline-text-2" id="text-10">
 <p>
 The end of the <code>A2-WRITEUP.txt</code> document includes the same Work
@@ -1749,8 +1767,8 @@ Complete each section of the Work Disclosure to avoid penalties.
 </p>
 </div>
 </div>
-<div id="outline-container-org51c3436" class="outline-2">
-<h2 id="org51c3436"><span class="section-number-2">11</span> Project Submission on Gradescope</h2>
+<div id="outline-container-org8fb3326" class="outline-2">
+<h2 id="org8fb3326"><span class="section-number-2">11</span> Project Submission on Gradescope</h2>
 <div class="outline-text-2" id="text-11">
 <p>
 Submit to Gradescope, typically by typing the command <code>make submit</code>
@@ -1761,8 +1779,8 @@ where your assignment code is stored. Specific
 NOTE 2: 
 </p>
 </div>
-<div id="outline-container-org56a74dd" class="outline-3">
-<h3 id="org56a74dd"><span class="section-number-3">11.1</span> Submitting via the Command Line (RECOMMENDED)</h3>
+<div id="outline-container-orgbc5679e" class="outline-3">
+<h3 id="orgbc5679e"><span class="section-number-3">11.1</span> Submitting via the Command Line (RECOMMENDED)</h3>
 <div class="outline-text-3" id="text-11-1">
 <p>
 Labs and Projects can be submitted to Gradescope via the command line
@@ -1835,8 +1853,8 @@ Autograder Results
 </div>
 </div>
 </div>
-<div id="outline-container-org0c59998" class="outline-3">
-<h3 id="org0c59998"><span class="section-number-3">11.2</span> Creating a Zip and Submitting Manually</h3>
+<div id="outline-container-orgcc35469" class="outline-3">
+<h3 id="orgcc35469"><span class="section-number-3">11.2</span> Creating a Zip and Submitting Manually</h3>
 <div class="outline-text-3" id="text-11-2">
 <p>
 <b>Submitting via the command line is faster and more reliable than the
@@ -1886,51 +1904,51 @@ uploading a zip.
 
 <div class="org-center">
 
-<div id="org9060ec7" class="figure">
+<div id="org6773794" class="figure">
 <p><img src="gradescope1.png" alt="gradescope1.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org8de70bf" class="figure">
+<div id="org5f62a3c" class="figure">
 <p><img src="gradescope2.png" alt="gradescope2.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org224ecb8" class="figure">
+<div id="orgf212ade" class="figure">
 <p><img src="gradescope3.png" alt="gradescope3.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org6470801" class="figure">
+<div id="org2997247" class="figure">
 <p><img src="gradescope4.png" alt="gradescope4.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org1edd890" class="figure">
+<div id="orgadf790e" class="figure">
 <p><img src="gradescope5.png" alt="gradescope5.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="orge01fec0" class="figure">
+<div id="org40410f0" class="figure">
 <p><img src="gradescope6.png" alt="gradescope6.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org71a835b" class="figure">
+<div id="orgd0b221d" class="figure">
 <p><img src="gradescope7.png" alt="gradescope7.png" style="max-width:100%;" />
 </p>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org579cec6" class="outline-3">
-<h3 id="org579cec6"><span class="section-number-3">11.3</span> Adding Group Members</h3>
+<div id="outline-container-orgb290272" class="outline-3">
+<h3 id="orgb290272"><span class="section-number-3">11.3</span> Adding Group Members</h3>
 <div class="outline-text-3" id="text-11-3">
 <p>
 If you are working in a group only one student needs to submit and can
@@ -1944,21 +1962,21 @@ Gradescope AFTER submitting.
 
 <div class="org-center">
 
-<div id="orgb0e7dd5" class="figure">
+<div id="org28f5692" class="figure">
 <p><img src="gradescope-group1.png" alt="gradescope-group1.png" style="max-width:100%;" />
 </p>
 </div>
 
 
-<div id="org907a01d" class="figure">
+<div id="orga85e96e" class="figure">
 <p><img src="gradescope-group2.png" alt="gradescope-group2.png" style="max-width:100%;" />
 </p>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgc9d1476" class="outline-3">
-<h3 id="orgc9d1476"><span class="section-number-3">11.4</span> Late Policies</h3>
+<div id="outline-container-orgc1e70c5" class="outline-3">
+<h3 id="orgc1e70c5"><span class="section-number-3">11.4</span> Late Policies</h3>
 <div class="outline-text-3" id="text-11-4">
 <p>
 As described in the <a href="syllabus.html">Course Syllabus</a>, late submissions are penalized as
@@ -1976,7 +1994,7 @@ credit</li>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-02-24 Tue 17:51 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-02-25 Wed 11:33 <br/> </i>
 </div>
 </body>
 </html>
