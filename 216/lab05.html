@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-03-02 Mon 09:00 -->
+<!-- 2026-03-03 Tue 19:57 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Lab05: Basic Assembly Coding</title>
@@ -344,7 +344,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2026-03-02 Mon 09:00</i>
+<i>Last Updated: 2026-03-03 Tue 19:57</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Lab05: Basic Assembly Coding</h1>
@@ -352,38 +352,60 @@ text-align: justify;
 <li><b>Due: 11:59pm Sun 08-Mar-2026</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
-<div id="outline-container-orgada30b5" class="outline-4">
-<h4 id="orgada30b5">CODE DISTRIBUTION: <a href="lab05-code.zip">lab05-code.zip</a></h4>
+<div id="outline-container-org8526478" class="outline-4">
+<h4 id="org8526478">CODE DISTRIBUTION: <a href="lab05-code.zip">lab05-code.zip</a></h4>
 </div>
-<div id="outline-container-orge733622" class="outline-4">
-<h4 id="orge733622">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-orge733622">
+<div id="outline-container-orgf2d06ec" class="outline-4">
+<h4 id="orgf2d06ec">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-orgf2d06ec">
 <dl class="org-dl">
+<dt>Tue Mar  3 07:55:19 PM EST 2026</dt><dd><p>
+The starter version of
+<code>coins_funcs_asm.s</code> had a incorrect comment on the layout of the
+<code>coins_t</code> struct when it is packed into a register. It should read
+as follows:
+</p>
+<div class="org-src-container">
+<pre class="src src-asm">  .global total_coins
+  total_coins:
+  ### args are
+  ### %rdi packed coin_t struct with struct fields in the following bit ranges
+  ###  {0-15: quarters, 15-31: dimes, 32-47: nickels,  48-63: pennies}
+  ### ^^^^^^ THIS LINE UPDATED ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+</pre>
+</div>
+<p>
+The code in the codepack has  been adjusted but those with the old
+version should just copy in the updated line for guidance. The
+functional code followed this convention, that all fields are 16
+bits wide.
+</p></dd>
+
 <dt>Mon Mar  2 08:59:57 AM EST 2026</dt><dd>The list of Codepack files
 incorrectly listed some files from last lab and was missing those
 from the Coins problem. This has been corrected.</dd>
 </dl>
 </div>
 </div>
-<div id="outline-container-org5f34b51" class="outline-4">
-<h4 id="org5f34b51"></h4>
-<div class="outline-text-4" id="text-org5f34b51">
+<div id="outline-container-org66681ba" class="outline-4">
+<h4 id="org66681ba"></h4>
+<div class="outline-text-4" id="text-org66681ba">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org5adf865">1. Rationale</a></li>
-<li><a href="#org5e51a57">2. Codepack</a></li>
-<li><a href="#org8737a84">3. Register Reference</a></li>
-<li><a href="#org899b94f">4. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org10319ae">5. Submission</a></li>
+<li><a href="#org5fc8657">1. Rationale</a></li>
+<li><a href="#org276a5d9">2. Codepack</a></li>
+<li><a href="#org376590d">3. Register Reference</a></li>
+<li><a href="#org19da28a">4. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org0b649ab">5. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org5adf865" class="outline-2">
-<h2 id="org5adf865"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org5fc8657" class="outline-2">
+<h2 id="org5fc8657"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Certain applications utilize bits at an individual level. This is
@@ -402,9 +424,9 @@ application. This will introduce folks to some syntax and semantics
 associated with assembly programs.
 </p>
 </div>
-<div id="outline-container-orgdef2632" class="outline-4">
-<h4 id="orgdef2632">Associated Reading</h4>
-<div class="outline-text-4" id="text-orgdef2632">
+<div id="outline-container-org3a986e7" class="outline-4">
+<h4 id="org3a986e7">Associated Reading</h4>
+<div class="outline-text-4" id="text-org3a986e7">
 <ul class="org-ul">
 <li>Bryant and O'Hallaron: Ch 3.1-3.7 on assembly code instructions in
 x86-64. The first few sections are along with an understanding of
@@ -429,9 +451,9 @@ Assembler dialect and shows how to block comment/uncomment code.
 </p>
 </div>
 </div>
-<div id="outline-container-orgf22c590" class="outline-4">
-<h4 id="orgf22c590">Grading Policy</h4>
-<div class="outline-text-4" id="text-orgf22c590">
+<div id="outline-container-org502ef5d" class="outline-4">
+<h4 id="org502ef5d">Grading Policy</h4>
+<div class="outline-text-4" id="text-org502ef5d">
 <p>
 Credit for this lab is earned by completing the code/answers in the
 Lab codepack and submitting a Zip of the work to Gradescope preferably
@@ -455,8 +477,8 @@ submissions. See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">f
 </div>
 </div>
 </div>
-<div id="outline-container-org5e51a57" class="outline-2">
-<h2 id="org5e51a57"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org276a5d9" class="outline-2">
+<h2 id="org276a5d9"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for this lab is linked at the top of this
@@ -576,8 +598,8 @@ the following files which are briefly described.
 </table>
 </div>
 </div>
-<div id="outline-container-org8737a84" class="outline-2">
-<h2 id="org8737a84"><span class="section-number-2">3</span> Register Reference</h2>
+<div id="outline-container-org376590d" class="outline-2">
+<h2 id="org376590d"><span class="section-number-2">3</span> Register Reference</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 The assembly code studied in this lab involves registers with some
@@ -596,15 +618,15 @@ which will be studied later.</li>
 
 <div class="org-center">
 
-<div id="org20199ff" class="figure">
+<div id="orgf2e89f7" class="figure">
 <p><img src="registers.png" alt="registers.png" style="max-width:100%;" />
 </p>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org899b94f" class="outline-2">
-<h2 id="org899b94f"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org19da28a" class="outline-2">
+<h2 id="org19da28a"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the exercise.
@@ -837,8 +859,8 @@ PROBLEM 2 CODE: Complete coins_funcs_asm.s
 </div>
 </div>
 </div>
-<div id="outline-container-org10319ae" class="outline-2">
-<h2 id="org10319ae"><span class="section-number-2">5</span> Submission</h2>
+<div id="outline-container-org0b649ab" class="outline-2">
+<h2 id="org0b649ab"><span class="section-number-2">5</span> Submission</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -848,7 +870,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-03-02 Mon 09:00 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-03-03 Tue 19:57 <br/> </i>
 </div>
 </body>
 </html>
