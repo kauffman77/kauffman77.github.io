@@ -1,0 +1,1228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2026-03-08 Sun 11:24 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMSC216 Lab06: GDB with Binaries and Caller / Callee Registers</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
+details > summary {
+padding: 2px 6px;
+font-family: Sans;
+font-size: 0.8em;
+width: fit-content;
+border-radius: 5px;
+background-color: #efefef;
+border: 1px solid black;
+cursor: pointer;
+}
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","[COMMANDO]>>","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+literal: ["[data/script.txt]>>","[data/script1.txt]>>","[data/script6.txt]>>"],
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+// hljs.COMMENT(/## /, /$/),     // hash-hash-ws for comment
+hljs.COMMENT(/##+/, /$/),     // or a sequence of hashes
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2026-03-08 Sun 11:24</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CMSC216 Lab06: GDB with Binaries and Caller / Callee Registers</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Sun 22-Mar-2026</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><i>Approximately 1.00% of total grade</i></li>
+</ul>
+<div id="outline-container-org99ac136" class="outline-4">
+<h4 id="org99ac136">CODE DISTRIBUTION: <a href="lab06-code.zip">lab06-code.zip</a></h4>
+</div>
+
+<div id="outline-container-org382f201" class="outline-4">
+<h4 id="org382f201">CHANGELOG: Empty</h4>
+</div>
+
+<div id="outline-container-org58b4208" class="outline-4">
+<h4 id="org58b4208"></h4>
+<div class="outline-text-4" id="text-org58b4208">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org11641c7">1. Rationale</a></li>
+<li><a href="#orge302ce0">2. Codepack</a></li>
+<li><a href="#org5a733b7">3. Register Reference</a></li>
+<li><a href="#org732308c">4. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org202a449">5. Submission</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org11641c7" class="outline-2">
+<h2 id="org11641c7"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Debuggers work at the binary level so it should not be surprising that
+they can handle programs that are devoid of source code. While less
+intuitive than working with the original programs, analyzing the
+disassembled instructions in a binary still allows its behavior to be
+understood and can give deeper insight into how assembly works. This
+lab presents a simple practice problem on working with part of a
+program that does not have source code.
+</p>
+
+<p>
+Processor registers are shared among all programs and functions within
+individual programs. Registers on most modern processor architectures are
+divided between Caller and Callee save registers according to the
+Operating System Application Binary Interfaces (ABI). This set of
+rules dictates which registers may change during a function call and
+which will remain stable across the call. These rules are adhered to
+by compilers but must be followed "by hand" when writing assembly code
+often leading to mistakes when the programmer is unacquainted with the
+conventions. This lab demonstrates some of those common errors
+practices how to safely use and restore Callee-save registers.
+</p>
+</div>
+<div id="outline-container-org4978df8" class="outline-4">
+<h4 id="org4978df8">Associated Reading / Preparation</h4>
+<div class="outline-text-4" id="text-org4978df8">
+<ul class="org-ul">
+<li>PROBLEM 1: <a href="https://kauffman77.github.io/tutorials/gdb.html#gdb-assembly">Quick Guide to GDB: Run Assembly Without Source Code
+Available</a>; tricks to deal with binary only files where no source
+code is available.</li>
+
+<li>PROBLEM 2: Bryant and O'Hallaron Ch 3.7 on assembly procedure call
+conventions in x86-64. Specifically, Ch 3.7.5 discusses
+caller/callee save conventions and the code associated with them.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgce3e7e3" class="outline-4">
+<h4 id="orgce3e7e3">Grading Policy</h4>
+<div class="outline-text-4" id="text-orgce3e7e3">
+<p>
+Credit for this lab is earned by completing the code/answers in the
+Lab codepack and submitting a Zip of the work to Gradescope preferably
+via running <code>make submit</code>. Students are responsible to check that the
+results produced locally are reflected on Gradescope after submitting
+their completed Zip.
+</p>
+
+<p>
+Lab Exercises are Free Collaboration and <b>students are encouraged to
+cooperate on labs.</b> Students may submit work as groups of up to 5 to
+Gradescope: one person submits then adds the names of their group
+members to the submission.
+</p>
+
+<p>
+No late submissions are accepted for Lab work but the lowest two lab
+scores for the semester will be dropped including zeros due to missing
+submissions. See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies in the course syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orge302ce0" class="outline-2">
+<h2 id="orge302ce0"><span class="section-number-2">2</span> Codepack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The codepack for the HW contains the following files:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Questions to answer: fill in the multiple choice selections in this file.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>quote_main.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1: Main file for debugging</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>quote_data.o</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1: Binary file for debugging</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>add2strs_asm_A.s</code></td>
+<td class="org-left">Study</td>
+<td class="org-left">Problem 2: A version, broken code to study to understand errors</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>add2strs_asm_B.s</code></td>
+<td class="org-left">Study</td>
+<td class="org-left">Problem 2: B version, broken code to study to understand errors</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>add2strs_asm_C.s</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 2: C version, complete this version with correct code</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>add2strs_reference.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2: C reference implementation of assembly code to write</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>add2strs_main.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2: Main and utility function calling assembly function</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>add2strs_clobber_asm.s</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2: Assembly code used to ensure reliable behavior across compiler versions</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Build</td>
+<td class="org-left">Enables <code>make test</code> and <code>make zip</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>QUESTIONS.txt.bk</code></td>
+<td class="org-left">Backup</td>
+<td class="org-left">Backup copy of the original file to help revert if needed</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>QUESTIONS.md5</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Checksum for answers in questions file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_quiz_filter</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Filter to extract answers from Questions file, used in testing</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_lab06.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for the lab</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_lab06_code.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Code tests for individual problems via <code>make test-prob1</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running scripts</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>gradescope-submit</code></td>
+<td class="org-left">Misc</td>
+<td class="org-left">Allows submission to Gradescope from the command line</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org5a733b7" class="outline-2">
+<h2 id="org5a733b7"><span class="section-number-2">3</span> Register Reference</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+This lab deals with the General Purpose Registers and the division
+between Caller / Calee save registers. The diagram below color codes
+registers according to which category they are in.
+</p>
+<div class="org-center">
+
+<div id="orgee8be6e" class="figure">
+<p><img src="registers.png" alt="registers.png" style="max-width:100%;" />
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org732308c" class="outline-2">
+<h2 id="org732308c"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Below are the contents of the <code>QUESTIONS.txt</code> file for the exercise.
+Follow the instructions in it to complete the QUIZ and CODE questions
+for the exercise.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                           _________________
+
+                            LAB06 QUESTIONS
+                           _________________
+
+
+Exercise Instructions
+=====================
+
+  Follow the instructions below to experiment with topics related to
+  this exercise.
+  - For sections marked QUIZ, fill in an (X) for the appropriate
+    response in this file. Use the command `make test-quiz' to see if
+    all of your answers are correct.
+  - For sections marked CODE, complete the code indicated. Use the
+    command `make test-code' to check if your code is complete.
+  - DO NOT CHANGE any parts of this file except the QUIZ sections as it
+    may interfere with the tests otherwise.
+  - If your `QUESTIONS.txt' file seems corrupted, restore it by copying
+    over the `QUESTIONS.txt.bk' backup file.
+  - When you complete the exercises, check your answers with `make test'
+    and if all is well. Create a zip file and submit it to Gradescope
+    with `make submit'. Ensure that the Autograder there reflects your
+    local results.
+  - IF YOU WORK IN A GROUP only one member needs to submit and then add
+    the names of their group on Gradescope.
+
+
+PROBLEM 1: Binary Debugging of QUOTES
+=====================================
+
+  The two files `quote_main.c' and `quote_data.o' can be compiled
+  together to form an executable as in the following.
+  ,----
+  | &gt; gcc quote_main.c quote_data.o
+  | &gt; ./a.out
+  | Complete this sentence by C++ creator Bjarne Stroustrup:
+  | C makes it easy to shoot yourself in the foot; ...
+  | 
+  | enter a number from 0 to 15: 2
+  | 
+  | 2: This is why most programmers are such poor dancers.
+  | 
+  | Have a nice tall glass of ... NOPE.
+  `----
+  As in a previous exercise, the intention is to use the debugger to
+  detect the correct response. In this case however, the correct
+  completion is present in `quote_main.c'. However, one must enter a
+  number which selects from several responses in an attempt to match the
+  correct completion. This causes something to happen in `quote_data.o'
+  but no source code is available for it.
+
+  It is possible to "brute force" the solution by trying all
+  solutions. That would miss the purpose of the exercise, to gain
+  familiarity with how GDB can handle binaries and allow one to resolve
+  situations that are not so amenable to brute force.
+
+
+QUIZ: Basic Binary Analysis
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Use some utility programs to gather information about the contents of
+  the binary file `quote_data.o'.  Review the previous HW if you have
+  forgotten what programs do OR brute force this QUIZ question by trying
+  the various suggested programs to see what they do.
+
+  For each of the below commands, select the response that best
+  describes its effect.
+
+
+`&gt;&gt; nm quote_data.o'
+--------------------
+
+  - ( ) Prints back the name of the file
+  - ( ) Displays the assembly code in the TEXT section of the file
+  - ( ) Displays the original C code that produced the binary file
+  - ( ) Shows the "symbols" (functions and global variables) in the file
+  - ( ) Shows the ELF (executable/linkable format) sections are in file
+  - ( ) Produces all ASCII strings embedded in the file
+
+
+`&gt;&gt; objdump -d quote_data.o'
+----------------------------
+
+  - ( ) Prints back the name of the file
+  - ( ) Displays the assembly code in the TEXT section of the file
+  - ( ) Displays the original C code that produced the binary file
+  - ( ) Shows the "symbols" (functions and global variables) in the file
+  - ( ) Shows the ELF (executable/linkable format) sections are in file
+  - ( ) Produces all ASCII strings embedded in the file
+
+
+`&gt;&gt; readelf -s quote_data.o'
+----------------------------
+
+  - ( ) Prints back the name of the file
+  - ( ) Displays the assembly code in the TEXT section of the file
+  - ( ) Displays the original C code that produced the binary file
+  - ( ) Shows the "symbols" (functions and global variables) in the file
+  - ( ) Shows the ELF (executable/linkable format) sections are in file
+  - ( ) Produces all ASCII strings embedded in the file
+
+
+`&gt;&gt; strings quote_data.o'
+-------------------------
+
+  - ( ) Prints back the name of the file
+  - ( ) Displays the assembly code in the TEXT section of the file
+  - ( ) Displays the original C code that produced the binary file
+  - ( ) Shows the "symbols" (functions and global variables) in the file
+  - ( ) Shows the ELF (executable/linkable format) sections are in file
+  - ( ) Produces all ASCII strings embedded in the file
+
+
+QUIZ: GDB with Compiled Functions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  The entry point into the assembly code in `quote_data.o' is the
+  function `get_it()' which is called from the `main()' function defined
+  in `quote_main.c'.
+
+  Which of the following command sequences will start `gdb', set a break
+  point on this function, and run to that position?
+  ,----
+  | ####### A ######
+  | &gt;&gt; gdb -tui quote_main
+  | (gdb) break get_it
+  | (gdb) run
+  | 
+  | ####### B ######
+  | &gt;&gt; gdb -tui quote_data.o
+  | (gdb) break get_it
+  | (gdb) run main
+  | 
+  | ####### C ######
+  | &gt;&gt; gdb -tui quote_main.c
+  | (gdb) break quote_data.o
+  | (gdb) run get_it
+  | 
+  | ####### D ######
+  | &gt;&gt; gdb -tui quote_data.o
+  | (gdb) break quote_main
+  | (gdb) run get_it
+  `----
+
+  - ( ) A
+  - ( ) B
+  - ( ) C
+  - ( ) D
+
+  On arriving in the `get_it()' function, what does GDB show initially
+  about the function?
+  - ( ) It shows the first lines of the C code for that function
+  - ( ) It shows the first lines of the Assembly code for that function
+  - ( ) It shows the first lines of the Binary Opcodes for that function
+  - ( ) It shows "No Source Available" because a certain cruel
+    instructor omitted the source code for this binary file.
+
+  Type thefollowing commands below and indicate how this changes the
+  display that GDB shows.
+  ,----
+  | (gdb) layout asm
+  | (gdb) layout regs
+  | (gdb) run  (then answer "y" to re-run)
+  `----
+  After these commands GDB shows
+  - ( ) The return value of the `get_it()' function and the register it
+    is stored in
+  - ( ) The values of all registers and the C code of `get_it()'
+  - ( ) The values of all registers and the assembly instructions of
+    `get_it()' (which are disassembled by GDB)
+  - ( ) The values of all registers and the binary and hex encoding of
+    the machine instructions for `get_it()'
+
+
+CODE: Step through the code to find the right Choice
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Use the debugger to step through the functions in `quote_data.o' and
+  determine the right number to pass in to generate the correct
+  response. Place this number in the file `input.txt' which is opened
+  and read by `quote_main.c'.
+
+  *NOTE: It is VERY EASY to solve this via brute force* by trying many
+  possibilities BUT the point is the gain experience navigating assembly
+  code with GDB and understanding compiled code despite lacking its
+  original source.
+
+  Here are some tips to help you navigate and understand what you see.
+  - Debugger commands for single instructions are preferable when
+    working in assembly
+     stepi / si  step a single instruction forward, step INTO function calls 
+     nexti / ni  step a single instruction forward, step OVER function calls 
+    Use plain `step' may step several instructions ahead as GDB guesses
+    on how many correspond to a missing line of C.
+
+  - Within the code for `get_it' is a call to `list_get'. This along
+    with the fact that earlier listings of global variables had a
+    `nodes' name indicates that some sort of linked list is present with
+    the choices.
+
+  - The parameters to the function follow the standard convention: 1st
+    param in register `%rdi', second in `%rsi', and so forth.  You
+    should be able to identify a loop in a critical function in which
+    the choices are present.  Use `print' and `x' commands in gdb to
+    examine data pointed to be registers to help identify where the
+    correct response is located.
+
+  - Often the `testX' instruction is used to determine truthy/falsey
+    qualities about a register. This takes several forms that are
+    discussed in lecture that you are likely to see:
+    - `testl %edx, %edx' may be used to check if `%edx' is 0 or negative
+    - `testq %rax, %rax' may be used to check if `%rax' is a `NULL'
+      pointer
+
+  - You can examine memory addresses pointed to registers with gdb
+    commands like the following. More details are in the GDB Quick
+    Guide.
+    ,----
+    |   (gdb) x/d $rax   # print memory pointed to by rax as a decimal integer
+    |   (gdb) x/x $rax   # print memory pointed to by rax as a hex number
+    |   (gdb) x/s $rax   # print memory pointed to by rax as a string
+    `----
+
+  - You can set breakpoints at individual instructions using the
+    following syntax involving the * symbol from the GDB Quick Guide.
+     COMMAND             Effect                                                
+    ---------------------------------------------------------------------------
+     `break *0x1248f2'   Break at specific instruction address                 
+     `break *func+24'    Break at instruction with decimal offset from a label 
+     `break *func+0x18'  Break at instruction with hex offset from a label
+
+  A good sign that you are absorbing what's going on is if you can come
+  back to `quote_main' a day later, and use GDB commands to quickly find
+  the correct index again.
+
+
+PROBLEM 2 Overview of addstrs
+=============================
+
+  Survey the provided code and examine the following source files.
+  ------------------------------------------------------------------------------------------------------------------
+   FILE                  Description                                                                                
+  ------------------------------------------------------------------------------------------------------------------
+   add2strs_main.c       A main() and convert() function in C; these are used assembly function add2strs()          
+   add2strs_asm_A.s      A broken version of the add2strs() function in assembly for study                          
+   add2strs_asm_B.s      A broken version of the add2strs() function in assembly for study                          
+   add2strs_asm_C.s      An empty version of add2strs() that needs to be Edited                                     
+   add2strs_reference.c  A reference C implementation of add2strs(): it shows the intended behavior of the function 
+  ------------------------------------------------------------------------------------------------------------------
+
+  The general setup is the following calling sequence:
+  - main() written in C calls...
+  - add2strs() written in Assembly calls...
+  - convert() written in C
+  The middle function add2strs() has several versions which are
+  broken. The goal of the lab is to explain why the A and B versions are
+  incorrect and create a working C version of the function in
+  `add2strs_asm_C.s'.
+
+  The primary reason that the A and B versions broken is a failure to
+  adhere to the usage conventions for caller/callee save registers.
+
+
+PROBLEM 2 QUIZ add2strs_asm_A.s
+===============================
+
+Step 1
+~~~~~~
+
+  Type `make' which will build several executables based on different
+  combinations of the source files
+  ,----
+  | &gt;&gt; make
+  | gcc -Wall -Werror -g  -o add2strs_main_A add2strs_asm_A.s add2strs_main.c add2strs_clobber_asm.s
+  | gcc -Wall -Werror -g  -o add2strs_main_B add2strs_asm_B.s add2strs_main.c add2strs_clobber_asm.s
+  | gcc -Wall -Werror -g  -o add2strs_main_C add2strs_asm_C.s add2strs_main.c add2strs_clobber_asm.s
+  `----
+  Note that there are 3 executables built based on the a/b/c versions of
+  assembly files.
+
+  Run the "A" version of the main program.
+
+  NOTE: If you aren't sure how to run a an executable, now would be a
+  great time to talk with a staff member about what the output of the
+  `make' command above and which parts of it show the executables that
+  are produced and how to run them.
+
+  What is the result of running the A version of the program?
+  - ( ) A segmentation fault occurs while the program runs
+  - ( ) The program runs but prints the error message "Unable to convert
+    string to number"
+  - ( ) The program runs normally but produces obviously incorrect
+    output
+  - ( ) The program runs correctly to completion but returns a non-zero
+    exit code
+
+
+Step 2
+~~~~~~
+
+  To get more insight on what is happening, run the A version of the
+  program under Valgrind to print messages about any memory errors
+  occur. Again, if you're not sure how to run the program under
+  Valgrind, ASK A STAFF MEMBER for help.
+
+  What does Valgrind report about the behavior of the program?
+  - ( ) The `main()' function has a bad memory reference likely due to a
+    faulty return value from the `addstrs()' function.
+  - ( ) There is a bad memory reference by the assembly `addstrs()'
+    function which is called from the C `main()' function
+  - ( ) There is a bad memory reference during the C `convert()'
+    function that is called by the assembly `addstrs()' function
+  - ( ) Trick question: there are no memory problems reported by
+    Valgrind
+
+
+Step 3
+~~~~~~
+
+  Use GDB to step through the execution of `add2strs()' A version. Use
+  the `nexti' command to step line by line through the function but step
+  over any function calls: `convert()' is written in C so there is no
+  reason to expect it is faulty. Look for obviously wrong assumptions in
+  the code for `add2strs()' according to the comments given.
+
+  Which of the following best summarizes the mistakes made in the A
+  version which lead to its wrong behavior?
+  - ( ) The stack is not aligned properly for the function call to
+    succeed
+  - ( ) The stack is not properly restored at the end of the function
+    which causes problems on the return
+  - ( ) Data is not properly loaded into argument registers for the
+    first call to the `convert()' function
+  - ( ) Data such as pointers are stored in Caller save registers that
+    change when the `convert()' function is called
+
+
+PROBLEM 2 QUIZ add2strs_asm_B.s
+===============================
+
+Step 1
+~~~~~~
+
+  Examine the B version of the assembly code in `add2strs_asm_B.s'.
+  Which of the following best describes the different approach taken in
+  the B version compared to the A version.
+
+  - ( ) Callee Save Registers like %rbp and %rbx are used to preserve
+    needed data across the call to `convert()' which clobbers Caller
+    Save Registers
+  - ( ) Adjustments are made to how the argument registers are loaded
+    for the first call to `convert()' so that the function runs
+    correctly.
+  - ( ) The stack is aligned differently for function calls in this
+    version which correct compared to the alignment used in the A
+    version.
+  - ( ) Callee registers that are used are saved and then restored
+    before returning from the function.
+
+
+Step 2
+~~~~~~
+
+  Run the B version of the program which uses this version of the
+  assembly code. Run the program under Valgrind as well. Which of the
+  following best describe the results?
+  - ( ) A segmentation fault still occurs but it happens on the second
+    call to `convert()' during `add2strs()'
+  - ( ) A segmentation fault still occurs but it happens during the
+    `main()' function.
+  - ( ) The program runs but it produces incorrect results and Valgrind
+    reports a "Conditional move/jump depends on uninitialized data"
+  - ( ) The program runs and produces incorrect results but Valgrind
+    does not report any errors.
+
+
+Step 3
+~~~~~~
+
+  Run the B version of the program under GDB.  Set a breakpoint in
+  `add2strs()' and step through the assembly noting its behavior.
+  Again, use the nexti command to step over calls to `convert()'.
+
+  Continue stepping through the return from `add2strs()' which will land
+  back in `main()'.  When the debugger shows the C code for `main()',
+  change its display to the assembly instructions for that C code using
+  the GDB command `layout asm'.
+
+  Which of the following best describes the instructions that appear in
+  `main()' immediately after `call add2strs'?
+  - ( ) These instructions make use of the stack pointer `%rsp' which
+    was not properly restored by `add2strs()' which will create problem
+    for `main()'
+  - ( ) These instructions use a Caller Save register like `%rdi' which
+    was altered by `add2strs()' but not restored which will create
+    problems for `main()'
+  - ( ) These instructions use a Callee Save register like `%rbp' which
+    was altered by `add2strs()' but not restored which will create
+    problems for `main()'
+  - ( ) These instructions perform a buffer overflow check and due to
+    one occurring in `add2strs()', problems are created for `main()'.
+
+
+PROBLEM 2 CODE add2strs_asm_C.s
+===============================
+
+  Fill in a completely correct definition for the `add2strs()' function
+  in the file `add2strs_asm_C.s' which is currently mostly blank. Base
+  your code on the B version but correct the problems you identified in
+  the with that version. Some useful instructions for this purpose are
+  noted below.
+  -----------------------------------------------------------------------
+   INSTRUCTION  EFFECT                                                   
+  -----------------------------------------------------------------------
+   pushq %rxy   Extends the stack and places the current 8-byte value of 
+                register %rxy in the stack to "save" the register        
+                                                                       
+   popq %rxy    Copies the 8-byte value pointed at by the Stack Pointer  
+                into register %rxy "restoring" it then shrinks the stack 
+  -----------------------------------------------------------------------
+
+
+  REMEMBER: For function calls to be compliant with the x86-64 standard,
+  the Stack Pointer must be divisible by 16. Functions that call other
+  functions typically expand the stack by the following number of bytes
+  with a combination of `pushq / subq' instructions.
+  ------------------------------------------------------------------------------------------------
+   PUSHQ / SUBQ GROWTH  RETURN ADDRESSS  TOTAL STACK GROWTH  EXAMPLES                             
+  ------------------------------------------------------------------------------------------------
+   8 bytes              8 bytes          16 bytes            subq $8,%rsp OR pushq %rbx           
+   24 bytes             8 bytes          32 bytes            pushq %rbx; pushq %rbp; subq $8,%rsp 
+   40 bytes             8 bytes          48 bytes            pushq %rbp; subq $32,%rsp            
+  ------------------------------------------------------------------------------------------------
+
+  FINAL NOTE: When writing longer assembly functions, one may "run out"
+  of Caller Save registers. Even if there are no function calls, it is
+  still common practice to push/pop Callee Save registers to allow their
+  use during these longer functions. Just make sure to push/pop in
+  opposite orders to respect stack semantics:
+  ,----
+  | longfunc:
+  |         pushq %reg1             # callee save regs like rbx, rbp, r15
+  |         pushq %reg2
+  |         pushq %reg3
+  |         ...
+  |         ...     # code that needs to use callee save reg1,reg2,reg3
+  | 
+  |         popq %reg3              # last in, first out stack semantics
+  |         popq %reg2
+  |         popq %reg1
+  |         ret
+  `----
+
+  You can test your code for the problem via the provided Makefile:
+  ,----
+  | make test-code testnum=1
+  `----
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org202a449" class="outline-2">
+<h2 id="org202a449"><span class="section-number-2">5</span> Submission</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
+how to upload your completed exercise zip to Gradescope.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-03-08 Sun 11:24 <br/> </i>
+</div>
+</body>
+</html>
