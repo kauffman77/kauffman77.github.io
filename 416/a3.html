@@ -1,0 +1,1123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2026-03-30 Mon 17:21 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMSC416 Assignment 3: Theoretical and Empirical Performance Analysis</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
+details > summary {
+padding: 2px 6px;
+font-family: Sans;
+font-size: 0.8em;
+width: fit-content;
+border-radius: 5px;
+background-color: #efefef;
+border: 1px solid black;
+cursor: pointer;
+}
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","[COMMANDO]>>","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>","profk@login-1","profk@login-2","profk@login-3"], // allowed interactive prompts
+literal: ["[data/script.txt]>>","[data/script1.txt]>>","[data/script6.txt]>>"],
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+// hljs.COMMENT(/## /, /$/),     // hash-hash-ws for comment
+hljs.COMMENT(/##+/, /$/),     // or a sequence of hashes
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
+<style type="text/css">
+</style>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2026-03-30 Mon 17:21</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CMSC416 Assignment 3: Theoretical and Empirical Performance Analysis</h1>
+<ul class="org-ul">
+<li><b>Due: Tue Tue 07-Apr by 11:59 pm</b></li>
+<li><i>Approximately 5% of total grade</i></li>
+<li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a> in PDF format</li>
+<li>You may work in groups of 1 to 3 and submit one assignment per group.</li>
+</ul>
+<div id="outline-container-org9ae181e" class="outline-4">
+<h4 id="org9ae181e">CODE DISTRIBUTION: <a href="a2-code.zip">a2-code.zip</a></h4>
+</div>
+<div id="outline-container-orgdb3cf8f" class="outline-4">
+<h4 id="orgdb3cf8f">CHANGELOG: Empty</h4>
+</div>
+
+<div id="outline-container-org3914820" class="outline-4">
+<h4 id="org3914820"></h4>
+<div class="outline-text-4" id="text-org3914820">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgf51ee4b">1. (30pts) <b>Problem 1</b>: Analytic Performance of Parallel LU Factorization</a></li>
+<li><a href="#org8356199">2. (20pts) <b>Problem 2</b>: Basic Use of HPC Toolkit</a></li>
+<li><a href="#org57bca1d">3. (40pts) <b>Problem 3</b>: Empirical Analysis of Parallel LU Factorization with HPC Toolkit</a></li>
+<li><a href="#orgb4c62e3">4. (10pts) <b>Work Disclosure</b></a></li>
+<li><a href="#orgabb39dd">5. Submission Instructions</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org0c80bc9" class="outline-4">
+<h4 id="org0c80bc9">ASSIGNMENT WRITEUP CONVENTIONS</h4>
+<div class="outline-text-4" id="text-org0c80bc9">
+<p>
+This is a primarily written assignment rather than a coding
+assignment. Please abide by the following conventions while completing
+the assignment.
+</p>
+<ul class="org-ul">
+<li><b>Type your answers</b> for the most part. Use a document format
+convenient for you (Google Docs, Microsoft Word, Latex / Overleaf,
+etc.) but make sure that answers are typed in it.</li>
+<li>Submit a PDF of your work. Do your work in an application that
+allows saving PDFs that are paged (letter sized 8.5in by 11in).</li>
+<li>Mathematical equations and derivations may be hand-written with
+photos of the math included in your writeup. Typographical versions
+of math are preferred for readability to hand-written work so do
+that if you know how and make sure any hand-written math is
+readable.</li>
+<li>When submitting to Gradescope, mark pages that contain answers to
+each problem to ease the grading burden.</li>
+</ul>
+
+<blockquote>
+<p>
+Note: some of the math fonts used throughout the assignment may not
+display correctly. I have tested the display on Google Chrome and
+Mozilla Firefox and seen it work when connected to the network. Notify
+Prof Kauffman via email if it does not render properly.
+</p>
+</blockquote>
+</div>
+</div>
+<div id="outline-container-orgf51ee4b" class="outline-2">
+<h2 id="orgf51ee4b"><span class="section-number-2">1</span> (30pts) <b>Problem 1</b>: Analytic Performance of Parallel LU Factorization</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+We discussed the LU factorization process in lecture and how to
+parallelize it.  Below is pseudocode for a parallel implementation of
+LU factorization. It has the following features.
+</p>
+<ul class="org-ul">
+<li>Assumes that the large, square matrix rows of the <code>A[]</code> matrix are
+evenly distributed among the processors</li>
+<li>Leaves modifies the A matrix in place overwriting it with the L and
+U factors in its Lower and Upper triangle</li>
+<li>Assumes that the processors are arranged in a 1D torus so that
+broadcasting requires: \(T_{broadcast} = t_s \log_2{(P)} + t_w P M\)
+with \(P\) as the number of processors and \(M\)</li>
+<li>Assumes that all processors do (approximately) the same number of
+operations including broadcasting. A more sophisticated version
+would potentially cut processors out of broadcasts / computations as
+they finish before others.</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-javascript"><span class="linenr"> 1: </span>PARALLEL_LU_FACTORS_INPLACE(A[] : square matrix,
+<span class="linenr"> 2: </span>                            proc_count : number of processors)
+<span class="linenr"> 3: </span>{
+<span class="linenr"> 4: </span>    // Will overwrite A with its L*U factors, no allocation of L or U
+<span class="linenr"> 5: </span>    // Assumes rows of A[] are distributed among all processors
+<span class="linenr"> 6: </span>    N = nrows(A)
+<span class="linenr"> 7: </span>    row_count = N / proc_count                  // assume even division for simplicity
+<span class="linenr"> 8: </span>    for(d=0 to N-1){                            // d is the leading row index
+<span class="linenr"> 9: </span>        Proc with row A[d,:] Broadcasts row to all others as Arow_d
+<span class="linenr">10: </span>        for(row Arow_i in A[] owned by Proc){   // each proc updates its row_count rows of A if needed:
+<span class="linenr">11: </span>            if(Arow_i row index &gt; d){           // as algorithm advances, low-index rows don't change anymore
+<span class="linenr">12: </span>                scale = Arow_i[d] / Arow_d[d]   // scaling factor for this row to 0 out lead element
+<span class="linenr">13: </span>                Arow_i[d] = scale               // store scle factors in the Lower triangle
+<span class="linenr">14: </span>                for(j=d+1 to N-1){              // adjust row by scaled lead row
+<span class="linenr">15: </span>                    Arow_i[j] = Arow_[j] - scale*Arow_d[j]
+<span class="linenr">16: </span>                }
+<span class="linenr">17: </span>            }
+<span class="linenr">18: </span>        }
+<span class="linenr">19: </span>    }
+<span class="linenr">20: </span>    return; // A now has its L,U factors in its lower/upper triangles
+<span class="linenr">21: </span>}
+</pre>
+</div>
+
+<p>
+Do the following analysis with this code.
+</p>
+<ol class="org-ol">
+<li><b>Parallel Runtime:</b> Computer the Parallel Runtime \(T_{par}\) for the algorithm. Use the
+following variables in your analysis.
+<ul class="org-ul">
+<li>\(N\) for the matrix dimension (A is an \(N \times N\) square matrix)</li>
+<li>\(P\) for the number of processors</li>
+<li>\(t_s\) and \(t_w\) for communication startup and per-word transfer
+times</li>
+<li>The given time complexity for the Broadcast operation for a 1D
+Torus</li>
+</ul></li>
+<li><b>Parallel Overhead:</b> Compute the Parallel Overhead of the algorithm
+which is \(T_{over} = P T_{par} - T_{ser}\). The Serial runtime of
+the in-place LU factorization is \(N^3\).</li>
+<li><b>Isoefficiency Balance Equation:</b> Provide the Isoefficiency Balance
+equation for the Parallel LU Factorization by substituting terms
+into the equation \(T_{ser} = K T_{over}\) as discussed in
+class. Remember \(K\) is an arbitrary constant indicating the desired
+efficiency so is not filled in.
+<ul class="org-ul">
+<li>Simplify your equation as much as possible so that one side is
+only \(N\) and the other side is an expression of constants, \(P\),
+and possibly an \(N\) in the denominator of a term.</li>
+<li>Describe how this equation governs how to maintain efficiency
+when increasing \(P\).</li>
+<li>If going from \(P=64\) procs to \(P=128\) procs, how much should \(N\)
+increase so that efficiency stays the same?</li>
+<li>For \(N=1024, P=64, t_s=1, t_w=0.1\) compute the Efficiency of the
+Parallel Algorithm which is \(E = T_{ser} / (P T_{par}\).</li>
+<li>Then for \(N=??, P=128, t_s=1, t_w=0.1\), compute Efficiency
+again. Fill in the ?? with the value for \(N\) predicted by
+Isoefficiency to show it correctly predicts how \(N\) needs to
+scale with \(P\) to maintain the same efficiency level.</li>
+</ul></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org8356199" class="outline-2">
+<h2 id="org8356199"><span class="section-number-2">2</span> (20pts) <b>Problem 2</b>: Basic Use of HPC Toolkit</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+This problem will have get students familiar with running HPC Toolkit
+to profile a parallel code and analyze it's results. The steps below
+will guide one through using HPC Toolkit on Zaratan to profile a
+code. Some steps ask that students provide screenshots of a Terminal
+output to verify that they are tracking their steps. Consult your
+Operating System of choice on how to take screenshots (Windows:
+<a href="https://support.microsoft.com/en-us/windows/use-snipping-tool-to-capture-screenshots-00246869-1843-655f-f220-97299b865f6b">Snipping Tool</a>, MacOS <a href="https://support.apple.com/en-us/102646">Screenshot Tool</a>, Linux: Various).
+</p>
+
+<p>
+This problem will require installing some software to analyze the data
+so ensure you have ready access to such a machine.
+</p>
+
+<p>
+<b>While there are a lot of steps here, it should take less than an hour
+to complete this problem.</b>
+</p>
+
+<ol class="org-ol">
+<li>We will profile the Heat simulation from Assignment 2. Students
+that did not finish the Heat implementation from Assignment 2,
+either partner with someone who did or approach Professor Kauffman
+to get access to an implementation.</li>
+<li>Log into Zaratan via SSH and change into the directory where the
+Heat solution is located (likely <code>a2-code</code> or something
+similar). Compile the program to ensure it is ready, probably by
+typing <code>make clean</code> and then <code>make</code>.</li>
+<li><p>
+Run the command:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">   &gt;&gt; module load hpctoolkit
+</pre>
+</div>
+<p>
+This will put the HPC Toolkit profiling tools on the path. <b>NOTE:
+This will screw with compilation</b> as HPC toolkit tools are built
+with slightly different compiler toolchain. Load the module ONLY
+after compiling your own code. If in doubt, you can <code>module unload
+   hpctoolkit</code> to get restore your path.
+</p></li>
+<li><p>
+Start an interactive job run using the command
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">   &gt;&gt; sinteractive -c 8 -t 20 -a cmsc416-class
+   # -c 8   : 8 cores
+   # -t 20  : 20 minutes
+   # -a ... : select class job allocation
+</pre>
+</div>
+<p>
+This will pause for a moment to secure compute resources and then
+log your shell into a compute node to work interactively there. <b>Do
+this to abide by the "no MPI jobs on login nodes"</b> admin policy.
+</p>
+
+<p>
+This will print messages and change the prompt according to the
+compute node granted. An example
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">   &gt;&gt; sinteractive -c 8 -t 20 -a cmsc416-class
+   salloc: Granted job allocation 18732721
+   salloc: Nodes compute-b7-35 are ready for job
+   profk@compute-b7-35 [a2-code]%
+</pre>
+</div></li>
+<li><p>
+Run the Heat MPI code under HPC Toolkit to profile and trace
+it. Use this command:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">   &gt;&gt; mpirun -np 8 hpcrun -t ./heat_mpi 50000 20000 0 
+   # -np 8 : run with 8 processors
+   # -t    : trace the run to show activity over time
+   # 50000 : time steps
+   # 20000 : number of heat "bar" elements evenly distributed amont procs
+   # 0     : do not print the final output
+</pre>
+</div></li>
+<li><p>
+Verify that HPC Toolkit has taken measurements by listing the
+directory where they will be stored via the command.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">   &gt;&gt; ls -d *heat_mpi-measure*
+   # should show a directory like hpctoolkit-heat_mpi-measurements-1234567
+</pre>
+</div>
+<p>
+The "Measurements" directory requires additional processing by HPC
+Toolkit programs (next step).
+</p></li>
+<li><p>
+Process the measurements and heat executable by running the
+following commands which the list the database directory created.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">   &gt;&gt; hpcstruct hpctoolkit-heat_mpi-measurements-NNNNNNNN
+   &gt;&gt; hpcprof   hpctoolkit-heat_mpi-measurements-NNNNNNNN
+   #                                             ^^^^^^^^
+   # Substitute the number of your run here, likely via tab completion in the shell
+
+   &gt;&gt; ls -d *heat_mpi-database*
+   # should list something like hpctoolkit-heat_mpi-database-1234567
+</pre>
+</div>
+<p>
+This "Database" directory will be transferred and analyzed in the
+next steps.
+</p></li>
+<li><p>
+<b>Take a Screenshot of your Terminal run</b> which shows the session of
+creating and interactive job, running Heat under MPI/HPC Toolkit,
+and post-processing the data described in the above steps. 
+</p>
+
+<p>
+As you would wish to analyze other program runs, these are the
+steps to go through to create the dataset of observations.
+</p></li>
+<li><p>
+Transfer the data in the <code>hpctoolkit-heat_mpi-database-*</code> directory
+to your local machine (laptop / desktop). A quick way to do so is
+via the <code>scp</code> utility Open a terminal on your Laptop (Windows
+<code>cmd.exe</code> / MacOS Terminal.app / Linux Various). Type the command
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">   homeputer&gt;&gt; cd your/favorite/folder
+   # change to a local folder you want the data in
+
+   homeputer&gt;&gt; scp -r  USERID@login.zaratan.umd.edu:path/to/database/hpctoolkit-heat_mpi-database-NNNNNN .
+   #                   ^^^^^^                       ^^^^^^^^^^^^^^^^^                             ^^^^^^ |
+   # Adjust            THIS                         AND THIS                                  AND THIS   +-&gt; Don't forget the dot!
+</pre>
+</div>
+<p>
+This will prompt for login credentials and then copy the Database
+directory from Zaratan to your home directory.
+</p>
+
+<p>
+If you are using VS Codium + SFTP Plugin, then you can do the above
+via a "Sync Remote -&gt; Local".
+</p></li>
+<li>After transferring the Database directory, open that folder and
+<b>Take a screenshot of the Database directory contents on your local
+computer</b>. Include the screenshot in the assignment writeup.</li>
+<li><p>
+Download and install the HPCViewer program which is part of the
+HPC Toolkit project. 
+</p>
+<ul class="org-ul">
+<li>Download from here: <a href="https://hpctoolkit.org/download.html">https://hpctoolkit.org/download.html</a></li>
+<li>MacOS Users: check your systems settings to determine if you
+have a newer M1/M2/M3 (Arm/aarch64) processor OR instead an
+older x86-64 processor and select an appropriate choice.</li>
+</ul>
+<p>
+After downloading the program, start it which should create a
+blank window.
+</p></li>
+<li>Within HPC Viewer, select <i>File -&gt; Open Local Database</i>. Navigate
+to the location where you downloaded the
+<code>hpctoolkit-heat_mpi-database-*</code> and select that folder (don't
+open the folder, just pick the folder then press the "Open" button
+in the dialogue).  This should open the database and show several
+panels of information.</li>
+<li><p>
+At the top of the HPC Viewer window, there will be a <i>Profile Tab</i>
+and a <i>Trace Tab</i>. <b>Start with the Profile Tab</b> which should be
+open by default. In the Bottom panel there will Foldable items
+starting with "program root" and "main": expand these to show the
+portions of code that have been identified as heavy CPU
+usage. There are no specific requirements for reporting here but
+poke around for things like
+</p>
+<ul class="org-ul">
+<li>What percent of time was spent in which loops</li>
+<li>Which function calls (MPI calls) occupied large fractions of time</li>
+</ul>
+<p>
+<b>Take at least one screenshot of the Profile Tab with profiles
+expanded</b> to show some features of where code spent time. In a
+sentence or two, mention anything interesting you found here such
+as the relative time spent crunching numbers versus communicating.
+</p>
+
+<p>
+(Optional) You can explore the profile options like "Top Down"
+(default), "Bottom Up" and "Flat" if you like which can make it
+quicker to identify hot spots to optimize.
+</p></li>
+<li><b>Switch to the Trace Tab</b> at the top of the HPC Viewer.  This
+shows program activity over time color bars in the top panel.
+Color corresponds to to which functions were executing on which
+processors with the whole stack trace taken into account.
+<ul class="org-ul">
+<li>Time advances from left (early) to right (later) in this chart</li>
+<li>There should be 8 horizontal bars for the 8 processors that ran
+with the color in the bar changing color from left to right as
+time advances and different functions are active.</li>
+<li>Use the mouse "cross hair" to click on spots to show what the
+Function Call Stack for a processor looks like at a given moment</li>
+<li>One can also "click and drag" to zoom in on a region</li>
+<li>In the upper right is a "Depth: N" option which allows limiting
+the depth of function calls that are colored. <b>Set Depth to 2</b>
+since we are mostly interested here in calls out of <code>main()</code>
+into functions like <code>malloc() / MPI_Sendrecv() / MPI_Gather()</code>.</li>
+<li>In the lower right is a "Mini Map" which allows changing where
+one is zoomed in on or adjusting the portion viewed</li>
+</ul></li>
+<li><p>
+<b>Take 3 Screenshots of the Trace Window</b> all with the Depth set to 2
+</p>
+<ol class="org-ol">
+<li>The Overall run zoomed out to show all processors for the
+entire run</li>
+<li>Zoomed in on the first 1.0 second or so showing all cores</li>
+<li>Zoomed in on the final 1.0 second or so showing all cores</li>
+</ol>
+<p>
+Describe in a few sentences anything interesting revealed by the
+the Trace view.
+</p>
+
+<p>
+(Optional) The bottom panel shows additional information such as
+the function call depth of processors. You can explore what's
+there in the HPC Viewer Manual here:
+</p>
+
+<p>
+<a href="https://hpctoolkit.gitlab.io/hpctoolkit/users/hpcviewer/hpcviewer.html">https://hpctoolkit.gitlab.io/hpctoolkit/users/hpcviewer/hpcviewer.html</a>
+</p></li>
+</ol>
+
+<p>
+In summary, there should be at a minimum the following screenshots
+with brief commentary on each in the writeup.
+</p>
+<ol class="org-ol">
+<li>Terminal Session generating measurements / database</li>
+<li>Database folder on local machine after transfer</li>
+<li>HPC Viewer Profile Tab with some functions expanded</li>
+<li>HPC Viewer Trace Tab with entire run, Depth: 2</li>
+<li>HPC Viewer Trace Tab zoomed in on First 1.0 sec Depth: 2</li>
+<li>HPC Viewer Trace Tab zoomed in on Last 1.0 sec Depth: 2</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org57bca1d" class="outline-2">
+<h2 id="org57bca1d"><span class="section-number-2">3</span> (40pts) <b>Problem 3</b>: Empirical Analysis of Parallel LU Factorization with HPC Toolkit</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<b>While the description of this problem is short, it is the longest
+problem so plan accordingly.</b> Finish Problem 2 first to get familiar
+with HPC Viewer as it is needed
+</p>
+
+
+<p>
+The codepack for this assignment (<code>a3-code.zip</code> linked at the top of
+this document) contains contains several (crummy) implementations of
+LU factorization along with some data on running the parallel versions
+of it.
+</p>
+<ul class="org-ul">
+<li><code>lu_gen_random.c</code> : a code that generates random matrices for
+factorization and stores them in a binary file format read by the
+remaining problems.</li>
+<li><code>lu_serial.c</code> : serial LU implementation</li>
+<li><code>lu_mpi1.c</code> : parallel LU implementation</li>
+<li><code>lu_mpi2.c</code> : parallel LU implementation</li>
+<li><code>hpctoolkit-lu_mpi1-database-mat_10K</code>: HPC Toolkit database for
+<code>lu_mpi1</code> run on a 10K by 10K matrix</li>
+<li><code>hpctoolkit-lu_mpi2-database-mat_10K</code>: HPC Toolkit database for
+<code>lu_mpi2</code> run on a 10K by 10K matrix</li>
+</ul>
+
+<p>
+This problem will analyze the practical performance implications of
+the code decisions in the two LU MPI implementations. The goal is to
+identify problems with the performance in each of them using HPC
+Toolkit's measurements and better understand the algorithmic choices.
+</p>
+<ul class="org-ul">
+<li>Study the code provided and come to understand it. Ensure a good
+understanding of the serial algorithm and the format of the matrix
+when stored on disk.</li>
+<li>Contrast the approaches taken in the MPI1 and MPI2 versions such as
+how the matrix is loaded from a binary file and distributed among
+processors. Relate this to how the main computation loop runs.</li>
+<li>Use HPC Viewer to open up the databases of measurements on MPI1 and
+MPI2 versions. Use the Trace View to look at how the computation
+evolved over time and what processor were doing early and later.</li>
+<li>Form a recommendation on an improved version of the parallel code
+that combines the best features of both (but don't code it).</li>
+</ul>
+
+
+<p>
+Answer the following questions about the MPI1 and MPI2
+implementations and their performance data.
+</p>
+<ol class="org-ol">
+<li>Using HPC Viewer, determine how many processors were used in the
+evaluation runs of both codes and the overall runtimes for each of
+MPI1 and MPI2. Which appears faster and by how much?</li>
+<li>Study the codes and contrast the approaches that MPI1 and MPI2 take
+to distributing data between processors.  Describe each approach in
+a few sentences using terminology discussed in the course for
+matrix layout. Include whether the overall data distribution is
+equal or unbalanced between processors in both MPI1 and MPI2.</li>
+<li>Analyze how the data files are processed initially in both MPI1 and
+MPI2 to distribute data from the file to processors.  Describe
+briefly how the code accomplishes these tasks focusing on the
+differences between the MPI1 and MPI2 versions.</li>
+<li><p>
+Use HPC Viewer to Zoom in on the early stages of the program run
+for both MPI1 and MPI2. Which of the two appears to have a more
+effective strategy for loading/distributing data and gets started
+on computation sooner? Justify your answer by providing a
+screenshot of what HPC Viewer shows that demonstrates empirical
+performance at startup. <b>Include screenshots from HPC Viewer and
+written discussion of what you see there.</b> 
+</p>
+
+<p>
+<i>Hint: Loading the matrix data happens early in the runs.</i>
+</p></li>
+<li><p>
+Analyze the overall processor usage. Do both MPI1 and MPI2 have
+most processors executing computation for most of the their run or
+is one more effective than the other at this? Tie this to the code
+analysis and <b>include screenshots from HPC Viewer and written
+discussion of what you see there</b> to support your case.
+</p>
+
+<p>
+<i>Hint: Looking at the later part of the run for processors in
+computation loops rather than communication is a good idea.</i>
+</p></li>
+<li>If one were producing an optimized <code>lu_mpi3.c</code> that combines the
+best features of the MPI1 and MPI2 versions, what would you
+recommend from each version?</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orgb4c62e3" class="outline-2">
+<h2 id="orgb4c62e3"><span class="section-number-2">4</span> (10pts) <b>Work Disclosure</b></h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Include at the end of your document a section titled "Work Disclosure"
+which has sections and content as indicated in the template below.
+</p>
+
+
+<hr/>
+<p>
+<span class="underline"><b>WORK DISCLOSURE</b></span>
+</p>
+
+<p>
+(A) <b>Human Collaborators:</b> Aside from the 1-2 people submitting this assignment, the
+following people contributed ideas and discussion to the completion of
+this work INCLUDING course staff members. (Write NONE if no
+collaborators were involved.)
+</p>
+<ul class="org-ul">
+<li>Person 1 &lt;person1@email.com&gt; helped understand Problem X and the
+meaning of &#x2026;</li>
+<li>Person 2 &lt;person2@email.com&gt; helped debug Cod for Problem Y&#x2026;</li>
+<li>etc.</li>
+</ul>
+
+<p>
+(B) <b>Resource Utilization:</b> The following resources such as websites,
+course notes, artificial intelligence tools (LLMs/ChatBots/etc.) were
+utilized in the completion of this work. Include course materials such
+as textbooks and lecture slides as well. (Write NONE if no resources
+were used [which would be hard to believe]).
+</p>
+<ul class="org-ul">
+<li>Resource 1 is here <a href="https://some.resource.org/useful_stuff.html">https://some.resource.org/useful_stuff.html</a> and
+provided help for Problem Z to understand &#x2026;.</li>
+<li>Resource 2 is the book "Parallel Analysis" by Auth Or with chapter 8
+helping a lot with Problem W</li>
+<li>Resource 3 is here <a href="https://airegurgitator.com">https://airegurgitator.com</a> and provided AI
+refinements for the writing of problem Q and helped debug code for
+Problem N.</li>
+<li>etc.</li>
+</ul>
+
+<p>
+(C) <b>Ownership of Work</b>: I / We affirm that all parties listed below
+have contributed to each solution presented in this document.  All
+parties are capable of describing how the solutions were derived, how
+they apply to the problem, and that they were created in accordance
+with the course's PRIME DIRECTIVE.
+</p>
+
+<p>
+Signed,
+</p>
+
+<p>
+NAME(S) OF SUBMITTERS
+</p>
+<hr/>
+
+<p>
+Completing this section with reasonable thoroughness will earn full
+credit. Failure to include this section may result in additional
+penalties aside from the loss of points indicated.
+</p>
+</div>
+</div>
+<div id="outline-container-orgabb39dd" class="outline-2">
+<h2 id="orgabb39dd"><span class="section-number-2">5</span> Submission Instructions</h2>
+<div class="outline-text-2" id="text-5">
+<ul class="org-ul">
+<li>Upload your PDF answers to Gradescope</li>
+<li>Ensure your answers are typed except for screenshots and possibly
+mathematical equations</li>
+<li>Refer to <a href="https://www.cs.umd.edu/~profk/416/a1.html#orgd776693">A1 Submission Instructions</a> for additional details</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-03-30 Mon 17:21 <br/> </i>
+</div>
+</body>
+</html>
