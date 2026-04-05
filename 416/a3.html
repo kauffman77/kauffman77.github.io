@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-04-01 Wed 11:04 -->
+<!-- 2026-04-05 Sun 15:26 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC416 Assignment 3: Theoretical and Empirical Performance Analysis</title>
@@ -526,7 +526,7 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2026-04-01 Wed 11:04</i>
+<i>Last Updated: 2026-04-05 Sun 15:26</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC416 Assignment 3: Theoretical and Empirical Performance Analysis</h1>
@@ -536,33 +536,37 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 <li>Submit to <a href="https://www.gradescope.com/"><b>Gradescope</b></a> in PDF format</li>
 <li>You may work in groups of 1 to 3 and submit one assignment per group.</li>
 </ul>
-<div id="outline-container-orgd7b2874" class="outline-4">
-<h4 id="orgd7b2874">CODE DISTRIBUTION: <a href="a3-code.zip">a3-code.zip</a></h4>
+<div id="outline-container-orgd7ca618" class="outline-4">
+<h4 id="orgd7ca618">CODE DISTRIBUTION: <a href="a3-code.zip">a3-code.zip</a></h4>
 </div>
-<div id="outline-container-orgc01cd27" class="outline-4">
-<h4 id="orgc01cd27">CHANGELOG: Empty</h4>
+<div id="outline-container-org7025b54" class="outline-4">
+<h4 id="org7025b54">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org7025b54">
+<dl class="org-dl">
+<dt>Wed Apr  1 05:49:07 PM EDT 2026</dt><dd>Typo fixes as reported in <a href="https://piazza.com/class/mko86kpwbhp47r/post/129">Post 129</a>,</dd>
+</dl>
 </div>
-
-<div id="outline-container-orgea9ded1" class="outline-4">
-<h4 id="orgea9ded1"></h4>
-<div class="outline-text-4" id="text-orgea9ded1">
+</div>
+<div id="outline-container-org346c59d" class="outline-4">
+<h4 id="org346c59d"></h4>
+<div class="outline-text-4" id="text-org346c59d">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgda782df">1. (30pts) <b>Problem 1</b>: Analytic Performance of Parallel LU Factorization</a></li>
-<li><a href="#orgf555f0f">2. (20pts) <b>Problem 2</b>: Basic Use of HPC Toolkit</a></li>
-<li><a href="#orgd8d5531">3. (40pts) <b>Problem 3</b>: Empirical Analysis of Parallel LU Factorization with HPC Toolkit</a></li>
-<li><a href="#orgd74129a">4. (10pts) <b>Work Disclosure</b></a></li>
-<li><a href="#orgc499a27">5. Submission Instructions</a></li>
+<li><a href="#orgb7b44fa">1. (30pts) <b>Problem 1</b>: Analytic Performance of Parallel LU Factorization</a></li>
+<li><a href="#org2619315">2. (20pts) <b>Problem 2</b>: Basic Use of HPC Toolkit</a></li>
+<li><a href="#org2dc97b3">3. (40pts) <b>Problem 3</b>: Empirical Analysis of Parallel LU Factorization with HPC Toolkit</a></li>
+<li><a href="#orgecb66d1">4. (10pts) <b>Work Disclosure</b></a></li>
+<li><a href="#org4c93949">5. Submission Instructions</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org0a42fa9" class="outline-4">
-<h4 id="org0a42fa9">ASSIGNMENT WRITEUP CONVENTIONS</h4>
-<div class="outline-text-4" id="text-org0a42fa9">
+<div id="outline-container-org899f112" class="outline-4">
+<h4 id="org899f112">ASSIGNMENT WRITEUP CONVENTIONS</h4>
+<div class="outline-text-4" id="text-org899f112">
 <p>
 This is a primarily written assignment rather than a coding
 assignment. Please abide by the following conventions while completing
@@ -593,8 +597,8 @@ Prof Kauffman via email if it does not render properly.
 </blockquote>
 </div>
 </div>
-<div id="outline-container-orgda782df" class="outline-2">
-<h2 id="orgda782df"><span class="section-number-2">1</span> (30pts) <b>Problem 1</b>: Analytic Performance of Parallel LU Factorization</h2>
+<div id="outline-container-orgb7b44fa" class="outline-2">
+<h2 id="orgb7b44fa"><span class="section-number-2">1</span> (30pts) <b>Problem 1</b>: Analytic Performance of Parallel LU Factorization</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 We discussed the LU factorization process in lecture and how to
@@ -608,7 +612,8 @@ evenly distributed among the processors</li>
 U factors in its Lower and Upper triangle</li>
 <li>Assumes that the processors are arranged in a 1D torus so that
 broadcasting requires: \(T_{broadcast} = t_s \log_2{(P)} + t_w P M\)
-with \(P\) as the number of processors and \(M\)</li>
+with \(P\) as the number of processors and \(M\) is the size of the
+message being sent</li>
 <li>Assumes that all processors do (approximately) the same number of
 operations including broadcasting. A more sophisticated version
 would potentially cut processors out of broadcasts / computations as
@@ -671,7 +676,7 @@ when increasing \(P\).</li>
 <li>If going from \(P=64\) procs to \(P=128\) procs, how much should \(N\)
 increase so that efficiency stays the same?</li>
 <li>For \(N=1024, P=64, t_s=1, t_w=0.1\) compute the Efficiency of the
-Parallel Algorithm which is \(E = T_{ser} / (P T_{par}\).</li>
+Parallel Algorithm which is \(E = T_{ser} / (P T_{par})\).</li>
 <li>Then for \(N=??, P=128, t_s=1, t_w=0.1\), compute Efficiency
 again. Fill in the ?? with the value for \(N\) predicted by
 Isoefficiency to show it correctly predicts how \(N\) needs to
@@ -680,8 +685,8 @@ scale with \(P\) to maintain the same efficiency level.</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-orgf555f0f" class="outline-2">
-<h2 id="orgf555f0f"><span class="section-number-2">2</span> (20pts) <b>Problem 2</b>: Basic Use of HPC Toolkit</h2>
+<div id="outline-container-org2619315" class="outline-2">
+<h2 id="org2619315"><span class="section-number-2">2</span> (20pts) <b>Problem 2</b>: Basic Use of HPC Toolkit</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 This problem will have get students familiar with running HPC Toolkit
@@ -937,8 +942,8 @@ with brief commentary on each in the writeup.
 </ol>
 </div>
 </div>
-<div id="outline-container-orgd8d5531" class="outline-2">
-<h2 id="orgd8d5531"><span class="section-number-2">3</span> (40pts) <b>Problem 3</b>: Empirical Analysis of Parallel LU Factorization with HPC Toolkit</h2>
+<div id="outline-container-org2dc97b3" class="outline-2">
+<h2 id="org2dc97b3"><span class="section-number-2">3</span> (40pts) <b>Problem 3</b>: Empirical Analysis of Parallel LU Factorization with HPC Toolkit</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 <b>While the description of this problem is short, it is the longest
@@ -1035,8 +1040,8 @@ recommend from each version?</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-orgd74129a" class="outline-2">
-<h2 id="orgd74129a"><span class="section-number-2">4</span> (10pts) <b>Work Disclosure</b></h2>
+<div id="outline-container-orgecb66d1" class="outline-2">
+<h2 id="orgecb66d1"><span class="section-number-2">4</span> (10pts) <b>Work Disclosure</b></h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Include at the end of your document a section titled "Work Disclosure"
@@ -1104,8 +1109,8 @@ penalties aside from the loss of points indicated.
 </p>
 </div>
 </div>
-<div id="outline-container-orgc499a27" class="outline-2">
-<h2 id="orgc499a27"><span class="section-number-2">5</span> Submission Instructions</h2>
+<div id="outline-container-org4c93949" class="outline-2">
+<h2 id="org4c93949"><span class="section-number-2">5</span> Submission Instructions</h2>
 <div class="outline-text-2" id="text-5">
 <ul class="org-ul">
 <li>Upload your PDF answers to Gradescope</li>
@@ -1117,7 +1122,7 @@ mathematical equations</li>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-04-01 Wed 11:04 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-04-05 Sun 15:26 <br/> </i>
 </div>
 </body>
 </html>
