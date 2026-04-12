@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-03-31 Tue 22:38 -->
+<!-- 2026-04-12 Sun 14:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CMSC216 Lab09: Fork/Wait and Stat</title>
+<title>CMSC216 Lab09: Make/Makefiles and I/O Redirection</title>
 <meta name="author" content="Chris Kauffman" />
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
@@ -330,6 +330,17 @@ margin-left: 0.5em;
 }
 }
 .linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
+details > summary {
+padding: 2px 6px;
+font-family: Sans;
+font-size: 0.8em;
+width: fit-content;
+border-radius: 5px;
+background-color: #efefef;
+border: 1px solid black;
+cursor: pointer;
+}
 }
 
 @media print {
@@ -341,78 +352,233 @@ text-align: justify;
 }
 }
 </style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","[COMMANDO]>>","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+literal: ["[data/script.txt]>>","[data/script1.txt]>>","[data/script6.txt]>>"],
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+// hljs.COMMENT(/## /, /$/),     // hash-hash-ws for comment
+hljs.COMMENT(/##+/, /$/),     // or a sequence of hashes
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2026-03-31 Tue 22:38</i>
+<i>Last Updated: 2026-04-12 Sun 14:51</i>
 </div>
 <div id="content" class="content">
-<h1 class="title">CMSC216 Lab09: Fork/Wait and Stat</h1>
+<h1 class="title">CMSC216 Lab09: Make/Makefiles and I/O Redirection</h1>
 <ul class="org-ul">
-<li><b>Due: 11:59pm Sun 12-Apr-2026</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><b>Due: 11:59pm Sun 19-Apr-2026</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
-<div id="outline-container-org156e410" class="outline-4">
-<h4 id="org156e410">CODE DISTRIBUTION: <a href="lab09-code.zip">lab09-code.zip</a></h4>
+<div id="outline-container-org2ec5632" class="outline-4">
+<h4 id="org2ec5632">CODE DISTRIBUTION: <a href="lab09-code.zip">lab09-code.zip</a></h4>
+<div class="outline-text-4" id="text-org2ec5632">
+<ul class="org-ul">
+<li>Download the code distribution</li>
+<li>See further setup instructions below</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgea90332" class="outline-4">
+<h4 id="orgea90332">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-org7db4344" class="outline-4">
-<h4 id="org7db4344">CHANGELOG: Empty</h4>
-</div>
-
-<div id="outline-container-orgb6d4640" class="outline-4">
-<h4 id="orgb6d4640"></h4>
-<div class="outline-text-4" id="text-orgb6d4640">
+<div id="outline-container-orgeccc394" class="outline-4">
+<h4 id="orgeccc394"></h4>
+<div class="outline-text-4" id="text-orgeccc394">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orge3cda02">1. Rationale</a></li>
-<li><a href="#org1e13241">2. Codepack</a></li>
-<li><a href="#orga66950b">3. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org7a72913">4. Submission</a></li>
+<li><a href="#org97c4fb3">1. Rationale</a></li>
+<li><a href="#org3cae0b5">2. Codepack</a></li>
+<li><a href="#orgb199952">3. Problem 1: Background on Makefiles</a>
+<ul>
+<li><a href="#org19e77ef">3.1. Structure of Makefiles</a></li>
+<li><a href="#org2cac0c1">3.2. Variables and Shortcuts in Makefiles</a></li>
+<li><a href="#org385dce1">3.3. Dependency Detection</a></li>
+</ul>
+</li>
+<li><a href="#orgd8768c1">4. Problem 2: I/O Redirection</a></li>
+<li><a href="#org4b886f9">5. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org1576981">6. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orge3cda02" class="outline-2">
-<h2 id="orge3cda02"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org97c4fb3" class="outline-2">
+<h2 id="org97c4fb3"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-The <code>fork()</code> and <code>wait()</code> system calls are among the most basic
-facilities to create and coordinate processes in Unix systems. While
-their semantics can seem simple at first, use of <code>fork()</code> in
-particular can be a bit deceptive.  This exercise illustrates as much with
-a simple looking program with somewhat unexpected behavior. It also
-gives practice on how a parent process can coordinate its execution in
-a limited fashion with child processes and receive a small amount of
-information about the child process via collecting their exit codes.
+Build systems are essential to program development to automate
+repetitive tasks such as compiling code, running tests, and tracking
+changes which would necessitate running such tasks.  The <code>make</code> build
+system is among the oldest build system and is ubiquitous across Unix
+systems making it a useful to know a few basics about it.
 </p>
 
 <p>
-Frequently systems programs must check for the existence of file and
-interrogate their properties. The first exercise studies two common
-system calls for this task, <code>access()</code> and <code>stat()</code>. It employs them
-in a few simple tasks to acquaint students with their use.
+Unix maintains a table of open File Descriptors for each running
+process.  Using the <code>dup()</code> and <code>dup2()</code> system calls, programs can
+manipulate this table to achieve interesting effects, notably
+redirection of output from standard locations to other places. This
+exercise demonstrates some common techniques for doing so and will
+acquaint students with the basics of how the file descriptor table
+works and how it is inherited by child processes.
 </p>
 </div>
-<div id="outline-container-org44999e8" class="outline-4">
-<h4 id="org44999e8">Associated Reading</h4>
-<div class="outline-text-4" id="text-org44999e8">
-<ul class="org-ul">
-<li>Bryant and O'Hallaron CSAPP Ch 8.4 discusses <code>fork() / wait()</code>,
-their uses in creating and coordinating processes, and gives enough
-basic coverage to inform on Problem 1.</li>
-<li>Bryant and O'Hallaron CSAPP Ch 10.6 discusses file metadata and how
-it is accessed via <code>stat()</code> and related functions. The <a href="https://man.he.net/?topic=access&amp;section=all">manual page
-entry for <code>access()</code></a> is a good source of information on its use.</li>
-</ul>
+<div id="outline-container-org4ec6907" class="outline-4">
+<h4 id="org4ec6907">Associated Reading</h4>
+<div class="outline-text-4" id="text-org4ec6907">
+<p>
+Students only need to master the basics of <code>make</code> and its <code>Makefile</code>
+format which are discussed in this document.  Those wanting a more
+complete account should consult the <a href="https://www.gnu.org/software/make/manual/make.html">GNU Make Manual</a> as it is the most
+widely deployed implementation of <code>make</code> and its manual is thorough.
+</p>
+
+<p>
+Bryant and O'Hallaron CS:APP covers I/O redirection in Section 10.9
+which gives good treatment of the <code>dup2()</code>. The preceding Section 10.8
+also discusses manipulations of the file descriptor table between
+parent and child processes.
+</p>
 </div>
 </div>
-<div id="outline-container-orgfb79445" class="outline-4">
-<h4 id="orgfb79445">Grading Policy</h4>
-<div class="outline-text-4" id="text-orgfb79445">
+<div id="outline-container-orgf8673de" class="outline-4">
+<h4 id="orgf8673de">Grading Policy</h4>
+<div class="outline-text-4" id="text-orgf8673de">
 <p>
 Credit for this lab is earned by completing the code/answers in the
 Lab codepack and submitting a Zip of the work to Gradescope preferably
@@ -436,13 +602,13 @@ submissions. See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">f
 </div>
 </div>
 </div>
-<div id="outline-container-org1e13241" class="outline-2">
-<h2 id="org1e13241"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org3cae0b5" class="outline-2">
+<h2 id="org3cae0b5"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-The codepack is linked at the top of this document. Always download it
-and unzip/unpack it.  It should contain the following files which are
-briefly described.
+The codepack for this exercise is linked at the top of this
+document. Always download it and unzip/unpack it.  It should contain
+the following files which are briefly described.
 </p>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -464,30 +630,60 @@ briefly described.
 </thead>
 <tbody>
 <tr>
+<td class="org-left"><code>makeproblem-demo-little</code></td>
+<td class="org-left">Study</td>
+<td class="org-left">Problem 1 Example Makefiles to study</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>makeproblem-demo-big</code></td>
+<td class="org-left">Study</td>
+<td class="org-left">Problem 1 Example Makefiles to study</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>makeproblem-create/Makefile</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 1 Template Makefile to complete for problem</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_makefile.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 CODE tests, used in <code>make test-prob2</code></td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>switch_stdout.c</code></td>
+<td class="org-left">Study</td>
+<td class="org-left">Problem 2: C file to study to answer QUIZ questions</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>childout_query.c</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 2 code outline to complete</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>nums.txt</code></td>
+<td class="org-left">Data</td>
+<td class="org-left">Problem 2: Data used in the tests</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
 <td class="org-left"><code>QUESTIONS.txt</code></td>
 <td class="org-left">EDIT</td>
 <td class="org-left">Questions to answer: fill in the multiple choice selections in this file.</td>
 </tr>
 
-<tr>
-<td class="org-left"><code>fork_me_main.c</code></td>
-<td class="org-left">EDIT</td>
-<td class="org-left">PROBLEM 1 C file to edit</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>stat_demo.c</code></td>
-<td class="org-left">Study</td>
-<td class="org-left">PROBLEM 2 demo showing <code>access() / stat()</code> system calls</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>newer_file.c</code></td>
-<td class="org-left">EDIT</td>
-<td class="org-left">PROBLEM 2 code outline to complete</td>
-</tr>
-</tbody>
-<tbody>
 <tr>
 <td class="org-left"><code>QUESTIONS.txt.bk</code></td>
 <td class="org-left">Backup</td>
@@ -509,33 +705,293 @@ briefly described.
 <tr>
 <td class="org-left"><code>test_lab09.org</code></td>
 <td class="org-left">Testing</td>
-<td class="org-left">Tests for this lab</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>test_code.org</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">Tests for code problems allowing individual testing</td>
-</tr>
-
-<tr>
-<td class="org-left"><code>test_order_pids</code></td>
-<td class="org-left">Testing</td>
-<td class="org-left">Filter to normalize the PIDs in <code>fork_me</code></td>
+<td class="org-left">Tests for this exercise</td>
 </tr>
 
 <tr>
 <td class="org-left"><code>gradescope-submit</code></td>
-<td class="org-left">Misc</td>
-<td class="org-left">Allows submission to Gradescope from the command line</td>
+<td class="org-left">Provided</td>
+<td class="org-left">Allows submission from the command line</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<div id="outline-container-orga66950b" class="outline-2">
-<h2 id="orga66950b"><span class="section-number-2">3</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-orgb199952" class="outline-2">
+<h2 id="orgb199952"><span class="section-number-2">3</span> Problem 1: Background on Makefiles</h2>
 <div class="outline-text-2" id="text-3">
+<p>
+Building programs often involves compiling separate source files and
+eventually combining them through linking to create an executable.
+There are often associated tasks such as running automated tests,
+creating distribution files, and generating documentation that may be
+supported by the build system as well.  Among the oldest build systems
+still in use is <code>make</code> and its associated <code>Makefiles</code>.  This problem
+covers the basics of how to create a <code>Makefile</code>.
+</p>
+</div>
+<div id="outline-container-org19e77ef" class="outline-3">
+<h3 id="org19e77ef"><span class="section-number-3">3.1</span> Structure of Makefiles</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+The basic structure of a <code>Makefile</code> involves <b>rules</b> which relate
+<b>targets, dependencies, and commands</b>. Simple <code>Makefiles</code> comprise a
+list of rules.
+</p>
+<div class="org-src-container">
+<pre class="src src-makefile"># comment above Rule 1
+target1 : dependency1A depency1B
+	command1A
+	command1B
+	command1C
+
+# comment above Rule 2
+target2 : dependency2A
+	command2A
+	command2B
+
+# comment above Rule 3
+target3 : dependency3A dependency3B dependency3B
+	command3A
+	command3B
+</pre>
+</div>
+<p>
+When invoked, <code>make target3</code> will load the contents of the <code>Makefile</code>
+and examine the relationship between <code>target3</code> and its
+dependencies. If <code>make</code> determines it is necessary, it may run
+<code>command3A, command3B</code> in sequence to "update" <code>target3</code>. In other
+cases, <code>make</code> may determine that there is no need to run additional
+commands as <code>target3</code> is already up to date.  Similarly, running <code>make
+target1</code> will possibly run <code>command1A, command1B, command1C</code>.
+</p>
+
+<p>
+NOTE: Commands associated with a rule <b>MUST BE INDENTED WITH A
+TAB</b>. This is a notoriously bad "feature" of make which can
+occasionally cause problems. Be aware: leading whitespace for commands
+should be TAB characters.
+</p>
+
+<p>
+The most common kind of target is a file that should be created such
+as a <code>.o</code> file or an executable program. The directory
+<code>makeproblem-demo-little</code> has an example <code>Makefile</code> showing this:
+</p>
+<div class="org-src-container">
+<pre class="src src-makefile"><span class="linenr"> 1: </span># Simple Makefile to build program main_prog
+<span class="linenr"> 2: </span>
+<span class="linenr"> 3: </span># first rule in the file is the default: typing `make` is the same as
+<span class="linenr"> 4: </span># typing `make main_prog`
+<span class="linenr"> 5: </span>
+<span class="linenr"> 6: </span># rule 1
+<span class="linenr"> 7: </span>main_prog : main_func.o func_01.o
+<span class="linenr"> 8: </span>	gcc -o main_prog main_func.o func_01.o
+<span class="linenr"> 9: </span>
+<span class="linenr">10: </span># rule 2
+<span class="linenr">11: </span>main_func.o : main_func.c
+<span class="linenr">12: </span>	gcc -c main_func.c
+<span class="linenr">13: </span>
+<span class="linenr">14: </span># rule 3
+<span class="linenr">15: </span>func_01.o : func_01.c
+<span class="linenr">16: </span>	gcc -c func_01.c
+<span class="linenr">17: </span>
+<span class="linenr">18: </span># rule 4
+<span class="linenr">19: </span>clean : 
+<span class="linenr">20: </span>	rm -f *.o
+<span class="linenr">21: </span>	rm -f main_prog
+</pre>
+</div>
+
+<p>
+The rules that appear are
+</p>
+<ol class="org-ol">
+<li><code>main_prog</code> depends on the <code>main_func.o</code> and <code>func_01.o</code>; the
+program is created by invoking GCC on these files</li>
+<li><code>main_func.o</code> depends on <code>main_func.c</code> which is created by running
+GCC</li>
+<li><code>func_01.o</code> depends on <code>func_01.c</code> and is created by running GCC</li>
+<li><code>clean</code> is a "phony" target with no dependencies which will remove
+compile artifacts by using the <code>rm</code> command</li>
+</ol>
+
+<p>
+When one types <code>make</code> or <code>make main_prog</code> in that directory, the
+following will appear:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; cd makeproblem-demo-little/
+&gt;&gt; make
+gcc -c main_func.c
+gcc -c func_01.c
+gcc -o main_prog main_func.o func_01.o
+</pre>
+</div>
+<p>
+Observe that <code>make</code> detects that the two dependencies for Rule 1 are
+incomplete: <code>main_func.o</code> and <code>func_01.o</code> are not present. To create
+them, it will generate them as targets according to for the rules that
+have them as targets, Rule 2 and Rule 3.  After running the commands
+for these two rules, the commands for Rule 1 are executed to generate
+the program.
+</p>
+</div>
+</div>
+<div id="outline-container-org2cac0c1" class="outline-3">
+<h3 id="org2cac0c1"><span class="section-number-3">3.2</span> Variables and Shortcuts in Makefiles</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Makefiles support a large number of features such as explicit
+variables, automatic variables, pattern-based rules, and many
+others. A few of these are described in the sample file
+<code>makeproblem-demo-little/Makefile-shortcuts</code>. It accomplishes the same
+task as the <code>Makefile</code> but utilizes some features which are useful to
+know about. The comments in this file describe some of these features.
+</p>
+<div class="org-src-container">
+<pre class="src src-makefile"><span class="linenr"> 1: </span># Simple Makefile to build program main_prog
+<span class="linenr"> 2: </span>
+<span class="linenr"> 3: </span># first rule in the file is the default: typing `make` is the same as
+<span class="linenr"> 4: </span># typing `make main_prog`
+<span class="linenr"> 5: </span>
+<span class="linenr"> 6: </span># rule 1
+<span class="linenr"> 7: </span>main_prog : main_func.o func_01.o
+<span class="linenr"> 8: </span>	gcc -o main_prog main_func.o func_01.o
+<span class="linenr"> 9: </span>
+<span class="linenr">10: </span># rule 2
+<span class="linenr">11: </span>main_func.o : main_func.c
+<span class="linenr">12: </span>	gcc -c main_func.c
+<span class="linenr">13: </span>
+<span class="linenr">14: </span># rule 3
+<span class="linenr">15: </span>func_01.o : func_01.c
+<span class="linenr">16: </span>	gcc -c func_01.c
+<span class="linenr">17: </span>
+<span class="linenr">18: </span># rule 4
+<span class="linenr">19: </span>clean : 
+<span class="linenr">20: </span>	rm -f *.o
+<span class="linenr">21: </span>	rm -f main_prog
+</pre>
+</div>
+
+<p>
+By default, typing <code>make</code> will search for a file named <code>Makefile</code> but
+the following invocation allows using a specific file other than that:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; make -f Makefile-shortcuts
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org385dce1" class="outline-3">
+<h3 id="org385dce1"><span class="section-number-3">3.3</span> Dependency Detection</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+Makefiles are useful for larger projects to automatically detect
+dependencies which must be updated.  The example in
+<code>makeproblem-demo-big/</code> shows a "larger" project with more files. Observe
+the following:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">&gt;&gt; make                # COMPILE 1
+gcc -c main_func.c
+gcc -c func_01.c
+gcc -c func_02.c
+gcc -c func_03.c
+gcc -c func_04.c
+gcc -c func_05.c
+gcc -c func_06.c
+gcc -c func_07.c
+gcc -c func_08.c
+gcc -c func_09.c
+gcc -c func_10.c
+gcc -c func_11.c
+gcc -c func_12.c
+gcc -c func_13.c
+gcc -c func_14.c
+gcc -c func_15.c
+gcc -c func_16.c
+gcc -c func_17.c
+gcc -c func_18.c
+gcc -c func_19.c
+gcc -c func_20.c
+gcc -o main_prog main_func.o func_01.o func_02.o func_03.o func_04.o func_05.o func_06.o func_07.o func_08.o func_09.o func_10.o func_11.o func_12.o func_13.o func_14.o func_15.o func_16.o func_17.o func_18.o func_19.o func_20.o
+
+&gt;&gt; make                # COMPILE 2
+make: Nothing to be done for 'all'.
+
+&gt;&gt; rm func_12.o        # delete a .o
+&gt;&gt; touch func_05.c     # make func_05.c look like it has been edited
+
+&gt;&gt; make                # COMPILE 3
+gcc -c func_05.c       # only out of sync or
+gcc -c func_12.c       # missing targets are regenerated
+gcc -o main_prog main_func.o func_01.o func_02.o func_03.o func_04.o func_05.o func_06.o func_07.o func_08.o func_09.o func_10.o func_11.o func_12.o func_13.o func_14.o func_15.o func_16.o func_17.o func_18.o func_19.o func_20.o
+</pre>
+</div>
+<p>
+The lesson above is in <code>COMPILE 3</code>: make detects that most of the <code>.o</code>
+files are in sync with their source files. Only the missing / out of
+sync targets have their rules applied to regenerated them and update
+the exectuable program.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd8768c1" class="outline-2">
+<h2 id="orgd8768c1"><span class="section-number-2">4</span> Problem 2: I/O Redirection</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Programs often need to deal with open files for reading and
+writing. The UNIX Operating System (Linux included in this) maintains
+a data structure called the <b>File Descriptor Table</b> for all open
+files. Some entries in this table are automatically created like
+Standard Input and Standard Output. Others are created via the
+<code>open()</code> system call. The table is maintained in Kernel Space and can
+only be altered via system calls like <code>open() / close() / ~dup() /
+dup2()</code>.
+</p>
+
+<p>
+It is useful to have some diagrams of how the <code>dup()</code> and <code>dup2()</code>
+system calls manipulate the table of file descriptors.  The following
+diagrams will be discussed in lecture and may be used by course staff
+to assist students in understanding how programs like
+<code>switch_stdout.c</code> work.
+</p>
+</div>
+<div id="outline-container-orgf448a08" class="outline-4">
+<h4 id="orgf448a08">Fork and Child File Descriptors</h4>
+<div class="outline-text-4" id="text-orgf448a08">
+<div class="org-center">
+
+<div id="org3b17a0c" class="figure">
+<p><img src="fork-fds.png" alt="fork-fds.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Effects of <code>open()</code>'ing a file then calling <code>fork()</code> : the child and parent both refer to the same open file.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd308011" class="outline-4">
+<h4 id="orgd308011">dup() and dup2() System calls</h4>
+<div class="outline-text-4" id="text-orgd308011">
+<div class="org-center">
+
+<div id="orge2247fb" class="figure">
+<p><img src="dup-and-dup2.png" alt="dup-and-dup2.png" style="max-width:100%;" />
+</p>
+<p><span class="figure-number">Figure 2: </span>LEFT: Effect of calling <code>dup()</code> to create a duplicate file descriptor table entry. RIGHT: Effect of calling <code>dup2()</code> to overwrite on file descriptor entry with another.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org4b886f9" class="outline-2">
+<h2 id="org4b886f9"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
+<div class="outline-text-2" id="text-5">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the exercise.
 Follow the instructions in it to complete the QUIZ and CODE questions
@@ -571,299 +1027,276 @@ Exercise Instructions
     the names of their group on Gradescope.
 
 
-PROBLEM 1 QUIZ: Questions on fork_me.c
+PROBLEM 1 QUIZ: Questions on Makefiles
 ======================================
 
-  Analyze the `fork_me.c' application then compile and run it. Compiling
-  can be done via a `make'. Answer the questions below about its
-  behavior.
-
-  How many total processes are created by running this program including
-  the initial process?
-  - ( ) 3
-  - ( ) 4
-  - ( ) 5
-  - ( ) 16
-
-  Which of the following best describes the relationship between the
-  processes created by running this program?
-  - ( ) There is a "chain" of processes with single parent, single
-    child, single grand child, etc.
-  - ( ) There is a "fan" of processes with a single parent and multiple
-    children
-  - ( ) There is a lobsided "tree" of processes with a single parent,
-    several children, some of which have grand children, some of which
-    have great grand children, etc.
-  - ( ) There are several individual parents each of which has a single
-    child.
-
-  Concerning when the processes complete and produce their FINISH
-  output...
-  - ( ) The order that the processes complete is always the same.
-  - ( ) The entire output order varies and cannot be predicted
-  - ( ) Portions of the output appear predictably but other portions
-    vary
-  - ( ) Only the process IDs vary but the printing order does not change
-
-  Check ALL that are true about the initial version of he `fork_me.c'
-  program
-  - ( ) Sometimes when running the program, a process will report its
-    Parent PID as 1
-  - ( ) All processes report a global_total of 4
-  - ( ) Sometimes the START message will appear after some FINISH
-    messages
-  - ( ) The intended output of child and grandchild processes print more
-    "--" symbols does not work and all processes appear at the same
-    level
+  Review the presentation of `Makefile' basics in the lab description
+  and analyze the examples provided in the demo directories
+  `makeproblem-demo-little' and `makeproblem-demo-big'. Then answer the
+  following questions.
 
 
-PROBLEM 1 CODE: Create order for fork_me.c
-==========================================
+Command Execution
+~~~~~~~~~~~~~~~~~
 
-  Modify the `fork_me.c' program to fulfill the following requirements
-  1. Every run of the program leads to the same ordering of output
-     between parent, child, grandchild, etc. processes
-  2. Parent processes pause each time a child is created and do not
-     proceed until a child process finishes.
-  3. The parent process examines the status of the child process and
-     extracts its exit code / return value and adds it to the
-     `global_total' variable.
-
-  The code modifications required include the use of some of the
-  following system calls and associated macros.
-  -----------------------------------------------------------------------------------------------------------------------------
-   Call/Macro                Effect                                                                                            
-  -----------------------------------------------------------------------------------------------------------------------------
-   wait(NULL);               Wait for any immediate child process to finish                                                    
-   wait(&amp;status);            Wait for any immediate child process to finish AND store info about its completion                
-   waitpid(cpid,NULL,0);     Wait specifically for child cpid to finish                                                        
-   waitpid(cpid,&amp;status,0);  Wait specifically for child cpid to finish AND store info about its completion                    
-   WIFEXITED(status)         Evaluates to "truthy" if status contains info on a process that exited normally                   
-   WEXITSTATUS(status)       For processes that exited normally, extracts the exit code / return value for the program         
-   WIFSIGNALLED(status)      Evaluates to "truthy" if status contains info on a process that were terminated due to errors     
-   WTERMSIG(status)          For processes that were terminated, returns the Signal number related to the cause of termination 
-  -----------------------------------------------------------------------------------------------------------------------------
-  Not all of these need be used in `fork_me.c' but they may all be
-  useful in an upcoming project.
-
-  You can test your code `make test-code testnum=1'.
-
-  NOTE that since the PIDs from run to run are unpredictable, the `make
-  test-code' command uses the `test_order_pids' to create consistent
-  PIDs for testing purposes.
-
-  EXAMPLE:
-  ,----
-  | &gt;&gt; ./fork_me
-  | START| parent_pid: 1010387 pid: 568951 
-  | FINISH| pid: 568951 parent_pid: 1010387 global_total: 4
-  | --FINISH| pid: 568953 parent_pid: 568951 global_total: 4
-  | ----FINISH| pid: 568954 parent_pid: 568952 global_total: 4
-  | ----FINISH| pid: 568957 parent_pid: 568953 global_total: 4
-  | ----FINISH| pid: 568956 parent_pid: 568952 global_total: 4
-  | ----FINISH| pid: 568960 parent_pid: 568955 global_total: 4
-  | ----FINISH| pid: 568961 parent_pid: 568952 global_total: 4
-  | --FINISH| pid: 568955 parent_pid: 568951 global_total: 4
-  | --FINISH| pid: 568952 parent_pid: 568951 global_total: 4
-  | ------FINISH| pid: 568964 parent_pid: 1 global_total: 4
-  | ------FINISH| pid: 568965 parent_pid: 1 global_total: 4
-  | ----FINISH| pid: 568962 parent_pid: 1 global_total: 4
-  | ------FINISH| pid: 568959 parent_pid: 1 global_total: 4
-  | --FINISH| pid: 568958 parent_pid: 568951 global_total: 4
-  | ------FINISH| pid: 568963 parent_pid: 1 global_total: 4
-  | --------FINISH| pid: 568966 parent_pid: 1 global_total: 4
-  | 
-  | &gt;&gt; ./fork_me | ./test_order_pids
-  | START| parent_pid: 101 pid: 100
-  | FINISH| pid: 100 parent_pid: 101 global_total: 4
-  | --FINISH| pid: 102 parent_pid: 100 global_total: 4
-  | --FINISH| pid: 103 parent_pid: 100 global_total: 4
-  | ----FINISH| pid: 104 parent_pid: 102 global_total: 4
-  | --FINISH| pid: 105 parent_pid: 100 global_total: 4
-  | ----FINISH| pid: 106 parent_pid: 105 global_total: 4
-  | ------FINISH| pid: 107 parent_pid: 106 global_total: 4
-  | ----FINISH| pid: 108 parent_pid: INIT global_total: 4
-  | ----FINISH| pid: 109 parent_pid: INIT global_total: 4
-  | ------FINISH| pid: 110 parent_pid: INIT global_total: 4
-  | ------FINISH| pid: 111 parent_pid: INIT global_total: 4
-  | ----FINISH| pid: 112 parent_pid: INIT global_total: 4
-  | --------FINISH| pid: 113 parent_pid: 111 global_total: 4
-  | ----FINISH| pid: 114 parent_pid: INIT global_total: 4
-  | --FINISH| pid: 115 parent_pid: INIT global_total: 4
-  | ------FINISH| pid: 116 parent_pid: INIT global_total: 4
-  `----
+  Which of the following best describes when the commands for a rule are
+  run?
+  - ( ) The commands for all targets in the Makefile are all run every
+    time make is used
+  - ( ) Only the commands associated with the target named on the
+    command line are run; e.g. `make targ5` will run commands associated
+    with targ5
+  - ( ) Commands for a given rule execute only if make detects a its
+    target is needed and then only if the target is missing or older
+    than its dependencies
 
 
-PROBLEM 2 QUIZ: Questions on stat_demo.c
-========================================
-
-  Analyze the `stat_demo.c' program. Compile and run it via
-  ,----
-  | &gt;&gt; make stat_demo
-  | ...
-  | &gt;&gt; ./stat_demo somefile.txt
-  | ...
-  | &gt;&gt; ./stat_demo a_dirname/
-  `----
-
-  Finally, you can contrast the behavior of `filestats.c' to the shell
-  command `stat' which provides similar functionality.
-
-  Answer the following questions about how the system call works.
-
-
-File Access
+Rule Syntax
 ~~~~~~~~~~~
 
-  Which of the filling best describes how the `access()' system call is
-  used?
-  - ( ) It alters read/write access to a file by adjusting its mode bits
-  - ( ) It is called to determine if a file exists using the `F_OK' flag
-  - ( ) It ensures a file exists and can be accessed by creating if
-    necessary
-  - ( ) It must be called before `stat()' in order to initialize a
-    `struct stat' data structure
-
-
-File Size
-~~~~~~~~~
-
-  How does `stat()' report the Size of a file?
-  - ( ) An integer is passed to the calls to be set to the size
-  - ( ) The return value is the number of bytes in the file
-  - ( ) The size is printed to standard output during the function call
-  - ( ) The field `sb.st_size' contains the number of bytes in file
-
-
-File Kind
-~~~~~~~~~
-
-  `stat()' reports the "kind" of file being queried. How is this
-  information used in `stat_demo.c'?
-  - ( ) The field `sb.st_filetype' is set to a string like "file" or
-    "pipe" to indicate the type of a file and that field can be printed
-    directly
-  - ( ) An integer passed in as an address to the call is set to the
-    type of the file
-  - ( ) The kind is encoded in the `sb.st_mode' field of the struct and
-    macros are used to distinguish the kind and print an appropriate
-    message.
-  - ( ) The kind is encoded in the `sb.st_mode' field of the struct and
-    functions are used to distinguish the kind and print an appropriate
-    message.
-
-  Which one of the following is NOT a file "kind" reported by `stat() /
-  lstat()'
-  - ( ) Directory
-  - ( ) Binary
-  - ( ) Socket
-  - ( ) Symbolic Link (symlink)
-
-
-mtime / ctime
-~~~~~~~~~~~~~
-
-  Do some research and determine the difference between the `ctime' and
-  `mtime' fields that are reported by `stat() / lstat()'. Which of the
-  following best describes this difference:
-  - ( ) `mtime' and `ctime' actually always report the same time and
-    their redundancy is a historical oddity.
-  - ( ) `mtime' indicates the last time that the file was moved from one
-    directory to another while `ctime' indicates the last change to the
-    data in the file
-  - ( ) `mtime' is the last time of modification when data was altered
-    in the file while `ctime' is the last access time when data was read
-    from the file
-  - ( ) `mtime' is when the actual data of a file changes while `ctime'
-    is associated with permissions, links, or other meta data changes
-    associated with the file.
-
-
-  You can test your results for the above quiz questions via `make
-  test-quiz' after completing all quiz questions.
-
-
-Additional Items to Observe
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  The function `ctime()' and `strmode()' both use an interesting
-  technique to make it possible to easily produce a printable string for
-  situations like those in `filestats.c'.  Time permitting, examine the
-  source code for `strmode()' in `strmode.c' and discuss with a TA how a
-  string is returned but there is no requirement to free that string.
-
-  Finally, like many system calls, `stat()' has a command-line
-  equivalent in the form of the `stat' command which prints to the
-  screen many of the statistics of a file and is useful at times.
+  Which of the following Rules correctly lays out the syntax for target,
+  dependencies, and commands in a Makefile.
   ,----
-  | &gt;&gt; stat A.txt
-  |   File: A.txt
-  |   Size: 2         	Blocks: 8          IO Block: 4096   regular file
-  | Device: 254,1	Inode: 7080409     Links: 1
-  | Access: (0644/-rw-r--r--)  Uid: ( 1000/kauffman)   Gid: (  985/   users)
-  | Access: 2024-11-07 14:15:55.332936076 -0500
-  | Modify: 2024-11-07 14:10:55.332925991 -0500
-  | Change: 2024-11-07 14:15:55.329602657 -0500
-  |  Birth: 2024-11-06 16:43:41.436780892 -0500
+  | # RULE A
+  | target : dependency1 dependency2
+  | 	command1
+  | 	command2
+  | 	command3
+  | 
+  | # RULE B
+  | target : dependency1 dependency2
+  | command1
+  | command2
+  | command3
+  | 
+  | # RULE C
+  | dependency1 dependency2 : target 
+  | 	command1
+  | 	command2
+  | 	command3
+  | 
+  | # RULE D
+  | target :
+  | 	command1
+  | 	command2
+  | 	command3
+  | : dependency1 dependency2
+  `----
+  - ( ) RULE A
+  - ( ) RULE B
+  - ( ) RULE C
+  - ( ) RULE D
+
+
+Variance in Makefiles
+~~~~~~~~~~~~~~~~~~~~~
+
+  Check ALL that are true about Makefile features
+  - ( ) Rules may have 0 dependencies
+  - ( ) Rules may have 0 commands
+  - ( ) Rules have no more than 1 command
+  - ( ) Rules have no more than 1 dependency
+  - ( ) Makefiles can set up explicit variables for use in rules
+  - ( ) Makefiles provide a variety of automatic variables for use in
+    rules
+  - ( ) A Makefile can have deeply nested decencies: targA depends on
+    targB depends on targC depends on targD etc.
+
+
+Problem 2 CODE: makeproblem-create
+==================================
+
+  Complete the template in the subdirectory
+  `makeproblem-create/Makefile' according to the comments there.  The
+  essential idea is to build the linked list program from an earlier lab
+  and add a few other targets.  Once you add rules for certain targets,
+  you can test them interactively via commands like `make' and `make
+  clean' in that directory. You can also run the automated tests of this
+  via a problem test:
+
+  ,----
+  | &gt;&gt; cd lab09-code
+  | &gt;&gt; make test-prob1   # run tests for Makefile under makeproblem-create
+  | ...
   `----
 
 
-PROBLEM 2 CODE: newer_file.c Program
-====================================
+PROBLEM 2 QUIZ: Questions on switch_stdout.c
+============================================
 
-  Fill in the template code provided in `newer_file.c'. The intent of
-  the program is to ensure that two named files exist and then compare
-  the modification time of them to print an older vs newer file.  This
-  will require use of the `access()' and `stat()' system calls as well
-  as a `diff_timespec()' function that is provided in the template.
-
-  You can test your code `make test-code testnum=2'. Below is a
-  demonstration of how the complete program should work.
-
+  Analyze the `switch_stdout.c' program. Compile and run it via
   ,----
-  | &gt;&gt; make newer_file              # build
-  | gcc -Wall -Werror -g -Og -o newer_file newer_file.c
+  | &gt; make switch_stdout
+  | ...
+  | &gt; ./switch_stdout
+  | ...
+  `----
+
+  Analyze the code and focus your attention on the use of `open() /
+  dup() / dup2()' which this program demonstrates.
+
+  Answer the following Questions about the techniques used in this
+  program. You may need to consult the Manual Page / Documentation on
+  some functions to answer confidently.
+
+
+Program Output
+~~~~~~~~~~~~~~
+
+  Which of the following is the output for `switch_stdout' when run?
+  (each of 1. 2. 3. appear on separate lines in the output)
+  - ( ) 1. Now you see me. 2. Now you don't!  3. How mysterious...
+  - ( ) 1. Now you see me. 2. Now you don't!
+  - ( ) 1. Now you see me. 3. How mysterious...
+  - ( ) 1. Now you see me.
+
+
+open() system call
+~~~~~~~~~~~~~~~~~~
+
+  The `open()' system call is used to open a file for writing in the
+  example.  What is returned by this system call?
+  - ( ) A `FILE *' which is passed to subsequent I/O operations or
+    `NULL' for failure
+  - ( ) An integer file descriptor which is &gt;= 0 for success and -1 for
+    failure
+  - ( ) An integer return code that is 1 for success and 0 for failure
+  - ( ) A `char *' which is the name of the opened file or `NULL' for
+    failure
+
+
+Use of dup()
+~~~~~~~~~~~~
+
+  Which of the following best describes how the `dup()' system call is
+  used in `switch_stdout.c'?
+  - ( ) It creates a duplicate of a file descriptor allowing standard
+    output to be restored to the screen late in the program.
+  - ( ) It manipulates the file descriptor table so output that would go
+    to the screen goes into a file instead.
+  - ( ) It duplicates an existing file creating an efficient copy of it
+    on disk.
+  - ( ) It creates a child process that prints to a file instead of the
+    screen.
+
+
+Use of dup2()
+~~~~~~~~~~~~~
+
+  Which of the following best describes how the `dup2()' system call is
+  used in `switch_stdout.c' when it is first called?
+  - ( ) It creates a duplicate of a file descriptor allowing standard
+    output to be restored to the screen late in the program.
+  - ( ) It manipulates the file descriptor table so output that would go
+    to the screen goes into a file instead.
+  - ( ) It duplicates an existing file creating an efficient copy of it
+    on disk.
+  - ( ) It creates a child process that prints to a file instead of the
+    screen.
+
+
+printf() changes in behavior
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Good old `printf()' is used in `switch_stdout.c' in several places but
+  seems to change its behavior in some of these spots. Which of the
+  following best describes this variation in behavior?
+  - ( ) `printf()' is called with different arguments that cause it to
+    print to different destinations, sometimes standard output,
+    sometimes a file
+  - ( ) `printf()' is called the same way in each case but automatically
+    begins printing to a file that is `open()''d and when it is
+    `close()''d, `printf()' reverts to printing to the screen
+  - ( ) `printf()' is called the same in each case and always prints to
+    standard output but by changing what is in the file descriptor table
+    at that position, output goes to the screen or to a file.
+
+
+PROBLEM 2 CODE: childout_query.c Program
+========================================
+
+  Fill in the template code provided in `childout_query.c'. The intent
+  of the program is to build off of the previous system calls like
+  `fork() / exec() / stat()' and combine then with the newly introduced
+  `dup2()' faclity to accomplish the following:
+  1. Specify an output file, a query character, and a command to run on
+     the command line
+  2. Fork and Exec a child process to run the given command and redirect
+     output into the named file
+  3. Have the parent wait until the child is finished
+  4. The parent then reports how many bytes of output are in the child's
+     output file
+  5. The parent opens the child output file, scans and prints it all
+     out, and reports how many times the query_letter appears in the
+     output
+
+  Below is a demonstration of how the program is meant to work.
+  ,----
+  | &gt;&gt; childout_query
+  | usage: childout_query &lt;childfile&gt; &lt;query_letter&gt; &lt;child_arg0&gt; [child_arg1] ...
   | 
-  | &gt;&gt; ./newer_file
-  | Usage: ./newer_file &lt;file1&gt; &lt;file2&gt;
-  | 
-  | &gt;&gt; echo A &gt; A.txt               # create 3 files
-  | &gt;&gt; echo B &gt; B.txt               
-  | &gt;&gt; echo C &gt; C.txt               # newest
-  | &gt;&gt; touch -d '-5min' A.txt       # oldest
-  | &gt;&gt; touch -d '-3min' B.txt       # middle
-  | 
-  | &gt;&gt; ./newer_file A.txt B.txt
-  | A.txt is OLDER than B.txt
-  | 
-  | &gt;&gt; ./newer_file C.txt B.txt
-  | C.txt is NEWER than B.txt
-  | 
-  | &gt;&gt; ./newer_file C.txt C.txt
-  | C.txt and C.txt are EQUAL in age
-  | 
-  | &gt;&gt; ./newer_file C.txt X.txt
-  | X.txt cannot be accessed
-  | 
-  | &gt;&gt; ./newer_file Z.txt X.txt
-  | Both Z.txt and X.txt cannot be accessed
+  | &gt;&gt; childout_query test.txt 3 seq 31 35
+  | Child redirecting output to 'test.txt', then exec()ing
+  | Parent waited, Child complete, exit code 0
+  | child produced 15 bytes of output
+  | Scanning child output for '3'
+  | 31
+  | 32
+  | 33
+  | 34
+  | 35
+  | child output contained 6 occurrences of '3'
+  `----
+  Note that the 15 bytes of output is due to there being 5 lines with 3
+  characters each: all lines comprise two digits and a newline (\n).
+
+  Here is another example where an `ls' command is run as the child
+  process.
+  ,----
+  | &gt;&gt; childout_query x.txt u ls /
+  | Parent waiting for child to complete
+  | Child redirecting output to 'x.txt', then exec()ing
+  | Parent waited, Child complete, exit code 0
+  | child produced 99 bytes of output
+  | Scanning child output for 'u'
+  | bin
+  | boot
+  | dev
+  | etc
+  | home
+  | lib
+  | lib64
+  | lost+found
+  | mnt
+  | opt
+  | proc
+  | root
+  | run
+  | sbin
+  | srv
+  | swapfile
+  | sys
+  | tmp
+  | usr
+  | var
+  | child output contained 3 occurrences of 'u'
   `----
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org7a72913" class="outline-2">
-<h2 id="org7a72913"><span class="section-number-2">4</span> Submission</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-org1576981" class="outline-2">
+<h2 id="org1576981"><span class="section-number-2">6</span> Submission</h2>
+<div class="outline-text-2" id="text-6">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
-how to upload your completed lab zip to Gradescope.
+how to upload your completed exercise zip to Gradescope.
 </p>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-03-31 Tue 22:38 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-04-12 Sun 14:51 <br/> </i>
 </div>
 </body>
 </html>
