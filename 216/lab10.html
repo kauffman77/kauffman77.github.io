@@ -1,0 +1,1175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2026-04-15 Wed 20:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMSC216 Lab10: Cache Optimization and Matrices</title>
+<meta name="author" content="Chris Kauffman" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
+<style type="text/css">
+@media screen {
+:root {
+--heading-bg-color:#e21833;
+--heading-fg-color:#ffd200;
+}
+html {
+font-family: serif;
+text-align: justify;
+}
+pre.src, pre.example {
+overflow-x: scroll;
+}
+/* Merge subtitle area with title area */
+.subtitle {
+text-align: center;
+margin-top: -2em;
+padding-top: 1em;
+padding-bottom: 0.1em;
+}
+.title, .subtitle {
+color: var(--heading-fg-color);
+background-color: var(--heading-bg-color);
+}
+/* Section borders, left section header style */
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+blockquote {
+font-style: italic;
+}
+td, th {
+padding-top: 2px;
+padding-bottom: 2px;
+}
+body {
+background-color: #EEE;
+}
+pre {
+}
+#content, #preamble, #postamble {
+margin-left:300px;
+max-width: 100%;
+}
+.tag {
+background-color: inherit; font-family: inherit;
+padding: inherit; font-size: 80%; font-weight: inherit;
+text-transform: uppercase;
+}
+
+.figure p { text-align: inherit; }
+figure-number { font-style: italic; }
+#table-of-contents {
+text-align: left;
+position: fixed;
+left: 0;
+margin: 0 auto;
+padding: 0;
+width: 300px;
+top: 0;
+height: 100%;
+border: 0;
+display: block;
+}
+#text-table-of-contents {
+overflow-y: scroll;
+height: 100%;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+#table-of-contents > h2 {
+padding: 0.1em;
+margin: 0;
+}
+/* adjustments for small screen, toc at top only */
+@media (max-width: 800px) { /* landscape for iphone */
+html {
+-webkit-text-size-adjust: none;  /* prevent scaling of text on mobile */
+}
+body {
+background-color: #EEE;
+width:100%;
+margin:0 auto;
+}
+#content, #preamble, #postamble {
+margin-left:0;
+}
+#table-of-contents {
+position: static;
+left: inherit;
+width:inherit;
+height: auto;
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+border: 0.75em solid #006633;
+}
+div.outline-2, #table-of-contents {
+background-color: rgb(250,250,250);
+border: 0.75em solid var(--heading-bg-color);
+border-top: 0em;
+padding: 0em .5em .5em .5em; /* top right bottom left */
+margin: 1em 0em 1em 0em; /* top right bottom left */
+}
+div.outline-2 > h2, #table-of-contents > h2 {
+background-color: var(--heading-bg-color);
+color: var(--heading-fg-color);
+font-variant: small-caps;
+padding: 0em 0em 0em .5em; /* top right bottom left */
+margin: 0em -.5em 0em -.75em; /* top right bottom left */
+text-align: left;
+}
+#text-table-of-contents {
+overflow-y: visible;
+height: inherit;
+}
+#text-table-of-contents ul {
+padding-left: 1em;
+margin-left: 0.5em;
+}
+}
+.linenr { font-size: xx-small; }
+th.org-left   { text-align: left;   }
+details > summary {
+padding: 2px 6px;
+font-family: Sans;
+font-size: 0.8em;
+width: fit-content;
+border-radius: 5px;
+background-color: #efefef;
+border: 1px solid black;
+cursor: pointer;
+}
+}
+
+@media print {
+html {
+font-family: serif;
+font-size: 10pt;
+text-align: justify;
+.linenr { font-size: xx-small; }
+}
+}
+</style>
+<style>
+/* Theme: Srcery
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Maintainer: @redguardtoo
+Website: https://srcery-colors.github.io/
+Date: 2021-04-13
+https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/srcery.css
+
+Tailored by: Chris Kauffman <profk@umd.edu>
+Date: Sat Nov 25 06:16:20 PM EST 2023
+*/
+pre code.hljs {
+display: block;
+overflow-x: auto;
+padding: 1em
+}
+code.hljs {
+padding: 3px 5px
+}
+.hljs {
+background: #1C1B19;
+/* Black */
+color: #FFFFFF/* Bright White */
+
+}
+/* Bright White */
+.hljs-subst,
+.hljs-quote,
+.hljs-literal {
+color: #FCE8C3
+}
+/* Bright Blue */
+.hljs-type,
+.hljs-symbol {
+color: #68A8E4
+}
+/* Red */
+.hljs-keyword,
+.hljs-deletion {
+color: #EF2F27
+}
+/* Yellow */
+.hljs-name,
+.hljs-function,
+.hljs-attribute,
+.hljs-selector-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-pseudo,
+.hljs-section,
+.hljs-title {
+color: #FBB829
+}
+/* Cyan */
+.hljs-code,
+.hljs-variable,
+.hljs-property,
+.hljs-template-variable,
+.hljs-class {
+color: #0AAEB3
+}
+/* Bright Green */
+.hljs-string,
+.hljs-regexp,
+.hljs-bullet,
+.hljs-addition {
+color: #98BC37
+}
+/* Bright Magenta */
+.hljs-built_in,
+.hljs-params {
+color: #FF5C8F
+}
+/* Blue */
+.hljs-template-tag,
+.hljs-selector-tag {
+color: #2C78BF
+}
+/* Bright Black */
+.hljs-link,
+.hljs-number,
+.hljs-comment,
+.hljs-meta {
+color: #B1B195
+/* color: #918175 */
+}
+.hljs-emphasis {
+font-style: italic
+}
+.hljs-strong {
+font-weight: bold
+}
+/* @see https://github.com/srcery-colors/srcery-emacs for reference */
+</style>
+
+<link rel="stylesheet" href="./srcery-ck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+function interactive_lang() {      // define a custom "interactive" language
+return {
+name: 'interactive',           // language name
+keywords: {
+$pattern: /[^ \t\n]+/,       // lex based on non-whitespace
+keyword: [">>","(shellac)","[COMMANDO]>>","HM>","TM>","HS>","homeputer>","grace3:","grace4:","grace5:","grace6:","grace7:","grace8:","grace9:","grace10:","grace3>>","grace4>>","grace5>>","grace6>>","grace7>>","grace8>>","grace9>>","grace10>>"], // allowed interactive prompts
+literal: ["[data/script.txt]>>","[data/script1.txt]>>","[data/script6.txt]>>"],
+},
+contains: [
+// hljs.HASH_COMMENT_MODE,   // use standard hash comments, any # is a comment
+hljs.COMMENT(/#+ /, /$/),    // use custom comment of # w/ whitespace
+// hljs.COMMENT(/## /, /$/),     // hash-hash-ws for comment
+hljs.COMMENT(/##+/, /$/),     // or a sequence of hashes
+]
+};
+};
+hljs.registerLanguage('interactive', interactive_lang);     // register custom language
+
+// Add highlighjs CSS classes to elemens marked with relevant org classes
+lang_map = new Map();              // map of org to hljs languages
+lang_map.set("src-c"     , "language-c");
+lang_map.set("src-python", "language-python");
+lang_map.set("src-text"  , "language-plaintext");
+lang_map.set("src-sh"    , "language-interactive");
+function add_class(el) {           // applied to each pre.src element
+for (let [org_lang, hljs_lang] of lang_map) {
+if(el.classList.contains(org_lang)){
+el.classList.add(hljs_lang);
+}
+}
+}
+// visit all pre.src elements and apply function to add language class
+document.querySelectorAll('pre.src').forEach(add_class);
+hljs.configure({cssSelector: 'pre'}); // select pre blocks only to highligh
+hljs.highlightAll();                  // perform highlighting on all pre blocks
+});
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<i>Last Updated: 2026-04-15 Wed 20:56</i>
+</div>
+<div id="content" class="content">
+<h1 class="title">CMSC216 Lab10: Cache Optimization and Matrices</h1>
+<ul class="org-ul">
+<li><b>Due: 11:59pm Sun 26-Apr-2026</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
+<li><i>Approximately 1.00% of total grade</i></li>
+</ul>
+<div id="outline-container-orga5e78b7" class="outline-4">
+<h4 id="orga5e78b7">CODE DISTRIBUTION: <a href="lab10-code.zip">lab10-code.zip</a></h4>
+</div>
+
+<div id="outline-container-org88a33f7" class="outline-4">
+<h4 id="org88a33f7">CHANGELOG: Empty</h4>
+</div>
+
+
+<div id="outline-container-orgb9fca32" class="outline-4">
+<h4 id="orgb9fca32"></h4>
+<div class="outline-text-4" id="text-orgb9fca32">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org5ddec09">1. Rationale</a></li>
+<li><a href="#org17af929">2. Codepack</a></li>
+<li><a href="#org41b788e">3. Timing Notes</a></li>
+<li><a href="#org5d2ff38">4. Background: The <code>clock()</code> Function</a></li>
+<li><a href="#org4beb907">5. QUESTIONS.txt File Contents</a>
+<ul>
+<li><a href="#org0ec20fb">Submission</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org5ddec09" class="outline-2">
+<h2 id="org5ddec09"><span class="section-number-2">1</span> Rationale</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Basic understanding of how the memory system works to fulfill
+load/store requests is essential when one wishes to optimize program
+performance to reduce runtime.  Having an intuition on which styles of
+coding exploit cache memories will offer great performance benefits on
+most modern computing architectures.
+</p>
+
+<p>
+The first problem times several code variations using the <code>clock()</code>
+function. The variations concern several types of <code>structs</code> that are
+arranged differently in memory shows how data layout affects memory
+cache performance.  It illustrates how sequential access patterns tend
+to be better than strided and random access patterns.
+</p>
+
+<p>
+The second problem asks students to study a matrix problem which has
+poor cache performance and adjust the algorithm used to favor cache
+more effectively. This leads to an increase in performance.
+</p>
+</div>
+<div id="outline-container-org5131556" class="outline-4">
+<h4 id="org5131556">Associated Reading / Preparation</h4>
+<div class="outline-text-4" id="text-org5131556">
+<p>
+Bryant and O'Hallaron: Ch 6 on The Memory Hierarchy. Ch 6.5 and 6.6
+may be particularly helpful
+</p>
+</div>
+</div>
+<div id="outline-container-org59cd7c5" class="outline-4">
+<h4 id="org59cd7c5">Grading Policy</h4>
+<div class="outline-text-4" id="text-org59cd7c5">
+<p>
+Credit for this lab is earned by completing the code/answers in the
+Lab codepack and submitting a Zip of the work to Gradescope preferably
+via running <code>make submit</code>. Students are responsible to check that the
+results produced locally are reflected on Gradescope after submitting
+their completed Zip.
+</p>
+
+<p>
+Lab Exercises are Free Collaboration and <b>students are encouraged to
+cooperate on labs.</b> Students may submit work as groups of up to 5 to
+Gradescope: one person submits then adds the names of their group
+members to the submission.
+</p>
+
+<p>
+No late submissions are accepted for Lab work but the lowest two lab
+scores for the semester will be dropped including zeros due to missing
+submissions. See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">full policies in the course syllabus</a>.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org17af929" class="outline-2">
+<h2 id="org17af929"><span class="section-number-2">2</span> Codepack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The codepack for the HW contains the following files:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">State</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>clock_demo.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 1 demo on how the <code>clock()</code> function is used</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>struct_stride.c</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 1 code used to observe CPU timing differences</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_struct_stride.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 1 code tests</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>matvec.h</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2 Header file defining some types and functions for</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>matvec_util.c</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Problem 2 Utility functions to manipulate matrices/vectors</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>matsums_funcs.c</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 2 Small "algorithms" to time arithmetic operations</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>matsums_main.c</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Problem 2 Main function that times different summing techniques</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_matsums.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Problem 2 code tests</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>QUESTIONS.txt</code></td>
+<td class="org-left">EDIT</td>
+<td class="org-left">Questions to answer</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Makefile</code></td>
+<td class="org-left">Build</td>
+<td class="org-left">Enables <code>make test</code> and <code>make zip</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>test_lab10.org</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Tests for this lab</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>testy</code></td>
+<td class="org-left">Testing</td>
+<td class="org-left">Test running scripts</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>gradescope-submit</code></td>
+<td class="org-left">Provided</td>
+<td class="org-left">Allows submission from the command line</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org41b788e" class="outline-2">
+<h2 id="org41b788e"><span class="section-number-2">3</span> Timing Notes</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+This lab involves optimizing the performance of a function and the
+behavior of doing so will vary from one machine to the next. If run on
+an arbitrary machine, the optimization techniques intended may or may
+not provide the expected speedup.
+</p>
+
+<p>
+<b>For evaluation purposes, log into the machine <code>login.zaratan.umd.edu</code>
+to test the timing.</b> This machine has known characteristics (processor
+speed and cache behavior) and should provide reasonably consistent
+results. Other machines like laptops might work but are not
+guaranteed.
+</p>
+</div>
+</div>
+<div id="outline-container-org5d2ff38" class="outline-2">
+<h2 id="org5d2ff38"><span class="section-number-2">4</span> Background: The <code>clock()</code> Function</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+The code block below illustrates the basic usage pattern for the
+<code>clock()</code> function.
+</p>
+<div class="org-src-container">
+<pre class="src src-c">#include &lt;time.h&gt;               // for clock() and clock_t
+
+{
+  clock_t begin = clock();      // current cpu moment
+
+  // Perform computation that takes a while;
+
+  clock_t end = clock();        // later cpu moment
+
+  double cpu_time =             // convert into seconds
+    ((double) (end-begin)) / CLOCKS_PER_SEC;
+
+  printf("Elapsed CPU Time: %f second\n", cpu_time);
+}
+</pre>
+</div>
+<p>
+A few caveats are worth pointing out.
+</p>
+<ul class="org-ul">
+<li>The <code>clock_t</code> type is often a large integer type like <code>unsigned
+  long</code> which is why one can perform subtraction using it.  Don't rely
+on this being the case and just use the type indicated as shown.</li>
+<li><code>clock()</code> itself returns a number corresponding to the number of CPU
+"ticks" which have occurred while the program runs. This requires
+conversion into the number of seconds shown above. It makes use of
+the <code>CLOCKS_PER_SECOND</code> constant which is included via <code>time.h</code>.</li>
+<li>The time computed by this method is equivalent to the <code>user</code> time
+reported by the <code>time</code> utility: it is how much CPU time the user
+program has used. It is relevant to timing computational loops but
+is complemented by "wall time" which requires use of different
+timing functions like <code>gettimeofday()</code> to compute.</li>
+<li><p>
+WARNING: Timing code runs is inherently noisy and will vary from one
+run to the next. <code>clock()</code> is reliable for timing computations that
+take around 0.001 seconds (a thousandth of a second). For times
+shorter than that, the variations in timing will likely be nearly as
+large as the total time which makes timing shorter activities
+unreliable.
+</p>
+
+<p>
+<b>Adjust program parameters like the number of loop iterations so
+reported times are at least 1e-03 seconds.</b> Ideally times should be
+larger, in the 1e-01 second range to be trustworthy.
+</p></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org4beb907" class="outline-2">
+<h2 id="org4beb907"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
+Follow the instructions in it to complete the QUIZ and CODE questions
+for the lab.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">                           _________________
+
+                            LAB10 QUESTIONS
+                           _________________
+
+
+Exercise Instructions
+=====================
+
+  Follow the instructions below to experiment with topics related to
+  this exercise.
+  - For sections marked QUIZ, fill in an (X) for the appropriate
+    response in this file. Use the command `make test-quiz' to see if
+    all of your answers are correct.
+  - For sections marked CODE, complete the code indicated. Use the
+    command `make test-code' to check if your code is complete.
+  - DO NOT CHANGE any parts of this file except the QUIZ sections as it
+    may interfere with the tests otherwise.
+  - If your `QUESTIONS.txt' file seems corrupted, restore it by copying
+    over the `QUESTIONS.txt.bk' backup file.
+  - When you complete the exercises, check your answers with `make test'
+    and if all is well. Create a zip file and submit it to Gradescope
+    with `make submit'. Ensure that the Autograder there reflects your
+    local results.
+  - IF YOU WORK IN A GROUP only one member needs to submit and then add
+    the names of their group on Gradescope.
+
+
+Timing Note
+===========
+
+  This code has been timed on grace-aws.umd.edu to verify it behaves as
+  expected in most cases but as with all timing code, system load and
+  other circumstances can affect the actual timing results. If you
+  strange times that seem to conflict with the expected answers, report
+  it to staff to get help.
+
+
+PROBLEM 1 Overview: clock_demo.c Program
+========================================
+
+  Demoers will walk through the `clock_demo.c' program to show how the
+  `clock()' function is used in practice.  Students should look
+  carefully at the techniques used to time the two different sections of
+  code and print that timing info. These will be needed to fill in the
+  subsequent programs.
+
+  Running the `clock_demo' program on the command line will produce
+  results that look like the following:
+  ,----
+  | &gt;&gt; make clock_demo
+  | gcc -Wall -Werror -g -Og -Wall -Werror -g -Og    clock_demo.c   -o clock_demo
+  | 
+  | &gt;&gt; ./clock_demo 
+  | usage: ./clock_demo &lt;arrlen&gt; &lt;repeats&gt;
+  | 
+  | &gt;&gt; ./clock_demo 1000 1000
+  | Summing array length 1000 with 1000 repeats, ascending
+  | Summing array length 1000 with 1000 repeats, descending
+  | method:  sum ascending CPU time: 2.3750e-03 sec   sum: 499500
+  | method: sum descending CPU time: 1.5760e-03 sec   sum: 499500
+  | 
+  | &gt;&gt; ./clock_demo 100000 1000
+  | Summing array length 100000 with 1000 repeats, ascending
+  | Summing array length 100000 with 1000 repeats, descending
+  | method:  sum ascending CPU time: 6.6969e-02 sec   sum: 704982704
+  | method: sum descending CPU time: 6.2286e-02 sec   sum: 704982704
+  | 
+  | &gt;&gt; ./clock_demo 100000 10000
+  | Summing array length 100000 with 10000 repeats, ascending
+  | Summing array length 100000 with 10000 repeats, descending
+  | method:  sum ascending CPU time: 6.2730e-01 sec   sum: 704982704
+  | method: sum descending CPU time: 6.1995e-01 sec   sum: 704982704
+  `----
+
+
+PROBLEM 1 CODE: `struct_stride.c' Program
+=========================================
+
+  The provided `struct_stride.c' program has a number of TODO items in
+  it related to timing several computations and reporting their results.
+  It is best to complete these items first and then attempt to answer
+  the quiz questions as some questions require running the program and
+  observing timing results.
+
+  Use the lab's description of how the `clock()' function works to
+  complete TODO items and print the results.
+
+  When completed, the program can be run as show below:
+  ,----
+  | &gt;&gt; ./struct_stride 
+  | usage: ./struct_stride &lt;arr_length&gt; &lt;num_iters&gt;
+  | 
+  | &gt;&gt; ./struct_stride 10000000 100
+  | method: int_field_base CPU time: 1.2345e-01 sec   sum: 0
+  | method: arr_field_base CPU time: 1.2345e-01 sec   sum: 0
+  | method: int_field_optm CPU time: 1.2345e-01 sec   sum: 0
+  | method: arr_field_optm CPU time: 1.2345e-01 sec   sum: 0
+  `----
+
+  NOTE: the timing information has intentionally been changed to read
+  1.2345e-01 as calculating this timing information is part of the lab.
+
+
+PROBLEM 1 QUIZ: Timing `struct_stride.c' Runs
+=============================================
+
+  NOTE: timing code varies from one machine to the next. The answers
+  below were tested on GRACE and appear to be stable but system load may
+  affect the outcome.
+
+
+Relative Speed of Struct Layouts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  After adding in calls to `clock()' and code the print times, run the
+  `struct_strid' program.
+
+  Run the program with a large array and a modest amount of array
+  iterations such as using the following parameters:
+  ,----
+  | ./struct_stride 6000000 100
+  `----
+
+  Examine the times reported.
+
+  Which option below reflects the relative speeds of the
+  layout/algorithm combinations?
+  ,----
+  |   ------SLOWEST--------------------------------------------FASTEST-----
+  | - ( ) arr_field_base &gt; arr_field_optm &gt; int_field_base &gt; int_field_optm 
+  | - ( ) int_field_base &gt; int_field_optm &gt; arr_field_base &gt; arr_field_optm
+  | - ( ) arr_field_base &gt; int_field_base &gt; arr_field_optm &gt; int_field_optm 
+  | - ( ) int_field_base &gt; arr_field_base &gt; int_field_optm &gt; arr_field_optm
+  `----
+
+
+Order of Memory Access
+~~~~~~~~~~~~~~~~~~~~~~
+
+  Below are several memory layouts of A/B elements to consider.
+  -------------------------------------------------------------------------
+   Byte Offset  +00  +04  +08  +12  +16       +80  +84  +88  +92  +96      
+   LAYOUT1       A0   A1   A2   A3   A4  ...   B0   B1   B2   B3   B4  ... 
+  -------------------------------------------------------------------------
+
+  -------------------------------------------------------------------
+   Byte Offset  +00  +04  +08  +12  +16  +20  +24  +28  32  +36      
+   LAYOUT 2      A0   B0   A1   B1   A2   B2   A3   B3  A4   B4  ... 
+  -------------------------------------------------------------------
+
+  For each of following, indicate the best suited option.
+
+  The `int_field_base' approach code that is timed..
+  - ( ) Uses memory LAYOUT 1 and visit elements in the order A0, B0, A1,
+    B1, A2, B2, etc.
+  - ( ) Uses memory LAYOUT 1 and visit elements in the order A0, A1, A2,
+    ... B0, B1, B2, etc.
+  - ( ) Uses memory LAYOUT 2 and visit elements in the order A0, B0, A1,
+    B1, A2, B2, etc.
+  - ( ) Uses memory LAYOUT 2 and visit elements in the order A0, A1, A2,
+    ... B0, B1, B2, etc.
+
+  The `arr_field_base' approach code that is timed..
+  - ( ) Uses memory LAYOUT 1 and visit elements in the order A0, B0, A1,
+    B1, A2, B2, etc.
+  - ( ) Uses memory LAYOUT 1 and visit elements in the order A0, A1, A2,
+    ... B0, B1, B2, etc.
+  - ( ) Uses memory LAYOUT 2 and visit elements in the order A0, B0, A1,
+    B1, A2, B2, etc.
+  - ( ) Uses memory LAYOUT 2 and visit elements in the order A0, A1, A2,
+    ... B0, B1, B2, etc.
+
+  The `int_field_optm' approach code that is timed..
+  - ( ) Uses memory LAYOUT 1 and visit elements in the order A0, B0, A1,
+    B1, A2, B2, etc.
+  - ( ) Uses memory LAYOUT 1 and visit elements in the order A0, A1, A2,
+    ... B0, B1, B2, etc.
+  - ( ) Uses memory LAYOUT 2 and visit elements in the order A0, B0, A1,
+    B1, A2, B2, etc.
+  - ( ) Uses memory LAYOUT 2 and visit elements in the order A0, A1, A2,
+    ... B0, B1, B2, etc.
+
+  The `arr_field_optm' approach code that is timed..
+  - ( ) Uses memory LAYOUT 1 and visit elements in the order A0, B0, A1,
+    B1, A2, B2, etc.
+  - ( ) Uses memory LAYOUT 1 and visit elements in the order A0, A1, A2,
+    ... B0, B1, B2, etc.
+  - ( ) Uses memory LAYOUT 2 and visit elements in the order A0, B0, A1,
+    B1, A2, B2, etc.
+  - ( ) Uses memory LAYOUT 2 and visit elements in the order A0, A1, A2,
+    ... B0, B1, B2, etc.
+
+
+int_field_base VS arr_field_base
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Examine the differences between the two types of structs that are used
+  in `struct_stride.c' called `int_field_t' and `arr_field_t'.
+
+  Now examine the first 2 code blocks that use these structs called,
+  `int_field_base' and `arr_field_base'. Both involve arrays and structs
+  which store an equal number of positive and negative
+  integers. However, they differ in the overall layout of those
+  integers.  Both use loops sum the "a" numbers first then sum the "b"
+  numbers, then combine them for the total sum.
+
+  Which of the following are possible explanations for the timing
+  difference between `int_field_base' and `arr_field_base'?
+  - ( ) `int_field_base' must perform more loop iterations than
+    `arr_field_base' which will making it slower.
+  - ( ) `arr_field_base' uses more memory to store then number than
+    `int_field_base' and this additional memory increases speed.
+  - ( ) `int_field_base' has a memory layout that is ABABABAB so when
+    adding A elements, there is a "stride" through
+    memory. `arr_field_base' has a layout like AAAAABBBBB so adding
+    elements has no stride.
+  - ( ) `int_field_base' uses struct field access. The assembly
+    instructions to access array fields are slower than the assembly
+    instructions that access array elements. This makes `arr_field_base'
+    faster due to its use of plain integer arrays.
+
+
+BASE vs OPTM versions
+~~~~~~~~~~~~~~~~~~~~~
+
+  The last two layout/algorithm sections are labeled "optm" as they
+  perform a simple code transformation from their "base" version.
+
+  Select ALL of the items below that are accomplished with this
+  transformation.
+
+  - ( ) Fewer loop checks/increments are needed as there is only one
+    loop instead of 2.
+  - ( ) The number of loop iterations is lowered for all loops in the
+    optm version.
+  - ( ) The memory stride is eliminated for the int_field_optm as both
+    a/b elements are added each iteration.
+  - ( ) The algorithmic complexity is reduced from O(N^2) in the "base"
+    to O(N) in the "optm" version.
+
+
+PROBLEM 2 QUIZ: Questions matsums
+=================================
+
+(A) Vector and Matrix
+~~~~~~~~~~~~~~~~~~~~~
+
+  Examine the header file `matvec.h' which gives type definitions and
+  declares functions associated with a simple matrix and vector type.
+
+  Which of the following best describes how the `matrix_t` type in the
+  lab stores numerical matrices?
+
+  - ( ) The 2D matrix is stored as a 2D array in the field data; this
+    allows direct access via 2D indexing via `mat.data[i][j]`
+  - ( ) The type `matrix_t` is defined as the same as a `int[][]` so the
+    2D data can be directly accessed via `mat[i][j]`
+  - ( ) The 2D matrix is stored as a 1D array in the mat.data field. 2D
+    accesses like `(i,j)` must be translated to 1D locations via the
+    formula `mat.data[i*mat.cols) + j]`
+  - ( ) The 2D matrix is stored in a hash table with the `mat.data`
+    field storing data and a hashing function used to compute the 1D
+    location of a 2D element.
+
+
+(B) Getting and Setting Elements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  For the `matrix_t' and `vector_t' types, convenient means to get and
+  set elements is provided. This mechanism is used in the utility
+  functions in `matvec_util.c' and defined in `matvec.h'.
+
+  Which of these best describes the means to access matrix elements
+  provided and used in the lab?
+  - ( ) The functions `MGET(mat,i,j)` and `MSET(mat,i,j,x)` are
+    implemented in the header to get and set elements of a `matrix_t`
+  - ( ) The macros `MGET(mat,i,j)` and `MSET(mat,i,j,x)` are `#define`'d
+    in the header to get and set elements of a `matrix_t`
+  - ( ) Instructions are given about what formula and fields to use when
+    accessing and changing elements of the matrix.
+  - ( ) No easy way is given for to work with the `matrix_t` type or its
+    elements.
+
+
+(C) row_sums vs col_sums Timing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Compile and run the `matsums_main' executable using the provided
+  `Makefile' (typing `make' should suffice).
+
+
+(A) row_sums vs col_sums Timing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  LOG INTO THE MACHINE grace-aws.umd.edu
+  - This is a special TIMING MACHINE for which the times of this code
+    have been tuned
+  - Using a different machine for your timing may lead to problems
+
+  Compile and run the `matsums_main' executable using the provided
+  `Makefile' (typing `make' should suffice). Note how to run this
+  program: pass the row and column sizes as command line parameters.
+  ,----
+  | &gt;&gt; ./matsums_main
+  | usage: ./matsums_main &lt;rows&gt; &lt;cols&gt;
+  `----
+
+  Run this program with differing parameters which control the number of
+  rows and columns in the matrix which is summed. Study the results,
+  including on a large matrix with 18000 rows and 8000 columns.  Note
+  any speed differences between the Row and Column sum routines on large
+  matrices.
+
+  The result of this timing indicated the following relative speeds of
+  these two provided algorithms.
+
+  - ( ) Summing ROWS was SLOWER than summing COLUMNS
+  - ( ) Summing ROWS was the SAME speed as summing COLUMNS
+  - ( ) Summing ROWS was FASTER than summing COLUMNS
+  - ( ) The speed varies wildly from run to run so it is harder to say
+    which of ROWS or COLUMNS is faster
+
+
+(B) row_sums vs col_sums speed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Examine the source code for the functions `row_sums()' and
+  `col_sums()' in the file `matsums_funcs.c'.  Describe why the
+  timing/speed differences you observed previously are occurring based
+  on features of the source code you see and the layout of the
+  `matrix_t' that is being summed. Consider especially the memory layout
+  and how the that of elements visited in each approach maps to the
+  actual data layout of the matrix data.
+
+  Which of the following best describes a reason for the relative speeds
+  of the algorithms?
+
+  - ( ) The two algorithms had equal speed as they perform the same
+    number of operations and have the same `O(R*C)` complexity.
+  - ( ) Row Summing was Faster because it accessed memory sequentially
+    while Column summing has a large stride in memory leading to poor
+    cache performance.
+  - ( ) Column Summing was Faster because it accessed memory
+    sequentially while Row has a stride in memory leading to poor cache
+    performance.
+  - ( ) Column summing was slower because the Row summing algorithm
+    exhibited better processor pipelining features allowing more
+    instructions per cycle to be executed.
+
+
+PROBLEM 2 CODE: opt_col_sums()
+==============================
+
+  Complete the function `opt_col_sums()' in file `matsums_funcs.c'. This
+  function should have identical behavior to `col_sums()' (it sums the
+  columns of the matrix into a provided array). However, it should be
+  *optimized* so that it achieves performance near to that of the
+  `row_sums()' function. To achieve this, re-arrange the loops to
+  iterate as efficiently as possible with respect to the memory
+  system. Feel free to ask course staff for hints on how to do this or
+  do some online research.
+
+  To time `opt_col_sums()', uncomment relevant blocks in the
+  `matsums_main.c' program that are provided for it.
+
+  Run your code on some of the large matrix examples previously used
+  such as an 18,000 by 8,000 matrix.  If the speed for the optimized
+  column version is close to that of the row sums, try running the test
+  cases associated with the code via `make test-code'.
+</pre>
+</div>
+</div>
+<div id="outline-container-org0ec20fb" class="outline-3">
+<h3 id="org0ec20fb">Submission</h3>
+<div class="outline-text-3" id="text-org0ec20fb">
+<p>
+Follow the instructions at the end of <a href="../lab01.html">Lab01</a> if you need a refresher on
+how to upload your completed exercise zip to Gradescope.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-04-15 Wed 20:56 <br/> </i>
+</div>
+</body>
+</html>
