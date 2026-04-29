@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-04-28 Tue 20:35 -->
+<!-- 2026-04-28 Tue 22:39 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Lab11: ~mmap()~ / Thread Performance</title>
@@ -344,7 +344,7 @@ text-align: justify;
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2026-04-28 Tue 20:35</i>
+<i>Last Updated: 2026-04-28 Tue 22:39</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Lab11: <code>mmap()</code> / Thread Performance</h1>
@@ -352,13 +352,13 @@ text-align: justify;
 <li><b>Due: 11:59pm Wed 06-May-2026</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
-<div id="outline-container-orgec57516" class="outline-4">
-<h4 id="orgec57516">CODE DISTRIBUTION: <a href="lab12-code.zip">lab12-code.zip</a></h4>
+<div id="outline-container-orgcf98b38" class="outline-4">
+<h4 id="orgcf98b38">CODE DISTRIBUTION: <a href="lab11-code.zip">lab11-code.zip</a></h4>
 </div>
 
-<div id="outline-container-orgd5173aa" class="outline-4">
-<h4 id="orgd5173aa">CHANGELOG: Empty</h4>
-<div class="outline-text-4" id="text-orgd5173aa">
+<div id="outline-container-orge64c298" class="outline-4">
+<h4 id="orge64c298">CHANGELOG: Empty</h4>
+<div class="outline-text-4" id="text-orge64c298">
 <p>
 <b>*</b>
 </p>
@@ -366,20 +366,20 @@ text-align: justify;
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org29d71ec">1. Rationale</a></li>
-<li><a href="#orga411c6f">2. Codepack</a></li>
-<li><a href="#orgaac9532">3. Problem 2 Overview and Background</a></li>
-<li><a href="#org0c435bc">4. Basic Overview of Threads</a></li>
-<li><a href="#org01ec0d8">5. Special Note On Testing</a></li>
-<li><a href="#org7e46489">6. QUESTIONS.txt File Contents</a></li>
-<li><a href="#org9223ae3">7. Submission</a></li>
+<li><a href="#org71d5ab9">1. Rationale</a></li>
+<li><a href="#org4577bb7">2. Codepack</a></li>
+<li><a href="#org8287582">3. Problem 2 Overview and Background</a></li>
+<li><a href="#org935b4fb">4. Basic Overview of Threads</a></li>
+<li><a href="#org298a92c">5. Special Note On Testing</a></li>
+<li><a href="#org8bcf028">6. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org7c5d57d">7. Submission</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org29d71ec" class="outline-2">
-<h2 id="org29d71ec"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org71d5ab9" class="outline-2">
+<h2 id="org71d5ab9"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Programs can request virtual memory to be mapped into their address
@@ -398,17 +398,17 @@ threads, divvying up work, and synchronizing the threads as they
 contribute a shared result.
 </p>
 </div>
-<div id="outline-container-org0819dbf" class="outline-4">
-<h4 id="org0819dbf">Associated Reading / Preparation</h4>
-<div class="outline-text-4" id="text-org0819dbf">
+<div id="outline-container-orgf96108d" class="outline-4">
+<h4 id="orgf96108d">Associated Reading / Preparation</h4>
+<div class="outline-text-4" id="text-orgf96108d">
 <p>
 Bryant and O'Hallaron: Ch 12.3-6 covers threaded programming.
 </p>
 </div>
 </div>
-<div id="outline-container-org3c5c002" class="outline-4">
-<h4 id="org3c5c002">Grading Policy</h4>
-<div class="outline-text-4" id="text-org3c5c002">
+<div id="outline-container-org9840c0b" class="outline-4">
+<h4 id="org9840c0b">Grading Policy</h4>
+<div class="outline-text-4" id="text-org9840c0b">
 <p>
 Credit for this lab is earned by completing the code/answers in the
 Lab codepack and submitting a Zip of the work to Gradescope preferably
@@ -432,8 +432,8 @@ submissions. See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">f
 </div>
 </div>
 </div>
-<div id="outline-container-orga411c6f" class="outline-2">
-<h2 id="orga411c6f"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-org4577bb7" class="outline-2">
+<h2 id="org4577bb7"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for the lab contains the following files:
@@ -544,8 +544,8 @@ The codepack for the lab contains the following files:
 </table>
 </div>
 </div>
-<div id="outline-container-orgaac9532" class="outline-2">
-<h2 id="orgaac9532"><span class="section-number-2">3</span> Problem 2 Overview and Background</h2>
+<div id="outline-container-org8287582" class="outline-2">
+<h2 id="org8287582"><span class="section-number-2">3</span> Problem 2 Overview and Background</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 This lab deals with matrices and vectors again similar to a previous
@@ -560,8 +560,8 @@ implementation.
 </p>
 </div>
 </div>
-<div id="outline-container-org0c435bc" class="outline-2">
-<h2 id="org0c435bc"><span class="section-number-2">4</span> Basic Overview of Threads</h2>
+<div id="outline-container-org935b4fb" class="outline-2">
+<h2 id="org935b4fb"><span class="section-number-2">4</span> Basic Overview of Threads</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Threads allow the creation of multiple "threads of execution" within
@@ -596,8 +596,8 @@ function calls used to facilitate it.
 </p>
 </div>
 </div>
-<div id="outline-container-org01ec0d8" class="outline-2">
-<h2 id="org01ec0d8"><span class="section-number-2">5</span> Special Note On Testing</h2>
+<div id="outline-container-org298a92c" class="outline-2">
+<h2 id="org298a92c"><span class="section-number-2">5</span> Special Note On Testing</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 The code is tuned to run properly on Zaratan login nodes. Performance
@@ -664,8 +664,8 @@ col_sum_threaded wall time: 4.8283e-02 sec
 </div>
 </div>
 </div>
-<div id="outline-container-org7e46489" class="outline-2">
-<h2 id="org7e46489"><span class="section-number-2">6</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org8bcf028" class="outline-2">
+<h2 id="org8bcf028"><span class="section-number-2">6</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the lab.
@@ -1019,8 +1019,8 @@ PROBLEM 2 CODE: Complete col_sums_thread()
 </div>
 </div>
 </div>
-<div id="outline-container-org9223ae3" class="outline-2">
-<h2 id="org9223ae3"><span class="section-number-2">7</span> Submission</h2>
+<div id="outline-container-org7c5d57d" class="outline-2">
+<h2 id="org7c5d57d"><span class="section-number-2">7</span> Submission</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 Follow the instructions at the end of <a href="lab01.html">Lab01</a> if you need a refresher on
@@ -1030,7 +1030,7 @@ how to upload your completed lab zip to Gradescope.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-04-28 Tue 20:35 <br/> </i>
+<hr/> <i> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-04-28 Tue 22:39 <br/> </i>
 </div>
 </body>
 </html>
