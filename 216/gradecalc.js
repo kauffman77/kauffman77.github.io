@@ -1,26 +1,26 @@
 // Standard grading elements
-var columns = new Array("Score","Possible","Percent","Weight","Bonus","WeightedScore");
-var header = "<th>Assignment</th> <th>Score</th> <th>Possible</th> <th>Percent</th> <th>Weight</th> <th>Bonus</th> <th>Weighted<br/> Score</th>  ";  
+var columns = new Array("Score","Possible","Percent","Weight","WeightedScore");
+var header = "<th>Assignment</th> <th>Score</th> <th>Possible</th> <th>Percent</th> <th>Weight</th> <th>Weighted<br/> Score</th>  ";  
 
 function Assignment(id,possible,weight,special){
     return {Id: id, Possible: possible, Weight: weight, Special: special};
 }
 
 var model = [
-    Assignment("Project 1", 100, 2, false),
-    Assignment("Project 2", 100, 2, false),
-    Assignment("Project 3", 100, 2, false),
-    Assignment("Project 4", 100, 2, false),
-    Assignment("Project 5", 100, 2, false),
-    Assignment("Labs",       10, 0, true),
-    Assignment("Exam 1", 70, 20, false),
-    Assignment("Exam 2", 70, 20, false),
-    Assignment("Exam 3", 70, 20, false),
-    Assignment("Final Exam", 100, 20, false),
+    Assignment("Project 1", 100,  2, false),
+    Assignment("Project 2", 100,  2, false),
+    Assignment("Project 3", 100,  2, false),
+    Assignment("Project 4", 100,  2, false),
+    Assignment("Project 5", 100,  2, false),
+    Assignment("Labs Total", 10, 10, false),
+    Assignment("Exam 1",     70, 20, false),
+    Assignment("Exam 2",     70, 20, false),
+    Assignment("Exam 3",     70, 20, false),
+    Assignment("Final Exam",100, 20, false),
+    Assignment("Engagement Points", 0, 0, true),
+    // Assignment("<i>Engagement Bonus</i>", 0, 0, "NoInput"),
     // Assignment("Total of Top 10 HW Quizzes", 100, 10, false),
-    Assignment("Engagement", 0, 0, false),
     // Assignment("Project Late Days", 0, 0, true),
-    // Assignment("<i>Computed Engagement Points</i>", 10, 10, "NoInput"),
     // Assignment("Bonuses", 0, 1, true)
 ];
 
@@ -29,29 +29,13 @@ function get(e){
     return document.getElementById(e);
 }
 
-// does the funky computation of engagement point score based on labs, bonus, late days;
+// computes engagement point bonus as floor(log2(1+EP_Total))
 function updateEngagement(a){
-    var labidx = model.findIndex(as => as.Id=="Labs + Surveys");
-    var labs   = model[labidx+0];
-    var bonus  = model[labidx+1];
-    var late   = model[labidx+2];
-    var engage = model[labidx+3];
-
-    labs.Percent  = 0; labs.WeightedScore  = 0;
-    bonus.Percent = 0; bonus.WeightedScore = 0;
-    late.Percent  = 0; late.WeightedScore  = 0;
-
-    engage.Score = labs.Score + bonus.Score - late.Score;
-    engage.Bonus = 0;
-    engage.Percent = engage.Score / engage.Possible;
-    if(engage.Score > engage.Possible){
-        engage.Percent = 1.0;
-        engage.Bonus = (engage.Score - engage.Possible) * 0.25;
-    }
-    engage.WeightedScore = engage.Percent * engage.Weight + engage.Bonus;
-    get(engage.Id+"Score").innerHTML = new Number(engage.Score).toFixed(2);
-    get(engage.Id+"Percent").innerHTML = new Number(engage.Percent).toFixed(2);
-    get(engage.Id+"WeightedScore").innerHTML = new Number(engage.WeightedScore).toFixed(2);
+    var eps = model.find(as => as.Id=="Engagement Points");
+    eps.Percent = 0.0;
+    eps.Weight  = 0.0;
+    eps.WeightedScore = 0.5 * Math.floor(Math.log2(1.0+eps.Score));
+    get(eps.Id+"WeightedScore").innerHTML = new Number(eps.WeightedScore).toFixed(2);
 }
 
 // Update screen on pressing button
@@ -103,7 +87,7 @@ function syncModelToDisplay(){
         for(var c in columns){
 	    var s = columns[c]
 	    if(s!="Score"){
-                console.warn("Update: "+a.Id + s);
+                // console.warn("Update: "+a.Id + s);
 	        get(a.Id + s).innerHTML = new Number(a[s]).toFixed(2);
             }
 	}
@@ -162,7 +146,7 @@ function addRow(a,table){
     var el = row.insertCell(-1);
     el.innerHTML = id;
     a.Score = a.Possible;   // initial score and bonus
-    a.Bonus = 0;
+    // a.Bonus = 0;
 
     for(var j=0; j<columns.length; j++){
 	var el = row.insertCell(-1);
