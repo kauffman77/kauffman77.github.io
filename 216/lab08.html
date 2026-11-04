@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-11-01 Sun 21:13 -->
+<!-- 2026-11-04 Wed 10:39 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Lab08: Make/Makefiles</title>
@@ -493,7 +493,7 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2026-11-01 Sun 21:13</i>
+<i>Last Updated: 2026-11-04 Wed 10:39</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Lab08: Make/Makefiles</h1>
@@ -501,38 +501,45 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 <li><b>Due: 11:59pm Mon 09-Nov-2026</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
-<div id="outline-container-org2558ff0" class="outline-4">
-<h4 id="org2558ff0">CODE DISTRIBUTION: <a href="lab08-code.zip">lab08-code.zip</a></h4>
+<div id="outline-container-orge03187b" class="outline-4">
+<h4 id="orge03187b">CODE DISTRIBUTION: <a href="lab08-code.zip">lab08-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org97c732f" class="outline-4">
-<h4 id="org97c732f">CHANGELOG: Empty</h4>
+<div id="outline-container-org92e89e5" class="outline-4">
+<h4 id="org92e89e5">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org92e89e5">
+<dl class="org-dl">
+<dt>Wed Nov  4 10:38:10 AM EST 2026</dt><dd>The original <code>Makefile</code> provided
+for students at the top level had a few bugs in it including
+referencing <code>lab09</code> instead of <code>lab08</code>. This has been corrected and
+students can get a fresh copy of <code>lab08-code.zip</code> to get the updates.</dd>
+</dl>
 </div>
-
-<div id="outline-container-org7ae9ed8" class="outline-4">
-<h4 id="org7ae9ed8"></h4>
-<div class="outline-text-4" id="text-org7ae9ed8">
+</div>
+<div id="outline-container-orge15cae5" class="outline-4">
+<h4 id="orge15cae5"></h4>
+<div class="outline-text-4" id="text-orge15cae5">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org4ee4315">1. Rationale</a></li>
-<li><a href="#org3d8e4b1">2. Codepack</a></li>
-<li><a href="#orgd3eee18">3. Problem 1: Background on Makefiles</a>
+<li><a href="#org6cd83af">1. Rationale</a></li>
+<li><a href="#orga9c8dd9">2. Codepack</a></li>
+<li><a href="#org3c450c2">3. Problem 1: Background on Makefiles</a>
 <ul>
-<li><a href="#org639284e">3.1. Structure of Makefiles</a></li>
-<li><a href="#org2bee2d9">3.2. Variables and Shortcuts in Makefiles</a></li>
-<li><a href="#org70f1b0f">3.3. Dependency Detection</a></li>
+<li><a href="#org718fabb">3.1. Structure of Makefiles</a></li>
+<li><a href="#org879a681">3.2. Variables and Shortcuts in Makefiles</a></li>
+<li><a href="#org098a88a">3.3. Dependency Detection</a></li>
 </ul>
 </li>
-<li><a href="#orga6a2107">4. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org290b1ac">4. QUESTIONS.txt File Contents</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org4ee4315" class="outline-2">
-<h2 id="org4ee4315"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org6cd83af" class="outline-2">
+<h2 id="org6cd83af"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Build systems are essential to program development to automate
@@ -542,9 +549,9 @@ system is among the oldest build system and is ubiquitous across Unix
 systems making it a useful to know a few basics about it.
 </p>
 </div>
-<div id="outline-container-orga911fce" class="outline-4">
-<h4 id="orga911fce">Associated Reading</h4>
-<div class="outline-text-4" id="text-orga911fce">
+<div id="outline-container-org03c06a7" class="outline-4">
+<h4 id="org03c06a7">Associated Reading</h4>
+<div class="outline-text-4" id="text-org03c06a7">
 <p>
 Students only need to master the basics of <code>make</code> and its <code>Makefile</code>
 format which are discussed in this document.  Those wanting a more
@@ -553,9 +560,9 @@ widely deployed implementation of <code>make</code> and its manual is thorough.
 </p>
 </div>
 </div>
-<div id="outline-container-orgabdd3da" class="outline-4">
-<h4 id="orgabdd3da">Grading Policy</h4>
-<div class="outline-text-4" id="text-orgabdd3da">
+<div id="outline-container-orgc057b87" class="outline-4">
+<h4 id="orgc057b87">Grading Policy</h4>
+<div class="outline-text-4" id="text-orgc057b87">
 <p>
 Credit for this lab is earned by completing the code/answers in the
 Lab codepack and submitting a Zip of the work to Gradescope preferably
@@ -579,8 +586,8 @@ submissions. See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">f
 </div>
 </div>
 </div>
-<div id="outline-container-org3d8e4b1" class="outline-2">
-<h2 id="org3d8e4b1"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orga9c8dd9" class="outline-2">
+<h2 id="orga9c8dd9"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for this exercise is linked at the top of this
@@ -670,8 +677,8 @@ the following files which are briefly described.
 </table>
 </div>
 </div>
-<div id="outline-container-orgd3eee18" class="outline-2">
-<h2 id="orgd3eee18"><span class="section-number-2">3</span> Problem 1: Background on Makefiles</h2>
+<div id="outline-container-org3c450c2" class="outline-2">
+<h2 id="org3c450c2"><span class="section-number-2">3</span> Problem 1: Background on Makefiles</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Building programs often involves compiling separate source files and
@@ -683,8 +690,8 @@ still in use is <code>make</code> and its associated <code>Makefiles</code>.  Th
 covers the basics of how to create a <code>Makefile</code>.
 </p>
 </div>
-<div id="outline-container-org639284e" class="outline-3">
-<h3 id="org639284e"><span class="section-number-3">3.1</span> Structure of Makefiles</h3>
+<div id="outline-container-org718fabb" class="outline-3">
+<h3 id="org718fabb"><span class="section-number-3">3.1</span> Structure of Makefiles</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 The basic structure of a <code>Makefile</code> involves <b>rules</b> which relate
@@ -791,8 +798,8 @@ the program.
 </p>
 </div>
 </div>
-<div id="outline-container-org2bee2d9" class="outline-3">
-<h3 id="org2bee2d9"><span class="section-number-3">3.2</span> Variables and Shortcuts in Makefiles</h3>
+<div id="outline-container-org879a681" class="outline-3">
+<h3 id="org879a681"><span class="section-number-3">3.2</span> Variables and Shortcuts in Makefiles</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Makefiles support a large number of features such as explicit
@@ -837,8 +844,8 @@ the following invocation allows using a specific file other than that:
 </div>
 </div>
 </div>
-<div id="outline-container-org70f1b0f" class="outline-3">
-<h3 id="org70f1b0f"><span class="section-number-3">3.3</span> Dependency Detection</h3>
+<div id="outline-container-org098a88a" class="outline-3">
+<h3 id="org098a88a"><span class="section-number-3">3.3</span> Dependency Detection</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 Makefiles are useful for larger projects to automatically detect
@@ -893,8 +900,8 @@ the exectuable program.
 </div>
 </div>
 </div>
-<div id="outline-container-orga6a2107" class="outline-2">
-<h2 id="orga6a2107"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org290b1ac" class="outline-2">
+<h2 id="org290b1ac"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the exercise.
@@ -1034,7 +1041,7 @@ if you need a refresher on how to upload your completed exercise zip to Gradesco
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-11-01 Sun 21:13 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-11-04 Wed 10:39 <br/> </i>
 </div>
 </body>
 </html>
