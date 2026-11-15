@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-11-15 Sun 09:26 -->
+<!-- 2026-11-15 Sun 09:30 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Lab10: I/O Redirection and Cache Optimization</title>
@@ -493,7 +493,7 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2026-11-15 Sun 09:26</i>
+<i>Last Updated: 2026-11-15 Sun 09:30</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Lab10: I/O Redirection and Cache Optimization</h1>
@@ -501,38 +501,38 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 <li><b>Due: 11:59pm Sun 22-Nov-2026</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
-<div id="outline-container-org83c5dd2" class="outline-4">
-<h4 id="org83c5dd2">CODE DISTRIBUTION: <a href="lab09-code.zip">lab09-code.zip</a></h4>
+<div id="outline-container-org1af46d4" class="outline-4">
+<h4 id="org1af46d4">CODE DISTRIBUTION: <a href="lab10-code.zip">lab10-code.zip</a></h4>
 </div>
 
-<div id="outline-container-orgce8c221" class="outline-4">
-<h4 id="orgce8c221">CHANGELOG: Empty</h4>
+<div id="outline-container-orga922248" class="outline-4">
+<h4 id="orga922248">CHANGELOG: Empty</h4>
 </div>
 
-<div id="outline-container-orga30b2b1" class="outline-4">
-<h4 id="orga30b2b1"></h4>
-<div class="outline-text-4" id="text-orga30b2b1">
+<div id="outline-container-org0cd14bf" class="outline-4">
+<h4 id="org0cd14bf"></h4>
+<div class="outline-text-4" id="text-org0cd14bf">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd3c97ab">1. Rationale</a></li>
-<li><a href="#org48e2c66">2. Codepack</a></li>
-<li><a href="#org602f0ec">3. Problem 1: I/O Redirection</a></li>
-<li><a href="#org3fbc9ff">4. Problem 2 Background: Timing Code</a>
+<li><a href="#orgec5af6e">1. Rationale</a></li>
+<li><a href="#orga3e559c">2. Codepack</a></li>
+<li><a href="#orge6adc99">3. Problem 1: I/O Redirection</a></li>
+<li><a href="#org2d61069">4. Problem 2 Background: Timing Code</a>
 <ul>
-<li><a href="#orgd86ef18">4.1. Timing Notes</a></li>
-<li><a href="#orgbb224cb">4.2. The <code>clock()</code> Function</a></li>
+<li><a href="#org3553655">4.1. Timing Notes</a></li>
+<li><a href="#orga5176fb">4.2. The <code>clock()</code> Function</a></li>
 </ul>
 </li>
-<li><a href="#org94ddd1b">5. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org20c6a1f">5. QUESTIONS.txt File Contents</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgd3c97ab" class="outline-2">
-<h2 id="orgd3c97ab"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-orgec5af6e" class="outline-2">
+<h2 id="orgec5af6e"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Unix maintains a table of open File Descriptors for each running
@@ -554,9 +554,9 @@ consequences of choosing layout and iteration patterns for visiting
 that data.
 </p>
 </div>
-<div id="outline-container-org0b5b41f" class="outline-4">
-<h4 id="org0b5b41f">Associated Reading</h4>
-<div class="outline-text-4" id="text-org0b5b41f">
+<div id="outline-container-orga7a60fe" class="outline-4">
+<h4 id="orga7a60fe">Associated Reading</h4>
+<div class="outline-text-4" id="text-orga7a60fe">
 <p>
 Bryant and O'Hallaron CS:APP covers I/O redirection in Section 10.9
 which gives good treatment of the <code>dup2()</code>. The preceding Section 10.8
@@ -571,9 +571,9 @@ here.
 </p>
 </div>
 </div>
-<div id="outline-container-org1f9f30a" class="outline-4">
-<h4 id="org1f9f30a">Grading Policy</h4>
-<div class="outline-text-4" id="text-org1f9f30a">
+<div id="outline-container-orga9d2317" class="outline-4">
+<h4 id="orga9d2317">Grading Policy</h4>
+<div class="outline-text-4" id="text-orga9d2317">
 <p>
 Credit for this lab is earned by completing the code/answers in the
 Lab codepack and submitting a Zip of the work to Gradescope preferably
@@ -597,8 +597,8 @@ submissions. See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">f
 </div>
 </div>
 </div>
-<div id="outline-container-org48e2c66" class="outline-2">
-<h2 id="org48e2c66"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orga3e559c" class="outline-2">
+<h2 id="orga3e559c"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for this exercise is linked at the top of this
@@ -701,8 +701,8 @@ the following files which are briefly described.
 </table>
 </div>
 </div>
-<div id="outline-container-org602f0ec" class="outline-2">
-<h2 id="org602f0ec"><span class="section-number-2">3</span> Problem 1: I/O Redirection</h2>
+<div id="outline-container-orge6adc99" class="outline-2">
+<h2 id="orge6adc99"><span class="section-number-2">3</span> Problem 1: I/O Redirection</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Programs often need to deal with open files for reading and
@@ -723,12 +723,12 @@ to assist students in understanding how programs like
 <code>switch_stdout.c</code> work.
 </p>
 </div>
-<div id="outline-container-org12b1a93" class="outline-4">
-<h4 id="org12b1a93">Fork and Child File Descriptors</h4>
-<div class="outline-text-4" id="text-org12b1a93">
+<div id="outline-container-org230104a" class="outline-4">
+<h4 id="org230104a">Fork and Child File Descriptors</h4>
+<div class="outline-text-4" id="text-org230104a">
 <div class="org-center">
 
-<div id="org699fb84" class="figure">
+<div id="org5a7d17e" class="figure">
 <p><img src="fork-fds.png" alt="fork-fds.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Effects of <code>open()</code>'ing a file then calling <code>fork()</code> : the child and parent both refer to the same open file.</p>
@@ -736,12 +736,12 @@ to assist students in understanding how programs like
 </div>
 </div>
 </div>
-<div id="outline-container-org351e846" class="outline-4">
-<h4 id="org351e846">dup() and dup2() System calls</h4>
-<div class="outline-text-4" id="text-org351e846">
+<div id="outline-container-org1f47ad9" class="outline-4">
+<h4 id="org1f47ad9">dup() and dup2() System calls</h4>
+<div class="outline-text-4" id="text-org1f47ad9">
 <div class="org-center">
 
-<div id="org8ef0a37" class="figure">
+<div id="org15f3d0d" class="figure">
 <p><img src="dup-and-dup2.png" alt="dup-and-dup2.png" style="max-width:100%;" />
 </p>
 <p><span class="figure-number">Figure 2: </span>LEFT: Effect of calling <code>dup()</code> to create a duplicate file descriptor table entry. RIGHT: Effect of calling <code>dup2()</code> to overwrite on file descriptor entry with another.</p>
@@ -750,12 +750,12 @@ to assist students in understanding how programs like
 </div>
 </div>
 </div>
-<div id="outline-container-org3fbc9ff" class="outline-2">
-<h2 id="org3fbc9ff"><span class="section-number-2">4</span> Problem 2 Background: Timing Code</h2>
+<div id="outline-container-org2d61069" class="outline-2">
+<h2 id="org2d61069"><span class="section-number-2">4</span> Problem 2 Background: Timing Code</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgd86ef18" class="outline-3">
-<h3 id="orgd86ef18"><span class="section-number-3">4.1</span> Timing Notes</h3>
+<div id="outline-container-org3553655" class="outline-3">
+<h3 id="org3553655"><span class="section-number-3">4.1</span> Timing Notes</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 This lab involves optimizing the performance of a function and the
@@ -773,8 +773,8 @@ guaranteed.
 </p>
 </div>
 </div>
-<div id="outline-container-orgbb224cb" class="outline-3">
-<h3 id="orgbb224cb"><span class="section-number-3">4.2</span> The <code>clock()</code> Function</h3>
+<div id="outline-container-orga5176fb" class="outline-3">
+<h3 id="orga5176fb"><span class="section-number-3">4.2</span> The <code>clock()</code> Function</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 The code block below illustrates the basic usage pattern for the
@@ -833,8 +833,8 @@ cautious about trusting times that are too short.
 </div>
 </div>
 </div>
-<div id="outline-container-org94ddd1b" class="outline-2">
-<h2 id="org94ddd1b"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org20c6a1f" class="outline-2">
+<h2 id="org20c6a1f"><span class="section-number-2">5</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the exercise.
@@ -1245,7 +1245,7 @@ if you need a refresher on how to upload your completed exercise zip to Gradesco
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-11-15 Sun 09:26 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-11-15 Sun 09:30 <br/> </i>
 </div>
 </body>
 </html>
