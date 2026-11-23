@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-11-23 Mon 15:54 -->
+<!-- 2026-11-23 Mon 16:45 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMSC216 Lab11: Matrix Cache Optimization</title>
@@ -493,7 +493,7 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 </head>
 <body>
 <div id="preamble" class="status">
-<i>Last Updated: 2026-11-23 Mon 15:54</i>
+<i>Last Updated: 2026-11-23 Mon 16:45</i>
 </div>
 <div id="content" class="content">
 <h1 class="title">CMSC216 Lab11: Matrix Cache Optimization</h1>
@@ -501,16 +501,16 @@ hljs.highlightAll();                  // perform highlighting on all pre blocks
 <li><b>Due: 11:59pm Wed 02-Dec-2026</b> on <a href="https://www.gradescope.com/">Gradescope</a></li>
 <li><i>Approximately 1.00% of total grade</i></li>
 </ul>
-<div id="outline-container-org4eef14c" class="outline-4">
-<h4 id="org4eef14c">CODE DISTRIBUTION: <a href="lab11-code.zip">lab11-code.zip</a></h4>
+<div id="outline-container-org6fc7821" class="outline-4">
+<h4 id="org6fc7821">CODE DISTRIBUTION: <a href="lab11-code.zip">lab11-code.zip</a></h4>
 </div>
 
-<div id="outline-container-org368e4f1" class="outline-4">
-<h4 id="org368e4f1">CHANGELOG:</h4>
-<div class="outline-text-4" id="text-org368e4f1">
+<div id="outline-container-org56c8856" class="outline-4">
+<h4 id="org56c8856">CHANGELOG:</h4>
+<div class="outline-text-4" id="text-org56c8856">
 <dl class="org-dl">
 <dt>Mon Nov 23 03:49:57 PM EST 2026</dt><dd><p>
-<a href="https://piazza.com/class/msj2zlurpml1qy/post/288">Poste 288</a> reported that the
+<a href="https://piazza.com/class/msj2zlurpml1qy/post/288">Post 288</a> reported that the
 student-provided <code>Makefile</code> for Lab 11 was missing the Gradescope
 assignment ID.  This can be fixed by editing the <code>GS_ASSIGN_ID</code> line
 to add the ID:
@@ -531,24 +531,24 @@ to make any manual changes. Thanks to those that reported the issue.
 </dl>
 </div>
 </div>
-<div id="outline-container-orgd56c992" class="outline-4">
-<h4 id="orgd56c992"></h4>
-<div class="outline-text-4" id="text-orgd56c992">
+<div id="outline-container-orgc62220e" class="outline-4">
+<h4 id="orgc62220e"></h4>
+<div class="outline-text-4" id="text-orgc62220e">
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org71be074">1. Rationale</a></li>
-<li><a href="#org0a1965f">2. Codepack</a></li>
-<li><a href="#org039912e">3. Timing Notes</a></li>
-<li><a href="#org75452a2">4. QUESTIONS.txt File Contents</a></li>
+<li><a href="#org787fdd1">1. Rationale</a></li>
+<li><a href="#orgd655e1b">2. Codepack</a></li>
+<li><a href="#orgbb2432e">3. Timing Notes</a></li>
+<li><a href="#org36be6e4">4. QUESTIONS.txt File Contents</a></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org71be074" class="outline-2">
-<h2 id="org71be074"><span class="section-number-2">1</span> Rationale</h2>
+<div id="outline-container-org787fdd1" class="outline-2">
+<h2 id="org787fdd1"><span class="section-number-2">1</span> Rationale</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Utilizing CPU memory caches is essential for crafting high-performance
@@ -559,9 +559,9 @@ performance. This gives a specific example of how to accomplish the
 same outcome while utilizing hardware more effectively.
 </p>
 </div>
-<div id="outline-container-org8ed202c" class="outline-4">
-<h4 id="org8ed202c">Associated Reading</h4>
-<div class="outline-text-4" id="text-org8ed202c">
+<div id="outline-container-org730ebbe" class="outline-4">
+<h4 id="org730ebbe">Associated Reading</h4>
+<div class="outline-text-4" id="text-org730ebbe">
 <p>
 Bryant and O'Hallaron cover The Memory Hierarchy in Chapter 6 with 6.5
 and 6.6 being particularly helpful for the matrix problem studied
@@ -569,9 +569,9 @@ here.
 </p>
 </div>
 </div>
-<div id="outline-container-orgf1f347f" class="outline-4">
-<h4 id="orgf1f347f">Grading Policy</h4>
-<div class="outline-text-4" id="text-orgf1f347f">
+<div id="outline-container-org8ac7678" class="outline-4">
+<h4 id="org8ac7678">Grading Policy</h4>
+<div class="outline-text-4" id="text-org8ac7678">
 <p>
 Credit for this lab is earned by completing the code/answers in the
 Lab codepack and submitting a Zip of the work to Gradescope preferably
@@ -595,8 +595,8 @@ submissions. See the <a href="https://www.cs.umd.edu/~profk/216/syllabus.html">f
 </div>
 </div>
 </div>
-<div id="outline-container-org0a1965f" class="outline-2">
-<h2 id="org0a1965f"><span class="section-number-2">2</span> Codepack</h2>
+<div id="outline-container-orgd655e1b" class="outline-2">
+<h2 id="orgd655e1b"><span class="section-number-2">2</span> Codepack</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The codepack for this exercise is linked at the top of this
@@ -692,8 +692,8 @@ the following files which are briefly described.
 </table>
 </div>
 </div>
-<div id="outline-container-org039912e" class="outline-2">
-<h2 id="org039912e"><span class="section-number-2">3</span> Timing Notes</h2>
+<div id="outline-container-orgbb2432e" class="outline-2">
+<h2 id="orgbb2432e"><span class="section-number-2">3</span> Timing Notes</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 This lab involves optimizing the performance of a function and the
@@ -711,8 +711,8 @@ guaranteed.
 </p>
 </div>
 </div>
-<div id="outline-container-org75452a2" class="outline-2">
-<h2 id="org75452a2"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
+<div id="outline-container-org36be6e4" class="outline-2">
+<h2 id="org36be6e4"><span class="section-number-2">4</span> QUESTIONS.txt File Contents</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Below are the contents of the <code>QUESTIONS.txt</code> file for the exercise.
@@ -886,7 +886,7 @@ if you need a refresher on how to upload your completed exercise zip to Gradesco
 </div>
 </div>
 <div id="postamble" class="status">
-<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-11-23 Mon 15:54 <br/> </i>
+<hr/> <i> <a href="https://www.umd.edu/web-accessibility" title="UMD Web Accessibility">Web Accessibility</a> <br/> Author: Chris Kauffman (<a href="mailto:profk@umd.edu">profk@umd.edu</a>) <br/> Date: 2026-11-23 Mon 16:45 <br/> </i>
 </div>
 </body>
 </html>
